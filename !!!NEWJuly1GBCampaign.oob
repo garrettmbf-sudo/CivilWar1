@@ -1,0 +1,1792 @@
+3		
+Union	A	Army of the Potomac
+	Begin	
+	L	4 4 41 MG George G Meade
+	U	49 4 C C 440 0 Oneida NY Cav
+	B	Provost Guard
+	Begin	
+	L	3 2 1 BG Marsena Patrick
+	U	412 4 I R 26 98 93rd New York
+        U       301 4 C C 48 212 1st Penn Cav
+	U	575 4 C C 48 212 2nd Penn Cav
+	U	50 4 C C 48 212 E&I 6th Pa Cav
+	U	290 4 I R 28 100 A-I 8th U.S.
+        U	42 4 C C 72 215 Dets US Cav
+	End
+        B	Engineer Bde
+	Begin	
+	L	2 3 2 BG Henry Benham
+	U	152 4 I R 40 102 A-C 15th NY Eng
+	U	205 4 I R 40 102 50th New York Eng
+	U	198 4 I R 40 102 U.S. Engineer Bn
+	End	
+	C	First Corps
+	Begin	
+	L	5 5 3 MG John Reynolds
+	U	57 4 C C 440 0 L, 1st Me Cav
+        U       60 4 I R 42 103 B, 121st Penn
+	D	1st Div (Wadsworth)
+	Begin	
+	L	4 5 4 BG James Wadsworth
+	B	Iron Bde
+	Begin	
+	L	4 5 8 BG Solomon Meredith
+	U	308 6 I R 158 146 19th Indiana
+	U	496 6 I R 156 145 24th Michigan
+	U	302 6 I R 160 147 2nd Wisconsin
+	U	344 6 I R 162 148 6th Wisconsin
+	U	364 6 I R 164 149 7th Wisconsin
+	End	
+	B	2nd Bde (Cutler)
+	Begin	
+	L	3 5 6 BG Lysander Cutler
+	U	434 5 I R 166 11 7th Indiana
+	U	375 4 I R 14 94 76th New York
+	U	318 5 Z R 286 184 84th New York
+	U	241 4 I R 2 91 95th New York
+	U	380 4 I R 26 98 147th New York
+	U	252 4 I R 42 103 56th Pennsylvania
+	End	
+	S	500 4 1/1 Train A
+        S	500 4 1/1 Train B
+	End	
+	D	2nd Div (Robinson)
+	Begin	
+	L	4 5 9 BG John Robinson
+        U	60 4 I R 310 107 D 149th Penn
+	B	1st Bde (Paul)
+	Begin	
+	L	3 4 7 BG Gabriel Paul
+	U	298 6 I R 86 114 16th Maine
+	U	298 5 I R 50 106 13th Massachusetts
+	U	411 5 I R 2 91 94th New York
+	U	285 5 I R 14 94 104th New York
+        U	270 5 I R 6 92 11th Pennsylvania
+	U	255 5 I R 310 107 107th Pennsylvania
+	End	
+	B	2nd Bde (Baxter)
+	Begin	
+	L	3 4 11 BG Henry Baxter
+	U	261 4 I R 62 111 12th Massachusetts
+	U	199 4 I R 282 182 83rd New York
+	U	236 4 I R 284 183 97th New York
+	U	273 5 I R 372 201 88th Pennsylvania
+	U	208 5 I R 372 201 90th Pennsylvania
+	End	
+	S	500 4 2/1 Train A
+        S	500 4 2/1 Train B
+	End	
+	D	3rd Div (Doubleday)
+	Begin	
+	L	3 4 12 MG A Doubleday
+	U	70 4 I R 509 339 C 149th Penn
+	B	1st Bde (Rowley)
+	Begin	
+	L	2 2 13 BG Thomas Rowley
+	U	287 5 I R 70 113 80th New York
+	U	263 4 I R 6 92 121st Pennsylvania
+	U	336 5 I R 372 201 142nd Pennsylvania
+	U	467 5 I R 372 201 151st Pennsylvania
+	End	
+	B	2nd Bde (Stone)
+	Begin	
+	L	3 4 14 Col Roy Stone
+	U	465 5 I R 30 99 143rd Pennsylvania
+	U	450 4 I R 152 144 149th Pennsylvania
+	U	400 5 I R 154 142 150th Pennsylvania
+	End	
+	B	3rd Bde (Stannard)
+	Begin	
+	L	2 4 101 BG George Stannard
+        L       1 1 101 12 & 15 VT Train guards at Emmitsburg
+        U	640 4 I R 20 96 12th Vermont
+	U	636 4 I R 20 96 13th Vermont
+	U	647 4 I R 20 96 14th Vermont
+        U	630 4 I R 20 96 15th Vermont
+	U	661 4 I R 20 96 16th Vermont
+	End	
+	S	500 4 3/1 Train A
+        S	500 4 3/1 Train B
+	End	
+	B	1st Corps Art Bde
+	Begin
+        U	6 4 A T 0 4 2nd Bty Maine Lt	
+        U	6 4 A N 12 2 5th Bty Maine Lt
+        U	6 4 A T 0 4 Bty E&L 1st N.Y. Lt
+        U	4 4 A T 0 4 Bty B 1st Penn Lt
+        U	6 5 A N 12 2 Bty B 4th U.S
+	End
+        S	600 4 1 Corps Train A
+        S       600 4 1 Corps Train B
+	End		
+	C	Second Corps
+	Begin	
+	L	5 6 15 MG Winfield Hancock
+	U	94 4 C C 396 238 D&K 6th NY Cav
+	U	100 4 C C 48 212 E&H 17th Penn Cav
+	D	1st Div (Caldwell)
+	Begin	
+	L	4 5 16 BG John Caldwell
+	B	1st Bde (Cross)
+	Begin	
+	L	3 4 17 Col Edward Cross
+	U	179 5 I R 82 119 5th New Hampshire
+	U	104 4 I R 16 5 61st New York
+	U	175 5 I R 6 92 81st Pennsylvania
+	U	392 5 I R 308 190 148th Pennsylvania
+	End	
+	B	Irish Bde
+	Begin	
+	L	3 4 18 Col Patrick Kelly
+	U	224 6 I R 136 134 28th Massachusetts
+	U	75 6 I M 138 137 A&B 63rd N.Y.
+	U	75 6 I M 140 138 A&B 69th N.Y.
+	U	90 6 I M 150 141 A&B 88th N.Y.
+	U	150 6 I M 134 136 A-D 116th Penn
+	End	
+	B	3rd Bde (Zook)
+	Begin	
+	L	3 4 19 BG Samuel Zook
+	U	134 5 I R 374 202 52nd New York
+	U	175 5 I R 14 94 57th New York
+	U	515 5 I R 306 190 140th Pennsylvania
+	U	147 5 I R 38 101 66th New York
+	End	
+	B	4th Bde (Brooke)
+	Begin	
+	L	2 3 20 Col J R Brooke
+	U	75 5 I R 70 113 A&B 27th Conn
+	U	234 5 I R 78 117 2nd Delaware
+	U	204 5 I R 14 94 64th New York
+        U	160 5 I R 30 99 53rd Pennsylvania
+	U	202 5 I M 6 92 145th Pennsylvania
+	End	
+	S	500 4 1/2 Train A
+        S	500 4 1/2 Train B
+	End	
+	D	2nd Div (Gibbon)
+	Begin	
+	L	4 5 21 BG John Gibbon
+	B	1st Bde (Harrow)
+	Begin	
+	L	3 4 22 BG William Harrow
+	U	439 5 I R 74 114 19th Maine
+	U	281 4 I R 50 106 15th Massachusetts
+	U	330 6 I R 430 249 1st Minnesota
+	U	335 5 I R 174 153 82nd New York
+	End	
+	B	Philadelphia Bde
+	Begin	
+	L	3 4 125 BG Alexander Webb
+	U	284 5 I R 202 161 69th Pennsylvania
+	U	261 4 Z R 202 161 71st Pennsylvania
+	U	380 4 Z R 200 162 72nd Pennsylvania
+	U	280 4 I R 306 190 106th Pennsylvania
+	End	
+	B	3rd Bde (Hall)
+	Begin	
+	L	3 3 24 Col Norman Hall
+	U	163 5 I R 50 106 19th Massachusetts
+	U	243 5 I R 170 151 20th Massachusetts
+	U	165 5 I R 56 108 7th Michigan
+	U	197 5 I R 298 189 42nd New York
+	U	152 5 I R 296 188 59th New York
+	End	
+	S	500 4 2/2 Train A
+        S	500 4 2/2 Train B
+	End	
+	D	3rd Div (Hays)
+	Begin	
+	L	3 4 102 BG Alexander Hays
+	U	82 4 Z R 98 122 10th New York Bn
+	B	1st Bde (Carroll)
+	Begin	
+	L	3 4 26 Col Samuel Carroll
+	U	191 5 I R 80 118 14th Indiana
+	U	299 5 I R 290 5 4th Ohio
+	U	209 5 I R 312 192 8th Ohio
+	U	234 5 I R 68 112 7th West Virginia
+	End	
+	B	2nd Bde (Smyth)
+	Begin	
+	L	3 4 27 Col Thomas Smyth
+	U	172 4 I B 172 152 14th Connecticut
+	U	251 4 I R 78 117 1st Delaware
+	U	444 4 I M 8 93 12th New Jersey
+	U	200 4 I R 14 94 108th New York
+	End	
+	B	3rd Bde (Willard)
+	Begin	
+	L	3 4 126 Col George Willard
+	U	269 4 I R 118 127 39th New York
+	U	390 4 I R 26 98 111th New York
+	U	392 4 I R 2 91 125th New York
+	U	455 5 I R 38 101 126th New York
+	End	
+	S	500 4 3/2 Train A
+        S	500 4 3/2 Train B
+	End	
+	B	2nd Corps Art Bde
+	Begin
+        U       4 4 A X 0 4 14th Bty N.Y. Lt
+        U	6 4 A T 0 4 Bty A 1st R.I. Lt	
+        U	6 4 A N 12 2 Bty B 1st R.I. Lt
+        U	6 5 A N 12 2 Bty I 1st U.S
+        U	6 5 A T 0 4 Bty A 4th U.S.
+	End
+	S	600 4 2 Corps Train A
+        S       600 4 2 Corps Train B
+	End	
+	C	Third Corps
+	Begin	
+	L	3 3 28 MG Daniel Sickles
+        U	36 4 C C 396 238 A 6th NY Cav
+        U	120 4 I R 192 100 CD&I 84th Penn
+	D	1st Div (Birney)
+	Begin	
+	L	3 4 29 MG David Birney
+	B	1st Bde (Graham)
+	Begin	
+	L	3 3 37 BG Charles Graham
+	U	207 4 I R 30 99 57th Pennsylvania
+	U	246 4 I R 30 99 63rd Pennsylvania
+	U	320 4 I R 30 99 68th Pennsylvania
+	U	274 4 I R 6 92 105th Pennsylvania
+	U	259 4 Z R 370 198 114th Pennsylvania
+	U	209 4 I R 6 92 141st Pennsylvania
+	End	
+	B	2nd Bde (Ward)
+	Begin	
+	L	3 4 31 BG J Hobart Ward
+	U	400 5 I R 80 118 20th Indiana
+	U	210 4 I R 74 114 3rd Maine
+	U	287 5 I R 86 114 4th Maine
+	U	287 5 I R 38 101 86th New York
+	U	238 4 I R 14 94 124th New York
+	U	277 5 I R 6 92 99th Pennsylvania
+        U       312 5 S B 64 19 1st U.S. SS
+        U       169 5 S B 64 19 8 Cos 2nd U.S. SS
+	End	
+	B	3rd Bde (Trobrnd)
+	Begin	
+	L	3 4 32 Col PR de Trobriand
+	U	350 4 I R 74 114 17th Maine
+	U	238 4 I R 56 108 3rd Michigan
+	U	216 5 I R 56 108 5th Michigan
+	U	431 4 I R 210 165 40th New York
+	U	152 4 I R 18 5 110th Pennsylvania
+	End	
+	S	500 4 1/3 Train A
+        S	500 4 1/3 Train B
+	End	
+	D	2nd Div (Humphreys)
+	Begin	
+	L	4 5 33 BG A A Humphreys
+	B	1st Bde (Carr)
+	Begin	
+	L	3 4 34 BG James Carr
+	U	321 4 I R 194 111 1st Massachusetts
+	U	286 4 I M 178 154 11th Massachusetts
+	U	245 4 I R 62 111 16th Massachusetts
+	U	224 4 I R 82 119 12th New Hampshire
+	U	275 5 I R 362 195 11th New Jersey
+	U	365 4 I R 42 103 26th Pennsylvania
+	End	
+	B	Excelsior Bde
+	Begin	
+	L	2 3 35 Col William Brewster
+	U	288 4 I R 180 155 70th New York
+	U	243 4 I R 182 156 71st New York
+	U	305 4 I R 184 159 72nd New York
+	U	349 4 I R 186 158 73rd New York
+	U	266 4 I R 188 157 74th New York
+	U	383 4 I R 190 155 120th New York
+	End	
+	B	3rd Bde (Burling)
+	Begin	
+	L	3 3 36 Col George Burling
+	U	354 5 I R 212 166 2nd New Hampshire
+	U	206 5 I R 354 195 5th New Jersey
+	U	207 5 I R 356 197 6th New Jersey
+	U	275 5 I R 358 196 7th New Jersey
+	U	170 5 I R 360 196 8th New Jersey
+	U	151 5 I R 6 92 115th Pennsylvania
+	End	
+	S	500 4 2/3 Train A
+        S	500 4 2/3 Train B
+	End
+        D	3rd Div (Elliott)
+	Begin	
+	L	3 3 33 BG William Elliott
+        U       1 1 I R 94 121 What if-drawn from 8th Corps
+	B	2nd Bde (Keifer)
+	Begin	
+	L	2 3 35 Col Joseph Keifer
+        U	317 3 I R 94 121 6th Maryland
+        U	312 3 I R 16 5 110th Ohio
+        U	404 3 I R 16 5 122nd Ohio
+        U	449 3 I R 30 99 138th Pennsylvania
+	End
+        B	3rd Bde (Smith)
+	Begin	
+	L	2 3 35 Col Benjamin Smith
+        U	488 3 I R 16 5 126th Ohio
+        U	314 3 I R 362 195 106th New York
+        U	349 4 I R 30 99 67th Pennsylvania
+        U	332 4 I R 30 99 87th Pennsylvania
+	End				
+        S	500 4 3/3 Train A
+        S	500 4 3/3 Train B
+	End	
+	B	3rd Corps Art Bde
+	Begin
+        U	6 4 A X 0 4 4th Bty N.Y. Lt	
+        U	6 4 A N 12 2 Bty D 1st N.Y. Lt
+        U	6 4 A X 0 4 2nd Bty N.J. Lt
+        U	6 4 A N 12 2 Bty E 1st R.I. Lt
+        U	6 5 A N 12 2 Bty K 4th U.S.
+	End
+        S	600 4 3 Corps Train A
+        S       600 4 3 Corps Train B	
+	End			
+	C	Fifth Corps
+	Begin	
+	L	3 4 46 MG George Sykes
+	U	95 4 C C 398 239 D&H 17th Penn Cav
+	U	117 4 I R 264 174 D&E 12th N.Y.
+	D	1st Div (Barnes)
+	Begin	
+	L	3 4 42 BG James Barnes
+	B	1st Bde (Tilton)
+	Begin	
+	L	3 3 43 BG William Tilton
+	U	139 3 I R 62 111 18th Massachusetts
+	U	137 4 I R 62 111 22nd Massachusetts
+	U	145 4 I R 56 108 1st Michigan
+	U	233 4 I R 30 99 118th Pennsylvania
+	End	
+	B	2nd Bde (Sweitzer)
+	Begin	
+	L	3 4 44 Col Jacob Sweitzer
+	U	412 4 I R 208 164 9th Massachusetts
+	U	242 4 I R 62 111 32nd Massachusetts
+	U	342 4 I R 56 108 4th Michigan
+	U	426 4 I R 42 103 62nd Pennsylvania
+	End	
+	B	3rd Bde (Vincent)
+	Begin	
+	L	3 5 45 Col Strong Vincent
+	U	386 5 I R 278 180 20th Maine
+	U	263 4 I R 56 108 16th Michigan
+	U	391 5 I R 280 181 44th New York
+	U	295 5 I R 30 99 83rd Pennsylvania
+	End
+        S	500 4 1/5 Train A
+        S	500 4 1/5 Train B
+	End	
+	D	2nd Div (Ayres)
+	Begin	
+	L	3 4 47 BG Romeyn Ayres
+	B	1st Regular Bde
+	Begin	
+	L	2 4 127 Col Hannibal Day
+	U	300 5 I R 28 100 Bn 3rd U.S.
+	U	173 5 I R 28 100 CFH&K 4th US
+	U	150 5 I R 28 100 D-I 6th US
+	U	415 4 I R 28 100 12th U.S.
+	U	513 5 I R 28 100 14th U.S.
+	End	
+	B	2nd Regular Bde
+	Begin	
+	L	2 4 133 Col Sydney Burbank
+	U	197 6 I R 28 100 Bn 2nd US
+	U	116 5 I R 28 100 ABE&I 7th US
+	U	93 4 I R 28 100 DG&H 10th US
+	U	286 4 I R 28 100 11th U.S.
+	U	260 4 I R 28 100 17th U.S.
+	End	
+	B	3rd Bde (Weed)
+	Begin	
+	L	3 4 128 BG Stephen Weed
+	U	144 5 I R 16 5 Bn 13th New York
+	U	453 5 Z R 110 124 140th New York
+	U	460 5 M R 112 125 146th New York
+	U	222 4 M R 114 126 91st Pennsylvania
+	U	365 5 Z M 116 14 155th Pennsylvania
+	End
+        S	500 4 2/5 Train A
+        S	500 4 2/5 Train B
+	End	
+	D	Penn Reserve Div
+	Begin	
+	L	3 4 248 BG Samuel Crawford
+	B	1st Bde (McCand)
+	Begin	
+	L	3 4 104 Col W McCandless
+	U	382 5 I R 54 107 1st Penn Reserves
+	U	235 5 I R 90 103 2nd Penn Reserves
+	U	327 4 I R 90 103 6th Penn Reserves
+	U	301 5 I B 102 103 13th Penn Reserves
+	End
+	B	3rd Bde (Fisher)
+	Begin	
+	L	3 4 106 Col J W Fisher
+	U	288 4 I M 54 107 5th Penn Reserves
+	U	325 4 I M 54 107 9th Penn Reserves
+	U	401 5 I R 66 110 10th Penn Reserves
+	U	327 5 I R 54 107 11th Penn Reserves
+	U	276 4 I R 90 103 12th Penn Reserves
+	End
+        S	500 4 Penn/5 Train A
+        S	500 4 Penn/5 Train B
+	End	
+	B	5th Corps Art Bde
+	Begin
+        U	6 4 A N 12 2 3rd Bty Mass Lt	
+        U	4 4 A T 0 4 Bty C 1st N.Y. Lt
+        U	6 4 A N 12 2 Bty L 1st Ohio Lt
+        U	6 5 A X 0 4 Bty D 5th U.S.
+        U	4 5 A T 0 4 Bty I 5th U.S.
+	End
+        S	600 4 5 Corps Train A
+        S       600 4 5 Corps Train B	
+	End	
+	C	Sixth Corps
+	Begin	
+	L	4 4 49 MG John Sedgwick
+        U	292 4 C C 511 338 1st Mass Cav
+	U	32 4 C C 511 338 L 1st N.J. Cav
+	U	42 4 C C 440 0 H 1st Penn Cav
+	D	1st Div (Wright)
+	Begin	
+	L	4 5 50 BG Horatio Wright
+	U	115 4 I R 509 339 AC&H 4th N.J.
+	B	1st Bde (Torbert)
+	Begin	
+	L	3 4 124 BG A T A Torbert
+	U	292 5 I R 348 195 1st New Jersey
+	U	357 5 I R 8 93 2nd New Jersey
+	U	295 5 I R 350 195 3rd New Jersey
+	U	413 5 I R 8 93 15th New Jersey
+	End	
+	B	2nd Bde (Bartlett)
+	Begin	
+	L	3 4 52 BG James Bartlett
+	U	307 4 I R 74 114 5th Maine
+	U	429 4 I R 2 91 121st New York
+	U	323 4 M R 292 186 95th Pennsylvania
+	U	322 4 I R 42 103 96th Pennsylvania
+	End	
+	B	3rd Bde (Russell)
+	Begin	
+	L	3 4 53 BG David Russell
+	U	395 5 I R 86 114 6th Maine
+	U	289 4 I R 6 92 49th Pennsylvania
+	U	423 5 I R 6 92 119th Pennsylvania
+	U	439 5 I R 58 109 5th Wisconsin
+	End
+        S	500 4 1/6 Train A
+        S	500 4 2/6 Train B
+	End	
+	D	2nd Div (Howe)
+	Begin	
+	L	3 4 54 BG Albion Howe
+	B	2nd Bde (Grant)
+	Begin	
+	L	2 4 55 Col Lewis Grant
+	U	465 5 I R 364 196 2nd Vermont
+	U	381 6 I R 20 96 3rd Vermont
+	U	399 5 I R 20 96 4th Vermont
+	U	309 5 I R 20 96 5th Vermont
+	U	346 5 I R 20 96 6th Vermont
+	End	
+	B	3rd Bde (Neill)
+	Begin	
+	L	3 4 56 BG Thomas Neill
+	U	216 4 I R 74 114 7th Maine
+	U	370 4 I R 2 91 43rd New York
+	U	445 4 I R 2 91 49th New York
+	U	385 4 I R 26 98 77th New York
+	U	386 5 I R 304 190 61st Pennsylvania
+	End
+        S	500 4 2/6 Train A
+        S	500 4 2/6 Train B
+	End	
+	D	3rd Div (Newton)
+	Begin	
+	L	3 4 57 MG John Newton
+	B	1st Bde (Shaler)
+	Begin	
+	L	3 4 58 BG Alexander Shaler
+	U	290 4 I R 2 91 65th New York
+	U	349 4 I R 26 98 67th New York
+	U	414 4 I R 38 101 122nd New York
+	U	489 5 I R 42 103 23rd Pennsylvania
+	U	291 4 I R 42 103 82nd Pennsylvania
+	End	
+	B	2nd Bde (Eustis)
+	Begin	
+	L	2 4 59 Col Henry Eustis
+	U	335 5 I R 50 106 7th Massachusetts
+	U	378 5 I R 62 111 10th Massachusetts
+	U	591 5 I R 62 111 37th Massachusetts
+	U	364 6 I R 92 120 2nd Rhode Island
+	End	
+	B	3rd Bde (Wheaton)
+	Begin	
+	L	3 4 60 BG Frank Wheaton
+        L       1 1 60 102nd Pa Wagon Gds at Westminster
+	U	237 6 I R 288 185 62nd New York
+	U	245 5 I R 30 99 93rd Pennsylvania
+	U	368 5 I R 372 201 98th Pennsylvania
+        U       103 4 I R 372 201 102nd Pennsylvania
+	U	464 5 I R 6 92 139th Pennsylvania
+	End
+        S	500 4 3/6 Train A
+        S	500 4 3/6 Train B
+	End	
+	B	6th Corps Art Bde
+	Begin
+        U	6 4 A N 12 2 1st Bty Mass Lt	
+        U	6 4 A T 0 4 1st Bty N.Y. Lt
+        U	6 4 A X 0 4 3rd Bty N.Y. Lt
+        U	6 4 A T 0 4 Bty C 1st R.I. Lt
+        U	6 4 A X 0 4 Bty G 1st R.I. Lt
+        U	4 5 A N 12 2 Bty D 2nd U.S.
+        U	6 5 A N 12 2 Bty G 2nd U.S.
+        U	6 5 A X 0 4 Bty F 5th U.S.
+	End
+        S	600 4 6 Corps Train A
+        S       600 4 6 Corps Train B	
+	End	
+	C	Eleventh Corps
+	Begin	
+	L	3 3 80 MG Oliver O Howard
+	U	95 4 C C 440 0 I&K 1st Ind Cav
+	U	50 4 C C 511 338 K 17th Penn Cav
+	U	50 4 I R 509 339 8th NY Indep Co
+	D	1st Div (Barlow)
+	Begin	
+	L	2 3 81 BG Francis Barlow
+	B	1st Bde (v.Gilsa)
+	Begin	
+	L	2 3 82 Col L von Gilsa
+	U	218 3 I R 14 94 41st New York
+	U	189 4 I R 2 91 54th New York
+	U	232 3 I R 154 142 68th New York
+	U	499 3 I R 30 99 153rd Pennsylvania
+	End	
+	B	2nd Bde (Ames)
+	Begin	
+	L	3 3 83 BG Adelbert Ames
+	U	386 3 I R 70 113 17th Connecticut
+	U	220 4 I R 16 5 25th Ohio
+	U	269 3 I R 16 5 75th Ohio
+	U	458 4 I R 16 5 107th Ohio
+	End
+        S	500 4 1/11 Train A
+        S	500 4 1/11 Train B
+	End	
+	D	2nd Div (Steinwehr)
+	Begin	
+	L	3 3 84 BG A v Steinwehr
+        U       56 3 I R 14 94 E 29th N.Y.
+	B	1st Bde (Coster)
+	Begin	
+	L	2 3 85 Col Charles Coster
+	U	400 3 I R 2 91 134th New York
+	U	240 3 I R 16 5 154th New York
+	U	284 3 I R 42 103 27th Pennsylvania
+	U	291 3 I R 42 103 73rd Pennsylvania
+	End	
+	B	2nd Bde (O.Smith)
+	Begin	
+	L	2 3 86 Col Orland Smith
+	U	493 3 I R 62 111 33rd Massachusetts
+	U	484 3 I R 2 91 136th New York
+	U	329 3 I R 16 5 55th Ohio
+	U	338 3 I R 42 103 73rd Ohio
+	End
+        S	500 4 2/11 Train A
+        S	500 4 2/11 Train B
+	End	
+	D	3rd Div (Schurz)
+	Begin	
+	L	3 4 87 MG Carl Schurz
+	B	1st Bde (Schimmel)
+	Begin	
+	L	2 3 88 BG A Schimmelfeng
+	U	318 4 I R 314 193 82nd Illinois
+	U	375 3 I R 26 98 45th New York
+	U	409 4 I R 38 101 157th New York
+	U	247 4 I R 290 5 61st Ohio
+	U	334 4 I R 154 142 74th Pennsylvania
+	End	
+	B	2nd Bde (Kryzan)
+	Begin	
+	L	3 4 89  Col W Krzyzanski
+	U	446 4 I R 58 109 26th Wisconsin
+	U	195 3 I R 14 94 58th New York
+	U	263 3 I R 14 94 119th New York
+	U	312 3 I R 290 5 82nd Ohio
+	U	208 3 I R 42 103 75th Pennsylvania
+	End
+        S	500 4 3/11 Train A
+        S	500 4 3/11 Train B
+	End	
+	B	11th Corps Art Bde
+	Begin
+	U	6 4 A T 0 4 Bty I 1st N.Y. Lt
+        U	4 4 A T 0 4 13th Bty N.Y. Lt 
+        U	6 4 A N 12 2 Bty I 1st Ohio Lt 
+        U	4 4 A N 12 2 Bty K 1st Ohio Lt
+        U	6 5 A N 12 2 Bty G 4th U.S.
+	End
+        S	600 4 11 Corps Train A
+        S       600 4 11 Corps Train B	
+	End	
+	C	Twelfth Corps
+	Begin	
+	L	3 2 90 MG Henry W Slocum
+        U	78 4 C C 440 0 D&L 9th NY Cav
+	U	170 4 I R 508 340 AB&D 10th Me
+        B	Lockwood's Bde
+	Begin	
+	L	2 3 76 BG Henry Lockwood
+	U	674 3 I R 94 121 Potomac Home Bde
+	U	532 3 I R 94 121 1st E.Shore Rgt
+	U	609 3 I R 14 94 150th New York
+        L	1 1 76 Seperate but functioned as 2nd Bde 1st Div
+	End	
+	D	1st Div (Williams)
+	Begin	
+	L	4 5 91 BG Alpheus Williams
+	B	1st Bde (McDougall)
+	Begin	
+	L	3 4 92 Col A L McDougall
+	U	221 5 I R 70 113 5th Connecticut
+        U	321 5 I R 553 309 20th Connecticut
+	U	290 5 I R 94 121 3rd Maryland
+	U	495 4 I R 14 94 123rd New York
+	U	245 5 I R 2 91 145th New York
+        U	262 5 I R 30 99 46th Pennsylvania
+	End	
+	B	3rd Bde (Ruger)
+	Begin	
+	L	3 4 93 BG Thomas Ruger
+	U	339 6 I R 158 146 27th Indiana
+	U	316 5 I R 18 5 2nd Massachusetts
+	U	347 5 I R 8 93 13th New Jersey
+	U	319 5 I R 14 94 107th New York
+	U	260 4 I R 58 109 3rd Wisconsin
+	End
+        S	500 4 1/12 Train A
+        S	500 4 1/12 Train B
+	End	
+	D	2nd Div (Geary)
+	Begin	
+	L	4 5 94 BG John Geary
+	U	34 4 I R 509 339 B 28th Penn
+	B	1st Bde (Candy)
+	Begin	
+	L	3 4 95 Col Charles Candy
+	U	299 4 I R 32 94 5th Ohio
+	U	282 4 I R 290 5 7th Ohio
+	U	315 5 I R 290 5 29th Ohio
+	U	297 4 I R 16 5 66th Ohio
+	U	303 4 I R 192 100 28th Pennsylvania
+	U	298 4 I R 6 92 147th Pennsylvania
+	End	
+	B	2nd Bde (Kane)
+	Begin	
+	L	3 4 96 BG Thomas Kane
+	U	357 5 I R 42 103 29th Pennsylvania
+	U	149 5 I R 6 92 109th Pennsylvania
+	U	191 5 I R 6 92 111th Pennsylvania
+	End	
+	B	3rd Bde (Greene)
+	Begin	
+	L	3 5 97 BG George Greene
+	U	273 5 I R 2 91 60th New York
+	U	198 5 I R 38 101 78th New York
+	U	230 5 I R 2 91 102nd New York
+	U	423 5 I R 2 91 137th New York
+	U	297 5 I R 14 94 149th New York
+	End
+        S	500 4 2/12 Train A
+        S	500 4 2/12 Train B
+	End
+        D	3rd Div (Naglee)
+	Begin	
+	L	3 4 94 BG James Naglee
+        L       1 1 94 Div was not present.Arrived after battle.
+	B	1st Bde (Horn)
+	Begin	
+	L	2 3 95 Col Joseph Horn
+	U	420 3 I R 32 94 6th Maryland
+	U	310 3 I R 290 5 110th Ohio
+	U	411 3 I R 290 5 122nd Ohio
+	U	406 4 I R 192 100 67th Pennsylvania
+	U	398 4 I R 6 92 87th Pennsylvania
+	End	
+	B	2nd Bde (Briggs)
+	Begin	
+	L	2 3 96 Col Henry Briggs
+	U	512 3 I R 32 94 9th Maryland
+        U	524 3 I R 32 94 10th Maryland
+        U	361 4 I R 18 5 8th Massachusetts
+        U	457 3 I R 18 5 51st Massachusetts
+	U	449 4 I R 6 92 46th Pennsylvania
+	End	
+	B	3rd Bde (Spinola)
+	Begin	
+	L	2 3 97 Col Francis Spinola
+        U	549 3 I R 6 92 158th Pennsylvania
+        U	513 3 I R 6 92 168th Pennsylvania
+        U	549 3 I R 6 92 171st Pennsylvania
+	End
+        S	500 4 3/12 Train A
+        S	500 4 3/12 Train B
+	End			
+	B	12th Corps Art Bde
+	Begin
+	U	4 4 A X 0 4 Bty M 1st N.Y. Lt
+        U	6 4 A X 0 4 Bty E Penn Lt
+        U	6 5 A N 12 2 Bty F 4th U.S.
+        U	4 5 A N 12 2 Bty K 5th U.S.
+	End
+        S	600 4 12 Corps Train A
+        S       600 4 12 Corps Train B	
+	End
+        C	French's Command
+	Begin	
+	L	3 3 100 MG William French
+        L       1 1 100 Not present. Arrived July 5
+	D	Harper's Ferry Div
+	Begin
+        L	2 3 100 BG William Morris	
+	B	Jewett's Bde
+	Begin	
+	L	2 3 99 BG J B Jewett
+        U       519 3 I R 8 93 14th New Jersey
+	U	655 2 I R 2 91 6th NY Hvy Art
+        U       600 2 I R 2 91 151st New York
+	U	402 3 I R 20 96 10th Vermont
+        U	4 4 A N 12 2 Bty L 5th U.S.
+	End
+        B	Kenly's Bde
+	Begin	
+	L	2 3 100 Col J R Kenly
+        U	412 4 I R 32 94 1st Maryland
+        U	475 4 I R 32 94 4th Maryland
+        U	502 3 I R 32 94 7th Maryland
+        U	512 3 I R 32 94 8th Maryland
+        U       6 4 A N 12 2 1st Bty W.Va Lt
+	End
+        B	J.Smith's Bde
+	Begin	
+	L	2 3 100 Col J Smith
+        U       405 4 I R 18 5 34th Massachusetts
+        U       420 4 I R 18 5 43rd Massachusetts
+        U       682 2 I R 2 91 106th New York
+        U	611 2 I R 290 5 126th Ohio
+        U	6 4 A N 12 2 1st Bty Ohio Lt
+	End
+        S	500 4 French Train A
+        S	500 4 French Train B
+	End	
+	End
+        C	Twenty-Second Corps
+	Begin	
+	L	1 1 98 DC Defenses. NOT Present
+	D	Casey's Div
+	Begin
+        L	3 2 100 BG Silas Casey
+        B	2nd Bde Penn Res
+	Begin	
+	L	3 4 105 Col Henry Sickel
+	U	337 5 I R 78 117 3rd Penn Reserves
+	U	329 5 I R 66 110 4th Penn Reserves
+	U	310 4 I R 78 117 7th Penn Reserves
+	U	290 4 I R 66 110 8th Penn Reserves
+	End			
+	B	Martindale's Bde
+	Begin	
+	L	3 3 99 BG John Martindale
+        U       572 3 I R 74 114 2nd Dist Columbia
+	U	591 2 I R 74 114 25th Maine
+	U	602 2 I R 74 114 27th Maine
+        U	6 4 A T 0 4 Keystone Pa Bty	
+	End
+        B	Slough's Bde
+	Begin	
+	L	2 3 100 BG John Slough
+        U       377 4 I R 18 5 39th Massachusetts
+        U       464 3 I R 212 166 14th N.Hampshire
+	U	393 4 I R 66 110 27th Pennsylvania
+	U	700 2 I R 74 114 150th Pennsylvania
+        U	6 4 A T 0 4 Bty H 1st R.I. Lt
+	End
+        B	Barry's Bde
+	Begin	
+	L	3 4 100 BG William Barry
+        U       487 4 I R 74 114 1st Dist Columbia
+        U       682 2 I R 2 91 153rd New York
+        U       715 2 I R 2 91 178th New York
+	U	124 4 I R 28 100 Bn 8th U.S.
+        U	6 4 A N 0 4 12th Bty New York Lt
+	End
+        B	Corcoran Legion
+	Begin	
+	L	2 3 18 BG M Corcoran
+	U	104 4 I R 138 137 Det 69th New York
+	U	585 3 I R 138 137 155th New York
+	U	598 3 I R 138 137 164th New York
+	U	620 3 I R 138 137 170th New York
+	End
+        S	500 4 Casey Train A
+        S	500 4 Casey Train B				
+	End	
+	End		
+	C	Cavalry Corps
+	Begin
+        L	4 4 111 MG A Pleasonton
+        U	258 4 C C 48 212 4th Penn Cav
+        U	110 5 C C 48 212 D&K 6th U.S. Cav
+        D	1st Div (Buford)
+	Begin	
+	L	5 6 112 BG John Buford
+        U	36 4 C C 60 213 L 6th N.Y. Cav
+        U	6 5 H T 36 16 Bty A 2nd U.S.
+        U	5 3 C P 511 338 Buford Scout 1 
+        U	5 3 C P 511 338 Buford Scout 2
+        U	5 3 C P 511 338 Buford Scout 3
+	B	1st Bde (Gamble)
+	Begin	
+	L	4 5 134 Col William Gamble
+	U	470 5 C C 447 344 8th Illinois Cav
+	U	233 4 C C 228 224 8 Cos 12th Ill Cav
+        U	313 4 C C 228 224 6 Cos 3rd Ind Cav
+	U	580 4 C C 60 213 8th New York Cav
+        U	100 5 C C 511 338 Det 8th Ill Cav 
+        U	100 4 C C 511 338 Det 12th Ill Cav
+        U	100 4 C C 511 338 Det 3rd Ind Cav
+        U	100 4 C C 511 338 Det 8th N.Y. Cav 
+	End	
+	B	2nd Bde (Devin)
+	Begin	
+	L	4 5 114 Col Thomas Devin
+	U	182 4 C C 60 213 5 Cos 6th N.Y. Cav
+	U	367 5 C C 60 213 9th New York Cav
+	U	464 4 C C 48 212 17th Penn Cav
+        U	59 4 C C 234 226 A&C 3rd W.Va Cav
+        U	100 4 C C 511 338 Det 6th N.Y. Cav
+        U	100 5 C C 511 338 Det 9th N.Y. Cav
+        U	100 4 C C 511 338 Det 17th Penn Cav
+	End	
+	B	Reserve Bde
+	Begin	
+	L	3 5 123 BG Wesley Merritt
+        L       1 1 123 6th U.S. Cav not engaged
+	U	242 4 C C 48 212 10 Cos 6th Pa Cav
+	U	362 6 C C 72 215 1st U.S. Cav
+	U	407 6 C C 72 215 2nd U.S. Cav
+	U	306 5 C C 72 215 5th U.S. Cav
+        U       240 5 C C 72 215 6th U.S. Cav
+        U	6 5 H T 36 16 Bty K 1st U.S.
+        U	100 4 C C 511 338 Det 6th Penn Cav
+        U	100 5 C C 511 338 Det 1st U.S. Cav
+        U	100 5 C C 511 338 Det 2nd U.S. Cav
+        U	100 5 C C 511 338 Det 5th U.S. Cav
+        U	100 5 C C 511 338 Det 6th U.S. Cav
+	End
+	S	500 4 1/Cav Train
+	End	
+	D	2nd Div (Gregg)
+	Begin	
+	L	4 5 120 BG David M Gregg
+	U	37 4 C C 388 236 A 1st Ohio Cav
+        U	4 5 H T 36 16 Bty E&G 1st U.S.
+	B	1st Bde (McIntosh)
+	Begin	
+	L	3 4 129 Col John McIntosh
+	U	66 3 C C 511 338 A Purnell Md Lgn
+	U	385 4 C C 232 225 1st Maryland Cav
+        U	325 4 C C 226 223 1st Mass Cav
+	U	318 4 C C 96 217 1st New Jersey Cav
+	U	355 4 C C 48 212 1st Penn Cav
+	U	335 4 C C 48 212 3rd Penn Cav
+	U	2 4 H T 332 23 Bty H 3rd Penn Hvy
+	End	
+	B	2nd Bde (Huey)
+	Begin	
+	L	3 4 130 Col Pennock Huey
+        L       1 1 130 Not Present-Guarding trains at Westminster
+	U	364 4 C C 220 220 2nd New York Cav
+	U	317 4 C C 60 213 4th New York Cav
+	U	391 4 C C 48 212 8th Penn Cav
+	U	482 4 C C 218 219 6th Ohio Cav
+        U	6 5 H N 332 2 Bty C 3rd U.S.
+	End	
+	B	3rd Bde (Gregg)
+	Begin	
+	L	4 5 119 Col John I Gregg
+	U	55 3 C C 236 227 Orton's DC Co
+	U	315 4 C C 220 220 1st Maine Cav
+	U	333 4 C C 60 213 10th New York Cav
+	U	358 3 C C 48 212 4th Penn Cav
+	U	349 4 C C 48 212 16th Penn Cav
+	End	
+	S	500 4 2/Cav Train
+	End	
+	D	3rd Div (Kilpatrck)
+	Begin	
+	L	2 3 252 BG J Kilpatrick
+	U	80 4 C C 390 237 A&C 1st Ohio Cav
+        U	6 5 H T 36 16 Bty M 2nd U.S.
+        U	4 5 H T 36 16 Bty E 4th U.S.
+	B	1st Bde (Farnswrth)
+	Begin	
+	L	3 4 131 BG Elon Farnsworth
+	U	420 5 C C 60 213 5th New York Cav
+	U	509 3 C C 48 212 18th Penn Cav
+	U	600 5 C C 224 222 1st Vermont Cav
+	U	395 4 C C 326 215 1st W.Va. Cav
+	End	
+	B	Michigan Bde
+	Begin	
+	L	2 4 132 BGen George A Custer
+	U	427 5 C C 436 245 1st Michigan Cav
+	U	646 4 C A 436 245 5th Michigan Cav
+	U	477 4 C C 424 244 6th Michigan Cav
+	U	383 4 C C 426 214 7th Michigan Cav
+	End	
+	S	500 4 3/Cav Train
+	End
+	D	Horse Artillery
+	Begin	
+	B	1st Brigade
+	Begin
+        U	4 4 H T 36 16 9th Bty Mich Lt	
+        U	6 4 H T 36 16 6th Bty N.Y. Lt
+        U	6 5 H T 36 16 Bty B&L 2nd U.S.
+	End
+        End
+	End		
+	C	Artillery Reserve
+	Begin
+	U	27 4 I R 508 340 C 32nd Mass
+	U	386 4 I R 8 93 7 Cos 4th N.J.
+	B	1st Regular Bde
+	Begin
+        U	6 5 A N 12 2 Bty H 1st U.S.
+        U	6 5 A N 12 2 Bty F&K 3rd U.S.
+        U	6 5 A N 12 2 Bty C 4th U.S.
+        U	4 5 A N 12 2 Bty C 5th U.S.
+	End	
+	B	1st Volunteer Bde
+	Begin
+        U	6 4 A T 0 4 5th Bty Mass Lt	
+        U	6 4 A N 12 2 9th Bty Mass Lt
+        U	4 4 A N 12 2 15th Bty N.Y. Lt
+        U	4 4 A T 0 4 Bty C Penn Lt
+        U	4 4 A T 0 4 Bty F Penn Lt
+	End 
+	B	2nd Volunteer Bde
+	Begin
+        U	4 4 A r 468 10 Bty B 1st Ct Hvy	
+        U	4 4 A r 468 10 Bty M 1st Ct Hvy
+        U	6 4 A u 12 2 2nd Bty Conn Lt 
+        U	6 4 A U 468 10 5th Bty N.Y. Lt
+        U       1 1 A U 468 10 Bty B&M 1st Ct stayed at Westminster  
+	End	
+	B	3rd Volunteer Bde
+	Begin
+        U	6 4 A T 0 4 1st Bty N.H. Lt 	
+        U	6 4 A T 0 4 Bty H 1st Ohio Lt 
+        U	6 4 A T 0 4 Bty F&G 1st Penn Lt
+        U	4 4 A X 0 4 Bty C W.Va Lt
+	End	
+	B	4th Volunteer Bde
+	Begin
+        U	6 4 A N 12 2 6th Bty Maine Lt 	
+        U	6 4 A T 0 4 Bty A Maryland Lt 
+        U	6 4 A T 0 4 1st Bty N.J. Lt
+        U	6 4 A N 12 2 Bty G 1st N.Y. Lt 
+        U	6 4 A T 0 4 Bty K 1st N.Y. Lt
+	End	
+	End	
+	End	
+Confederate	A	Army of N.Virginia
+	Begin	
+	L	4 5 144 Gen Robert E Lee
+	U	118 4 C P 253 89 A&C 39th Va Bn
+        U	108 4 I R 133 42 1st Virginia Bn
+	C	First Corps
+	Begin	
+	L	5 5 145 LTG J Longstreet
+        U	124 3 C R 75 57 Black's Prov Bn
+        L       1 1 145 Black's Bn arrived morning 2 July
+	D	McLaws' Div
+	Begin	
+	L	4 5 146 MG Lafayette McLaws
+	B	Kershaw's Bde
+	Begin	
+	L	3 4 147 BG Joseph Kershaw
+	U	412 5 M R 46 24 2nd South Carolina
+	U	407 4 I R 34 71 3rd South Carolina
+	U	408 4 I R 211 24 7th South Carolina
+	U	300 4 I R 22 76 8th South Carolina
+	U	449 5 I R 10 76 15th South Carolina
+	U	203 4 M R 289 22 3rd S.Carolina Bn
+	End	
+	B	Semmes' Bde
+	Begin	
+	L	3 4 148 BG Paul Semmes
+	U	303 5 I R 516 273 10th Georgia
+	U	302 5 M R 527 288 50th Georgia
+	U	301 5 I R 9 77 51st Georgia
+	U	422 5 I R 9 77 53rd Georgia
+	End	
+	B	Barksdale's Bde
+	Begin	
+	L	3 5 149 BG Wm Barksdale
+	U	481 6 I R 349 6 13th Mississippi
+	U	468 6 I R 79 26 17th Mississippi
+	U	242 5 I R 67 26 18th Mississippi
+	U	424 6 I R 353 47 21st Mississippi
+	End	
+	B	Wofford's Bde
+	Begin	
+	L	3 4 150 BG Wm Wofford
+	U	333 5 I R 45 76 16th Georgia
+	U	302 5 I R 199 36 18th Georgia
+	U	303 6 I R 527 288 24th Georgia
+	U	213 5 M R 121 61 Cobb's Ga Lgn
+	U	273 5 M R 123 67 Phillips Ga Lgn
+        U       233 5 M R 76 67 3rd Bn Ga SS
+	End	
+	B	Cabell's Bn
+	Begin
+        U	4 4 A N 1 3 Ellis N.C. Lt Art
+        U	4 4 A T 393 1 Pulaski Ga Art
+        U	4 5 A N 1 3 1st Co Richmnd How
+        U	4 4 A T 415 3 Troup Ga Art
+	End
+        S       500 5 McLaws Train A	
+	S	500 5 McLaws Train B
+	End	
+	D	Pickett's Div
+	Begin	
+	L	2 3 151 MG George Pickett
+	B	Garnett's Bde
+	Begin	
+	L	3 4 152 BG Richard Garnett
+	U	193 5 I R 139 8 8th Virginia
+	U	312 6 M R 15 77 18th Virginia
+	U	328 5 M R 3 76 19th Virginia
+	U	333 5 I R 145 6 28th Virginia
+	U	289 6 I R 153 8 56th Virginia
+	End	
+	B	Kemper's Bde
+	Begin	
+	L	2 4 153 BG James Kemper
+	U	209 6 I R 133 42 1st Virginia
+	U	332 5 I R 27 42 3rd Virginia
+	U	335 6 M R 27 42 7th Virginia
+	U	359 6 I R 3 76 11th Virginia
+	U	395 5 I R 15 77 24th Virginia
+	End	
+	B	Armistead's Bde
+	Begin	
+	L	3 4 154 BG Lewis Armistead
+	U	257 6 M R 3 76 9th Virginia
+	U	422 5 M R 15 77 14th Virginia
+	U	356 6 M R 15 77 38th Virginia
+	U	435 6 M R 27 42 53rd Virginia
+	U	476 6 M R 27 42 57th Virginia
+	End
+        B	Corse's Bde
+	Begin	
+	L	3 4 155 BGen Montgomery Corse
+        L       1 1 155 Bde not present-Richmond Gsn
+	U	377 5 M R 3 76 15th Virginia
+	U	362 5 M R 141 6 17th Virginia
+	U	385 6 M R 3 76 29th Virginia
+	U	412 5 M R 15 77 30th Virginia
+	End
+        B	Jenkins' Bde
+	Begin	
+	L	3 4 197 BG Micah Jenkins
+        L       1 1 197 Bde not present-Richmond Gsn 
+	U	305 5 M R 119 25 1st S.Carolina Vols
+	U	325 6 I R 129 6 2nd S.Carolina Rfls
+	U	329 5 I R 10 76 5th South Carolina
+	U	280 5 I R 46 24 6th South Carolina
+	U	257 5 I R 421 259 Hampton Lgn Inf
+	U	236 5 I R 227 49 Palmetto S.C. SS
+	End			
+	B	Dearing's Bn
+	Begin
+        U	6 4 A N 1 3 Fauquier Va Art	
+        U	4 4 A T 1 3 Hampton Va Art
+        U	4 4 A N 1 3 Rich-Fayette Va Art
+        U	4 4 A N 1 3 Lynchburg Va Art
+	End
+        S       500 5 Pickett Train A	
+	S	500 5 Pickett Train B
+	End	
+	D	Hood's Div
+	Begin	
+	L	4 5 156 MG John B Hood
+	B	Law's Bde
+	Begin	
+	L	3 4 157 BG Evander Law
+	U	346 4 I R 257 74 4th Alabama
+	U	499 5 M R 269 6 15th Alabama
+	U	363 4 I R 23 30 44th Alabama
+	U	347 4 I R 265 37 47th Alabama
+	U	374 4 I R 23 30 48th Alabama
+	End	
+	B	Texas Bde
+	Begin	
+	L	3 4 158 BG Jerome Robertson
+	U	479 6 I R 157 6 3rd Arkansas
+	U	426 6 I R 159 40 1st Texas
+	U	415 6 I R 161 37 4th Texas
+	U	409 6 I R 163 67 5th Texas
+	End	
+	B	Anderson's Bde
+	Begin	
+	L	3 4 159 BG George Anderson
+	U	377 5 M R 33 77 7th Georgia
+	U	311 5 I R 516 273 8th Georgia
+	U	340 4 I R 9 77 9th Georgia
+	U	309 5 M R 197 75 11th Georgia
+	U	525 5 I R 9 77 59th Georgia
+	End	
+	B	Benning's Bde
+	Begin	
+	L	3 3 160 BG Henry Benning
+	U	348 5 I R 45 76 2nd Georgia
+	U	368 6 M R 9 77 15th Georgia
+	U	350 5 I R 33 77 17th Georgia
+	U	351 5 I R 516 273 20th Georgia
+	End	
+	B	Henry's Bn
+	Begin
+        U	5 4 A N 1 3 Branch's N.C. Bty	
+        U	4 4 A N 1 3 German S.C. Art
+        U	4 4 A T 1 3 Palmetto S.C. Art
+        U	6 4 A T 1 3 Rowan N.C. Art
+	End
+        S       500 5 Hood Train A	
+	S	500 5 Hood Train B
+	End
+	D	1 Corps Art Reserve
+        Begin
+	B	Alexander's Bn
+	Begin
+        U	4 4 A U 1 3 Ashland Va Art	
+        U	4 4 A T 393 1 Bedford Va Art
+        U	4 4 A H 415 3 Brook's S.C. Bty
+        U	4 4 A J 470 14 Madison La Art
+        U	4 4 A T 393 1 Rich-Parker Va Art
+        U	4 4 A N 1 3 Bath Va Art
+	End	
+	B	Washington La Arty
+	Begin
+	U	4 5 A N 1 3 1st Co Wash Arty
+        U	4 5 A N 1 3 2nd Co Wash Arty
+        U	4 5 A N 1 3 3rd Co Wash Arty
+        U	4 5 A N 1 3 4th Co Wash Arty
+	End
+	End
+        S	600 5 1 Corps Train A
+        S       600 5 1 Corps Train B		
+	End	
+	C	Second Corps
+	Begin	
+	L	3 3 161 LTG Richard S Ewell
+        U	31 5 C P 247 85 B 39th Va Bn
+        U	241 5 C P 255 86 1st Md Cav Bn
+        U       94 5 I R 43 76 A&B 1st NC SS
+	D	Early's Div
+	Begin	
+	L	3 4 162 MG Jubal A Early
+	B	Hays' Bde
+	Begin	
+	L	3 5 163 BG Harry Hays
+	U	196 4 Z R 97 28 5th Louisiana
+	U	218 4 Z R 71 43 6th Louisiana
+	U	235 5 Z R 83 41 7th Louisiana
+	U	296 5 Z R 99 28 8th Louisiana
+	U	347 4 Z R 97 28 9th Louisiana
+	End	
+	B	Smith's Bde
+	Begin	
+	L	3 4 164 BG William Smith
+        L       1 1 164 13th & 58th Va not present-at Winchester
+        U       275 4 I R 3 76 13th Virginia
+	U	267 4 I R 3 76 31st Virginia
+	U	281 4 M R 3 76 49th Virginia
+	U	254 4 I R 39 69 52nd Virginia
+        U       235 4 I R 39 69 58th Virginia
+	End	
+	B 	Hoke's Bde
+	Begin	
+	L	3 4 165 Col Issac Avery
+        L       1 1 165 1st & 54th NC not present-at Winchester
+        U       220 5 M R 43 76 1st N.Carolina Bn
+	U	509 5 M R 43 76 6th North Carolina
+	U	436 5 M R 7 32 21st North Carolina
+        U       310 4 M R 7 32 54th North Carolina
+	U	297 4 M R 31 78 57th North Carolina
+	End	
+	B	Gordon's Bde
+	Begin	
+	L	3 5 166 BG John B Gordon
+	U	312 6 I R 33 77 13th Georgia
+	U	315 5 I R 45 76 26th Georgia
+	U	252 5 M R 9 77 31st Georgia
+	U	341 5 I R 209 36 38th Georgia
+	U	299 6 M R 527 288 60th Georgia
+	U	288 5 I R 9 77 61st Georgia
+	End
+	B	Jones' Bn
+	Begin
+        U	4 4 A N 1 3 Chrlttsville Va Art
+        U	4 4 A T 393 1 Courtney Va Art
+        U	4 4 A T 393 1 Louisiana Gds Bty
+        U	4 4 A N 1 3 Staunton Va Art
+	End 
+        S       500 5 Early Train A	
+	S	500 5 Early Train B
+	End	
+	D	Johnson's Div
+	Begin	
+	L	4 4 167 MG Edward Johnson
+	B	Steuart's Bde
+	Begin	
+	L	3 4 168 BG George Steuart
+	U	400 5 I R 201 23 1st Maryland Bn
+	U	377 5 M R 291 22 1st North Carolina
+	U	548 5 M R 31 78 3rd North Carolina
+	U	276 4 I R 15 77 10th Virginia
+	U	251 5 M R 279 22 23rd Virginia
+	U	264 4 I R 147 6 37th Virginia
+	End	
+	B	Stonewall Bde
+	Begin	
+	L	3 4 169 BG James Walker
+	U	333 6 I R 133 42 2nd Virginia
+	U	257 6 I R 135 6 4th Virginia
+	U	345 6 I R 27 42 5th Virginia
+	U	148 6 I R 115 8 27th Virginia
+	U	236 6 I R 401 250 33rd Virginia
+	End	
+	B	Nicholls' Bde
+	Begin	
+	L	3 4 170 Col Jesse Williams
+	U	172 6 Z R 407 256 1st Louisiana
+	U	236 5 Z R 71 43 2nd Louisiana
+	U	226 5 Z R 99 28 10th Louisiana
+	U	281 5 Z R 99 28 14th Louisiana
+	U	186 4 Z R 97 28 15th Louisiana
+	End	
+	B	Jones' Bde
+	Begin	
+	L	3 4 171 BG John Jones
+	U	183 4 I R 15 77 22nd Virginia
+	U	280 5 M R 143 8 25th Virginia
+	U	252 5 I R 39 69 42nd Virginia
+	U	227 4 I R 309 22 44th Virginia
+	U	251 5 M R 15 77 48th Virginia
+	U	253 5 I R 385 6 50th Virginia
+	End	
+	B	Latimer's Bn
+	Begin
+        U	4 4 A N 1 3 1st Maryland Bty	
+        U	4 4 A T 1 3 Allegheny Va Art
+        U	4 4 A T 437 1 4th Maryland Bty
+        U	4 4 A T 393 1 Lee Va Art
+	End
+        S       500 5 Johnson Train A	
+	S	500 5 Johnson Train B
+	End	
+	D	Rodes' Div
+	Begin	
+	L	5 5 172 MG Robert E Rodes
+	B	Daniel's Bde
+	Begin	
+	L	3 4 173 BG Junius Daniel
+	U	465 5 M R 43 76 32nd North Carolina
+	U	583 5 M R 31 78 43rd North Carolina
+	U	460 6 M R 7 32 45th North Carolina
+	U	409 5 M R 31 78 53rd North Carolina
+	U	240 5 I R 295 22 2nd N.Carolina Bn
+	End	
+	B	Iverson's Bde
+	Begin	
+	L	1 2 174 BG Alfred Iverson
+	U	473 4 M R 7 32 5th North Carolina
+	U	219 4 I R 43 76 12th North Carolina
+	U	372 4 M R 19 72 20th North Carolina
+	U	316 3 M R 171 8 23rd North Carolina
+	End	
+	B	Doles' Bde
+	Begin	
+	L	3 4 175 BG George Doles
+	U	341 6 I R 516 273 4th Georgia
+	U	327 5 I R 45 76 12th Georgia
+	U	287 6 I R 9 77 21st Georgia
+	U	364 6 M R 527 288 44th Georgia
+	End	
+	B	Ramseur's Bde
+	Begin	
+	L	3 4 176 BG Stephen Ramseur
+	U	243 6 I R 295 22 2nd North Carolina
+	U	196 5 I R 155 8 4th North Carolina
+	U	308 5 M R 19 72 14th North Carolina
+	U	276 5 M R 175 6 30th North Carolina
+	End	
+	B	O'Neil's Bde
+	Begin	
+	L	3 4 177 Col Edward O'Neal
+	U	350 4 M R 35 30 3rd Alabama
+	U	317 5 I R 11 27 5th Alabama
+	U	382 4 M R 263 6 6th Alabama
+	U	317 5 M R 307 22 12th Alabama
+	U	319 4 I R 307 22 26th Alabama
+	End	
+	B	Carter's Bn
+	Begin
+        U	4 4 A T 393 1 Jeff Davis Art	
+        U	4 4 A N 1 3 King Wm Va Art
+        U	4 4 A N 1 3 Louisa-Morris Va Art
+        U	4 4 A T 393 1 Orange Va Art
+	End
+        S       500 5 Rodes Train A	
+	S	500 5 Rodes Train B
+	End	
+	D	2 Corps Art Reserve
+        Begin
+	B	1st Virginia Bn
+	Begin
+        U	4 5 A T 437 1 2nd Co Richmd How	
+        U	4 5 A T 393 1 3rd Co Richmd How
+        U	4 4 A T 393 1 Powhatan Va Art
+        U	4 4 A U 471 11 1st Rockbrg Va Art
+        U	4 4 A N 1 3 Salem Va Art
+	End	
+	B	Nelson's Bn
+	Begin
+        U	4 4 A N 1 3 Amherst Va Art	
+        U	4 4 A N 1 3 Fluvanna Va Art
+        U	4 4 A T 393 1 Ga Regulars Bty
+	End
+        End
+        S       600 5 2 Corps Train A
+        S	600 5 2 Corps Train B	
+	End	
+	C	Third Corps
+	Begin	
+	L	2 3 178 LTG A P Hill
+	D	Anderson's Div
+	Begin	
+	L	4 5 179 MG R H Anderson
+	B	Wilcox's Bde
+	Begin	
+	L	3 4 180 BG Cadmus Wilcox
+	U	477 5 M R 259 35 8th Alabama
+	U	306 4 I R 11 27 9th Alabama
+	U	311 5 I R 23 30 10th Alabama
+	U	312 5 I R 263 6 11th Alabama
+	U	316 5 M R 23 30 14th Alabama
+	End	
+	B	Wright's Bde
+	Begin	
+	L	3 4 181 BG Ambrose Wright
+	U	411 5 M R 33 77 3rd Georgia
+	U	400 5 I R 45 76 22nd Georgia
+	U	395 5 M R 527 288 48th Georgia
+	U	173 4 I R 301 22 2nd Georgia Bn
+	End	
+	B	Mahone's Bde
+	Begin	
+	L	3 4 182 BG William Mahone
+	U	288 4 I R 135 6 6th Virginia
+	U	348 5 M R 39 69 12th Virginia
+	U	270 4 I R 39 69 16th Virginia
+	U	276 5 M R 3 76 41st Virginia
+	U	356 5 I R 151 6 61st Virginia
+	End	
+	B	Florida Bde
+	Begin	
+	L	2 2 183 Col David Lang
+	U	242 4 M R 95 34 2nd Florida
+	U	321 5 M R 177 8 5th Florida
+	U	176 5 M R 179 6 8th Florida
+	End	
+	B	Posey's Bde
+	Begin	
+	L	3 4 184 BG Carnot Posey
+	U	305 4 I R 91 26 12th Mississippi
+	U	385 4 I R 351 26 16th Mississippi
+	U	372 4 M R 55 26 19th Mississippi
+	U	256 4 I R 67 26 48th Mississippi
+	End
+	B	Sumter Ga Bn
+	Begin
+        U	6 5 A N 415 3 Co A Sumter Ga Bn	
+        U	6 5 A H 415 3 Co B Sumter Ga Bn
+        U	6 5 A T 393 1 Co C Sumter Ga Bn
+	End
+        S       500 5 Anderson Train A	
+	S	500 5 Anderson Train B
+	End	
+	D	Heth's Div
+	Begin	
+	L	3 3 185 MG Harry Heth
+	B	Pettigrew's Bde
+	Begin	
+	L	3 4 186 BG James Pettigrew
+        L       1 1 186 44th NC not present-in MD
+	U	617 4 M R 7 32 11th North Carolina
+	U	839 5 M R 43 76 26th North Carolina
+        U       560 4 M R 43 76 44th North Carolina
+	U	567 4 M R 31 78 47th North Carolina
+	U	553 4 M R 43 76 52nd North Carolina
+	End	
+	B	Brockenbgh's Bde
+	Begin	
+	L	2 3 187 Col J M Brockenbrough
+	U	254 3 I R 15 77 40th Virginia
+	U	209 3 I R 27 42 47th Virginia
+	U	268 4 I R 3 76 55th Virginia
+	U	237 3 M R 305 22 22nd Virginia Bn
+	End	
+	B Archer's Bde
+	Begin	
+	L	2 3 188 BG James Archer
+	U	308 3 I R 35 30 13th Alabama
+	U	135 5 M R 297 22 5th Alabama Bn
+	U	281 4 I R 125 38 1st Tennessee (PA)
+	U	249 4 I R 51 38 7th Tennessee
+	U	220 4 I R 63 38 14th Tennessee
+	End	
+	B	Davis' Bde
+	Begin	
+	L	2 3 189 BG J R Davis
+	U	492 4 I R 355 26 2nd Mississippi
+	U	592 5 I R 357 33 11th Mississippi
+	U	575 3 I R 91 26 42nd Mississippi
+	U	640 4 M R 7 32 55th North Carolina
+	End	
+	B	Garnett's Bn
+	Begin
+        U	3 4 A T 393 1 Donaldson La Art	
+        U	4 4 A N 1 3 Norfolk Va Art
+        U	4 4 A N 1 3 Pittsylvnia Va Art
+        U	4 4 A H 393 1 Va Lt Art Blues
+	End
+        S       500 5 Heth Train A	
+	S	500 5 Heth Train B
+	End	
+	D	Pender's Div
+	Begin	
+	L	4 5 190 MG William Pender
+	B	Perrin's Bde
+	Begin	
+	L	3 4 191 Col Abner Perrin
+	U	328 5 I R 119 25 1st S.Carolina (PA)
+	U	366 6 M R 127 24 1st S.Carolina Rfls
+	U	368 5 I R 45 76 12th South Carolina
+	U	390 5 I R 287 22 13th South Carolina
+	U	428 5 I R 289 22 14th South Carolina
+	End	
+	B	Lane's Bde
+	Begin	
+	L	3 4 192 BG James Lane
+	U	291 5 I R 165 67 7th North Carolina
+	U	346 5 M R 19 72 18th North Carolina
+	U	345 5 M R 173 67 28th North Carolina
+	U	368 5 M R 31 78 33rd North Carolina
+	U	379 5 M R 195 32 37th North Carolina
+	End	
+	B	Thomas' Bde
+	Begin	
+	L	3 4 193 BG Edward Thomas
+	U	305 4 I R 516 273 14th Georgia
+	U	307 4 I R 527 288 35th Georgia
+	U	309 4 M R 9 77 45th Georgia
+	U	329 4 I R 251 6 49th Georgia
+	End	
+	B	Scales' Bde
+	Begin	
+	L	3 4 194 BG Alfred Scales
+	U	232 6 M R 31 78 13th North Carolina
+	U	321 5 M R 43 76 16th North Carolina
+	U	267 5 M R 167 72 22nd North Carolina
+	U	311 5 M R 193 39 34th North Carolina
+	U	216 5 I R 19 72 38th North Carolina
+	End	
+	B	Poague's Bn
+	Begin
+        U	4 4 A T 393 1 Albemarle Va Art	
+        U	4 4 A N 1 3 Charlotte N.C. Art
+        U	4 4 A N 1 3 Madison Miss Art
+        U	4 4 A N 1 3 Warrenton Va Art
+	End
+        S       500 5 Pender Train A	
+	S	500 5 Pender Train B
+	End	
+	D	3 Corps Art Reserve
+        Begin
+	B	McIntosh's Bn
+	Begin
+        U	4 4 A N 1 3 Danville Va Art	
+        U	2 5 A W 393 1 1/Hardaway's Ala Bty
+        U       2 4 A T 1 3 2/Hardaway's Ala Bty
+        U	4 4 A T 1 3 2nd Rockbrg Va Art
+        U	4 4 A T 393 1 Rich-Johnson Va Art
+	End	
+	B	Pegram's Bn
+	Begin
+        U	4 4 A N 1 3 Crenshaw's Va Bty	
+        U	4 4 A T 393 1 Fredricksbg Va Art
+        U	4 4 A N 1 3 Letcher Va Art
+        U	4 4 A T 393 1 Pee Dee S.C. Art
+        U	4 4 A N 1 3 Purcell Va Art
+	End
+        End
+        S	600 5 3 Corps Train A
+        S       600 5 3 Corps Train B	
+	End
+        C	Fourth Corps
+	Begin	
+	L	4 5 195 LTG D H Hill
+        L       1 1 195 This Corps is for what if use
+	D	Whiting's Div
+	Begin	
+	L	3 4 196 MG W H C Whiting
+	B	Cooke's Bde
+	Begin	
+	L	3 4 198 BG John Cooke
+	U	420 4 I R 7 32 15th North Carolina
+	U	503 4 I R 31 78 27th North Carolina
+	U	488 3 I R 43 76 46th North Carolina
+	U	431 3 I R 19 72 48th North Carolina
+	End	
+	B	Colquitt's Bde
+	Begin	
+	L	3 4 199 BG Alfred Colquitt
+	U	314 5 I R 21 36 6th Georgia
+	U	307 5 I R 45 76 19th Georgia
+	U	322 4 I R 205 39 23rd Georgia
+	U	280 4 I R 33 77 27th Georgia
+	U	303 4 I R 389 22 28th Georgia
+	End	
+	B	Martin's Bde
+	Begin	
+	L	3 4 200 BG James Martin
+	U	700 3 I R 31 78 17th North Carolina
+	U	614 3 I R 43 76 42nd North Carolina
+	U	663 3 I R 19 72 50th North Carolina
+        U       665 3 I R 19 72 51st North Carolina
+	End	
+	B	Moseley's Bn
+	Begin
+	U	4 4 A H 13 23 Dabney's Va Bty
+	U	4 4 A N 1 3 Hankin's Va Bty
+	U	4 4 A T 437 1 Guy's Va Bty
+	U	4 4 A T 437 1 Page's Va Bty
+	End
+        S       500 5 Whiting Train A	
+	S	500 5 Whiting Train B
+	End	
+	D	Jones's Div
+	Begin	
+	L	3 4 201 MG Samuel Jones
+	B	Echols' Bde
+	Begin	
+	L	3 4 202 BG John Echols
+	U	425 4 I R 305 22 22nd Virginia
+	U	510 3 I R 319 22 45th Virginia
+	U	212 3 M R 279 22 23rd Virginia Bn
+	U	255 3 M R 281 22 26th Virginia Bn
+	End	
+	B	McCausland's Bde
+	Begin	
+	L	3 4 203 Col J McCausland
+	U	467 3 I R 39 69 36th Virginia
+        U       480 3 I R 39 69 46th Virginia
+	U	484 3 I R 15 77 60th Virginia
+	End	
+	B	Wharton's Bde
+	Begin	
+	L	2 3 204 Col George Wharton
+	U	502 3 I R 3 76 51st Virginia
+        U       475 3 I R 3 76 59th Virginia
+	U	211 3 M R 283 39 30th Virginia Bn
+	End	
+	B	Boggs' Bn
+	Begin
+	U	4 4 A N 1 3 Martin's Va Bty
+	U	4 4 A N 1 3 Johnston's Va Bty
+	U	4 4 A H 13 23 Bty A 13th N.C.
+	End
+        S       500 5 Jones Train A	
+	S	500 5 Jones Train B
+	End	
+	D	Taliaferro's Div
+	Begin	
+	L	4 5 205 MG Wm Taliaferro
+	B	Ripley's Bde
+	Begin	
+	L	3 4 206 BG Roswell Ripley
+        U	275 4 M R 211 24 1st S.Carolina Bn
+	U	255 4 I R 211 24 7th S.Carolina Bn
+	U	470 4 I R 10 76 11th South Carolina
+	U	725 3 M R 22 76 20th South Carolina
+	U	605 3 M R 22 76 21st South Carolina
+	U	585 3 M R 283 39 25th South Carolina
+	End	
+	B	Mercer's Bde
+	Begin	
+	L	3 4 207 BG Henry Mercer
+        U	214 3 I R 33 77 18th Georgia Bn
+        U	330 4 I R 9 77 32nd Georgia
+        U	408 3 I R 33 77 54th Georgia
+        U       355 3 M R 9 77 57th Georgia
+	U	385 3 M R 9 77 62nd Georgia
+        U	375 3 M R 9 77 63rd Georgia
+        U	400 3 M R 9 77 64th Georgia
+	End
+        B	Finnegan's Bde
+	Begin	
+	L	3 4 207 BG Joseph Finnegan
+        U	305 4 I R 95 34 1st Florida Bn
+        U	330 4 I R 95 34 2nd Florida Bn
+        U	308 4 I R 95 34 4th Florida Bn
+        U       320 3 M R 95 34 6th Florida Bn
+	End
+	B	Branch's Bn
+	Begin
+	U	5 4 A N 1 3 Confederate Gds
+	U	4 4 A N 1 3 Coit's SC Bty
+	U	4 4 A H 13 23 Young's Va Bty
+	U	6 4 A T 437 1 Nichols Va Bty
+	End
+        S       500 5 Taliaferro Train A	
+	S	500 5 Taliaferro Train B
+	End	
+	D	4 Corps Art Reserve
+	Begin
+	B	Andrew's Bn
+	Begin
+	U	4 4 A T 437 1 Bty F 1st N.C.
+	U	6 4 H H 13 23 Waters' N.C. Bty
+	U	4 4 A T 437 1 Hudnall's N.C. Bty
+	U	4 4 A T 437 1 Peyton's N.C. Bty
+	End	
+	B	Ells' Bn
+	Begin	
+	U	4 4 A T 437 1 Slaten's Ga Bty
+	U	4 4 H T 493 12 Lewis' Va Bty
+	U	4 4 A H 13 23 Bty C 3rd N.C. Bn
+	U	4 4 A T 437 1 Bladen Stars Bty
+        End
+        End
+        S       600 5 4 Corps Train A
+        S	600 5 4 Corps Train B	
+	End	
+	D	Cavalry Division
+	Begin	
+	L	5 5 208 MG J E B Stuart
+	B	Hampton's Bde
+	Begin	
+	L	5 6 209 BG Wade Hampton
+	U	407 6 C R 73 54 1st N.Carolina Cav
+	U	339 6 C R 75 57 1st S.Carolina Cav
+	U	186 6 C R 75 57 2nd S.Carolina Cav
+	U	325 5 C P 229 59 Cobb's Ga Lgn
+	U	246 5 C R 77 58 Jeff Davis Ms Lgn
+	U	238 6 C P 229 81 Phillips Ga Lgn
+	End	
+	B	Fitzhugh Lee's Bde
+	Begin	
+	L	4 5 210 BG Fitzhugh Lee
+	U	359 6 C R 235 51 1st Virginia Cav
+	U	448 5 C P 61 52 2nd Virginia Cav
+	U	247 5 C R 49 3 3rd Virginia Cav
+	U	544 5 C R 237 53 4th Virginia Cav
+	U	250 5 C R 239 83 5th Virginia Cav
+	End	
+	B	Robertson's Bde
+	Begin	
+	L	3 4 212 BG Beverly Robertson
+	U	504 4 C R 85 50 4th N.Carolina Cav
+	U	458 3 C R 73 54 5th N.Carolina Cav
+	End	
+	B	Jenkins' Bde
+	Begin	
+	L	3 4 213 BG Albert Jenkins
+	U	267 4 C R 61 52 14th Virginia Cav
+	U	260 4 C P 61 52 16th Virginia Cav
+	U	265 3 C R 49 3 17th Virginia Cav
+	U	172 3 C P 345 52 34th Va Cav Bn
+	U	125 3 C R 347 52 36th Va Cav Bn
+	U	4 4 H H 57 23 Jackson's Va Bty
+	End	
+	B	Jones' Bde
+	Begin	
+	L	3 4 214 BG William Jones
+        L       1 1 214 12th Va was in Shenandoah
+	U	425 5 C R 61 52 6th Virginia Cav
+	U	328 5 C R 49 3 7th Virginia Cav
+	U	354 4 C R 61 52 11th Virginia Cav
+	U	404 4 C R 61 52 12th Virginia Cav
+        U	4 4 H H 57 23 Chew's Va Bty
+	End	
+	B	W H F Lee's Bde
+	Begin	
+	L	3 4 215 Col John Chambless
+        L       1 1 215 15th Va was in Virginia
+	U	161 5 C P 85 50 2nd N.Carolina Cav
+	U	558 6 C R 347 52 9th Virginia Cav
+	U	265 5 C R 61 52 10 Cos 10th Va Cav
+	U	330 5 C R 49 3 13th Virginia Cav
+	U	311 5 C R 49 3 15th Virginia Cav
+	End	
+	B	Horse Artillery
+	Begin
+        U	4 5 H T 395 15 1st Stuart Va Art
+        U       4 4 H T 395 15 Ashby's Va Art
+        U	4 4 H X 395 15 2nd Maryland Bty
+        U	4 4 H O 395 15 Washington SC Art
+        U	4 5 H T 13 23 2nd Stuart Va Art
+	End 
+	B	Imboden's Cmd
+	Begin	
+	L	2 3 217 BG John Imboden
+	U	410 4 C R 61 52 1/18th Va Cav
+        U       480 4 C R 61 52 2/18th Va Cav
+	U	500 3 C R 49 3 1/62nd Va Mtd Inf
+        U       570 3 C R 49 3 2/62nd Va Mtd Inf
+	U	85 2 C P 345 3 Va Partisan Rngrs
+	U	4 4 H N 57 23 McClanahan's Bty
+	End
+	S	500 5 Cavalry Train
+	End
+        End	
+Union	S	600 4 Reserve Train A
+Union	S	600 4 Reserve Train B
+Union	S	600 4 Reserve Train C
+Union	S	600 4 Reserve Train D
+Union	S	600 4 Reserve Train E
+Confederate     S       600 5 Reserve Train A
+Confederate     S       600 5 Reserve Train B
+Confederate     S       600 5 Reserve Train C
+Confederate     S       600 5 Reserve Train D
+Confederate     S       600 5 Reserve Train E
