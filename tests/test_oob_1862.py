@@ -46,3 +46,11 @@ def test_date_correct_parent_transfers_and_state_flags():
         for counter in oob.snapshot(snap_day)["counters"]:
             assert counter["state_flag"] in ("MIXED", "UNKNOWN") or len(counter["state_flag"]) == 2
             assert isinstance(counter["command_chain"], list)
+
+
+def test_no_reversed_historical_windows():
+    oob = OOB.load()
+    assert all(not r["valid_to"] or r["valid_from"] <= r["valid_to"]
+               for r in oob.assignments)
+    assert all(not r["valid_to"] or r["valid_from"] <= r["valid_to"]
+               for r in oob.commands)

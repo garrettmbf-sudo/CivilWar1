@@ -210,6 +210,14 @@ def validate(oob: OOB, repo_root: str | None = None) -> list[str]:
                 e(f"duplicate {key}: {r[key]} in {fname}")
             seen.add(r[key])
 
+    # Invalid reverse-date sentinels must not masquerade as historical records.
+    for row in oob.assignments:
+        if row["valid_to"] and row["valid_from"] > row["valid_to"]:
+            e(f"assignment {row['assignment_id']}: valid_from after valid_to")
+    for row in oob.commands:
+        if row["valid_to"] and row["valid_from"] > row["valid_to"]:
+            e(f"command {row['brigade_id']}: valid_from after valid_to")
+
     # 4 parents exist
     for fid, f in oob.formations.items():
         p = f["parent_id"]
