@@ -62,3 +62,9 @@ The new `render_valley_v3_network.py` uses **original procedural color and cosme
 * **Blue Ridge / Massanutten gaps:** mountain tiles must not erase the route, but a broad rectangular hole in the ridge is not a verified gap. Only documented roads through correct passes should grant movement.
 
 **Branch policy:** These are additional candidate tooling and evidence for the open topology-repair PR. Preserve all audited images and save data. Do not merge without a reliable in-game verification plan.
+
+## Edge-exact preview
+
+![A provisional 125×130-hex Valley map showing exact traced roads, rivers and railways, blocked crossings and cosmetic hillshade](preview_edge_exact.jpg)
+
+The image above is a reduced diagnostic preview, not a native game screenshot, DEM, or historical georeferencing result. Rebuild it using `python render_valley_v3_network.py --script build_valley_map_v3.ps1 --output Valley_Map_v3_edge_exact.png`.
