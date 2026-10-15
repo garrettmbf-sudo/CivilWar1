@@ -1,5 +1,3 @@
-# 1864 — Sheridan's Valley Campaign
+# Deferred concept — Sheridan's 1864 Valley Campaign
 
-Scenario skeleton and notes for the 1864 campaign. Tasks:
-- Place Union cavalry and infantry corps per historic orders of battle.
-- Design objectives to cut off Confederate supply and destroy infrastructure.
+**Out of scope for the first release.** Preserved only so earlier planning is not destroyed. Do not add scenarios, units or content here until the complete Jackson 1862 campaign is working and the user explicitly expands scope.

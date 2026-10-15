@@ -1,7 +1,9 @@
-# Documentation index
+# Documentation index — 1862 Shenandoah Valley only
 
-See the files in this directory for design notes, reverse-engineering writeups, and contributor guidance.
+- [Development roadmap](roadmap.md) — priorities, exit tests and actual status
+- [Scenario design](scenario-design.md) — map, brigades and operational play
+- [Repository layout and preservation](repository-layout.md) — asset locations and migration rules
+- [Map format evidence log](sav-format.md) — no verified writer yet
+- [Mod packaging evidence](mod-format.md) — native packaging unverified
 
-- docs/sav_format.md — working notes and spec as we reverse-engineer `.sav` files
-- docs/mod_structure.md — recommended mod layout for Hex of Steel
-- docs/roadmap.md — planned tasks for parsing and map generation
+Legacy aliases `sav_format.md` and `mod_structure.md` are intentionally retained to keep previous links resolving.
