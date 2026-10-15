@@ -16,7 +16,7 @@ import csv
 import json
 import os
 from dataclasses import dataclass, field
-from datetime import date
+from datetime import date, timedelta
 
 DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "historical_data")
 
@@ -241,7 +241,9 @@ def validate(oob: OOB, repo_root: str | None = None) -> list[str]:
             e(f"{fid} ({f['faction']}) cross-assigned under {p} ({oob.formations[p]['faction']})")
 
     # 3 every brigade references valid commander on its active dates
-    all_days = [date(1862, 3, 23), date(1862, 5, 8), date(1862, 5, 25), date(1862, 6, 9)]
+    # Check every day, not only the four published scenario snapshots.
+    first, last = date(1862, 3, 23), date(1862, 6, 30)
+    all_days = [first + timedelta(days=n) for n in range((last - first).days + 1)]
     for fid, f in oob.formations.items():
         if f["level"] != "brigade" or f["type"] == "hq":
             continue
