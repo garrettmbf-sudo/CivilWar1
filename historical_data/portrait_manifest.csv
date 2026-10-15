@@ -1,0 +1,52 @@
+faction,officer,rank_group,filename,github_path,status,campaign_priority,audit_status
+CSA,"Thomas J. Jackson",general,mdl_CSA_TJJackson.png,mdl_CSA_TJJackson.png,PRESENT,primary,approved_existing
+CSA,"Richard S. Ewell",general,mdl_CSA_REwell.png,mdl_CSA_REwell.png,PRESENT,primary,approved_existing
+CSA,"Edward Johnson",general,mdl_CSA_EJohnson.png,mdl_CSA_EJohnson.png,PRESENT,primary,approved_existing
+CSA,"Richard B. Garnett",general,mdl_CSA_RGarnett.png,mdl_CSA_RGarnett.png,PRESENT,primary,approved_existing
+CSA,"Charles S. Winder",general,mdl_CSA_CSWinder.png,mdl_CSA_CSWinder.png,PRESENT,primary,approved_existing
+CSA,"William B. Taliaferro",general,mdl_CSA_WBTaliaferro.png,mdl_CSA_WBTaliaferro.png,PRESENT,primary,approved_existing
+CSA,"Arnold Elzey",general,mdl_CSA_AElzey.png,mdl_CSA_AElzey.png,PRESENT,primary,approved_existing
+CSA,"Isaac R. Trimble",general,mdl_CSA_ITrimble.png,mdl_CSA_ITrimble.png,PRESENT,primary,approved_existing
+CSA,"Richard Taylor",general,mdl_CSA_RTaylor.png,mdl_CSA_RTaylor.png,PRESENT,primary,approved_existing
+CSA,"George H. Steuart",general,mdl_CSA_GHSteuart.png,,MISSING,primary,pending_new
+CSA,"Turner Ashby",general,mdl_CSA_TAshby.png,mdl_CSA_TAshby.png,PRESENT,primary,approved_existing
+CSA,"Jesse S. Burks",colonel,mdl_CSA_JSBurks.png,,MISSING,primary,pending_new
+CSA,"Samuel V. Fulkerson",colonel,mdl_CSA_SVFulkerson.png,,MISSING,primary,pending_new
+CSA,"John A. Campbell",colonel,mdl_CSA_JACampbell.png,,MISSING,primary,pending_new
+CSA,"John M. Patton Jr.",colonel,mdl_CSA_JMPatton.png,,MISSING,primary,pending_new
+CSA,"Zephaniah T. Conner",colonel,mdl_CSA_ZTConner.png,,MISSING,support,pending_new
+CSA,"William C. Scott",colonel,mdl_CSA_WCScott.png,,MISSING,primary,pending_new
+CSA,"James A. Walker",colonel,mdl_CSA_JAWalker.png,reference/mdl_CSA_JAWalker.png,PRESENT,primary,approved_existing
+CSA,"Bradley T. Johnson",colonel,mdl_CSA_BTJohnson.png,,MISSING,primary,pending_new
+CSA,"Thomas T. Munford",colonel,mdl_CSA_TMunford.png,mdl_CSA_TMunford.png,PRESENT,primary,approved_existing
+CSA,"Thomas S. Flournoy",colonel,mdl_CSA_TSFlournoy.png,,MISSING,support,pending_new
+CSA,"Stapleton Crutchfield",colonel,mdl_CSA_SCrutchfield.png,,MISSING,primary,pending_new
+USA,"Nathaniel P. Banks",general,mdl_USA_NPBanks.png,reference/mdl_USA_NPBanks.png,PRESENT,primary,approved_existing
+USA,"John C. Fremont",general,mdl_USA_JCFremont.png,reference/mdl_USA_JCFremont.png,PRESENT,primary,approved_existing
+USA,"Irvin McDowell",general,mdl_USA_IMcDowell.png,reference/mdl_USA_IMcDowell.png,PRESENT,secondary,approved_existing
+USA,"James Shields",general,mdl_USA_JShields.png,reference/mdl_USA_JShields.png,PRESENT,primary,approved_existing
+USA,"Alpheus S. Williams",general,mdl_USA_AWilliams.png,reference/mdl_USA_AWilliams.png,PRESENT,primary,approved_existing
+USA,"John W. Geary",general,mdl_USA_JGeary.png,reference/mdl_USA_JGeary.png,PRESENT,secondary,approved_existing
+USA,"John P. Hatch",general,mdl_USA_JHatch.png,reference/mdl_USA_JHatch.png,PRESENT,primary,approved_existing
+USA,"Robert H. Milroy",general,mdl_USA_RMilroy.png,reference/mdl_USA_RMilroy.png,PRESENT,primary,approved_existing
+USA,"Robert C. Schenck",general,mdl_USA_RSchenk.png,reference/mdl_USA_RSchenk.png,PRESENT,primary,approved_existing
+USA,"Louis Blenker",general,mdl_USA_LBlenker.png,reference/mdl_USA_LBlenker.png,PRESENT,primary,approved_existing
+USA,"Julius H. Stahel",general,mdl_USA_JStahel.png,reference/mdl_USA_JStahel.png,PRESENT,primary,approved_existing
+USA,"Henry Bohlen",general,mdl_USA_HBohlen.png,,MISSING,primary,pending_new
+USA,"George D. Bayard",general,mdl_USA_GDBayard.png,reference/mdl_USA_GDBayard.png,PRESENT,primary,approved_existing
+USA,"Nathan Kimball",general,mdl_USA_NKimball.png,reference/mdl_USA_NKimball.png,PRESENT,primary,approved_existing
+USA,"Orris S. Ferry",general,mdl_USA_OSFerry.png,,MISSING,primary,pending_new
+USA,"Erastus B. Tyler",general,mdl_USA_EBTyler.png,reference/mdl_USA_EBTyler.png,PRESENT,primary,approved_existing
+USA,"Jeremiah C. Sullivan",general,mdl_USA_JCSullivan.png,reference/mdl_USA_JCSullivan.png,PRESENT,primary,approved_existing
+USA,"Samuel W. Crawford",general,mdl_USA_SCrawford.png,reference/mdl_USA_SCrawford.png,PRESENT,review,approved_existing
+USA,"George S. Greene",general,mdl_USA_GGreene.png,reference/mdl_USA_GGreene.png,PRESENT,review,approved_existing
+USA,"George L. Hartsuff",general,mdl_USA_GHartsuff.png,reference/mdl_USA_GHartsuff.png,PRESENT,review,approved_existing
+USA,"John J. Abercrombie",general,mdl_USA_JAbercrombie.png,reference/mdl_USA_JAbercrombie.png,PRESENT,review,approved_existing
+USA,"George H. Gordon",general,mdl_USA_GHGordon.png,reference/mdl_USA_GHGordon.png,PRESENT,primary,approved_existing
+USA,"John R. Kenly",colonel,mdl_USA_JKenly.png,reference/mdl_USA_JKenly.png,PRESENT,primary,approved_existing
+USA,"Dudley Donnelly",colonel,mdl_USA_DDonnelly.png,,MISSING,primary,pending_new
+USA,"Samuel S. Carroll",colonel,mdl_USA_SCarroll.png,reference/mdl_USA_SCarroll.png,PRESENT,primary,approved_existing
+USA,"John A. Koltes",colonel,mdl_USA_JAKoltes.png,,MISSING,primary,pending_new
+USA,"Gustave P. Cluseret",colonel,mdl_USA_GPCluseret.png,,MISSING,primary,pending_new
+USA,"Thornton F. Brodhead",colonel,mdl_USA_TFBrodhead.png,,MISSING,secondary,pending_new
+USA,"John W. Stiles",colonel,mdl_USA_JWStiles.png,,MISSING,review,pending_new

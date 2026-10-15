@@ -1,37 +1,37 @@
-"""Validate a .sav file heuristically.
+"""Basic file inspection only — NOT verification of Hex of Steel compatibility.
 
-This script runs basic checks (magic bytes, size vs width*height if encoded) and exits non-zero on error.
+The previous validator assumed an invented b'HSAV' magic and could report
+"passed" for invalid or arbitrary files. Fail closed until an engine-verified
+format/parser and game loading test exist.
 """
+
+from __future__ import annotations
+
 import argparse
-import sys
+from pathlib import Path
 
 
-def validate(path):
-    with open(path, 'rb') as f:
-        data = f.read()
-    if len(data) < 8:
-        print('File too small to be valid')
+def validate(path: str) -> int:
+    sample = Path(path)
+    if not sample.is_file():
+        print(f"Not found: {sample}")
         return 2
-    magic = data[:4]
-    if magic != b'HSAV':
-        print('Warning: magic bytes not recognized (found', magic, ')')
-    # naive width/height check if present
-    try:
-        width = int.from_bytes(data[4:6], 'little')
-        height = int.from_bytes(data[6:8], 'little')
-        expected = width * height
-        actual = len(data) - 8
-        if actual < expected:
-            print(f'File appears truncated: expected at least {expected} tile bytes, found {actual}')
-            return 3
-    except Exception:
-        pass
-    print('Basic checks passed (note: format not fully known yet)')
-    return 0
+    size = sample.stat().st_size
+    if size == 0:
+        print(f"Empty file: {sample}")
+        return 2
+    with sample.open("rb") as f:
+        header = f.read(32)
+    print(f"File exists: {sample} ({size} bytes). Header: {header.hex()}")
+    print(
+        "UNVERIFIED: no documented Hex of Steel .sav schema or in-game "
+        "round-trip yet. Existence and readable bytes are not a validation pass."
+    )
+    return 1
 
-if __name__ == '__main__':
-    p = argparse.ArgumentParser()
-    p.add_argument('file')
-    args = p.parse_args()
-    code = validate(args.file)
-    sys.exit(code)
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("file")
+    args = parser.parse_args()
+    raise SystemExit(validate(args.file))

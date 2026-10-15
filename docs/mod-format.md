@@ -1,25 +1,13 @@
-# Mod Format Notes
+# Hex of Steel mod packaging — verification status
 
-This file documents the structure we expect from Hex of Steel mods and how to package them for distribution.
+**Not yet verified:** a complete native package layout, loader behavior, or a ready-to-install release.
 
-Current assumptions
-- The game loads custom content from a mod package.
-- The final package should be zip-based for distribution.
-- Game-ready content should live under `/mod`.
-- We should use an intermediate JSON representation before exporting to `.sav`.
+The proposed `mod/` folder remains reserved for **tested game-ready assets**, not reference images or arbitrary zip contents. Existing Harmony example files under `docs/3574617535/` are **research examples**, not permission to redistribute their binaries.
 
-Likely package structure
-- `/mod/metadata.json`
-- `/mod/maps/`
-- `/mod/scenarios/`
-- `/mod/config/`
-- `/mod/assets/`
+Validation required before releasing:
+1. Inspect the installed game's actual mod folder structure and compatible Workshop mods.
+2. Record exact data/config names, dependency locations and game version.
+3. Verify packaging by loading the mod in-game.
+4. Exclude proprietary binaries and images whose redistribution permission is unverified.
 
-Rules for packaging
-- Keep data that is human-editable in JSON or YAML.
-- Build a zip only after validation passes.
-- Keep the artifact reproducible by writing a deterministic build script.
-
-Unknowns
-- The exact Hex of Steel mod loader format is not yet confirmed.
-- We must validate against community mods or sample files before claiming compatibility.
+Legacy path `docs/mod_structure.md` remains for compatibility but points here.
