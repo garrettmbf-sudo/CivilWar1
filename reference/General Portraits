@@ -1,1 +1,54 @@
 
+
+faction,officer,rank_group,filename,github_location,status,campaign_priority
+CSA,Thomas J. Jackson,general,mdl_CSA_TJJackson.png,root,PRESENT,primary
+CSA,Richard S. Ewell,general,mdl_CSA_REwell.png,root,PRESENT,primary
+CSA,Edward Johnson,general,mdl_CSA_EJohnson.png,root,PRESENT,primary
+CSA,Richard B. Garnett,general,mdl_CSA_RGarnett.png,root,PRESENT,primary
+CSA,Charles S. Winder,general,mdl_CSA_CSWinder.png,root,PRESENT,primary
+CSA,William B. Taliaferro,general,mdl_CSA_WBTaliaferro.png,root,PRESENT,primary
+CSA,Arnold Elzey,general,mdl_CSA_AElzey.png,root,PRESENT,primary
+CSA,Isaac R. Trimble,general,mdl_CSA_ITrimble.png,root,PRESENT,primary
+CSA,Richard Taylor,general,mdl_CSA_RTaylor.png,root,PRESENT,primary
+CSA,George H. Steuart,general,mdl_CSA_GHSteuart.png,missing,MISSING,primary
+CSA,Turner Ashby,general,mdl_CSA_TAshby.png,root,PRESENT,primary
+CSA,Jesse S. Burks,colonel,mdl_CSA_JSBurks.png,missing,MISSING,primary
+CSA,Samuel V. Fulkerson,colonel,mdl_CSA_SVFulkerson.png,missing,MISSING,primary
+CSA,John A. Campbell,colonel,mdl_CSA_JACampbell.png,missing,MISSING,primary
+CSA,John M. Patton Jr.,colonel,mdl_CSA_JMPatton.png,missing,MISSING,primary
+CSA,Zephaniah T. Conner,colonel,mdl_CSA_ZTConner.png,missing,MISSING,support
+CSA,William C. Scott,colonel,mdl_CSA_WCScott.png,missing,MISSING,primary
+CSA,James A. Walker,colonel,mdl_CSA_JAWalker.png,reference,PRESENT,primary
+CSA,Bradley T. Johnson,colonel,mdl_CSA_BTJohnson.png,missing,MISSING,primary
+CSA,Thomas T. Munford,colonel,mdl_CSA_TMunford.png,root,PRESENT,primary
+CSA,Thomas S. Flournoy,colonel,mdl_CSA_TSFlournoy.png,missing,MISSING,support
+CSA,Stapleton Crutchfield,colonel,mdl_CSA_SCrutchfield.png,missing,MISSING,primary
+USA,Nathaniel P. Banks,general,mdl_USA_NPBanks.png,reference,PRESENT,primary
+USA,John C. Fremont,general,mdl_USA_JCFremont.png,reference,PRESENT,primary
+USA,Irvin McDowell,general,mdl_USA_IMcDowell.png,reference,PRESENT,secondary
+USA,James Shields,general,mdl_USA_JShields.png,reference,PRESENT,primary
+USA,Alpheus S. Williams,general,mdl_USA_AWilliams.png,reference,PRESENT,primary
+USA,John W. Geary,general,mdl_USA_JGeary.png,reference,PRESENT,secondary
+USA,John P. Hatch,general,mdl_USA_JHatch.png,reference,PRESENT,primary
+USA,Robert H. Milroy,general,mdl_USA_RMilroy.png,reference,PRESENT,primary
+USA,Robert C. Schenck,general,mdl_USA_RSchenk.png,reference,PRESENT,primary
+USA,Louis Blenker,general,mdl_USA_LBlenker.png,reference,PRESENT,primary
+USA,Julius H. Stahel,general,mdl_USA_JStahel.png,reference,PRESENT,primary
+USA,Henry Bohlen,general,mdl_USA_HBohlen.png,missing,MISSING,primary
+USA,George D. Bayard,general,mdl_USA_GDBayard.png,reference,PRESENT,primary
+USA,Nathan Kimball,general,mdl_USA_NKimball.png,reference,PRESENT,primary
+USA,Orris S. Ferry,general,mdl_USA_OSFerry.png,missing,MISSING,primary
+USA,Erastus B. Tyler,general,mdl_USA_EBTyler.png,reference,PRESENT,primary
+USA,Jeremiah C. Sullivan,general,mdl_USA_JCSullivan.png,reference,PRESENT,primary
+USA,Samuel W. Crawford,general,mdl_USA_SCrawford.png,reference,PRESENT,review
+USA,George S. Greene,general,mdl_USA_GGreene.png,reference,PRESENT,review
+USA,George L. Hartsuff,general,mdl_USA_GHartsuff.png,reference,PRESENT,review
+USA,John J. Abercrombie,general,mdl_USA_JAbercrombie.png,reference,PRESENT,review
+USA,George H. Gordon,general,mdl_USA_GHGordon.png,reference,PRESENT,primary
+USA,John R. Kenly,colonel,mdl_USA_JKenly.png,reference,PRESENT,primary
+USA,Dudley Donnelly,colonel,mdl_USA_DDonnelly.png,missing,MISSING,primary
+USA,Samuel S. Carroll,colonel,mdl_USA_SCarroll.png,reference,PRESENT,primary
+USA,John A. Koltes,colonel,mdl_USA_JAKoltes.png,missing,MISSING,primary
+USA,Gustave P. Cluseret,colonel,mdl_USA_GPCluseret.png,missing,MISSING,primary
+USA,Thornton F. Brodhead,colonel,mdl_USA_TFBrodhead.png,missing,MISSING,secondary
+USA,John W. Stiles,colonel,mdl_USA_JWStiles.png,missing,MISSING,review
