@@ -1,20 +1,33 @@
-# CivilWar1 — Hex of Steel American Civil War Mod
+# CivilWar1: Hex of Steel Shenandoah Valley Mod
 
-This repository is the working home for a large-scale American Civil War mod for Hex of Steel.
+This repository exists to support a large-scale American Civil War mod for Hex of Steel, centered on the Shenandoah Valley and campaigns of 1862 and 1864.
 
-Goals
-- Provide tooling to reverse-engineer and generate Hex of Steel `.sav` map files.
-- Provide documentation for the `.sav` format, mod structure, unit stats, and scenarios.
-- Store mod files in a game-loadable format and make it easy for humans and AI to contribute.
+The project is intentionally structured for reverse engineering and incremental development:
+- We do not assume the Hex of Steel `.sav` format is public or stable.
+- We collect sample maps and use them to infer the binary format.
+- We keep human-readable design documents and scenario plans in version control.
+- We generate game-ready map data through an intermediate JSON format before exporting to `.sav`.
 
-Repository layout (high-level)
-- docs/             — Design notes, format docs, and contributor guides
-- scripts/          — Python tools to parse/generate/validate .sav files
-- units/            — Unit definitions (YAML) and stats
-- maps/             — Map templates, sample maps, and generated .sav outputs (gitignored large binaries)
-- scenarios/        — Scenario definitions for 1862 and 1864 campaigns
-- mod/              — Game-ready mod package layout (assets, rules, scenarios)
+Repository layout
+- /mod: game-ready mod files, packaging output, and materials intended for distribution
+- /src: all tooling, parsers, generator utilities, and build scripts
+- /docs: format notes, design docs, and scenario references
+- /reference: historical notes, screenshots, and external references
+- /samples: sample `.sav` files used for reverse engineering and testing only
+- /tests: automated validation for parser and packaging scripts
 
-Start here:
-- docs/README.md — onboarding and next steps for adding sample .sav files for reverse engineering.
+Quick start
+1. Install Python 3.10+.
+2. Create a virtual environment.
+3. Install dependencies: `pip install -r requirements.txt`
+4. Run the parser on a sample file: `python src/sav_parser.py samples/sample_map.sav`
+5. Build distributable mod package: `python src/build_mod.py --output dist/mod.zip`
 
+Important rules
+- Prefer Python tooling (`struct`, `numpy`, `pytest`).
+- Use `snake_case` for file names and directories.
+- Use intermediate JSON (for example `hexwright`) before exporting to `.sav`.
+- Do not commit large binary files unless they are required for reverse engineering.
+- Keep notes and discoveries in `/docs` and historical materials in `/reference`.
+
+This README is the main entry point for contributors. See AGENTS.md for repo-specific operating rules.
