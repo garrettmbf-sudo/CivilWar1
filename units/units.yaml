@@ -1,0 +1,19 @@
+# Unit definitions (starter)
+
+# This YAML file lists unit templates we will use in scenarios. Fields are provisional.
+
+- id: us_infantry_reg
+  name: "Union Infantry Regiment"
+  faction: Union
+  type: Infantry
+  strength: 100
+  morale: 60
+  movement: 3
+
+- id: cs_infantry_reg
+  name: "Confederate Infantry Regiment"
+  faction: Confederate
+  type: Infantry
+  strength: 100
+  morale: 55
+  movement: 3

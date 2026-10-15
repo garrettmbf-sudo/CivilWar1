@@ -1,0 +1,10 @@
+# Byte- and binary-oriented build artifacts
+__pycache__/
+*.pyc
+.env
+.vscode/
+dist/
+build/
+*.egg-info/
+maps/samples/
+maps/generated/
