@@ -68,3 +68,17 @@ The new `render_valley_v3_network.py` uses **original procedural color and cosme
 ![A provisional 125×130-hex Valley map showing exact traced roads, rivers and railways, blocked crossings and cosmetic hillshade](preview_edge_exact.jpg)
 
 The image above is a reduced diagnostic preview, not a native game screenshot, DEM, or historical georeferencing result. Rebuild it using `python render_valley_v3_network.py --script build_valley_map_v3.ps1 --output Valley_Map_v3_edge_exact.png`.
+
+## Portable dependencies
+
+Geometry tests and the basic v3 schematic need **Pillow**; the new cosmetic hillshade diagnostic also uses **NumPy, SciPy and scikit-image**. From the repository root:
+
+```bash
+python -m pip install -r experiments/valley_v3/requirements-preview.txt
+cd experiments/valley_v3
+python -m unittest test_geometry.py test_valley_v3_connections.py -v
+python render_valley_v3_network.py --output Valley_Map_v3_edge_exact.png
+python valley_v3_connections.py --json valley_v3_connection_audit.json
+```
+
+The final audit intentionally returns nonzero while unsupported sprite masks and unresolved crossings remain; do not treat that deliberate preflight warning as a crashed renderer.
