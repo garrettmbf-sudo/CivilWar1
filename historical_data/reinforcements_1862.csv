@@ -1,0 +1,13 @@
+event_id,date,event_type,subject_id,detail,effect,sources
+E001,1862-04-01,command_change,FRM_CS_STONEWALL,"Garnett removed; Winder succeeds",Change brigade commander record; brigade identity retained,SRC007
+E002,1862-04-21,reinforcement,REG_VA10,"10th Virginia Infantry joins Jackson's command",Begins assignment to Fulkerson's/Taliaferro's Brigade,SRC007
+E003,1862-05-01,command_change,FRM_US_SHIELDSDIV_K,"Shields' division begins transfer from Banks to McDowell (spring 1862)",Parent switches to Department of the Rappahannock by May 1 window,SRC007
+E004,1862-05-08,commander_loss,CMD_JOHNSON_E,"Edward Johnson wounded at McDowell",Army of the Northwest reorganized; brigades transferred not duplicated,SRC007
+E005,1862-05-20,reinforcement,FRM_CS_EWELLDIV,"Ewell's Division arrives and unites with Jackson (May 20-22)",New HQ + 4 brigades become available under Valley District,SRC007
+E006,1862-05-23,battle_result,FRM_US_KENLY,"Front Royal stormed; garrison captured","Kenly's garrison exits campaign (POW); B.T. Johnson's Marylanders return to Steuart after detachment",SRC007
+E007,1862-05-25,command_change,FRM_CS_BURKS,"Campbell wounded at First Winchester; Patton succeeds",Commander succession on same brigade ID,SRC007
+E008,1862-05-25,command_change,FRM_CS_FULKERSON,"Taliaferro ill; Fulkerson acting",Acting commander flag,SRC007
+E009,1862-06-06,commander_loss,FRM_CS_ASHBY,"Turner Ashby killed near Harrisonburg",Cavalry command transitions to post-Ashby HQ (Munford); regiments transfer by ID,SRC007
+E010,1862-06-08,commander_loss,FRM_CS_ELZEY,"Elzey wounded at Cross Keys",Walker assumes brigade command,SRC007
+E011,1862-06-08,commander_loss,FRM_CS_STEUART,"Steuart wounded at Cross Keys",Scott exercises temporary command,SRC007
+E012,1862-06-09,reorganization,FRM_CS_STEUART,"Post-Cross Keys/Port Republic redistribution within Ewell's command","Exact June 10+ composition UNRESOLVED - flagged for research per reference Part VI",SRC007|SRC003

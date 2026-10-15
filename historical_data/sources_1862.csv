@@ -1,0 +1,9 @@
+source_id,citation,used_for,confidence
+SRC001,"National Park Service, Shenandoah Valley 1862 battlefield summaries (nps.gov) - campaign strength estimates and battle rosters",strengths; battle OOBs; Kernstown/Winchester/Cross Keys/Port Republic engaged forces,high
+SRC002,"The War of the Rebellion: A Compilation of the Official Records of the Union and Confederate Armies (OR), Series I (Jackson's Valley District returns; Banks/Shields/Fremont departmental returns)",dated returns; regiment assignments; aggregate strengths,pending_verification
+SRC003,"Peter Cozzens, Shenandoah 1862: Stonewall Jackson's Valley Campaign (UNC Press 2008); reference/oob reference Part VI note",'definitive database' reconciliation; brigade reorganizations after Cross Keys/Port Republic,medium
+SRC004,"civilwarintheeast.com order-of-battle pages (cited in reference/oob reference)",May-June brigade compositions; artillery attachments to Jackson's division,medium
+SRC005,"Wikipedia battle order-of-battle tables (cited in reference/oob reference): First Winchester, Cross Keys, Port Republic, McDowell",late-May/June tactical groupings,medium
+SRC006,"Maryland State Archives history of Front Royal / Kenly's command (msa.maryland.gov)",Front Royal garrison composition May 23,high
+SRC007,"reference/oob reference (repo file, historical research document)",baseline extraction for all formations below,authoritative_starting_point
+SRC008,"game-mechanics assumption pending verification - see docs/unit-stats.md","strength conversion (HoS counter strength vs soldiers) is NOT yet verified against game internals",unverified

@@ -1,0 +1,14 @@
+return_id,date,subject_type,subject_id,men,kind,basis,sources
+R001,1862-03-23,formation,FRM_CS_VALLEY,3800,estimate,"NPS campaign estimate ~3,500-3,800 at Kernstown (aggregate; NOT distributed to brigades per instruction)",SRC007|SRC001
+R002,1862-03-23,formation,FRM_US_SHIELDSDIV_K,8500,estimate,"NPS: Union force around Kernstown ~8,500 though not all engaged (aggregate)",SRC001|SRC007
+R003,1862-03-23,regiment,REG_VA02,,unknown,"No dated regimental return loaded yet - OR check pending",SRC002
+R004,1862-05-08,formation,FRM_CS_NW,3000,estimate,"Contemporary estimate of Johnson's effectives at McDowell (aggregate)",SRC007
+R005,1862-05-08,formation,FRM_US_FREMONTDEPT,6500,estimate,"NPS McDowell Union figure; 'figures vary by engaged/available troops' - aggregate kept as-is",SRC001|SRC007
+R006,1862-05-23,formation,FRM_US_KENLY,1063,reported,"NPS Front Royal Union strength ~1,063",SRC001|SRC007
+R007,1862-05-23,formation,FRM_CS_VALLEY,3000,estimate,"Confederate troops actively engaged at Front Royal ~3,000 (Taylor + B.T. Johnson detachment); engagement subset only",SRC001|SRC007
+R008,1862-05-25,formation,FRM_CS_VALLEY,16000,estimate,"Combined Jackson+Ewell late-May field force ~16,000-17,000 (NPS/reference)",SRC001|SRC007
+R009,1862-05-25,formation,FRM_US_BANKSDEPT,6500,estimate,"NPS First Winchester Union ~6,500 (aggregate)",SRC001|SRC007
+R010,1862-06-08,formation,FRM_US_FREMONTDEPT,11500,estimate,"NPS Cross Keys Union ~11,500 (aggregate)",SRC001|SRC007
+R011,1862-06-08,formation,FRM_CS_EWELLDIV,5800,estimate,"NPS Cross Keys Confederate ~5,800 (Ewell's engaged force)",SRC001|SRC007
+R012,1862-06-09,formation,FRM_US_TYLER3,3500,estimate,"NPS Port Republic Union ~3,500 (Tyler+Carroll engaged)",SRC001|SRC007
+R013,1862-06-09,formation,FRM_CS_VALLEY,6000,estimate,"NPS Port Republic Confederate ~6,000",SRC001|SRC007

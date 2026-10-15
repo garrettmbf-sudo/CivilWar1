@@ -1,0 +1,97 @@
+regiment_id,designation,state,type,notes,sources
+REG_VA02,"2nd Virginia Infantry",VA,infantry,Stonewall Brigade,SRC007
+REG_VA04,"4th Virginia Infantry",VA,infantry,Stonewall Brigade,SRC007
+REG_VA05,"5th Virginia Infantry",VA,infantry,Stonewall Brigade,SRC007
+REG_VA27,"27th Virginia Infantry",VA,infantry,Stonewall Brigade,SRC007
+REG_VA33,"33rd Virginia Infantry",VA,infantry,Stonewall Brigade,SRC007
+REG_VA21,"21st Virginia Infantry",VA,infantry,Burks'/Campbell's/Patton's Brigade,SRC007
+REG_VA42,"42nd Virginia Infantry",VA,infantry,Burks'/Campbell's/Patton's Brigade,SRC007
+REG_VA48,"48th Virginia Infantry",VA,infantry,Burks'/Campbell's/Patton's Brigade,SRC007
+REG_VA01B,"1st Virginia (Irish) Battalion",VA,infantry,battalion; Burks'/Campbell's/Patton's Brigade,SRC007
+REG_VA10,"10th Virginia Infantry",VA,infantry,joins Apr 21; Taliaferro's Brigade,SRC007
+REG_VA23,"23rd Virginia Infantry",VA,infantry,Fulkerson's/Taliaferro's Brigade,SRC007
+REG_VA37,"37th Virginia Infantry",VA,infantry,Fulkerson's/Taliaferro's Brigade,SRC007
+REG_VA07C,"7th Virginia Cavalry",VA,cavalry,Ashby's command,SRC007
+REG_VA02C,"2nd Virginia Cavalry",VA,cavalry,Munford's troops,SRC007
+REG_VA06C,"6th Virginia Cavalry",VA,cavalry,Flournoy's troops,SRC007
+REG_VA12,"12th Georgia Infantry",GA,infantry,Conner's at McDowell -> Elzey's under Ewell,SRC007
+REG_VA25,"25th Virginia Infantry",VA,infantry,Conner's at McDowell -> Elzey's under Ewell,SRC007
+REG_VA31,"31st Virginia Infantry",VA,infantry,Conner's at McDowell -> Elzey's under Ewell,SRC007
+REG_VA13,"13th Virginia Infantry",VA,infantry,Elzey's Brigade late-May/June roster,SRC007
+REG_VA44,"44th Virginia Infantry",VA,infantry,Scott's -> Scott/Steuart's Brigade,SRC007
+REG_VA52,"52nd Virginia Infantry",VA,infantry,Scott's -> Scott/Steuart's Brigade,SRC007
+REG_VA58,"58th Virginia Infantry",VA,infantry,Scott's -> Scott/Steuart's Brigade,SRC007
+REG_MD01CS,"1st Maryland Infantry (Confederate)",MD,infantry,Steuart's Maryland organization; detached to Front Royal May 23 then returned,SRC007
+REG_AL15,"15th Alabama Infantry",AL,infantry,Trimble's Brigade,SRC007
+REG_GA21,"21st Georgia Infantry",GA,infantry,Trimble's Brigade,SRC007
+REG_MS16,"16th Mississippi Infantry",MS,infantry,Trimble's Brigade,SRC007
+REG_NC21,"21st North Carolina Infantry",NC,infantry,Trimble's Brigade,SRC007
+REG_LA06,"6th Louisiana Infantry",LA,infantry,Taylor's Brigade,SRC007
+REG_LA07,"7th Louisiana Infantry",LA,infantry,Taylor's Brigade,SRC007
+REG_LA08,"8th Louisiana Infantry",LA,infantry,Taylor's Brigade,SRC007
+REG_LA09,"9th Louisiana Infantry",LA,infantry,Taylor's Brigade,SRC007
+REG_LA01S,"Wheat's 1st Special Louisiana Battalion",LA,infantry,battalion; Taylor's Brigade,SRC007
+REG_IN14,"14th Indiana Infantry",IN,infantry,Kimball's 1st Brigade (Kernstown & Rappahannock roster),SRC007
+REG_OH04,"4th Ohio Infantry",OH,infantry,Rappahannock roster Kimball's brigade,SRC007
+REG_OH08,"8th Ohio Infantry",OH,infantry,Kimball's 1st Brigade,SRC007
+REG_OH67,"67th Ohio Infantry",OH,infantry,Kernstown: Kimball's 1st Bde; June roster: Ferry's 2nd Bde - dated assignment resolves,SRC007
+REG_PA84,"84th Pennsylvania Infantry",PA,infantry,Kernstown: Kimball's 1st Bde; Port Republic: Carroll's - dated assignment resolves,SRC007
+REG_OH05,"5th Ohio Infantry",OH,infantry,Kernstown: Sullivan's 2nd Bde; Port Republic: Carroll's - dated assignment resolves,SRC007
+REG_IN13,"13th Indiana Infantry",IN,infantry,Kernstown: Sullivan's 2nd Bde; June roster: Tyler's 3rd Bde,SRC007
+REG_OH62,"62nd Ohio Infantry",OH,infantry,Sullivan's 2nd Bde; June roster: Ferry's 2nd Bde,SRC007
+REG_IL39,"39th Illinois Infantry",IL,infantry,Kernstown: Sullivan's (marked unengaged); June roster: Ferry's 2nd Bde,SRC007
+REG_OH07,"7th Ohio Infantry",OH,infantry,Kernstown: Tyler's 3rd Bde; Port Republic: Tyler's tactical Bde,SRC007
+REG_IN07,"7th Indiana Infantry",IN,infantry,Kernstown: Tyler's 3rd Bde; Port Republic: Tyler's tactical Bde,SRC007
+REG_WV01,"1st West Virginia Infantry",WV,infantry,Kernstown: Tyler's 3rd Bde; Port Republic: Tyler's tactical Bde,SRC007
+REG_OH29,"29th Ohio Infantry",OH,infantry,Tyler's 3rd Bde throughout,SRC007
+REG_PA110,"110th Pennsylvania Infantry",PA,infantry,Kernstown: Tyler's 3rd Bde; Port Republic: Tyler's tactical Bde,SRC007
+REG_OH66,"66th Ohio Infantry",OH,infantry,June roster Ferry's; Port Republic: Carroll's,SRC007
+REG_WV07,"7th West Virginia Infantry",WV,infantry,June roster Kimball's brigade,SRC007
+REG_CT05,"5th Connecticut Infantry",CT,infantry,Donnelly's Brigade,SRC007
+REG_NY28,"28th New York Infantry",NY,infantry,Donnelly's Brigade,SRC007
+REG_PA46,"46th Pennsylvania Infantry",PA,infantry,Donnelly's Brigade,SRC007
+REG_IN27,"27th Indiana Infantry",IN,infantry,Gordon's Brigade,SRC007
+REG_MA02,"2nd Massachusetts Infantry",MA,infantry,Gordon's Brigade,SRC007
+REG_PA29,"29th Pennsylvania Infantry",PA,infantry,"Gordon's Brigade; two-company detachment in Kenly's garrison May 23 (documented partition)",SRC007
+REG_WI03,"3rd Wisconsin Infantry",WI,infantry,Gordon's Brigade,SRC007
+REG_ME10,"10th Maine Infantry",ME,infantry,Geary's command,SRC007
+REG_MD01US,"1st Maryland Infantry (Union)",MD,infantry,Kenly's Front Royal garrison,SRC007
+REG_OH25,"25th Ohio Infantry",OH,infantry,"McDowell org: Milroy; Cross Keys org: Milroy",SRC007
+REG_OH32,"32nd Ohio Infantry",OH,infantry,"McDowell org: Milroy; Cross Keys org: Schenck (reassigned)",SRC007
+REG_OH73,"73rd Ohio Infantry",OH,infantry,"McDowell org: Milroy; Cross Keys org: Schenck (reassigned)",SRC007
+REG_OH75,"75th Ohio Infantry",OH,infantry,"McDowell org: Milroy; Cross Keys org: Schenck (reassigned)",SRC007
+REG_OH55,"55th Ohio Infantry",OH,infantry,Schenck both organizations,SRC007
+REG_OH82,"82nd Ohio Infantry",OH,infantry,"McDowell org: Schenck; Cross Keys org: Schenck",SRC007
+REG_WV02,"2nd West Virginia Infantry",WV,infantry,"McDowell org: Milroy; Cross Keys org: Milroy",SRC007
+REG_WV03,"3rd West Virginia Infantry",WV,infantry,"McDowell org: Milroy; Cross Keys org: Milroy",SRC007
+REG_WV05,"5th West Virginia Infantry",WV,infantry,"McDowell org: Schenck; Cross Keys org: Milroy (reassigned)",SRC007
+REG_WV08,"8th West Virginia Infantry",WV,infantry,Cluseret's Brigade,SRC007
+REG_OH60,"60th Ohio Infantry",OH,infantry,Cluseret's Brigade,SRC007
+REG_NY08,"8th New York Infantry ('First German Legion')",NY,infantry,Stahel's Brigade,SRC007
+REG_NY39,"39th New York Infantry",NY,infantry,Stahel's Brigade,SRC007
+REG_NY41,"41st New York Infantry",NY,infantry,Stahel's Brigade,SRC007
+REG_NY45,"45th New York Infantry",NY,infantry,Stahel's Brigade,SRC007
+REG_PA27,"27th Pennsylvania Infantry",PA,infantry,Stahel's Brigade,SRC007
+REG_NY29,"29th New York Infantry",NY,infantry,Koltes' Brigade,SRC007
+REG_NY68,"68th New York Infantry",NY,infantry,Koltes' Brigade,SRC007
+REG_PA73,"73rd Pennsylvania Infantry",PA,infantry,Koltes' Brigade,SRC007
+REG_NY54,"54th New York Infantry",NY,infantry,Bohlen's Brigade,SRC007
+REG_NY58,"58th New York Infantry",NY,infantry,Bohlen's Brigade,SRC007
+REG_PA74,"74th Pennsylvania Infantry",PA,infantry,Bohlen's Brigade,SRC007
+REG_PA75,"75th Pennsylvania Infantry",PA,infantry,Bohlen's Brigade,SRC007
+REG_PA13R,"Battalion 13th Pennsylvania Reserves (1st Rifles)",PA,infantry,"in Bayard's command but classified INFANTRY per reference note",SRC007
+REG_ME01B,"1st Maine Cavalry, 2nd Battalion",ME,cavalry,Hatch's cavalry brigade,SRC007
+REG_MD01C,"1st Maryland Cavalry (5 companies)",MD,cavalry,Hatch's; understrength detachment noted,SRC007
+REG_NY05C,"5th New York Cavalry",NY,cavalry,Hatch's cavalry brigade,SRC007
+REG_VT01C,"1st Vermont Cavalry",VT,cavalry,Hatch's cavalry brigade,SRC007
+REG_NY08C,"8th New York Cavalry (5 dismounted companies)",NY,cavalry,Geary's command; dismounted,SRC007
+REG_WV01C,"1st West Virginia Cavalry",WV,cavalry,"Milroy's artillery/cavalry support at McDowell; detachment at Cross Keys",SRC007
+REG_WV03C,"3rd West Virginia Cavalry",WV,cavalry,Fremont additional cavalry,SRC007
+REG_OH13C,"13th Ohio Cavalry",OH,cavalry,"listed with Milroy support at McDowell as '12th Ohio Battery' ambiguity resolved to artillery; verify OR",SRC007
+REG_OH06C,"6th Ohio Cavalry",OH,cavalry,Fremont additional cavalry,SRC007
+REG_CT01CB,"1st Connecticut Cavalry Battalion",CT,cavalry,Schenck's Cross Keys organization,SRC007
+REG_NJ01C,"1st New Jersey Cavalry",NJ,cavalry,Bayard's attached command,SRC007
+REG_PA01C,"1st Pennsylvania Cavalry",PA,cavalry,Bayard's attached command,SRC007
+REG_NY04C,"4th New York Cavalry",NY,cavalry,Blenker's division cavalry,SRC007
+REG_MI01CD,"1st Michigan Cavalry (5 companies)",MI,cavalry,attached to Williams' Division,SRC007
+REG_PAZDA,"Pennsylvania Zouaves d'Afrique (detachment)",PA,infantry,Geary's command; detachment strength unknown,SRC007
