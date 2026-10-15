@@ -1,0 +1,41 @@
+{
+  "status": "PROVISIONAL_SCHEMATIC_TO_VERIFY_AGAINST_1862_MAPS",
+  "purpose": "Add historically important network omitted from reference v3 without modifying its source",
+  "routes": {
+    "rrWinchesterPotomac": [
+      [
+        80,
+        94
+      ],
+      [
+        82,
+        97
+      ],
+      [
+        85,
+        99
+      ],
+      [
+        89,
+        101
+      ],
+      [
+        93,
+        102
+      ],
+      [
+        97,
+        103
+      ],
+      [
+        103,
+        103
+      ]
+    ]
+  },
+  "notes": [
+    "Winchester and Potomac Railroad existed, but hex waypoints are NOT georeferenced.",
+    "Verify exact 1862 rail alignment and depot location against the period source.",
+    "Unverified river crossings must remain blocking until native rail bridge behavior is tested."
+  ]
+}
