@@ -1,0 +1,8 @@
+{
+    "modName": "HarmonyCore",
+    "modAuthor": "A Corsican Frog",
+    "modVersion": "1.0.1",
+    "dependencies": "None",
+    "supportedGameVersion": "8.0.5+",
+    "modDescription": "\n\nThis mod contains a single library (Harmony.dll) which other mods are dependent on to apply their modifications to the game."
+}
