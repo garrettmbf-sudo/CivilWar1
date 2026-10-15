@@ -114,6 +114,49 @@ class OOB:
                 return c["commander_id"]
         return ""  # vacant / not applicable
 
+    def parent_on(self, formation_id: str, on: date) -> str:
+        """Return a date-valid parent HQ without rewriting historical source rows."""
+        parent = self.formations[formation_id]["parent_id"]
+        if parent == "FRM_US_SHIELDSDIV_K" and on >= date(1862, 5, 1):
+            parent = "FRM_US_SHIELDSDIV_R"
+        if parent == "FRM_CS_JACKSONDIV" and on < date(1862, 5, 20):
+            parent = "FRM_CS_VALLEY"
+        return parent
+
+    def state_origins(self, formation_id: str, on: date) -> list[str]:
+        """Unique states of assigned regiments on the requested date."""
+        states = set()
+        for member in self.members_of(formation_id, on):
+            regiment = self.regiments.get(member)
+            if regiment:
+                code = (regiment.get("state") or "").strip().upper()
+                if code:
+                    states.add(code)
+        return sorted(states)
+
+    def state_flag(self, formation_id: str, on: date) -> str:
+        """Return an origin-state token, not an unverified sprite filename."""
+        states = self.state_origins(formation_id, on)
+        return states[0] if len(states) == 1 else ("MIXED" if states else "UNKNOWN")
+
+    def command_chain(self, formation_id: str, on: date) -> list[str]:
+        """Validate HQ ancestry against active formations on this date."""
+        active = self.active_formations(on)
+        chain = []
+        seen = {formation_id}
+        current = formation_id
+        while True:
+            parent = self.parent_on(current, on)
+            if not parent:
+                return chain
+            if parent in seen:
+                raise ValueError(f"{formation_id} on {on}: circular command chain at {parent}")
+            if parent not in active:
+                raise ValueError(f"{formation_id} on {on}: inactive/missing HQ {parent}")
+            seen.add(parent)
+            chain.append(parent)
+            current = parent
+
     def snapshot(self, on: date) -> dict:
         """Dated order of battle: active HQ tree + counters (brigades etc.)."""
         act = self.active_formations(on)
@@ -133,7 +176,10 @@ class OOB:
                 "faction": f["faction"],
                 "type": f["type"],
                 "commander": self.commander_of(fid, on),
-                "parent": f["parent_id"],
+                "parent": self.parent_on(fid, on),
+                "command_chain": self.command_chain(fid, on),
+                "origin_states": self.state_origins(fid, on),
+                "state_flag": self.state_flag(fid, on),
                 "regiments": regs,
                 "batteries": batts,
             })
@@ -197,6 +243,16 @@ def validate(oob: OOB, repo_root: str | None = None) -> list[str]:
             cmd = oob.commander_of(fid, day)
             if cmd and cmd not in oob.commanders:
                 e(f"{fid} on {day}: unknown commander {cmd}")
+
+    # Date-valid command chains, including pre-division and department transfers.
+    for fid in oob.formations:
+        for day in all_days:
+            if fid not in oob.active_formations(day):
+                continue
+            try:
+                oob.command_chain(fid, day)
+            except ValueError as exc:
+                e(str(exc))
 
     # 2 one active parent per regiment/date unless detachment-marked
     for rid in oob.regiments:

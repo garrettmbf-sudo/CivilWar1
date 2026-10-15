@@ -28,3 +28,21 @@ def test_key_campaign_snapshots():
     may = oob.snapshot(date(1862, 5, 25))
     assert 'FRM_CS_EWELLDIV' not in march['headquarters']
     assert 'FRM_CS_EWELLDIV' in may['headquarters']
+
+
+def test_date_correct_parent_transfers_and_state_flags():
+    oob = OOB.load()
+    march = date(1862, 3, 23)
+    may = date(1862, 5, 25)
+    assert oob.parent_on("FRM_CS_STONEWALL", march) == "FRM_CS_VALLEY"
+    assert oob.parent_on("FRM_CS_STONEWALL", may) == "FRM_CS_JACKSONDIV"
+    assert oob.parent_on("FRM_US_KIMBALL1", march) == "FRM_US_SHIELDSDIV_K"
+    assert oob.parent_on("FRM_US_KIMBALL1", may) == "FRM_US_SHIELDSDIV_R"
+    assert oob.state_flag("FRM_CS_STONEWALL", march) == "VA"
+    assert oob.state_flag("FRM_US_KIMBALL1", march) == "MIXED"
+    assert oob.state_origins("FRM_US_KIMBALL1", march) == ["IN", "OH", "PA"]
+    assert oob.state_flag("FRM_CS_VALLEY", march) == "UNKNOWN"
+    for snap_day in [march, date(1862, 5, 8), may, date(1862, 6, 9)]:
+        for counter in oob.snapshot(snap_day)["counters"]:
+            assert counter["state_flag"] in ("MIXED", "UNKNOWN") or len(counter["state_flag"]) == 2
+            assert isinstance(counter["command_chain"], list)
