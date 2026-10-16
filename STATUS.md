@@ -43,3 +43,10 @@ Done / saved:
   params, GeometryOnly tile check. Parses cleanly in pwsh 7.4 (/tmp/pwsh). Untested against game DLLs.
 Not done: re-slice tiles (still 576 old tiles, need 3410), Manifest update, README_INSTALL.md, dist zip, git branch.
 Notes: docs say do NOT bake grid into tiles; tiles must be 2000x2000 per official tutorial (~370 MB est. for 3410).
+
+## 2026-10-16 — painted full map + mod package
+- painted_sections/build_sandy_ridge.py (section test, FULL=1 mode), build_full_map.py, slice_full_tiles.py
+- data/basemap_painted_full.png -> 3410 SV_K tiles (Summer, 2000px, no grid), ~6.4 GB
+- Natural straight fieldstone wall (least-squares line through wall hexes), not hexside zigzag
+- data/layers/kernstown_units.json (15 brigade/battery units) read by tools/build_kernstown_map.ps1
+- dist/Kernstown1862_mod.zip (6.7 GB, stored). UNTESTED in game.
