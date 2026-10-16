@@ -1538,7 +1538,7 @@ def draw_labels(img, box=None, scale=1.0):
     for name, lon, lat, fnt, dx, dy, st, pri, fill in items:
         x, y = ll2px(lon, lat)
         if name == "Stone Wall":  # anchor to actual wall hexsides (N edge of hex 17,23)
-            x, y = hexc(17, 23); y -= R_PX * 0.87
+            x, y = FEAT.get("_runtime", {}).get("stone_wall_label_xy") or (hexc(17, 23)[0], hexc(17, 23)[1] - R_PX * 0.87)
         x, y = x - ox + dx, y - oy + dy
         tw, th = text_size(name, fnt, st)
         candidates = [(0, 0), (12, -10), (-12, -10), (14, 8), (-16, 6), (0, -18), (20, 0)]
