@@ -2,6 +2,15 @@
 
 You need: Hex of Steel (Steam, version 8 or newer) and Windows PowerShell (already on every Windows 10/11 PC).
 
+## 0. Get the map tiles (GitHub Release)
+The 3410 tile images (~6.5 GB) are not in git. Download them from the release
+https://github.com/garrettmbf-sudo/CivilWar1/releases/tag/kernstown-v0.3.0 :
+- `Kernstown_tiles_part1of4_cols00-15.zip` … `Kernstown_tiles_part4of4_cols47-61.zip` (all four are required)
+- `Kernstown_mod_base.zip` (Manifest.json and empty mod folders)
+
+Extract every zip into the **same** folder (your `Kernstown1862_mod` folder from step 1; merge/overwrite folders when asked).
+Each zip contains `mod\Graphics\Tiles\Summer\`, so together they fill `mod\Graphics\Tiles\Summer\` with all 3410 `SV_K_<col>_<row>.png` files.
+
 ## 1. Unzip
 1. Right-click `Kernstown1862_mod.zip` → **Extract All…** → pick e.g. `C:\Kernstown1862`.
 2. You now have `C:\Kernstown1862\Kernstown1862_mod\` containing `mod`, `tools`, `data`, `templates` and this file.
