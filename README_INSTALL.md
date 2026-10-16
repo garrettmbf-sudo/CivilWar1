@@ -3,8 +3,8 @@
 You need: Hex of Steel (Steam, version 8 or newer) and Windows PowerShell (already on every Windows 10/11 PC).
 
 ## 0. Get the map tiles (GitHub Release)
-The 3410 tile images (~6.5 GB) are not in git. Download them from the release
-https://github.com/garrettmbf-sudo/CivilWar1/releases/tag/kernstown-v0.3.0 :
+The 3410 tile images (~5.5 GB) are not in git. Download them from the release
+https://github.com/garrettmbf-sudo/CivilWar1/releases/tag/kernstown-v0.3.1 :
 - `Kernstown_tiles_part1of4_cols00-15.zip` … `Kernstown_tiles_part4of4_cols47-61.zip` (all four are required)
 - `Kernstown_mod_base.zip` (Manifest.json and empty mod folders)
 

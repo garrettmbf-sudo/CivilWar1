@@ -1,0 +1,1 @@
+edges=9997 mean_dE=3.13 median_dE=2.91 p95_dE=5.38 texture_floor_dE=3.18 dE>5=690 feature_edges=9780 feature_misaligned(>=30px)=805 alpha_seam_edges=0 bad_edges=1327
