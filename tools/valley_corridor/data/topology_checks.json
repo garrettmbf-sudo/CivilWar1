@@ -1,0 +1,10 @@
+{
+  "topological_edges": 407,
+  "pike_tiles": 408,
+  "dangling_internal_edges": 0,
+  "jump_edges": 0,
+  "inside_bounds": true,
+  "unique_nodes": true,
+  "historic_crossing_status": "all unverified in prototype",
+  "wall_fence_status": "not generated without period digitization"
+}

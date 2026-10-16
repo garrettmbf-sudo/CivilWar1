@@ -1,0 +1,10 @@
+{
+  "count": 8,
+  "sample_type": "3 Hex of Steel stock PNGs, 3 CivilWar1 v4 PNGs, and 2 new proof-of-concept sprites; NOT from Kernstown release",
+  "all_2000px": true,
+  "png_lossless_median_ratio": 1.0,
+  "webp_lossless_median_ratio": 0.405,
+  "palette256_median_ratio": 0.419,
+  "palette256_min_SSIM": 0.87506,
+  "png_identical": true
+}

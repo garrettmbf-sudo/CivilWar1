@@ -1,0 +1,12 @@
+{
+  "tiles_exported": 9,
+  "sampled_shared_canvas_pixel_mismatches": 0,
+  "stitch_original_pixel_samples": 1011,
+  "stitch_original_pixel_mismatches": 0,
+  "alpha_mask": "Exact stock Plain.png alpha channel",
+  "native_tile_pixels": [
+    2000,
+    2000
+  ],
+  "status": "seam construction technique verified; visual/navigational engine test still needed"
+}

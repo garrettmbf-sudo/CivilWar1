@@ -1,0 +1,266 @@
+[
+  {
+    "tile": "Plain (stock)",
+    "dimensions": [
+      2000,
+      2000
+    ],
+    "input_mode": "RGBA",
+    "original_png_bytes": 70044,
+    "formats": {
+      "png_optimize_9": {
+        "bytes": 66691,
+        "ratio": 0.9521,
+        "pixel_identical": true
+      },
+      "png_rgba_optimize": {
+        "bytes": 66691,
+        "ratio": 0.9521,
+        "pixel_identical": true
+      },
+      "webp_lossless_ARCHIVE_ONLY": {
+        "bytes": 26364,
+        "ratio": 0.3764,
+        "pixel_identical": false,
+        "engine_supported": false
+      },
+      "png_palette256_OPTIONAL_REVIEW": {
+        "bytes": 25256,
+        "ratio": 0.3606,
+        "pixel_identical": false,
+        "SSIM_300px": 0.95233
+      }
+    }
+  },
+  {
+    "tile": "River1 (stock)",
+    "dimensions": [
+      2000,
+      2000
+    ],
+    "input_mode": "RGBA",
+    "original_png_bytes": 69036,
+    "formats": {
+      "png_optimize_9": {
+        "bytes": 66692,
+        "ratio": 0.966,
+        "pixel_identical": true
+      },
+      "png_rgba_optimize": {
+        "bytes": 66692,
+        "ratio": 0.966,
+        "pixel_identical": true
+      },
+      "webp_lossless_ARCHIVE_ONLY": {
+        "bytes": 28336,
+        "ratio": 0.4105,
+        "pixel_identical": false,
+        "engine_supported": false
+      },
+      "png_palette256_OPTIONAL_REVIEW": {
+        "bytes": 26105,
+        "ratio": 0.3781,
+        "pixel_identical": false,
+        "SSIM_300px": 0.95322
+      }
+    }
+  },
+  {
+    "tile": "Railroad1 (stock)",
+    "dimensions": [
+      2000,
+      2000
+    ],
+    "input_mode": "RGBA",
+    "original_png_bytes": 68914,
+    "formats": {
+      "png_optimize_9": {
+        "bytes": 66530,
+        "ratio": 0.9654,
+        "pixel_identical": true
+      },
+      "png_rgba_optimize": {
+        "bytes": 66530,
+        "ratio": 0.9654,
+        "pixel_identical": true
+      },
+      "webp_lossless_ARCHIVE_ONLY": {
+        "bytes": 27484,
+        "ratio": 0.3988,
+        "pixel_identical": false,
+        "engine_supported": false
+      },
+      "png_palette256_OPTIONAL_REVIEW": {
+        "bytes": 25987,
+        "ratio": 0.3771,
+        "pixel_identical": false,
+        "SSIM_300px": 0.95541
+      }
+    }
+  },
+  {
+    "tile": "V4_F_BASE_03_0_N (v4)",
+    "dimensions": [
+      2000,
+      2000
+    ],
+    "input_mode": "P",
+    "original_png_bytes": 111824,
+    "formats": {
+      "png_optimize_9": {
+        "bytes": 111824,
+        "ratio": 1.0,
+        "pixel_identical": true
+      },
+      "png_rgba_optimize": {
+        "bytes": 340566,
+        "ratio": 3.0456,
+        "pixel_identical": true
+      },
+      "webp_lossless_ARCHIVE_ONLY": {
+        "bytes": 78710,
+        "ratio": 0.7039,
+        "pixel_identical": true,
+        "engine_supported": false
+      },
+      "png_palette256_OPTIONAL_REVIEW": {
+        "bytes": 112080,
+        "ratio": 1.0023,
+        "pixel_identical": false,
+        "SSIM_300px": 0.99994
+      }
+    }
+  },
+  {
+    "tile": "V4_M_BASE_04_0_N (v4)",
+    "dimensions": [
+      2000,
+      2000
+    ],
+    "input_mode": "P",
+    "original_png_bytes": 97556,
+    "formats": {
+      "png_optimize_9": {
+        "bytes": 97556,
+        "ratio": 1.0,
+        "pixel_identical": true
+      },
+      "png_rgba_optimize": {
+        "bytes": 250730,
+        "ratio": 2.5701,
+        "pixel_identical": true
+      },
+      "webp_lossless_ARCHIVE_ONLY": {
+        "bytes": 69034,
+        "ratio": 0.7076,
+        "pixel_identical": true,
+        "engine_supported": false
+      },
+      "png_palette256_OPTIONAL_REVIEW": {
+        "bytes": 97812,
+        "ratio": 1.0026,
+        "pixel_identical": false,
+        "SSIM_300px": 0.99997
+      }
+    }
+  },
+  {
+    "tile": "V4_H_BASE_00_0_N (v4)",
+    "dimensions": [
+      2000,
+      2000
+    ],
+    "input_mode": "P",
+    "original_png_bytes": 97344,
+    "formats": {
+      "png_optimize_9": {
+        "bytes": 97344,
+        "ratio": 1.0,
+        "pixel_identical": true
+      },
+      "png_rgba_optimize": {
+        "bytes": 298999,
+        "ratio": 3.0716,
+        "pixel_identical": true
+      },
+      "webp_lossless_ARCHIVE_ONLY": {
+        "bytes": 68696,
+        "ratio": 0.7057,
+        "pixel_identical": true,
+        "engine_supported": false
+      },
+      "png_palette256_OPTIONAL_REVIEW": {
+        "bytes": 97600,
+        "ratio": 1.0026,
+        "pixel_identical": false,
+        "SSIM_300px": 0.99994
+      }
+    }
+  },
+  {
+    "tile": "SV_CORRIDOR_187_184 (corridor-demo)",
+    "dimensions": [
+      2000,
+      2000
+    ],
+    "input_mode": "RGBA",
+    "original_png_bytes": 71038,
+    "formats": {
+      "png_optimize_9": {
+        "bytes": 71038,
+        "ratio": 1.0,
+        "pixel_identical": true
+      },
+      "png_rgba_optimize": {
+        "bytes": 71038,
+        "ratio": 1.0,
+        "pixel_identical": true
+      },
+      "webp_lossless_ARCHIVE_ONLY": {
+        "bytes": 16224,
+        "ratio": 0.2284,
+        "pixel_identical": false,
+        "engine_supported": false
+      },
+      "png_palette256_OPTIONAL_REVIEW": {
+        "bytes": 29999,
+        "ratio": 0.4223,
+        "pixel_identical": false,
+        "SSIM_300px": 0.87506
+      }
+    }
+  },
+  {
+    "tile": "SV_CORRIDOR_187_185 (corridor-demo)",
+    "dimensions": [
+      2000,
+      2000
+    ],
+    "input_mode": "RGBA",
+    "original_png_bytes": 62008,
+    "formats": {
+      "png_optimize_9": {
+        "bytes": 62008,
+        "ratio": 1.0,
+        "pixel_identical": true
+      },
+      "png_rgba_optimize": {
+        "bytes": 62008,
+        "ratio": 1.0,
+        "pixel_identical": true
+      },
+      "webp_lossless_ARCHIVE_ONLY": {
+        "bytes": 11430,
+        "ratio": 0.1843,
+        "pixel_identical": false,
+        "engine_supported": false
+      },
+      "png_palette256_OPTIONAL_REVIEW": {
+        "bytes": 25772,
+        "ratio": 0.4156,
+        "pixel_identical": false,
+        "SSIM_300px": 0.90241
+      }
+    }
+  }
+]
