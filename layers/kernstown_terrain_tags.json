@@ -1,0 +1,353 @@
+{
+  "marsh_hexes": [
+    [
+      18,
+      24
+    ],
+    [
+      19,
+      23
+    ],
+    [
+      19,
+      24
+    ],
+    [
+      19,
+      25
+    ],
+    [
+      20,
+      24
+    ],
+    [
+      20,
+      25
+    ],
+    [
+      20,
+      26
+    ],
+    [
+      21,
+      23
+    ],
+    [
+      21,
+      24
+    ],
+    [
+      21,
+      25
+    ],
+    [
+      21,
+      26
+    ],
+    [
+      22,
+      24
+    ],
+    [
+      22,
+      25
+    ],
+    [
+      22,
+      26
+    ],
+    [
+      23,
+      23
+    ],
+    [
+      23,
+      24
+    ],
+    [
+      23,
+      25
+    ],
+    [
+      23,
+      26
+    ],
+    [
+      24,
+      24
+    ],
+    [
+      24,
+      25
+    ],
+    [
+      24,
+      26
+    ],
+    [
+      24,
+      27
+    ],
+    [
+      25,
+      25
+    ]
+  ],
+  "stone_wall_hexes": [
+    [
+      14,
+      23
+    ],
+    [
+      15,
+      23
+    ],
+    [
+      16,
+      23
+    ],
+    [
+      17,
+      23
+    ],
+    [
+      18,
+      23
+    ],
+    [
+      19,
+      22
+    ],
+    [
+      20,
+      23
+    ]
+  ],
+  "stone_wall_hexsides": [
+    {
+      "col": 14,
+      "row": 23,
+      "edge": 0,
+      "edge_name": "N",
+      "draw_edge": 1
+    },
+    {
+      "col": 15,
+      "row": 23,
+      "edge": 0,
+      "edge_name": "N",
+      "draw_edge": 1
+    },
+    {
+      "col": 16,
+      "row": 23,
+      "edge": 0,
+      "edge_name": "N",
+      "draw_edge": 1
+    },
+    {
+      "col": 17,
+      "row": 23,
+      "edge": 0,
+      "edge_name": "N",
+      "draw_edge": 1
+    },
+    {
+      "col": 18,
+      "row": 23,
+      "edge": 0,
+      "edge_name": "N",
+      "draw_edge": 1
+    },
+    {
+      "col": 19,
+      "row": 22,
+      "edge": 0,
+      "edge_name": "N",
+      "draw_edge": 1
+    },
+    {
+      "col": 20,
+      "row": 23,
+      "edge": 0,
+      "edge_name": "N",
+      "draw_edge": 1
+    }
+  ],
+  "stone_wall_confederate_hexes": [
+    [
+      14,
+      23
+    ],
+    [
+      15,
+      23
+    ],
+    [
+      16,
+      23
+    ],
+    [
+      17,
+      23
+    ],
+    [
+      18,
+      23
+    ],
+    [
+      19,
+      22
+    ],
+    [
+      20,
+      23
+    ]
+  ],
+  "stone_wall_damage_modificator": 35,
+  "stone_wall_notes": "Wall INSIDE Confed hexes along N edge. Layers tagged; DamageModificator=35. HoS: no hexside/directional combat. Prefer DM35 over fortification tile. HoS stock: Plain=0, Forest/ThinForest=25, Hill=15, City=40, HillForest=50, Mountain=60. Stone wall=35 (between forest and city). Bonus is NOT directional \u2014 HoS has no hexside facing.",
+  "stone_wall_hex_sides": [
+    [
+      [
+        14,
+        23
+      ],
+      [
+        15,
+        23
+      ]
+    ],
+    [
+      [
+        15,
+        23
+      ],
+      [
+        16,
+        23
+      ]
+    ],
+    [
+      [
+        16,
+        23
+      ],
+      [
+        17,
+        23
+      ]
+    ],
+    [
+      [
+        17,
+        23
+      ],
+      [
+        17,
+        22
+      ]
+    ],
+    [
+      [
+        17,
+        22
+      ],
+      [
+        18,
+        23
+      ]
+    ],
+    [
+      [
+        18,
+        23
+      ],
+      [
+        19,
+        22
+      ]
+    ],
+    [
+      [
+        19,
+        22
+      ],
+      [
+        20,
+        23
+      ]
+    ],
+    [
+      [
+        20,
+        23
+      ],
+      [
+        21,
+        23
+      ]
+    ]
+  ],
+  "measurements": {
+    "ridge_length_hex": 27,
+    "wall_end_dist_hex": 7,
+    "wall_unique_hexes": 9,
+    "wall_hexes": [
+      [
+        14,
+        23
+      ],
+      [
+        15,
+        23
+      ],
+      [
+        16,
+        23
+      ],
+      [
+        17,
+        22
+      ],
+      [
+        17,
+        23
+      ],
+      [
+        18,
+        23
+      ],
+      [
+        19,
+        22
+      ],
+      [
+        20,
+        23
+      ],
+      [
+        21,
+        23
+      ]
+    ],
+    "pritchard_hex": [
+      25,
+      26
+    ],
+    "wall_to_pritchard_hex": 7,
+    "winchester_hex_count": 20,
+    "hoge_min_dist_wall_m": 570.0,
+    "vex": 1.0
+  },
+  "winchester_courthouse_vp": {
+    "hex": [
+      42,
+      41
+    ],
+    "lon": -78.16444,
+    "lat": 39.18389,
+    "name": "Frederick County Courthouse",
+    "primary_vp": true,
+    "victory_points": 1
+  }
+}

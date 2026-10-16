@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+*.pyc
+dist/
+mod/Graphics/Tiles/
+data/basemap_*.png
+*.bak*

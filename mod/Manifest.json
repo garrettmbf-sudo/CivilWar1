@@ -1,0 +1,8 @@
+{
+  "modName": "Shenandoah Valley 1862 \u2014 First Kernstown",
+  "modAuthor": "CivilWar1 project",
+  "modVersion": "0.3.0",
+  "dependencies": "None",
+  "supportedGameVersion": "8.0.0+",
+  "modDescription": "First Kernstown, 23 March 1862. 62x55 hexes at 250 yd, 3410 unique painted SV_K_col_row tiles (Summer folder) sliced from one continuous painted basemap: early-March tan/brown fields, leafless woods, Valley Pike, creeks, fences, Sandy Ridge stone wall, 1862 Winchester. No hex grid baked into tiles. Scenario .sav is generated on your PC by tools/build_kernstown_map.ps1."
+}

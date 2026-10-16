@@ -1,0 +1,229 @@
+{
+  "cols": 62,
+  "rows": 55,
+  "hexes": {
+    "24,27": {
+      "col": 24,
+      "row": 27,
+      "marsh": true,
+      "terrain_tag": "marsh"
+    },
+    "20,26": {
+      "col": 20,
+      "row": 26,
+      "marsh": true,
+      "terrain_tag": "marsh"
+    },
+    "21,25": {
+      "col": 21,
+      "row": 25,
+      "marsh": true,
+      "terrain_tag": "marsh"
+    },
+    "22,26": {
+      "col": 22,
+      "row": 26,
+      "marsh": true,
+      "terrain_tag": "marsh"
+    },
+    "23,25": {
+      "col": 23,
+      "row": 25,
+      "marsh": true,
+      "terrain_tag": "marsh"
+    },
+    "19,24": {
+      "col": 19,
+      "row": 24,
+      "marsh": true,
+      "terrain_tag": "marsh"
+    },
+    "24,26": {
+      "col": 24,
+      "row": 26,
+      "marsh": true,
+      "terrain_tag": "marsh"
+    },
+    "25,25": {
+      "col": 25,
+      "row": 25,
+      "marsh": true,
+      "terrain_tag": "marsh"
+    },
+    "20,25": {
+      "col": 20,
+      "row": 25,
+      "marsh": true,
+      "terrain_tag": "marsh"
+    },
+    "21,24": {
+      "col": 21,
+      "row": 24,
+      "marsh": true,
+      "terrain_tag": "marsh"
+    },
+    "22,25": {
+      "col": 22,
+      "row": 25,
+      "marsh": true,
+      "terrain_tag": "marsh"
+    },
+    "23,24": {
+      "col": 23,
+      "row": 24,
+      "marsh": true,
+      "terrain_tag": "marsh"
+    },
+    "19,23": {
+      "col": 19,
+      "row": 23,
+      "marsh": true,
+      "terrain_tag": "marsh"
+    },
+    "24,25": {
+      "col": 24,
+      "row": 25,
+      "marsh": true,
+      "terrain_tag": "marsh"
+    },
+    "18,24": {
+      "col": 18,
+      "row": 24,
+      "marsh": true,
+      "terrain_tag": "marsh"
+    },
+    "21,23": {
+      "col": 21,
+      "row": 23,
+      "marsh": true,
+      "terrain_tag": "marsh",
+      "stone_wall": true
+    },
+    "21,26": {
+      "col": 21,
+      "row": 26,
+      "marsh": true,
+      "terrain_tag": "marsh"
+    },
+    "20,24": {
+      "col": 20,
+      "row": 24,
+      "marsh": true,
+      "terrain_tag": "marsh"
+    },
+    "23,23": {
+      "col": 23,
+      "row": 23,
+      "marsh": true,
+      "terrain_tag": "marsh"
+    },
+    "23,26": {
+      "col": 23,
+      "row": 26,
+      "marsh": true,
+      "terrain_tag": "marsh"
+    },
+    "22,24": {
+      "col": 22,
+      "row": 24,
+      "marsh": true,
+      "terrain_tag": "marsh"
+    },
+    "19,25": {
+      "col": 19,
+      "row": 25,
+      "marsh": true,
+      "terrain_tag": "marsh"
+    },
+    "24,24": {
+      "col": 24,
+      "row": 24,
+      "marsh": true,
+      "terrain_tag": "marsh"
+    },
+    "14,24": {
+      "col": 14,
+      "row": 24,
+      "stone_wall": true,
+      "terrain_tag": "stone_wall"
+    },
+    "17,23": {
+      "col": 17,
+      "row": 23,
+      "stone_wall": true,
+      "terrain_tag": "stone_wall",
+      "damage_modificator": 35,
+      "wall_edge": "N"
+    },
+    "18,23": {
+      "col": 18,
+      "row": 23,
+      "stone_wall": true,
+      "terrain_tag": "stone_wall",
+      "damage_modificator": 35,
+      "wall_edge": "N"
+    },
+    "20,23": {
+      "col": 20,
+      "row": 23,
+      "stone_wall": true,
+      "terrain_tag": "stone_wall",
+      "damage_modificator": 35,
+      "wall_edge": "N"
+    },
+    "15,23": {
+      "col": 15,
+      "row": 23,
+      "stone_wall": true,
+      "terrain_tag": "stone_wall",
+      "damage_modificator": 35,
+      "wall_edge": "N"
+    },
+    "19,22": {
+      "col": 19,
+      "row": 22,
+      "stone_wall": true,
+      "terrain_tag": "stone_wall",
+      "damage_modificator": 35,
+      "wall_edge": "N"
+    },
+    "16,24": {
+      "col": 16,
+      "row": 24,
+      "stone_wall": true,
+      "terrain_tag": "stone_wall"
+    },
+    "16,23": {
+      "col": 16,
+      "row": 23,
+      "stone_wall": true,
+      "terrain_tag": "stone_wall",
+      "damage_modificator": 35,
+      "wall_edge": "N"
+    },
+    "42,41": {
+      "col": 42,
+      "row": 41,
+      "vp": true,
+      "primary_vp": true,
+      "vp_name": "Frederick County Courthouse",
+      "victory_points": 1,
+      "terrain_tag": "city_vp",
+      "label": "Courthouse"
+    },
+    "14,23": {
+      "col": 14,
+      "row": 23,
+      "stone_wall": true,
+      "terrain_tag": "stone_wall",
+      "damage_modificator": 35,
+      "wall_edge": "N"
+    },
+    "17,22": {
+      "col": 17,
+      "row": 22,
+      "stone_wall": true,
+      "terrain_tag": "stone_wall"
+    }
+  }
+}

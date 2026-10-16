@@ -1,0 +1,96 @@
+{
+  "hexsides": [
+    {
+      "col": 14,
+      "row": 23,
+      "edge": 0,
+      "edge_name": "N",
+      "draw_edge": 1
+    },
+    {
+      "col": 15,
+      "row": 23,
+      "edge": 0,
+      "edge_name": "N",
+      "draw_edge": 1
+    },
+    {
+      "col": 16,
+      "row": 23,
+      "edge": 0,
+      "edge_name": "N",
+      "draw_edge": 1
+    },
+    {
+      "col": 17,
+      "row": 23,
+      "edge": 0,
+      "edge_name": "N",
+      "draw_edge": 1
+    },
+    {
+      "col": 18,
+      "row": 23,
+      "edge": 0,
+      "edge_name": "N",
+      "draw_edge": 1
+    },
+    {
+      "col": 19,
+      "row": 22,
+      "edge": 0,
+      "edge_name": "N",
+      "draw_edge": 1
+    },
+    {
+      "col": 20,
+      "row": 23,
+      "edge": 0,
+      "edge_name": "N",
+      "draw_edge": 1
+    }
+  ],
+  "confederate_hexes": [
+    [
+      14,
+      23
+    ],
+    [
+      15,
+      23
+    ],
+    [
+      16,
+      23
+    ],
+    [
+      17,
+      23
+    ],
+    [
+      18,
+      23
+    ],
+    [
+      19,
+      22
+    ],
+    [
+      20,
+      23
+    ]
+  ],
+  "notes": "Wall INSIDE Confed hexes along N edge. Layers tagged; DamageModificator=35. HoS: no hexside/directional combat. Prefer DM35 over fortification tile.",
+  "damage_modificator": 35,
+  "damage_modificator_notes": "HoS stock: Plain=0, Forest/ThinForest=25, Hill=15, City=40, HillForest=50, Mountain=60. Stone wall=35 (between forest and city). Bonus is NOT directional \u2014 HoS has no hexside facing.",
+  "hos_fortification_research": {
+    "recommendation": "DamageModificator 35 only; do not use fortification tile",
+    "why_not_fortification": "Fortification tiles (ex-trenches) and bunkers are whole-hex; dev confirmed no side/rear attack system, so not directional or owner-only. Would fight unique SV_K art (WWII trench look).",
+    "alternatives": {
+      "entrenchment": "Unit field EntrenchmentLevelOnStart (-15%/level); optional for Confed units on wall hexes",
+      "bunker_unit": "Engineer-built armor unit; wrong scale/era for dry-stone wall",
+      "earthwork_fort_tile": "Named fort tiles exist in ACW.sav as VPs; not a field wall"
+    },
+    "ps1": "build_kernstown_map.ps1 sets DamageModificator=35 on stone_wall-tagged hexes"
+  }
+}

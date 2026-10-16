@@ -1,0 +1,60 @@
+{
+  "W": 6635,
+  "H": 6723,
+  "px_per_m": 0.55,
+  "R_px": 72.59024934521165,
+  "style": "painted-sheet1+sheet2; wall sprites; fixed Hoge Run; Winchester grid",
+  "vex": 1.0,
+  "measurements": {
+    "ridge_length_hex": 27,
+    "wall_end_dist_hex": 7,
+    "wall_unique_hexes": 9,
+    "wall_hexes": [
+      [
+        14,
+        23
+      ],
+      [
+        15,
+        23
+      ],
+      [
+        16,
+        23
+      ],
+      [
+        17,
+        22
+      ],
+      [
+        17,
+        23
+      ],
+      [
+        18,
+        23
+      ],
+      [
+        19,
+        22
+      ],
+      [
+        20,
+        23
+      ],
+      [
+        21,
+        23
+      ]
+    ],
+    "pritchard_hex": [
+      25,
+      26
+    ],
+    "wall_to_pritchard_hex": 7,
+    "winchester_hex_count": 20,
+    "hoge_min_dist_wall_m": 570.0,
+    "vex": 1.0
+  },
+  "note": "previews only; no tile re-slice"
+}

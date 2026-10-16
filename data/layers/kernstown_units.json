@@ -1,0 +1,127 @@
+{
+ "date": "1862-03-23",
+ "source_note": "Brigade-level OOB, First Kernstown (Shields' div. under Col. N. Kimball vs Jackson's Valley District). Positions approximate mid-afternoon before Tyler's assault on the stone wall. Rows increase northward.",
+ "template_note": "Unit Name/Country must exist in the unit-source .sav (ACW sample: Infantry, Light Cavalry, Napoleon 12pdr; countries Union, Confederacy).",
+ "units": [
+  {
+   "country": "Confederacy",
+   "custom_name": "Stonewall Bde (Garnett) 2,4,5,27,33 VA",
+   "template_name": "Infantry",
+   "col": 17,
+   "row": 23,
+   "entrenchment_on_start": 2
+  },
+  {
+   "country": "Confederacy",
+   "custom_name": "Fulkerson's Bde 23,37 VA",
+   "template_name": "Infantry",
+   "col": 15,
+   "row": 23,
+   "entrenchment_on_start": 2
+  },
+  {
+   "country": "Confederacy",
+   "custom_name": "Burks' Bde 21,42,48 VA, 1 VA Bn",
+   "template_name": "Infantry",
+   "col": 17,
+   "row": 20,
+   "entrenchment_on_start": 0
+  },
+  {
+   "country": "Confederacy",
+   "custom_name": "Ashby's 7th Virginia Cavalry",
+   "template_name": "Light Cavalry",
+   "col": 27,
+   "row": 17,
+   "entrenchment_on_start": 0
+  },
+  {
+   "country": "Confederacy",
+   "custom_name": "Chew's Battery (horse arty)",
+   "template_name": "Napoleon 12pdr",
+   "col": 26,
+   "row": 18,
+   "entrenchment_on_start": 0
+  },
+  {
+   "country": "Confederacy",
+   "custom_name": "Rockbridge Artillery (McLaughlin)",
+   "template_name": "Napoleon 12pdr",
+   "col": 16,
+   "row": 22,
+   "entrenchment_on_start": 0
+  },
+  {
+   "country": "Confederacy",
+   "custom_name": "Carpenter's Battery",
+   "template_name": "Napoleon 12pdr",
+   "col": 18,
+   "row": 22,
+   "entrenchment_on_start": 0
+  },
+  {
+   "country": "Confederacy",
+   "custom_name": "West Augusta Arty (Waters)",
+   "template_name": "Napoleon 12pdr",
+   "col": 19,
+   "row": 21,
+   "entrenchment_on_start": 0
+  },
+  {
+   "country": "Union",
+   "custom_name": "1st Bde (Kimball) 14 IN, 8,67 OH, 84 PA",
+   "template_name": "Infantry",
+   "col": 25,
+   "row": 26,
+   "entrenchment_on_start": 0
+  },
+  {
+   "country": "Union",
+   "custom_name": "2nd Bde (Sullivan) 39 IL, 13 IN, 5,62 OH",
+   "template_name": "Infantry",
+   "col": 29,
+   "row": 24,
+   "entrenchment_on_start": 0
+  },
+  {
+   "country": "Union",
+   "custom_name": "3rd Bde (Tyler) 7 IN, 7,29 OH, 110 PA, 1 WV",
+   "template_name": "Infantry",
+   "col": 17,
+   "row": 25,
+   "entrenchment_on_start": 0
+  },
+  {
+   "country": "Union",
+   "custom_name": "Btry A 1st WV Arty (Jenks)",
+   "template_name": "Napoleon 12pdr",
+   "col": 25,
+   "row": 27,
+   "entrenchment_on_start": 0
+  },
+  {
+   "country": "Union",
+   "custom_name": "Btry E 4th US Arty (Clark)",
+   "template_name": "Napoleon 12pdr",
+   "col": 26,
+   "row": 27,
+   "entrenchment_on_start": 0
+  },
+  {
+   "country": "Union",
+   "custom_name": "Btry L 1st Ohio Arty (Robinson)",
+   "template_name": "Napoleon 12pdr",
+   "col": 26,
+   "row": 26,
+   "entrenchment_on_start": 0
+  },
+  {
+   "country": "Union",
+   "custom_name": "Brodhead's Cav (1 MI, 1 WV, 1 OH sqns)",
+   "template_name": "Light Cavalry",
+   "col": 13,
+   "row": 25,
+   "entrenchment_on_start": 0
+  }
+ ]
+}

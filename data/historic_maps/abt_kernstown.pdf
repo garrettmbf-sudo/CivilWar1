@@ -1,0 +1,1375 @@
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr" prefix="content: http://purl.org/rss/1.0/modules/content/  dc: http://purl.org/dc/terms/  foaf: http://xmlns.com/foaf/0.1/  og: http://ogp.me/ns#  rdfs: http://www.w3.org/2000/01/rdf-schema#  schema: http://schema.org/  sioc: http://rdfs.org/sioc/ns#  sioct: http://rdfs.org/sioc/types#  skos: http://www.w3.org/2004/02/skos/core#  xsd: http://www.w3.org/2001/XMLSchema# ">
+  <head>
+    <meta charset="utf-8" />
+<noscript><style>form.antibot > * { display: none !important; } form.antibot noscript { display: block !important; }</style>
+</noscript><meta name="description" content="Sorry, the page you were looking for doesn’t exist. Have you tried our keyword search? Go to the homepage or email us at web@battlefields.org if we..." />
+<link rel="canonical" href="https://www.battlefields.org/error" />
+<meta property="og:site_name" content="American Battlefield Trust" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://www.battlefields.org/error" />
+<meta property="og:title" content="Page Not Found" />
+<meta property="og:description" content="Sorry, the page you were looking for doesn’t exist. Have you tried our keyword search? Go to the homepage or email us at web@battlefields.org if we..." />
+<meta property="fb:pages" content="21813808850" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@battlefields" />
+<meta name="twitter:title" content="Page Not Found" />
+<meta name="twitter:description" content="Sorry, the page you were looking for doesn’t exist. Have you tried our keyword search? Go to the homepage or email us at web@battlefields.org if we..." />
+<meta name="twitter:site:id" content="25512685" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta property="og:image" content="https://www.battlefields.org/sites/default/files/american-battlefield-trust-gettysburg-noel-kline.jpg" />
+<meta property="og:image:alt" content="The American Battlefield Trust logo on top of a photograph of Gettysburg National Military Park by Noel Kline" />
+<meta property="twitter:image:alt" content="The American Battlefield Trust logo on top of a photograph of Gettysburg National Military Park by Noel Kline" />
+<meta property="og:image:width" content="1920" />
+<meta property="twitter:image:width" content="1920" />
+<meta property="og:image:height" content="1080" />
+<meta property="twitter:image:height" content="1080" />
+<meta property="og:image:secure_url" content="https://www.battlefields.org/sites/default/files/american-battlefield-trust-gettysburg-noel-kline.jpg" />
+<meta property="twitter:image" content="https://www.battlefields.org/sites/default/files/american-battlefield-trust-gettysburg-noel-kline.jpg" />
+<link rel="icon" href="/themes/client/abt/favicon.ico" type="image/vnd.microsoft.icon" />
+
+    <title>Page Not Found | American Battlefield Trust</title>
+    <link rel="stylesheet" media="all" href="/themes/contrib/stable/css/system/components/align.module.css?tmyp5b" />
+<link rel="stylesheet" media="all" href="/themes/contrib/stable/css/system/components/container-inline.module.css?tmyp5b" />
+<link rel="stylesheet" media="all" href="/themes/contrib/stable/css/system/components/clearfix.module.css?tmyp5b" />
+<link rel="stylesheet" media="all" href="/themes/contrib/stable/css/system/components/hidden.module.css?tmyp5b" />
+<link rel="stylesheet" media="all" href="/themes/contrib/stable/css/system/components/js.module.css?tmyp5b" />
+<link rel="stylesheet" media="all" href="/modules/contrib/antibot/css/antibot.css?tmyp5b" />
+<link rel="stylesheet" media="all" href="/themes/contrib/stable/css/core/components/progress.module.css?tmyp5b" />
+<link rel="stylesheet" media="all" href="/themes/contrib/stable/css/core/components/ajax-progress.module.css?tmyp5b" />
+<link rel="stylesheet" media="all" href="https://cdn.jsdelivr.net/npm/instantsearch.css@8.0.0/themes/reset-min.css" />
+<link rel="stylesheet" media="all" href="/modules/custom/abt_core/css/abt_core_search.css?tmyp5b" />
+<link rel="stylesheet" media="all" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.min.css" />
+<link rel="stylesheet" media="all" href="/modules/custom/abt_core/css/admin.css?tmyp5b" />
+<link rel="stylesheet" media="all" href="/modules/contrib/ckeditor_indentblock/css/plugins/indentblock/ckeditor.indentblock.css?tmyp5b" />
+<link rel="stylesheet" media="all" href="/modules/custom/ik_d8_module_core/css/admin-custom.css?tmyp5b" />
+<link rel="stylesheet" media="all" href="/themes/contrib/stable/css/core/assets/vendor/normalize-css/normalize.css?tmyp5b" />
+<link rel="stylesheet" media="all" href="/themes/contrib/stable/css/core/normalize-fixes.css?tmyp5b" />
+<link rel="stylesheet" media="all" href="//fonts.googleapis.com/css?family=Roboto+Condensed:300,300italic,400,400italic,700,700italic,italic,regular|Roboto:regular,bold&amp;subset=latin" />
+<link rel="stylesheet" media="all" href="//use.typekit.net/yky4vbw.css" />
+<link rel="stylesheet" media="all" href="/themes/client/abt/styles/css/style.css?tmyp5b" />
+<link rel="stylesheet" media="all" href="/themes/contrib/classy/css/components/action-links.css?tmyp5b" />
+<link rel="stylesheet" media="all" href="/themes/contrib/classy/css/components/breadcrumb.css?tmyp5b" />
+<link rel="stylesheet" media="all" href="/themes/contrib/classy/css/components/button.css?tmyp5b" />
+<link rel="stylesheet" media="all" href="/themes/contrib/classy/css/components/collapse-processed.css?tmyp5b" />
+<link rel="stylesheet" media="all" href="/themes/contrib/classy/css/components/container-inline.css?tmyp5b" />
+<link rel="stylesheet" media="all" href="/themes/contrib/classy/css/components/details.css?tmyp5b" />
+<link rel="stylesheet" media="all" href="/themes/contrib/classy/css/components/exposed-filters.css?tmyp5b" />
+<link rel="stylesheet" media="all" href="/themes/contrib/classy/css/components/field.css?tmyp5b" />
+<link rel="stylesheet" media="all" href="/themes/contrib/classy/css/components/form.css?tmyp5b" />
+<link rel="stylesheet" media="all" href="/themes/contrib/classy/css/components/icons.css?tmyp5b" />
+<link rel="stylesheet" media="all" href="/themes/contrib/classy/css/components/inline-form.css?tmyp5b" />
+<link rel="stylesheet" media="all" href="/themes/contrib/classy/css/components/item-list.css?tmyp5b" />
+<link rel="stylesheet" media="all" href="/themes/contrib/classy/css/components/link.css?tmyp5b" />
+<link rel="stylesheet" media="all" href="/themes/contrib/classy/css/components/links.css?tmyp5b" />
+<link rel="stylesheet" media="all" href="/themes/contrib/classy/css/components/menu.css?tmyp5b" />
+<link rel="stylesheet" media="all" href="/themes/contrib/classy/css/components/more-link.css?tmyp5b" />
+<link rel="stylesheet" media="all" href="/themes/contrib/classy/css/components/pager.css?tmyp5b" />
+<link rel="stylesheet" media="all" href="/themes/contrib/classy/css/components/tabledrag.css?tmyp5b" />
+<link rel="stylesheet" media="all" href="/themes/contrib/classy/css/components/tableselect.css?tmyp5b" />
+<link rel="stylesheet" media="all" href="/themes/contrib/classy/css/components/tablesort.css?tmyp5b" />
+<link rel="stylesheet" media="all" href="/themes/contrib/classy/css/components/tabs.css?tmyp5b" />
+<link rel="stylesheet" media="all" href="/themes/contrib/classy/css/components/textarea.css?tmyp5b" />
+<link rel="stylesheet" media="all" href="/themes/contrib/classy/css/components/ui-dialog.css?tmyp5b" />
+<link rel="stylesheet" media="all" href="/themes/contrib/classy/css/components/messages.css?tmyp5b" />
+<link rel="stylesheet" media="all" href="/themes/contrib/classy/css/components/node.css?tmyp5b" />
+<link rel="stylesheet" media="all" href="/themes/contrib/classy/css/components/progress.css?tmyp5b" />
+
+    <script type="application/json" data-drupal-selector="drupal-settings-json">{"path":{"baseUrl":"\/","pathPrefix":"","currentPath":"","currentPathIsAdmin":false,"isFront":false,"currentLanguage":"en"},"pluralDelimiter":"\u0003","suppressDeprecationErrors":true,"gtag":{"tagId":"","consentMode":true,"otherIds":[],"events":[],"additionalConfigInfo":[]},"ajaxPageState":{"libraries":"eJxtkGFSAyEMhS_EliN1AqQMLpAtCSqe3hSs1k7_MO99D0IScGLBe2ohUWUDal0mv187CU6L79gGeNF8-pjJQd5YRk41TqRiX28LBc2kgd_v4US8NWSU7UK-r5sHNk4sUGU7oEFZtOnXMpWAy7jgBzpOgqusPptwUJfuZotnbR8thJLqY1tnPKgJZIuhexBq2_JbTq5BG0aLhaT8nGrAKnNu-6CNz8A8rAPGuy7IDFEb-_GVgma3_yu1Ajl9oYlEMeNZINqox7M_wRt8_ofFpH1N8bTda09-v63X_qpXTCdI8jI4KI9LytnoqkX3nTzb0PoB-fRHDA8WLHPQb6VezSg","theme":"abt","theme_token":null},"ajaxTrustedUrl":[],"gtm":{"tagId":null,"settings":{"data_layer":"dataLayer","include_classes":false,"allowlist_classes":"","blocklist_classes":"","include_environment":false,"environment_id":"","environment_token":""},"tagIds":["GTM-MM395Q9"]},"modals":{"admin":false,"user":null,"debug":false,"geolocate":false,"useBoostrap":true,"manualTriggers":[],"exitIntentTriggers":["modal--51"],"modal--6":{"active":false,"debugName":"Warrior Newsletter Sign-Up","showAgainDismiss":null,"showAgainConvert":null,"showAgainVisit":null,"showDateStart":"2026-10-15","showDateEnd":"2026-10-15","showDelay":"3","showIfReferred":[],"showLocationsCountries":[],"showLocationsState":[],"showOnPages":["\/learn\/major-conflicts\/warrior-legacy-programs-veterans-active-duty-military-families","\/node\/8466"],"userVisitedLast":null,"showOverride":null,"triggerType":"automatic","triggerSelectors":null},"modal--10":{"active":false,"debugName":"Legacy Giving Brochures Modal","showAgainDismiss":null,"showAgainConvert":null,"showAgainVisit":null,"showDateStart":"2026-10-15","showDateEnd":"2026-10-15","showDelay":"3","showIfReferred":[],"showLocationsCountries":[],"showLocationsState":[],"showOnPages":["give\/membership","give\/donate","give\/donate-tribute","give\/ways-to-give","\/donor-advised-funds","give\/support-education","give\/membership","give\/membership\/renew","give\/membership\/color-bearer","give\/membership\/gift-membership","give\/membership\/membership-benefits","give\/membership\/color-bearer-benefits"],"userVisitedLast":null,"showOverride":null,"triggerType":"automatic","triggerSelectors":null},"modal--12":{"active":false,"debugName":"Battlefield Visitation Survey","showAgainDismiss":"7","showAgainConvert":null,"showAgainVisit":null,"showDateStart":"2026-10-15","showDateEnd":"2026-10-15","showDelay":"3","showIfReferred":[],"showLocationsCountries":[],"showLocationsState":[],"showOnPages":[],"userVisitedLast":null,"showOverride":null,"triggerType":"automatic","triggerSelectors":null},"modal--14":{"active":false,"debugName":"Annual Art Sale","showAgainDismiss":null,"showAgainConvert":null,"showAgainVisit":null,"showDateStart":"2026-10-15","showDateEnd":"2026-10-15","showDelay":"3","showIfReferred":[],"showLocationsCountries":[],"showLocationsState":[],"showOnPages":[],"userVisitedLast":null,"showOverride":null,"triggerType":"automatic","triggerSelectors":null},"modal--21":{"active":false,"debugName":"Gaines\u0027 Mill - Cold Harbor Saved Forever Campaign","showAgainDismiss":null,"showAgainConvert":null,"showAgainVisit":null,"showDateStart":"2022-12-06","showDateEnd":"2022-12-22","showDelay":"3","showIfReferred":[],"showLocationsCountries":[],"showLocationsState":[],"showOnPages":[],"userVisitedLast":null,"showOverride":null,"triggerType":"automatic","triggerSelectors":null},"modal--28":{"active":false,"debugName":"Head-Tilting History Email Sign-Up","showAgainDismiss":"30","showAgainConvert":null,"showAgainVisit":null,"showDateStart":"2026-10-15","showDateEnd":"2026-10-15","showDelay":"3","showIfReferred":[],"showLocationsCountries":[],"showLocationsState":[],"showOnPages":["\/learn\/articles\/head-tilting-history","\/learn\/articles\/head-tilting-history\/*","\/learn\/articles\/*"],"userVisitedLast":null,"showOverride":null,"triggerType":"automatic","triggerSelectors":null},"modal--29":{"active":false,"debugName":"The Nature of History Email Sign-Up","showAgainDismiss":null,"showAgainConvert":"30","showAgainVisit":"30","showDateStart":"2026-10-15","showDateEnd":"2026-10-15","showDelay":"3","showIfReferred":[],"showLocationsCountries":[],"showLocationsState":[],"showOnPages":["\/learn\/nature-of-history","\/learn\/nature-of-history\/*","\/learn\/articles\/*","\/preserve\/battlefields-mean-ecosystems"],"userVisitedLast":null,"showOverride":null,"triggerType":"automatic","triggerSelectors":null},"modal--30":{"active":false,"debugName":"The Battlefield Bulletin Sign-Up","showAgainDismiss":"30","showAgainConvert":null,"showAgainVisit":null,"showDateStart":"2026-10-15","showDateEnd":"2026-10-15","showDelay":"3","showIfReferred":[],"showLocationsCountries":[],"showLocationsState":[],"showOnPages":["\/learn\/educators","\/learn\/educators\/*","\/learn\/educators\/resources\/field-trip-fund","\/learn\/educators\/civil-war-curriculum","\/learn\/educators\/civil-war-inquiry-curriculum","\/learn\/educators\/resources\/civil-war-traveling-trunk","\/learn\/educators\/great-task","\/events\/national-teacher-institute-2023","\/events\/2023-virtual-teacher-institute","\/other-educational-resources"],"userVisitedLast":null,"showOverride":null,"triggerType":"automatic","triggerSelectors":null},"modal--31":{"active":false,"debugName":"The Liberty Trail Email Sign-Up","showAgainDismiss":"30","showAgainConvert":null,"showAgainVisit":null,"showDateStart":"2026-10-15","showDateEnd":"2026-10-15","showDelay":"3","showIfReferred":[],"showLocationsCountries":[],"showLocationsState":[],"showOnPages":["\/learn\/revolutionary-war\/libertytrail","\/visit\/mobile-apps\/liberty-trail-app","\/learn\/revolutionary-war","\/learn\/revolutionary-war\/*","\/learn\/maps\/southern-campaign-1776-1781","\/learn\/maps\/southern-campaign-animated-map","\/visit\/itineraries\/tour-revolutionary-war-southern-campaign-three-days"],"userVisitedLast":null,"showOverride":null,"triggerType":"automatic","triggerSelectors":null},"modal--32":{"active":false,"debugName":"Join the Charge Email Sign-Up","showAgainDismiss":"7","showAgainConvert":"30","showAgainVisit":"30","showDateStart":"2024-04-09","showDateEnd":"2024-04-22","showDelay":"10","showIfReferred":[],"showLocationsCountries":[],"showLocationsState":[],"showOnPages":["\/preserve\/gettysburg-enlivening-iconic-battlefield"],"userVisitedLast":null,"showOverride":null,"triggerType":"automatic","triggerSelectors":null},"modal--35":{"active":false,"debugName":"Action Alerts Signup","showAgainDismiss":null,"showAgainConvert":null,"showAgainVisit":null,"showDateStart":"2026-10-15","showDateEnd":"2026-10-15","showDelay":"6","showIfReferred":[],"showLocationsCountries":[],"showLocationsState":[],"showOnPages":["\/speak-out\/digital-gateway-threatens-overwhelm-manassas-battlefield","\/events\/prince-william-planning-commission-meeting"],"userVisitedLast":null,"showOverride":null,"triggerType":"automatic","triggerSelectors":null},"modal--36":{"active":false,"debugName":"2023 Year-End Gettysburg","showAgainDismiss":"7","showAgainConvert":null,"showAgainVisit":null,"showDateStart":"2023-12-12","showDateEnd":"2023-12-23","showDelay":"3","showIfReferred":[],"showLocationsCountries":[],"showLocationsState":[],"showOnPages":[],"userVisitedLast":null,"showOverride":null,"triggerType":"automatic","triggerSelectors":null},"modal--38":{"active":false,"debugName":"2023 Year-End General 2","showAgainDismiss":null,"showAgainConvert":null,"showAgainVisit":null,"showDateStart":"2023-12-24","showDateEnd":"2023-12-31","showDelay":"3","showIfReferred":[],"showLocationsCountries":[],"showLocationsState":[],"showOnPages":[],"userVisitedLast":null,"showOverride":null,"triggerType":"automatic","triggerSelectors":null},"modal--39":{"active":false,"debugName":"MagellanTV Join the Charge Email Sign-Up","showAgainDismiss":"30","showAgainConvert":null,"showAgainVisit":null,"showDateStart":"2026-10-15","showDateEnd":"2026-10-15","showDelay":"8","showIfReferred":[],"showLocationsCountries":[],"showLocationsState":[],"showOnPages":["\/welcome-magellantv-subscribers"],"userVisitedLast":null,"showOverride":null,"triggerType":"automatic","triggerSelectors":null},"modal--40":{"active":false,"debugName":"MagellanTV Full","showAgainDismiss":"30","showAgainConvert":null,"showAgainVisit":null,"showDateStart":"2026-10-15","showDateEnd":"2026-10-15","showDelay":"3","showIfReferred":[],"showLocationsCountries":[],"showLocationsState":[],"showOnPages":["\/welcome-magellantv-subscribers"],"userVisitedLast":null,"showOverride":null,"triggerType":"automatic","triggerSelectors":null},"modal--41":{"active":false,"debugName":"Preserve Our Nation\u2019s Battlefields","showAgainDismiss":"14","showAgainConvert":null,"showAgainVisit":null,"showDateStart":"2024-07-01","showDateEnd":"2024-12-31","showDelay":"5","showIfReferred":[],"showLocationsCountries":[],"showLocationsState":[],"showOnPages":["\/home","\/learn\/*","\/visit\/*","\/preserve\/*","\/our-work\/*","\/news\/*","\/events\/*"],"userVisitedLast":null,"showOverride":null,"triggerType":"automatic","triggerSelectors":null},"modal--42":{"active":false,"debugName":"Juneteenth Join the Charge!","showAgainDismiss":null,"showAgainConvert":null,"showAgainVisit":null,"showDateStart":"2026-10-15","showDateEnd":"2026-10-15","showDelay":"5","showIfReferred":[],"showLocationsCountries":[],"showLocationsState":[],"showOnPages":["\/learn\/articles\/10-facts-juneteenth","\/learn\/articles\/juneteenth","\/learn\/quizzes\/how-well-do-you-know-juneteenth","\/events\/juneteenth-luminaria-fort-monroe-national-monument","\/learn\/primary-sources\/general-order-no-3"],"userVisitedLast":null,"showOverride":null,"triggerType":"automatic","triggerSelectors":null},"modal--43":{"active":false,"debugName":"Giving Tuesday 2024","showAgainDismiss":"3","showAgainConvert":null,"showAgainVisit":null,"showDateStart":"2024-11-21","showDateEnd":"2024-12-03","showDelay":"3","showIfReferred":[],"showLocationsCountries":[],"showLocationsState":[],"showOnPages":["\/learn","\/learn\/*","\/visit","\/visit\/*","\/preserve","\/preserve\/*","\/our-work","\/our-work\/*","\/news","\/news\/*","\/events","\/events\/*"],"userVisitedLast":null,"showOverride":null,"triggerType":"automatic","triggerSelectors":null},"modal--44":{"active":false,"debugName":"2024 Year-End Match (12\/21\/24-12\/31\/24)","showAgainDismiss":"4","showAgainConvert":null,"showAgainVisit":null,"showDateStart":"2024-12-21","showDateEnd":"2024-12-31","showDelay":"3","showIfReferred":[],"showLocationsCountries":[],"showLocationsState":[],"showOnPages":["\/learn","\/learn\/*","\/visit","\/visit\/*","\/preserve","\/preserve\/*","\/our-work","\/our-work\/*","\/news","\/news\/*","\/events","\/events\/*"],"userVisitedLast":null,"showOverride":null,"triggerType":"automatic","triggerSelectors":null},"modal--45":{"active":false,"debugName":"Our Enduring Legacy","showAgainDismiss":"30","showAgainConvert":null,"showAgainVisit":null,"showDateStart":"2025-04-16","showDateEnd":"2026-07-03","showDelay":"5","showIfReferred":[],"showLocationsCountries":[],"showLocationsState":[],"showOnPages":["\/home","\/learn","\/learn\/*","\/visit","\/visit\/*","\/preserve","\/preserve\/*","\/our-work","\/our-work\/*","\/news","\/news\/*","\/events","\/events\/*"],"userVisitedLast":null,"showOverride":null,"triggerType":"automatic","triggerSelectors":null},"modal--46":{"active":false,"debugName":"What Inspires You?","showAgainDismiss":"30","showAgainConvert":"30","showAgainVisit":"30","showDateStart":"2026-10-15","showDateEnd":"2026-10-15","showDelay":"4","showIfReferred":[],"showLocationsCountries":[],"showLocationsState":[],"showOnPages":["\/give\/membership\/welcome"],"userVisitedLast":null,"showOverride":null,"triggerType":"automatic","triggerSelectors":null},"modal--47":{"active":false,"debugName":"Join the Legacy Challenge!","showAgainDismiss":"45","showAgainConvert":"0","showAgainVisit":"0","showDateStart":"2026-10-15","showDateEnd":"2026-10-15","showDelay":"3","showIfReferred":[],"showLocationsCountries":[],"showLocationsState":[],"showOnPages":["\/give","\/give\/ira-qcd","\/give\/ways-to-give"],"userVisitedLast":null,"showOverride":null,"triggerType":"automatic","triggerSelectors":null},"modal--48":{"active":false,"debugName":"Giving Tuesday 2025","showAgainDismiss":"7","showAgainConvert":null,"showAgainVisit":null,"showDateStart":"2026-10-15","showDateEnd":"2026-10-15","showDelay":"3","showIfReferred":[],"showLocationsCountries":[],"showLocationsState":[],"showOnPages":["\/home","\/learn","\/learn\/*","\/visit","\/visit\/*","\/preserve","\/preserve\/*","\/our-work","\/our-work\/*","\/news","\/news\/*","\/events","\/events\/*"],"userVisitedLast":null,"showOverride":null,"triggerType":"automatic","triggerSelectors":null},"modal--49":{"active":false,"debugName":"2025 Year-End Match (12\/23\/25-12\/31\/25)","showAgainDismiss":"4","showAgainConvert":null,"showAgainVisit":null,"showDateStart":"2025-12-23","showDateEnd":"2025-12-31","showDelay":"3","showIfReferred":[],"showLocationsCountries":[],"showLocationsState":[],"showOnPages":["\/learn","\/learn\/*","\/visit","\/visit\/*","\/preserve","\/preserve\/*","\/our-work","\/our-work\/*","\/news","\/news\/*","\/events","\/events\/*"],"userVisitedLast":null,"showOverride":null,"triggerType":"automatic","triggerSelectors":null},"modal--50":{"active":false,"debugName":"2026 Giving Fourth Eutaw Springs","showAgainDismiss":"3","showAgainConvert":"4","showAgainVisit":"4","showDateStart":"2026-06-26","showDateEnd":"2026-07-05","showDelay":"3","showIfReferred":[],"showLocationsCountries":[],"showLocationsState":[],"showOnPages":["\/home","\/learn","\/learn\/*","\/visit","\/visit\/*","\/preserve","\/preserve\/*","\/our-work","\/our-work\/*","\/news","\/news\/*","\/events","\/events\/*"],"userVisitedLast":null,"showOverride":null,"triggerType":"automatic","triggerSelectors":null},"modal--51":{"active":true,"debugName":"The Land Remembers Exit ","showAgainDismiss":"1","showAgainConvert":"1","showAgainVisit":"1","showDateStart":"2026-10-15","showDateEnd":"2026-10-15","showDelay":"0","showIfReferred":[],"showLocationsCountries":[],"showLocationsState":[],"showOnPages":["\/thelandremembers"],"userVisitedLast":null,"showOverride":null,"triggerType":"exit_intent","triggerSelectors":null}},"statistics":{"data":{"nid":"1"},"url":"\/modules\/contrib\/statistics\/statistics.php"},"abt_core":{"algoliaSearch":{"searchClient":{"appId":"GEG0U4VQ90","apiKey":"4af5b532aa4d0a6274e2297f5c577d2a"},"indexName":"algolia_site_search"},"params":["ms","\r\nutm_campaign","\r\nutm_medium","\r\nutm_source"],"new_design":true},"abt_eportal":{"abt_api_client_id":"01ebf0da-5f76-4335-bfaa-bed6af8d40cb"},"abt_maps":{"siteurl":"https:\/\/www.battlefields.org"},"valortrail_url":"https:\/\/www.valortrail.org","quicklink":{"admin_link_container_patterns":["#block-local-tasks-block a",".block-local-tasks-block a","#drupal-off-canvas a","#toolbar-administration a"],"ignore_admin_paths":true,"ignore_ajax_links":true,"ignore_file_ext":true,"total_request_limit":0,"concurrency_throttle_limit":0,"idle_wait_timeout":2000,"viewport_delay":0,"debug":false,"url_patterns_to_ignore":["user\/logout","\/search?","#","\/admin","\/edit"]},"user":{"uid":0,"permissionsHash":"466b5405282fa124fdb85b96fda61cce706fb24c9621e1f0104687946126a1eb"}}</script>
+<script src="https://consent.cookiebot.com/uc.js" id="Cookiebot" data-cbid="652dab6a-f792-4259-9c22-7c5c9b9e2967" data-blockingmode="auto"></script>
+<script src="/core/misc/drupalSettingsLoader.js?v=11.4.10" data-cookieconsent="necessary"></script>
+<script src="/modules/contrib/google_tag/js/gtag.js?tmyp5b"></script>
+<script src="/modules/contrib/google_tag/js/gtm.js?tmyp5b"></script>
+
+  </head>
+  <body class="theme--america-250 theme--homepage-redesign front-end-theme   user-role--anonymous path-sites page-node-type-page page-layout-page-default">
+        <a href="#maincontent" class="visually-hidden focusable skip-link" tabindex="0">
+      Skip to main content
+    </a>
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MM395Q9"
+                  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+      <div class="dialog-off-canvas-main-canvas" data-off-canvas-main-canvas>
+    <div class="layout-container">
+
+  <header role="banner" id="page-header">
+      <div class="region region-header">
+    
+
+
+<div id="block-sitewideopportunityalert" class="settings-tray-editable block block-abt-core block-abt-sitewide-alert" data-drupal-settingstray="editable">
+  
+  
+      
+  </div>
+
+
+
+<div id="block-algoliasearch" class="settings-tray-editable block block-abt-core block-abt-core-algolia-search" data-drupal-settingstray="editable">
+  
+  
+      
+<div id="algolia-search-menu" class="container-lg algolia-search-menu d-none">
+	<div class="search-panel">
+		<div class="search-panel__filters"></div>
+		<div class="search-panel__results">
+			<div class="searchbox-container d-flex">
+				<div id="searchbox">
+					<div id="autocomplete"></div>
+					<div id="menu-query-suggestions-container"></div>
+				</div>
+			</div>
+			<div class="results-container d-flex flex-column align-items-center justify-content-center">
+				<div id="loading-indicator" class="loading-indicator text-align-center p-5" style=""></div>
+				<div id="hits">
+					<a class="all-results d-flex justify-content-center mb-lg-25" href="/search">
+						<div class="all-results-btn-container">
+							<span class="all-results-btn uppercase">See all results</span>
+						</div>
+					</a>
+				</div>
+			</div>
+			<div id="pagination" class="d-flex"></div>
+		</div>
+	</div>
+</div>
+
+  </div>
+
+  </div>
+
+  </header>
+
+  
+  
+
+  
+
+  
+
+  
+
+  <main role="main">
+      
+    <div class="layout-content">
+        <div class="region region-content">
+    <div data-drupal-messages-fallback class="hidden"></div>
+
+
+
+<div id="block-abt-content" class="block block-system block-system-main-block">
+  
+  
+      
+
+<article about="/error" class="node node--type-page node--view-mode-full node--not-found">
+
+  
+  
+
+  <div class="node__content">
+    <div class="layout layout--onecol layout--main">
+      <div class="layout__region layout__region--content">
+        <h1>Page Not Found</h1>
+        <div class="field field--name-body field--type-text-with-summary field--label-hidden text-formatted field__item">
+          <p><strong>Sorry, the page you were looking for doesn’t exist.</strong></p>
+
+<p>Have you tried our keyword search?</p>
+
+<p>Go to the&nbsp;<a href="https://www.battlefields.org/">homepage</a>&nbsp;or email us at&nbsp;<a href="mailto:web@battlefields.org">web@battlefields.org</a>&nbsp;if we can be of assistance!</p>
+
+        </div>
+        <div class="not-found-search-form views-exposed-form">
+          <form action="/search" method="GET" class="container-inline">
+            <div class="form-item">
+              <label for="not-found-search-input">Keyword</label>
+              <input id="not-found-search-input" type="text" name="search" placeholder="i.e. Gettysburg, Lesson Plans, Antietam battle maps">
+            </div>
+            <div class="form-actions">
+              <input class="form-submit" id="not-found-search-submit" type="submit" title="Search">
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</article>
+
+  </div>
+
+
+
+<div id="block-abt-prefooterredesign" class="settings-tray-editable block block-abt-core block-prefooter-redesign" data-drupal-settingstray="editable">
+  
+  
+      <div class="block-prefooter-redesign__wrapper">
+
+            <a class="block-prefooter-redesign__left" href="https://shop.battlefields.org/?a=abtprefooter">
+              <div class="block-prefooter-redesign__image">
+                      <img src="/sites/default/files/left_image-default-mobile.png" alt="Various magazine covers stacked on top of one another, a baseball hat with an American Battlefield Trust logo and a man wearing a hoodie with an American Battlefield Trust logo design on it." class="block-prefooter-redesign__image__mobile" />
+            <img src="/sites/default/files/left_image-default.png" alt="Various magazine covers stacked on top of one another, a baseball hat with an American Battlefield Trust logo and a man wearing a hoodie with an American Battlefield Trust logo design on it." class="block-prefooter-redesign__image__desktop" />
+                  </div>
+        <div class="block-prefooter-redesign__inner-content">
+          <h2 class="block-prefooter-redesign__title">Shop and Preserve</h2>
+          <div class="block-prefooter-redesign__text">Show your pride in battlefield preservation by shopping in our store. Every purchase supports the mission.</div>
+                    <div class="block-prefooter-redesign__link">Show Now</div>
+                  </div>
+           </a>
+      
+            <a class="block-prefooter-redesign__right" href="/about/accountability">
+              <div class="block-prefooter-redesign__image">
+                      <img src="/themes/client/abt/static/images/prefooter/right_image-default.png" alt="Charity Navigator logo with 4 stars" />
+                  </div>
+        <div class="block-prefooter-redesign__inner-content">
+          <h2 class="block-prefooter-redesign__title">Give with Confidence</h2>
+          <div class="block-prefooter-redesign__text">The Majority of our funds go directly to Preservation and Education.</div>
+                    <div class="block-prefooter-redesign__link">Our Financials</div>
+                  </div>
+            </a>
+          </div>
+  </div>
+
+
+
+<div id="block-emailsignup" class="settings-tray-editable block block-abt-core block-email-signup" data-drupal-settingstray="editable">
+  
+  
+      <div class="email-signup"><div class="title-wrapper"><h2>Join <span class="replace">t</span><span class="hide">he</span> Action</h2>
+      <p class="description">Get e-mail updates about U.S. history and battlefield preservation news.</p></div>
+       <div class="ngp-form" data-labels="inline" data-form-url="https://actions.everyaction.com/v1/Forms/CC4ePJPWckqHpXGTmuB6BQ2" data-fastaction-endpoint="https://fastaction.ngpvan.com" data-inline-errors="true" data-fastaction-nologin="true" data-databag="everybody">
+      </div></div>
+  </div>
+
+  </div>
+
+    </div>
+    
+    
+  </main>
+
+      <footer role="contentinfo">
+      <div class="region-pre-footer">
+          <div class="region region-modal">
+    
+
+
+<div id="block-modalsblock" class="settings-tray-editable block block-ik-modals block-ik-modals-block" data-drupal-settingstray="editable">
+  
+  
+      
+<div id="modal--51" aria-labelledby="modal--51--label" class="ik-modal modal modal--type-alternative fade modal--color-blue" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+                  <div class="modal-body">
+                  <div class="modal-body__overlay"></div>
+          <div class="modal-body__inner">
+            <div class="modal-body__inner__headlines">
+                            <div class="field--name-field-main-headline">
+                Not Ready to Join?
+              </div>
+              <div class="field--name-field-secondary-headline">
+                Stay connected instead! You'll receive the latest news, history, and special updates from the Trust – plus you'll be entered for a chance to receive one of 100 copies of our Battle Maps book.
+              </div>
+            </div>
+            
+
+            <div class="field field--name-field-everyaction-form field--type-entity-reference field--label-hidden field__item">
+
+
+<article class="media media--type-everyaction-form media--view-mode-default" data-form-id="44351">
+  
+      
+ 
+ 
+  <div class="ngp-form"
+     data-form-url="https://secure.everyaction.com/v1/Forms/YsH37tMvo0iriLDRExD1wA2"
+          data-fastaction-endpoint="https://fastaction.ngpvan.com"
+     data-inline-errors="true" data-labels="inline"
+     data-fastaction-nologin="true"
+          data-mobile-autofocus="false">
+</div>
+  
+ </article>
+</div>
+                </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  </div>
+
+          <div class="region region-pre-footer">
+    
+
+
+<div id="block-abt-educatorportalloginmodal" class="settings-tray-editable block block-abt-eportal block-abt-eportal-modal" data-drupal-settingstray="editable">
+  
+  
+      <div id="modal--eportal" class="modal modal--type-default fade modal--color-blue" tabindex="-1" role="dialog" aria-hidden="true"><div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h2>Battlefields Educators Login</h2>
+        <p>Login/Create account to save educator resources to your library.</p>
+        <div class="modal-expired" style="display: none;">
+          <p><strong>Your access link has expired or is invalid.</strong></p><p>Please request a new link by entering your email address below or check your email for the most recent access link provided.</p>
+        </div>
+        <form id="eportal-user-form">
+          <div class="form-item full">
+            <label for="eportal-user-email">Email<span class="required">*</span></label>
+            <input type="email" name="email" id="eportal-user-email" required placeholder="Email"/>
+          </div>
+          <div class="secondary-info" style="display: none;">
+            <div class="form-item">
+              <label for="eportal-user-firstname">First Name<span class="required">*</span></label>
+              <input type="text" name="first_name" id="eportal-user-firstname" placeholder="First Name"/>
+            </div>
+            <div class="form-item">
+              <label for="eportal-user-lastname">Last Name<span class="required">*</span></label>
+              <input type="text" name="last_name" id="eportal-user-lastname" placeholder="Last Name"/>
+            </div>
+            <div class="form-item full">
+              <label for="eportal-user-school">School Name</label>
+              <input type="text" name="school_name" id="eportal-user-school" placeholder="School Name"/>
+            </div>
+            <div class="form-item">
+              <label for="eportal-user-city">City</label>
+              <input type="text" name="city" id="eportal-user-city" placeholder="City"/>
+            </div>
+            <div class="form-item">
+              <label for="eportal-user-state">State</label>
+              <select class="form-select" id="eportal-user-state" name="state"><option value="">Select your state</option><option value="">Non-US State or Province</option><option value="AL">Alabama</option><option value="AK">Alaska</option><option value="AS">American Samoa</option><option value="AZ">Arizona</option><option value="AR">Arkansas</option><option value="AA">Armed Forces (AA)</option><option value="AE">Armed Forces (AE)</option><option value="AP">Armed Forces (AP)</option><option value="CA">California</option><option value="CO">Colorado</option><option value="CT">Connecticut</option><option value="DE">Delaware</option><option value="DC">District of Columbia</option><option value="FL">Florida</option><option value="GA">Georgia</option><option value="GU">Guam</option><option value="HI">Hawaii</option><option value="ID">Idaho</option><option value="IL">Illinois</option><option value="IN">Indiana</option><option value="IA">Iowa</option><option value="KS">Kansas</option><option value="KY">Kentucky</option><option value="LA">Louisiana</option><option value="ME">Maine</option><option value="MH">Marshall Islands</option><option value="MD">Maryland</option><option value="MA">Massachusetts</option><option value="MI">Michigan</option><option value="FM">Micronesia</option><option value="MN">Minnesota</option><option value="MS">Mississippi</option><option value="MO">Missouri</option><option value="MT">Montana</option><option value="NE">Nebraska</option><option value="NV">Nevada</option><option value="NH">New Hampshire</option><option value="NJ">New Jersey</option><option value="NM">New Mexico</option><option value="NY">New York</option><option value="NC">North Carolina</option><option value="ND">North Dakota</option><option value="MP">Northern Mariana Islands</option><option value="OH">Ohio</option><option value="OK">Oklahoma</option><option value="OR">Oregon</option><option value="PW">Palau</option><option value="PA">Pennsylvania</option><option value="PR">Puerto Rico</option><option value="RI">Rhode Island</option><option value="SC">South Carolina</option><option value="SD">South Dakota</option><option value="TN">Tennessee</option><option value="TX">Texas</option><option value="UT">Utah</option><option value="VT">Vermont</option><option value="VI">Virgin Islands</option><option value="VA">Virginia</option><option value="WA">Washington</option><option value="WV">West Virginia</option><option value="WI">Wisconsin</option><option value="WY">Wyoming</option></select>
+            </div>
+            <fieldset class="form-item">
+              <legend>I teach at these level(s):</legend>
+                <div>
+                  <input type="checkbox" id="eportal-user-grade-elementary" name="grade[]" value="elementary" class="form-checkbox">
+                  <label for="eportal-user-grade-elementary">Elementary School</label>
+                </div>
+                <div>
+                  <input type="checkbox" id="eportal-user-grade-middle" name="grade[]" value="middle" class="form-checkbox">
+                  <label for="eportal-user-grade-middle">Middle School</label>
+                </div>
+                <div>
+                  <input type="checkbox" id="eportal-user-grade-high" name="grade[]" value="high" class="form-checkbox">
+                  <label for="eportal-user-grade-high">High School</label>
+                </div>
+                <div>
+                <input type="checkbox" id="eportal-user-grade-home" name="grade[]" value="home" class="form-checkbox">
+                <label for="eportal-user-edit-grade-home">Home School</label>
+              </div>
+                <div>
+                  <input type="checkbox" id="eportal-user-grade-college" name="grade[]" value="college" class="form-checkbox">
+                  <label for="eportal-user-grade-college">College/University</label>
+                </div>
+                <div>
+                  <input type="checkbox" id="eportal-user-grade-adult" name="grade[]" value="adult" class="form-checkbox">
+                  <label for="eportal-user-grade-adult">Adult/Continuing Education</label>
+                </div>
+              </fieldset>
+            </div>
+
+            <fieldset class="captcha captcha-type-challenge--recaptcha">
+              <legend class="captcha__title js-form-required form-required">
+                CAPTCHA
+              </legend>
+              <div class="captcha__element">
+                <div class="js-form-item form-item full js-form-type-textfield form-type-textfield js-form-item-captcha-response form-item-captcha-response">
+                  <span class="field-prefix">4 + 9 =</span>
+                  <input autocomplete="off" aria-describedby="edit-captcha-response--description" type="text" id="edit-captcha-response" name="captcha_response" value="" size="4" maxlength="2" class="form-text required" required data-math-1="4" data-math-2="9">
+                  <div id="edit-captcha-response--description" class="description">
+                    Solve this simple math problem and enter the result. E.g. for 1+3, enter 4.
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+          <input type="submit" value="Submit" />
+        </form>
+        <div class="modal-success" style="display: none;">
+          <p><strong>Success!</strong><br/><span>An access link has been emailed to you. It may take up to a few minutes to arrive.</span><br/>To ensure you are able to receive login emails from us, please add support@interactiveknowledge.com to your safe sender list.<br/><br/>You may now close this browser tab.</p>
+          <p>If you are having trouble, you can try and <button id="retry-email">regenerate the link.</button></p>
+        </div>
+        <div class="modal-account" style="display: none;">
+        </div>
+      </div>
+    </div>
+  </div>
+</div><div id="modal--eportal-edit" class="modal modal--type-default fade modal--color-blue" tabindex="-1" role="dialog" aria-hidden="true"><div class="modal-dialog modal-dialog-centered" role="document">
+<div class="modal-content">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <h2>Edit My Account</h2>
+    <p></p>
+    <form id="eportal-user-edit-form">
+      <div class="form-item full">
+        <label for="eportal-user-edit-email">Email<span class="required">*</span></label>
+        <input type="email" name="email" id="eportal-user-edit-email" required placeholder="Email" />
+      </div>
+      <div class="form-item">
+        <label for="eportal-user-edit-firstname">First Name<span class="required">*</span></label>
+        <input type="text" name="first_name" id="eportal-user-edit-firstname" placeholder="First Name"/>
+      </div>
+      <div class="form-item">
+        <label for="eportal-user-edit-lastname">Last Name<span class="required">*</span></label>
+        <input type="text" name="last_name" id="eportal-user-edit-lastname" placeholder="Last Name"/>
+      </div>
+      <div class="form-item full">
+        <label for="eportal-user-edit-school">School Name</label>
+        <input type="text" name="school_name" id="eportal-user-edit-school" placeholder="School Name"/>
+      </div>
+      <div class="form-item">
+        <label for="eportal-user-edit-city">City</label>
+        <input type="text" name="city" id="eportal-user-edit-city" placeholder="City"/>
+      </div>
+      <div class="form-item">
+        <label for="eportal-user-edit-state">State</label>
+        <select class="form-select" id="eportal-user-edit-state" name="state"><option value="">Select your state</option><option value="">Non-US State or Province</option><option value="AL">Alabama</option><option value="AK">Alaska</option><option value="AS">American Samoa</option><option value="AZ">Arizona</option><option value="AR">Arkansas</option><option value="AA">Armed Forces (AA)</option><option value="AE">Armed Forces (AE)</option><option value="AP">Armed Forces (AP)</option><option value="CA">California</option><option value="CO">Colorado</option><option value="CT">Connecticut</option><option value="DE">Delaware</option><option value="DC">District of Columbia</option><option value="FL">Florida</option><option value="GA">Georgia</option><option value="GU">Guam</option><option value="HI">Hawaii</option><option value="ID">Idaho</option><option value="IL">Illinois</option><option value="IN">Indiana</option><option value="IA">Iowa</option><option value="KS">Kansas</option><option value="KY">Kentucky</option><option value="LA">Louisiana</option><option value="ME">Maine</option><option value="MH">Marshall Islands</option><option value="MD">Maryland</option><option value="MA">Massachusetts</option><option value="MI">Michigan</option><option value="FM">Micronesia</option><option value="MN">Minnesota</option><option value="MS">Mississippi</option><option value="MO">Missouri</option><option value="MT">Montana</option><option value="NE">Nebraska</option><option value="NV">Nevada</option><option value="NH">New Hampshire</option><option value="NJ">New Jersey</option><option value="NM">New Mexico</option><option value="NY">New York</option><option value="NC">North Carolina</option><option value="ND">North Dakota</option><option value="MP">Northern Mariana Islands</option><option value="OH">Ohio</option><option value="OK">Oklahoma</option><option value="OR">Oregon</option><option value="PW">Palau</option><option value="PA">Pennsylvania</option><option value="PR">Puerto Rico</option><option value="RI">Rhode Island</option><option value="SC">South Carolina</option><option value="SD">South Dakota</option><option value="TN">Tennessee</option><option value="TX">Texas</option><option value="UT">Utah</option><option value="VT">Vermont</option><option value="VI">Virgin Islands</option><option value="VA">Virginia</option><option value="WA">Washington</option><option value="WV">West Virginia</option><option value="WI">Wisconsin</option><option value="WY">Wyoming</option></select>
+      </div>
+      <fieldset class="form-item">
+        <legend>Grade Level(s)</legend>
+          <div>
+            <input type="checkbox" id="eportal-user-edit-grade-elementary" name="grade[]" value="elementary" class="form-checkbox">
+            <label for="eportal-user-edit-grade-elementary">Elementary School</label>
+          </div>
+          <div>
+            <input type="checkbox" id="eportal-useredit--grade-middle" name="grade[]" value="middle" class="form-checkbox">
+            <label for="eportal-user-edit-grade-middle">Middle School</label>
+          </div>
+          <div>
+            <input type="checkbox" id="eportal-user-grade-high" name="grade[]" value="high" class="form-checkbox">
+            <label for="eportal-user-edit-grade-high">High School</label>
+          </div>
+          <div>
+            <input type="checkbox" id="eportal-user-grade-home" name="grade[]" value="home" class="form-checkbox">
+            <label for="eportal-user-edit-grade-home">Home School</label>
+          </div>
+          <div>
+            <input type="checkbox" id="eportal-user-grade-college" name="grade[]" value="college" class="form-checkbox">
+            <label for="eportal-user-grade-college">College/University</label>
+          </div>
+          <div>
+            <input type="checkbox" id="eportal-user-grade-adult" name="grade[]" value="adult" class="form-checkbox">
+            <label for="eportal-user-grade-adult">Adult/Continuing Education</label>
+          </div>
+        </fieldset>
+      <input type="submit" value="Submit" />
+    </form>
+    <div class="modal-success" style="display: none;">
+      <p>Your account information has been saved.</p>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div id="modal--eportal-remove" class="modal modal--type-default fade modal--color-blue" tabindex="-1" role="dialog" aria-hidden="true"><div class="modal-dialog modal-dialog-centered" role="document">
+<div class="modal-content">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <h2>Delete My Account</h2>
+    <p>This action cannot be undone. Please enter your email address below to confirm.</p>
+    <form id="eportal-user-remove-form">
+      <div class="form-item">
+        <label for="eportal-user-remove-email">Email<span class="required">*</span></label>
+        <input type="email" name="email" id="eportal-user-remove-email" required placeholder="Email"/>
+      </div>
+      <input type="submit" value="Submit" />
+    </form>
+    <div class="modal-success" style="display: none;">
+      <p>Your account has been removed.</p>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div id="modal--eportal-collection-add" class="modal modal--type-default fade modal--color-blue" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h2>Create a new playlist</h2>
+        <p></p>
+        <form id="eportal-collection-add-form">
+          <div class="form-item full">
+            <label for="eportal-collection-name-add">Name<span class="required">*</span></label>
+            <input type="text" name="collection_name" id="eportal-collection-name-add" required placeholder="Playlist Name" required />
+          </div>
+          <div class="form-item full">
+            <label for="eportal-collection-description-add">Description</label>
+            <input type="text" name="collection_desc" id="eportal-collection-description-add" placeholder="Description" />
+          </div>
+          <input type="submit" value="Save" />
+        </form>
+        <div class="modal-success" style="display: none;">
+          <p>Your playlist has been created. The page will redirect you to the new list shortly.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="modal--eportal-resource-save" class="modal modal--type-default fade modal--color-blue" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h2>Save to a playlist</h2>
+        <p class="h2"></p>
+        <form id="eportal-resource-save-form">
+          <div class="form-item full">
+            <label for="eportal-resource-save">Save to playlist<span class="required">*</span></label>
+            <select name="resource_save" id="eportal-resource-save"></select>
+          </div>
+          <div class="form-item full" style="display: none;">
+            <label for="eportal-resource-new-collection">New Playlist Name<span class="required">*</span></label>
+            <input type="text" name="collection_new" id="eportal-resource-new-collection" />
+          </div>
+          <input type="submit" value="Save" />
+        </form>
+        <div class="modal-success" style="display: none;">
+          <p><strong>Success!</strong> Your resource has been saved to your playlist.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  </div>
+
+  </div>
+
+      </div>
+      <div class="region-footer">
+          <div class="region region-footer">
+    
+
+
+
+<div id="block-abtfooter" class="settings-tray-editable block block-abt-core block-abt-footer" data-drupal-settingstray="editable">
+  
+  
+      <div class="footer-menu footer-menu--mobile">
+      <div class="footer-menu__inner">
+        <div class="footer-menu__column">
+          <div class="footer-logo"><a href="/"><img src="/themes/client/abt/static/images/footer/footer-white-logo.svg" alt="American Battlefield Trust Logo with Tagline: Preserve. Educate. Inspire." /></a></div>
+          <div class="footer-donate"><a href="/help-save-battlefields">Donate Now</a></div>
+          <div class="footer-menu__menu footer-menu__menu__main footer-menu__menu__simple">
+            
+              <ul class="menu topmenu">
+                    <li class="menu-item menu-item--collapsed">
+        <a href="/learn" data-drupal-link-system-path="node/4">Learn</a>
+              </li>
+                <li class="menu-item menu-item--collapsed">
+        <a href="/visit" data-drupal-link-system-path="node/689"> Visit</a>
+              </li>
+                <li class="menu-item menu-item--collapsed">
+        <a href="/preserve" data-drupal-link-system-path="node/693">Preserve</a>
+              </li>
+                <li class="menu-item menu-item--collapsed">
+        <a href="/our-work" data-drupal-link-system-path="node/6223">Our Work</a>
+              </li>
+        </ul>
+  
+
+
+          </div>
+          <div class="footer-menu__menu footer-menu__menu__simple-giving">
+            <ul>
+              <li><a href="/give">Giving Options</a></li>
+              <li><a href="https://shop.battlefields.org/?a=abtfooter" target="_blank">Store <span class="visually-hidden">(opens in new window)</a></li>
+              <li><a href="/about/contact">Contact</a></li>
+            </ul>
+          </div>
+          <div class="footer-menu__menu footer-menu__menu__social">
+            
+              <ul class="menu topmenu">
+                          <li class="menu-item">
+        <a href="https://www.instagram.com/americanbattlefieldtrust/">
+          
+
+<figure class="media media--type-image media--view-mode-thumbnail media--landscape" style="" data-quickedit-entity-id="media/845">
+  
+  
+          <img loading="lazy" src="/sites/default/files/styles/medium/public/thumbnails/image/icon-instagram-white%402x.png?itok=dbrwc4c0" width="100" height="100" alt="Instagram logo" typeof="foaf:Image" class="image-style-medium" />
+
+
+
+
+  
+  
+</figure>
+
+        </a>
+                      </li>
+                          <li class="menu-item">
+        <a href="https://www.youtube.com/americanbattlefieldtrust">
+          
+
+<figure class="media media--type-image media--view-mode-thumbnail media--landscape" style="" data-quickedit-entity-id="media/42883">
+  
+  
+          <img loading="lazy" src="/sites/default/files/styles/medium/public/icon-youtube-white.png?itok=-UG1RWqA" width="100" height="100" alt="YouTube Icon" typeof="foaf:Image" class="image-style-medium" />
+
+
+
+
+  
+  
+</figure>
+
+        </a>
+                      </li>
+                          <li class="menu-item">
+        <a href="https://www.facebook.com/americanbattlefieldtrust">
+          
+
+<figure class="media media--type-image media--view-mode-thumbnail media--landscape" style="" data-quickedit-entity-id="media/840">
+  
+  
+          <img loading="lazy" src="/sites/default/files/styles/medium/public/thumbnails/image/icon-facebook-white%402x.png?itok=E1wYywuT" width="100" height="100" alt="Facebook" typeof="foaf:Image" class="image-style-medium" />
+
+
+
+
+  
+  
+</figure>
+
+        </a>
+                      </li>
+                          <li class="menu-item">
+        <a href="http://www.x.com/battlefields">
+          
+
+<figure class="media media--type-image media--view-mode-thumbnail media--landscape" style="" data-quickedit-entity-id="media/39419">
+  
+  
+          <img loading="lazy" src="/sites/default/files/styles/medium/public/x-social-icon.gif?itok=zVI-_xIn" width="100" height="100" alt="X" typeof="foaf:Image" class="image-style-medium" />
+
+
+
+
+  
+  
+</figure>
+
+        </a>
+                      </li>
+                          <li class="menu-item">
+        <a href="https://www.tiktok.com/@americanbattlefieldtrust">
+          
+
+<figure class="media media--type-image media--view-mode-thumbnail media--landscape" style="" data-quickedit-entity-id="media/25194">
+  
+  
+          <img loading="lazy" src="/sites/default/files/styles/medium/public/icon-tiktok-white.png?itok=3bhgoq4K" width="100" height="100" alt="TikTok Icon" typeof="foaf:Image" class="image-style-medium" />
+
+
+
+
+  
+  
+</figure>
+
+        </a>
+                      </li>
+                          <li class="menu-item">
+        <a href="https://www.linkedin.com/company/americanbattlefieldtrust">
+          
+
+<figure class="media media--type-image media--view-mode-thumbnail media--landscape" style="" data-quickedit-entity-id="media/843">
+  
+  
+          <img loading="lazy" src="/sites/default/files/styles/medium/public/thumbnails/image/linked-in-icon.png?itok=ZwwuGrCK" width="100" height="100" alt="LinkedIn logo" typeof="foaf:Image" class="image-style-medium" />
+
+
+
+
+  
+  
+</figure>
+
+        </a>
+                      </li>
+            </ul>
+  
+
+
+          </div>
+          <div class="footer-menu__menu footer-menu__menu__giving">
+            
+              <ul class="menu topmenu">
+                    
+      <li class="menu-item menu-item--expanded">
+                  <span>Give with confidence</span>
+                                        <ul class="menu submenu">
+                    
+      <li class="menu-item">
+                  <a href="https://www.charitynavigator.org/ein/541426643">
+            
+
+<figure class="media media--type-image media--view-mode-thumbnail media--landscape" style="" data-quickedit-entity-id="media/42884">
+  
+  
+          <img loading="lazy" src="/sites/default/files/styles/medium/public/Charity-Navigator-2026-logo_1.png?itok=FctLuFmK" width="220" height="220" alt="Charity Navigator 2026 Logo" typeof="foaf:Image" class="image-style-medium" />
+
+
+
+
+  
+  
+</figure>
+
+          </a>
+                      </li>
+
+                
+      <li class="menu-item">
+                  <a href="http://www.best-charities.org/find/charitypage.php?id=3&amp;ein=54-1426643">
+            
+
+<figure class="media media--type-image media--view-mode-thumbnail media--portrait" style="" data-quickedit-entity-id="media/847">
+  
+  
+          <img loading="lazy" src="/sites/default/files/styles/medium/public/thumbnails/image/best_in_america-2019.png?itok=sE4p62FE" width="52" height="86" alt="Best In America badge" typeof="foaf:Image" class="image-style-medium" />
+
+
+
+
+  
+  
+</figure>
+
+          </a>
+                      </li>
+
+                
+      <li class="menu-item">
+                  <a href="https://greatnonprofits.org/org/american-battlefield-trust">
+            
+
+<figure class="media media--type-image media--view-mode-thumbnail media--landscape" style="" data-quickedit-entity-id="media/38255">
+  
+  
+          <img loading="lazy" src="/sites/default/files/styles/medium/public/2024TRbadge-lg_1.png?itok=TQ6q1iRF" width="96" height="72" alt="2024 GreatNonprofits Top-Rated Nonprofit Seal" typeof="foaf:Image" class="image-style-medium" />
+
+
+
+
+  
+  
+</figure>
+
+          </a>
+                      </li>
+
+                
+      <li class="menu-item">
+                  <a href="http://give.org/charity-reviews/national/american-battlefield-trust-in-washington-dc-3982">
+            
+
+<figure class="media media--type-image media--view-mode-thumbnail media--portrait" style="" data-quickedit-entity-id="media/848">
+  
+  
+          <img loading="lazy" src="/sites/default/files/styles/medium/public/thumbnails/image/aC-seal-vertical-w-url-57px.png?itok=-ni4c7yh" width="57" height="100" alt="BBB Accredited Company" typeof="foaf:Image" class="image-style-medium" />
+
+
+
+
+  
+  
+</figure>
+
+          </a>
+                      </li>
+
+                
+      <li class="menu-item">
+                  <a href="https://app.candid.org/profile/7808345/?pkId=87f75f53-bb04-4e5b-a7de-6c54c59d1e2e&amp;isActive=true">
+            
+
+<figure class="media media--type-image media--view-mode-thumbnail media--landscape" style="" data-quickedit-entity-id="media/40732">
+  
+  
+          <img loading="lazy" src="/sites/default/files/styles/medium/public/candid_1.jpg?itok=Ve4m27vU" width="80" height="80" alt="Candid Platinum Transparency Seal 2026" typeof="foaf:Image" class="image-style-medium" />
+
+
+
+
+  
+  
+</figure>
+
+          </a>
+                      </li>
+
+        </ul>
+  
+              </li>
+
+                
+      <li class="menu-item menu-item--expanded">
+                  <span>Sponsored by</span>
+                                        <ul class="menu submenu">
+                    
+      <li class="menu-item">
+                  <a href="http://www.history.com/">
+            
+
+<figure class="media media--type-image media--view-mode-thumbnail media--portrait" style="" data-quickedit-entity-id="media/850">
+  
+  
+          <img loading="lazy" src="/sites/default/files/styles/medium/public/thumbnails/image/history.png?itok=-QF2WZXi" width="52" height="55" alt="History logo" typeof="foaf:Image" class="image-style-medium" />
+
+
+
+
+  
+  
+</figure>
+
+          </a>
+                      </li>
+
+        </ul>
+  
+              </li>
+
+        </ul>
+  
+
+
+          </div>
+          <div class="footer-menu__menu footer-menu__menu__additional">
+            <ul>
+              <li class="footer-tax-info">The American Battlefield Trust is a 501(c)(3) non-profit organization. Donations to the Trust are tax deductible to the full extent allowable under the law. Federal Identification Number (EIN): 54-1426643.</li>
+              <li class="footermenu-item--privacy-policy"><a href="/about/accountability/privacy-policy">Privacy Policy</a></li>
+              <li class="footermenu-item--terms-of-service"><a href="/about/accountability/terms-service">Terms of Service</a></li>
+              <li class="footermenu-item--state-registrations"><a href="/about/accountability/state-registrations">State Registrations</a></li>
+              <li class="footermenu-item--copyright">© 2026 American Battlefield Trust</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-menu footer-menu--desktop">
+      <div class="footer-menu__inner">
+
+               <div class="footer-menu__column">
+          <div class="footer-logo"><a href="/"><img src="/themes/client/abt/static/images/footer/footer-white-logo.svg" alt="American Battlefield Trust Logo with Tagline: Preserve. Educate. Inspire." /></a></div>
+          <div class="footer-donate"><a href="/help-save-battlefields">Donate Now</a></div>
+          
+                    <div class="footer-menu__menu footer-menu__menu__simple-giving">
+            <ul>
+              <li class="footer-tax-info">The American Battlefield Trust is a 501(c)(3) non-profit organization. Donations to the Trust are tax deductible to the full extent allowable under the law. Federal Identification Number (EIN): 54-1426643.</li>
+              <li><a href="/give">Giving Options</a></li>
+              <li><a href="/about/contact">Contact</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-menu__menu footer-menu__menu__social">
+            
+              <ul class="menu topmenu">
+                          <li class="menu-item">
+        <a href="https://www.instagram.com/americanbattlefieldtrust/">
+          
+
+<figure class="media media--type-image media--view-mode-thumbnail media--landscape" style="" data-quickedit-entity-id="media/845">
+  
+  
+          <img loading="lazy" src="/sites/default/files/styles/medium/public/thumbnails/image/icon-instagram-white%402x.png?itok=dbrwc4c0" width="100" height="100" alt="Instagram logo" typeof="foaf:Image" class="image-style-medium" />
+
+
+
+
+  
+  
+</figure>
+
+        </a>
+                      </li>
+                          <li class="menu-item">
+        <a href="https://www.youtube.com/americanbattlefieldtrust">
+          
+
+<figure class="media media--type-image media--view-mode-thumbnail media--landscape" style="" data-quickedit-entity-id="media/42883">
+  
+  
+          <img loading="lazy" src="/sites/default/files/styles/medium/public/icon-youtube-white.png?itok=-UG1RWqA" width="100" height="100" alt="YouTube Icon" typeof="foaf:Image" class="image-style-medium" />
+
+
+
+
+  
+  
+</figure>
+
+        </a>
+                      </li>
+                          <li class="menu-item">
+        <a href="https://www.facebook.com/americanbattlefieldtrust">
+          
+
+<figure class="media media--type-image media--view-mode-thumbnail media--landscape" style="" data-quickedit-entity-id="media/840">
+  
+  
+          <img loading="lazy" src="/sites/default/files/styles/medium/public/thumbnails/image/icon-facebook-white%402x.png?itok=E1wYywuT" width="100" height="100" alt="Facebook" typeof="foaf:Image" class="image-style-medium" />
+
+
+
+
+  
+  
+</figure>
+
+        </a>
+                      </li>
+                          <li class="menu-item">
+        <a href="http://www.x.com/battlefields">
+          
+
+<figure class="media media--type-image media--view-mode-thumbnail media--landscape" style="" data-quickedit-entity-id="media/39419">
+  
+  
+          <img loading="lazy" src="/sites/default/files/styles/medium/public/x-social-icon.gif?itok=zVI-_xIn" width="100" height="100" alt="X" typeof="foaf:Image" class="image-style-medium" />
+
+
+
+
+  
+  
+</figure>
+
+        </a>
+                      </li>
+                          <li class="menu-item">
+        <a href="https://www.tiktok.com/@americanbattlefieldtrust">
+          
+
+<figure class="media media--type-image media--view-mode-thumbnail media--landscape" style="" data-quickedit-entity-id="media/25194">
+  
+  
+          <img loading="lazy" src="/sites/default/files/styles/medium/public/icon-tiktok-white.png?itok=3bhgoq4K" width="100" height="100" alt="TikTok Icon" typeof="foaf:Image" class="image-style-medium" />
+
+
+
+
+  
+  
+</figure>
+
+        </a>
+                      </li>
+                          <li class="menu-item">
+        <a href="https://www.linkedin.com/company/americanbattlefieldtrust">
+          
+
+<figure class="media media--type-image media--view-mode-thumbnail media--landscape" style="" data-quickedit-entity-id="media/843">
+  
+  
+          <img loading="lazy" src="/sites/default/files/styles/medium/public/thumbnails/image/linked-in-icon.png?itok=ZwwuGrCK" width="100" height="100" alt="LinkedIn logo" typeof="foaf:Image" class="image-style-medium" />
+
+
+
+
+  
+  
+</figure>
+
+        </a>
+                      </li>
+            </ul>
+  
+
+
+          </div>
+                    <div class="footer-copyright">© 2026 American Battlefield Trust</div>
+        </div>
+
+                <div class="footer-menu__column">
+          
+          <div class="footer-menu__menu footer-menu__menu__main">
+            
+              <ul class="menu topmenu">
+                    <li class="menu-item menu-item--expanded">
+        <a href="/learn" data-drupal-link-system-path="node/4">Learn</a>
+                                <ul class="menu submenu">
+                    <li class="menu-item">
+        <a href="/learn/battles" data-drupal-link-system-path="learn/battles">Battles</a>
+              </li>
+                <li class="menu-item">
+        <a href="/learn/maps/animated-battle-maps" data-drupal-link-system-path="node/84">Animated Maps</a>
+              </li>
+                <li class="menu-item">
+        <a href="/learn/topics" data-drupal-link-system-path="node/6222">Topics</a>
+              </li>
+                <li class="menu-item">
+        <a href="/search?algolia_search_index%5BrefinementList%5D%5Bfield_resource_type%5D%5B0%5D=biography" data-drupal-link-query="{&quot;algolia_search_index&quot;:{&quot;refinementList&quot;:{&quot;field_resource_type&quot;:[&quot;biography&quot;]}}}" data-drupal-link-system-path="search">Biographies</a>
+              </li>
+                <li class="menu-item">
+        <a href="/search?algolia_search_index%5BrefinementList%5D%5Bfield_resource_type%5D%5B0%5D=article" data-drupal-link-query="{&quot;algolia_search_index&quot;:{&quot;refinementList&quot;:{&quot;field_resource_type&quot;:[&quot;article&quot;]}}}" data-drupal-link-system-path="search">Articles</a>
+              </li>
+                <li class="menu-item">
+        <a href="/search?algolia_search_index%5BrefinementList%5D%5Bfield_resource_type%5D%5B0%5D=video" data-drupal-link-query="{&quot;algolia_search_index&quot;:{&quot;refinementList&quot;:{&quot;field_resource_type&quot;:[&quot;video&quot;]}}}" data-drupal-link-system-path="search">Videos</a>
+              </li>
+                <li class="menu-item">
+        <a href="/search?algolia_search_index%5BrefinementList%5D%5Bfield_resource_type%5D%5B0%5D=primary_source" data-drupal-link-query="{&quot;algolia_search_index&quot;:{&quot;refinementList&quot;:{&quot;field_resource_type&quot;:[&quot;primary_source&quot;]}}}" data-drupal-link-system-path="search">Primary Sources</a>
+              </li>
+                <li class="menu-item">
+        <a href="/search?algolia_search_index%5BrefinementList%5D%5Bfield_resource_type%5D%5B0%5D=map" data-drupal-link-query="{&quot;algolia_search_index&quot;:{&quot;refinementList&quot;:{&quot;field_resource_type&quot;:[&quot;map&quot;]}}}" data-drupal-link-system-path="search">Maps</a>
+              </li>
+                <li class="menu-item">
+        <a href="/learn/educators" data-drupal-link-system-path="node/9025">For Educators</a>
+              </li>
+        </ul>
+  
+              </li>
+                <li class="menu-item menu-item--expanded">
+        <a href="/visit" data-drupal-link-system-path="node/689"> Visit</a>
+                                <ul class="menu submenu">
+                    <li class="menu-item">
+        <a href="/visit/battlefields" data-drupal-link-system-path="visit/battlefields"> Battlefields &amp; Heritage Sites</a>
+              </li>
+                <li class="menu-item">
+        <a href="/visit/tour-recommendation-database" data-drupal-link-system-path="node/7294"> Travel Planner</a>
+              </li>
+                <li class="menu-item">
+        <a href="/learn/monuments-markers" data-drupal-link-system-path="node/78">Monuments &amp; Markers</a>
+              </li>
+                <li class="menu-item">
+        <a href="/visit/itineraries" data-drupal-link-system-path="node/13"> Itineraries</a>
+              </li>
+                <li class="menu-item">
+        <a href="/visit/mobile-apps" data-drupal-link-system-path="node/7532">Mobile Apps</a>
+              </li>
+                <li class="menu-item">
+        <a href="/visit/virtual-tours" data-drupal-link-system-path="node/6217"> Virtual Tours</a>
+              </li>
+                <li class="menu-item">
+        <a href="/learn/augmented-reality" data-drupal-link-system-path="node/8039"> Augmented Reality</a>
+              </li>
+                <li class="menu-item">
+        <a href="https://thelibertytrail.org/home">The Liberty Trail</a>
+              </li>
+                <li class="menu-item">
+        <a href="https://www.valortrail.org/">Medal of Honor Valor Trail</a>
+              </li>
+        </ul>
+  
+              </li>
+                <li class="menu-item menu-item--expanded">
+        <a href="/preserve" data-drupal-link-system-path="node/693">Preserve</a>
+                                <ul class="menu submenu">
+                    <li class="menu-item">
+        <a href="/give/save-battlefields" data-drupal-link-system-path="node/12">Save a Battlefield</a>
+              </li>
+                <li class="menu-item">
+        <a href="/give/ways-to-give" data-drupal-link-system-path="node/5409">Ways to Give</a>
+              </li>
+                <li class="menu-item">
+        <a href="http://americanbattlefieldlegacy.org/">Legacy Giving</a>
+              </li>
+                <li class="menu-item">
+        <a href="/give/about-donor-advised-funds" data-drupal-link-system-path="node/4064">Donor Advised Funds</a>
+              </li>
+                <li class="menu-item">
+        <a href="/preserve/celebrate-our-victories" data-drupal-link-system-path="node/696">Preservation Victories</a>
+              </li>
+                <li class="menu-item">
+        <a href="/preserve/speak-out" data-drupal-link-system-path="node/7544"> Advocacy Efforts</a>
+              </li>
+                <li class="menu-item">
+        <a href="/give/membership" data-drupal-link-system-path="node/87">Become a Member</a>
+              </li>
+                <li class="menu-item">
+        <a href="/give/color-bearers" data-drupal-link-system-path="node/90">Join the Color Bearers</a>
+              </li>
+                <li class="menu-item">
+        <a href="/give/membership/magazine" data-drupal-link-system-path="node/83">Magazine</a>
+              </li>
+        </ul>
+  
+              </li>
+                <li class="menu-item menu-item--expanded">
+        <a href="/our-work" data-drupal-link-system-path="node/6223">Our Work</a>
+                                <ul class="menu submenu">
+                    <li class="menu-item">
+        <a href="/about/how-we-work" data-drupal-link-system-path="node/4011">How We Work</a>
+              </li>
+                <li class="menu-item">
+        <a href="/about" data-drupal-link-system-path="node/3988">Mission</a>
+              </li>
+                <li class="menu-item">
+        <a href="/about/programs" data-drupal-link-system-path="node/3989"> Programs</a>
+              </li>
+                <li class="menu-item">
+        <a href="/news" data-drupal-link-system-path="node/690">News</a>
+              </li>
+                <li class="menu-item">
+        <a href="/events" data-drupal-link-system-path="node/5"> Events</a>
+              </li>
+                <li class="menu-item">
+        <a href="/about/accountability" data-drupal-link-system-path="node/3994">Accountability</a>
+              </li>
+                <li class="menu-item">
+        <a href="/about/careers" data-drupal-link-system-path="node/4195"> Careers</a>
+              </li>
+                <li class="menu-item">
+        <a href="/about/sponsorships" data-drupal-link-system-path="node/6542"> Corporate Sponsorships</a>
+              </li>
+                <li class="menu-item">
+        <a href="/about/contact" data-drupal-link-system-path="node/3993">Contact Us</a>
+              </li>
+        </ul>
+  
+              </li>
+        </ul>
+  
+
+
+
+                      </div>
+
+          <div class="footer-menu__column__row">
+                          <div class="footer-menu__menu footer-menu__menu__giving">
+              
+              <ul class="menu topmenu">
+                    
+      <li class="menu-item menu-item--expanded">
+                  <span>Give with confidence</span>
+                                        <ul class="menu submenu">
+                    
+      <li class="menu-item">
+                  <a href="https://www.charitynavigator.org/ein/541426643">
+            
+
+<figure class="media media--type-image media--view-mode-thumbnail media--landscape" style="" data-quickedit-entity-id="media/42884">
+  
+  
+          <img loading="lazy" src="/sites/default/files/styles/medium/public/Charity-Navigator-2026-logo_1.png?itok=FctLuFmK" width="220" height="220" alt="Charity Navigator 2026 Logo" typeof="foaf:Image" class="image-style-medium" />
+
+
+
+
+  
+  
+</figure>
+
+          </a>
+                      </li>
+
+                
+      <li class="menu-item">
+                  <a href="http://www.best-charities.org/find/charitypage.php?id=3&amp;ein=54-1426643">
+            
+
+<figure class="media media--type-image media--view-mode-thumbnail media--portrait" style="" data-quickedit-entity-id="media/847">
+  
+  
+          <img loading="lazy" src="/sites/default/files/styles/medium/public/thumbnails/image/best_in_america-2019.png?itok=sE4p62FE" width="52" height="86" alt="Best In America badge" typeof="foaf:Image" class="image-style-medium" />
+
+
+
+
+  
+  
+</figure>
+
+          </a>
+                      </li>
+
+                
+      <li class="menu-item">
+                  <a href="https://greatnonprofits.org/org/american-battlefield-trust">
+            
+
+<figure class="media media--type-image media--view-mode-thumbnail media--landscape" style="" data-quickedit-entity-id="media/38255">
+  
+  
+          <img loading="lazy" src="/sites/default/files/styles/medium/public/2024TRbadge-lg_1.png?itok=TQ6q1iRF" width="96" height="72" alt="2024 GreatNonprofits Top-Rated Nonprofit Seal" typeof="foaf:Image" class="image-style-medium" />
+
+
+
+
+  
+  
+</figure>
+
+          </a>
+                      </li>
+
+                
+      <li class="menu-item">
+                  <a href="http://give.org/charity-reviews/national/american-battlefield-trust-in-washington-dc-3982">
+            
+
+<figure class="media media--type-image media--view-mode-thumbnail media--portrait" style="" data-quickedit-entity-id="media/848">
+  
+  
+          <img loading="lazy" src="/sites/default/files/styles/medium/public/thumbnails/image/aC-seal-vertical-w-url-57px.png?itok=-ni4c7yh" width="57" height="100" alt="BBB Accredited Company" typeof="foaf:Image" class="image-style-medium" />
+
+
+
+
+  
+  
+</figure>
+
+          </a>
+                      </li>
+
+                
+      <li class="menu-item">
+                  <a href="https://app.candid.org/profile/7808345/?pkId=87f75f53-bb04-4e5b-a7de-6c54c59d1e2e&amp;isActive=true">
+            
+
+<figure class="media media--type-image media--view-mode-thumbnail media--landscape" style="" data-quickedit-entity-id="media/40732">
+  
+  
+          <img loading="lazy" src="/sites/default/files/styles/medium/public/candid_1.jpg?itok=Ve4m27vU" width="80" height="80" alt="Candid Platinum Transparency Seal 2026" typeof="foaf:Image" class="image-style-medium" />
+
+
+
+
+  
+  
+</figure>
+
+          </a>
+                      </li>
+
+        </ul>
+  
+              </li>
+
+                
+      <li class="menu-item menu-item--expanded">
+                  <span>Sponsored by</span>
+                                        <ul class="menu submenu">
+                    
+      <li class="menu-item">
+                  <a href="http://www.history.com/">
+            
+
+<figure class="media media--type-image media--view-mode-thumbnail media--portrait" style="" data-quickedit-entity-id="media/850">
+  
+  
+          <img loading="lazy" src="/sites/default/files/styles/medium/public/thumbnails/image/history.png?itok=-QF2WZXi" width="52" height="55" alt="History logo" typeof="foaf:Image" class="image-style-medium" />
+
+
+
+
+  
+  
+</figure>
+
+          </a>
+                      </li>
+
+        </ul>
+  
+              </li>
+
+        </ul>
+  
+
+
+            </div>
+                        <div class="footer-menu__menu footer-menu__menu__additional">
+              <ul>
+                <li class="footermenu-item--privacy-policy"><a href="/about/accountability/privacy-policy">Privacy Policy</a></li>
+                <li class="footermenu-item--terms-of-service"><a href="/about/accountability/terms-service">Terms of Service</a></li>
+                <li class="footermenu-item--state-registrations"><a href="/about/accountability/state-registrations">State Registrations</a></li>
+              </ul>
+            </div>
+                      </div>
+                  </div>
+      </div>
+    </div>
+  </div>
+
+  </div>
+
+      </div>
+    </footer>
+  
+</div>
+  </div>
+
+    
+    <script src="https://polyfill-fastly.io/v3/polyfill.min.js?features=IntersectionObserver%2CIntersectionObserverEntry%2CURL%2CObject.assign%2CArray.from%2CArray.prototype.includes%2CString.prototype.includes%2CElement.prototype.matches%2CPromise%2CPromise.prototype.finally"></script>
+<script src="/core/assets/vendor/jquery/jquery.min.js?v=4.0.0" data-cookieconsent="necessary"></script>
+<script src="https://unpkg.com/quicklink@2.3.0/dist/quicklink.umd.js"></script>
+<script src="/core/assets/vendor/once/once.min.js?v=1.0.1"></script>
+<script src="/core/misc/drupal.js?v=11.4.10" data-cookieconsent="necessary"></script>
+<script src="/core/misc/drupal.init.js?v=11.4.10" data-cookieconsent="necessary"></script>
+<script src="/core/misc/debounce.js?v=11.4.10"></script>
+<script src="/modules/contrib/quicklink/js/quicklink_init.js?tmyp5b"></script>
+<script src="/core/assets/vendor/tabbable/index.umd.min.js?v=6.3.0"></script>
+<script src="/themes/client/abt/js/accordions.js?tmyp5b"></script>
+<script src="/themes/client/abt/js/blockquote.js?tmyp5b"></script>
+<script src="https://d3rse9xjbp8270.cloudfront.net/at.js" data-cookieconsent="necessary"></script>
+<script src="/themes/client/abt/js/everyaction.js?tmyp5b"></script>
+<script src="https://cdn.jsdelivr.net/npm/@algolia/autocomplete-js"></script>
+<script src="https://cdn.jsdelivr.net/npm/algoliasearch@5.54.1/dist/lite/builds/browser.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4.101.1/dist/instantsearch.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js"></script>
+<script src="/modules/custom/abt_core/js/algolia-instantsearch.js?tmyp5b"></script>
+<script src="/themes/client/abt/js/paragraph-full-width.js?v=11.4.10" data-cookieconsent="necessary"></script>
+<script src="/themes/client/abt/js/links.js?tmyp5b"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" data-cookieconsent="necessary"></script>
+<script src="/modules/contrib/ik_modals/js/modals.js?tmyp5b"></script>
+<script src="/themes/client/abt/js/modal-tracking.js?tmyp5b"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.1/js/bootstrap.min.js" data-cookieconsent="necessary"></script>
+<script src="/themes/client/abt/js/modals-reset-focus.js?tmyp5b"></script>
+<script src="/themes/client/abt/js/persistant-params.js?tmyp5b"></script>
+<script src="/themes/client/abt/js/rockt-init.js?tmyp5b"></script>
+<script src="/themes/client/abt/js/rockt.js?tmyp5b"></script>
+<script src="/themes/client/abt/js/tables.js?tmyp5b"></script>
+<script src="/modules/contrib/antibot/js/antibot.js?tmyp5b"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery.hoverintent/1.10.2/jquery.hoverIntent.min.js" data-cookieconsent="necessary"></script>
+<script src="/themes/client/abt/js/mega-menu.js?tmyp5b"></script>
+<script src="/themes/client/abt/js/post-cookiebot.js?tmyp5b"></script>
+<script src="https://www.youtube.com/iframe_api"></script>
+<script src="/themes/client/abt/js/youtube.js?tmyp5b"></script>
+<script src="/modules/custom/abt_maps/js/map-shared-ajax-requests.js?tmyp5b" data-cookieconsent="necessary"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.1/Sortable.min.js"></script>
+<script src="//www.google.com/recaptcha/api.js"></script>
+<script src="/modules/custom/abt_eportal/js/educator-portal-library.js?tmyp5b" data-cookieconsent="preferences"></script>
+<script src="/core/misc/progress.js?v=11.4.10"></script>
+<script src="/core/assets/vendor/loadjs/loadjs.min.js?v=4.3.0"></script>
+<script src="/core/misc/announce.js?v=11.4.10"></script>
+<script src="/core/misc/message.js?v=11.4.10"></script>
+<script src="/core/misc/ajax.js?v=11.4.10"></script>
+<script src="/themes/contrib/stable/js/ajax.js?v=11.4.10"></script>
+<script src="/modules/contrib/google_tag/js/gtag.ajax.js?tmyp5b"></script>
+<script src="/modules/contrib/statistics/statistics.js?v=11.4.10"></script>
+
+  </body>
+</html>
