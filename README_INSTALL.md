@@ -2,6 +2,19 @@
 
 You need: Hex of Steel (Steam, version 8 or newer) and Windows PowerShell (already on every Windows 10/11 PC).
 
+
+## Easy install (recommended)
+1. Close Hex of Steel. Make sure you have about **14 GB** free disk space.
+2. Press **Start**, type `PowerShell`, and open **Windows PowerShell**.
+3. Copy this line, paste it into the blue window (right-click pastes), and press **Enter**:
+   ```
+   irm https://raw.githubusercontent.com/garrettmbf-sudo/CivilWar1/kernstown-map/install.ps1 | iex
+   ```
+4. Wait (≈5.5 GB download). The installer downloads the release files, puts the mod into
+   `%USERPROFILE%\AppData\LocalLow\Valentin's studios\Hex of Steel\MODS\First Kernstown 1862`,
+   builds `Maps\First Kernstown 1862.sav`, and tells you the next steps. If it is interrupted, run the same line again: it resumes.
+5. Then follow step 4 "Play" below. The manual steps below are only needed if the easy install fails.
+
 ## 0. Get the map tiles (GitHub Release)
 The 3410 tile images (~5.5 GB) are not in git. Download them from the release
 https://github.com/garrettmbf-sudo/CivilWar1/releases/tag/kernstown-v0.3.1 :
