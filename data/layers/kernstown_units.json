@@ -1,6 +1,6 @@
 {
  "date": "1862-03-23",
- "source_note": "Brigade-level OOB, First Kernstown (Shields' div. under Col. N. Kimball vs Jackson's Valley District). Positions approximate mid-afternoon before Tyler's assault on the stone wall. Rows increase northward.",
+ "source_note": "Brigade-level OOB, First Kernstown (Shields' div. under acting div. commander Col. Nathan Kimball vs Jackson's Valley District). Positions approximate mid-afternoon before Tyler's flanking assault on the stone wall. Rows increase northward. Cross-referenced against CivilWar1 historical_data (SRC001/SRC007).",
  "template_note": "Unit Name/Country must exist in the unit-source .sav (ACW sample: Infantry, Light Cavalry, Napoleon 12pdr; countries Union, Confederacy).",
  "units": [
   {
@@ -37,7 +37,7 @@
   },
   {
    "country": "Confederacy",
-   "custom_name": "Chew's Battery (horse arty)",
+   "custom_name": "Chew's Horse Artillery",
    "template_name": "Napoleon 12pdr",
    "col": 26,
    "row": 18,
@@ -45,7 +45,7 @@
   },
   {
    "country": "Confederacy",
-   "custom_name": "Rockbridge Artillery (McLaughlin)",
+   "custom_name": "Rockbridge Artillery (Poague)",
    "template_name": "Napoleon 12pdr",
    "col": 16,
    "row": 22,
@@ -53,7 +53,7 @@
   },
   {
    "country": "Confederacy",
-   "custom_name": "Carpenter's Battery",
+   "custom_name": "Carpenter's Alleghany Battery",
    "template_name": "Napoleon 12pdr",
    "col": 18,
    "row": 22,
@@ -61,9 +61,25 @@
   },
   {
    "country": "Confederacy",
-   "custom_name": "West Augusta Arty (Waters)",
+   "custom_name": "Caskie's Hampden Artillery",
    "template_name": "Napoleon 12pdr",
-   "col": 19,
+   "col": 15,
+   "row": 22,
+   "entrenchment_on_start": 0
+  },
+  {
+   "country": "Confederacy",
+   "custom_name": "Wooding's Danville Artillery",
+   "template_name": "Napoleon 12pdr",
+   "col": 20,
+   "row": 22,
+   "entrenchment_on_start": 0
+  },
+  {
+   "country": "Confederacy",
+   "custom_name": "Pleasants' Battery",
+   "template_name": "Napoleon 12pdr",
+   "col": 20,
    "row": 21,
    "entrenchment_on_start": 0
   },
@@ -93,7 +109,7 @@
   },
   {
    "country": "Union",
-   "custom_name": "Btry A 1st WV Arty (Jenks)",
+   "custom_name": "Btry A West Virginia Arty (Jenks)",
    "template_name": "Napoleon 12pdr",
    "col": 25,
    "row": 27,
@@ -101,7 +117,15 @@
   },
   {
    "country": "Union",
-   "custom_name": "Btry E 4th US Arty (Clark)",
+   "custom_name": "Btry B West Virginia Arty",
+   "template_name": "Napoleon 12pdr",
+   "col": 27,
+   "row": 27,
+   "entrenchment_on_start": 0
+  },
+  {
+   "country": "Union",
+   "custom_name": "Btry E 4th US Artillery (Clark)",
    "template_name": "Napoleon 12pdr",
    "col": 26,
    "row": 27,
@@ -117,7 +141,7 @@
   },
   {
    "country": "Union",
-   "custom_name": "Brodhead's Cav (1 MI, 1 WV, 1 OH sqns)",
+   "custom_name": "Brodhead's Cav (MI/PA/MD/WV/OH detachments)",
    "template_name": "Light Cavalry",
    "col": 13,
    "row": 25,

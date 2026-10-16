@@ -1,7 +1,9 @@
 # First Kernstown map builder — BinaryFormatter via Hex of Steel assemblies
-# Reads data/layers/kernstown_game.json and paints custom SV_* tiles onto a trusted template .sav
-# SAFETY: deserialize only a personally trusted local .sav. BinaryFormatter can execute code.
+# Reads data/layers/kernstown_game.json + kernstown_units.json; paints custom SV_K tiles
+# onto a trusted template .sav and places brigade/battery counters.
+# SAFETY: BinaryFormatter can execute code — deserialize only a personally trusted local .sav.
 # Does NOT install to Workshop by default.
+# OOB cross-referenced against CivilWar1 historical_data (SRC001/SRC007).
 
 param(
     [string]$LayersJson = "",
@@ -122,8 +124,9 @@ for ($y=0; $y -lt $H; $y++) {
 Write-Output "Placed $placed tiles"
 $map.SizeX = $W; $map.SizeY = $H
 $map.TilesTable = $tilesTable
-$map.ScenarioName = "First Kernstown — 23 March 1862"
+$map.ScenarioName = "First Kernstown `u2014 23 March 1862"
 $map.FileName = "First Kernstown 1862"
+Set-IfProp $map "ScenarioDescription" "Jackson attacks Kimball's division south of Winchester. CSA ~3,800 vs USA ~8,500. Sandy Ridge stone wall hexes give +35 defence."
 foreach ($n in @("NextMap","NextMap2","NextMapDefeat","NextMap2Defeat")) {
     if ($map.PSObject.Properties[$n]) { $map.$n = "" }
 }
@@ -168,6 +171,10 @@ if (-not $NoUnits -and (Test-Path $UnitsJson)) {
     foreach ($u in $unitsSpec.units) {
         $key = "$($u.template_name)|$($u.country)"
         if (-not $templates.ContainsKey($key)) { Write-Warning "No template unit '$key' in $UnitSourceMap - skipped $($u.custom_name)"; continue }
+        if ([int]$u.col -lt 0 -or [int]$u.col -ge $W -or [int]$u.row -lt 0 -or [int]$u.row -ge $H) {
+            Write-Warning "Unit '$($u.custom_name)' at ($($u.col),$($u.row)) is outside grid ${W}x${H} - skipped"
+            continue
+        }
         $nu = Clone-Obj $templates[$key]
         Set-IfProp $nu "PosX" ([int]$u.col); Set-IfProp $nu "PosY" ([int]$u.row)
         Set-IfProp $nu "CustomName" ([string]$u.custom_name); Set-IfProp $nu "ForcedCustomName" $true

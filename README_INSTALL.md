@@ -16,7 +16,7 @@ You need: Hex of Steel (Steam, version 8 or newer) and Windows PowerShell (alrea
    ```
    - If Hex of Steel is not in the default Steam folder, add `-GameDir "D:\SteamLibrary\steamapps\common\Hex of Steel"` (your folder) to the end of the second line.
    - The script uses `templates\ACW_sample_102x60.sav` (your American Civil War sample) as the template and as the source of the unit types (Infantry, Light Cavalry, Napoleon 12pdr, Union/Confederacy). To use another trusted .sav add `-TemplateMap "C:\path\file.sav"`.
-4. It should end with `Placed 15 units` and `Wrote ...\mod\Maps\First Kernstown 1862.sav`.
+4. It should end with `Placed 18 units` and `Wrote ...\mod\Maps\First Kernstown 1862.sav`.
    Only run this script on .sav files you trust (it uses the game's own save loader).
 
 ## 3. Copy the mod into the game
@@ -28,7 +28,7 @@ You need: Hex of Steel (Steam, version 8 or newer) and Windows PowerShell (alrea
 ## 4. Play
 1. Start Hex of Steel → **MODS** → tick **Shenandoah Valley 1862 — First Kernstown** → **Apply changes** (the game may restart).
 2. **Play → Custom scenario** (or open it in the **Map editor**) → choose **First Kernstown 1862**.
-3. Victory points: Winchester Courthouse (primary), Kernstown and Opequon Church (secondary). The stone wall hexes on Sandy Ridge give +35 defence; the Confederate brigades there start entrenched (level 2).
+3. Victory points: Winchester Courthouse (primary), Kernstown and Opequon Church (secondary). The stone wall hexes on Sandy Ridge give +35 defence; the Confederate brigades there start entrenched (level 2). CSA has 10 units (~3,800 men), USA has 8 units (~8,500 men).
 
 ## If something goes wrong
 - Black hexes: the mod is not active, or the folder was not copied with its `Graphics\Tiles\Summer` folder.
