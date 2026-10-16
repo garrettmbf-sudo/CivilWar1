@@ -4,7 +4,7 @@
 
 ## Audited scope
 
-- **36 source art files** inventoried by the script: **32 presumed hex atlases**, **three standalone object sheets**, and **one dense composite needing hand segmentation**. Other miscellaneous images in the workspace were intentionally excluded.
+- **41 source art files** inventoried by the script: **32 presumed hex atlases**, **six standalone object sheets**, and **three dense composites needing hand segmentation**. Other miscellaneous images in the workspace were intentionally excluded.
 - **234 individual candidate tile crops** examined, **1,404 border slots** sampled (six sides per candidate).
 - Shape heuristic: **186 point-top**, **19 possible flat-top**, **29 uncertain**. The apparent flat-top candidates are *not approved*: several are known false positives from border shadows/adjacent-tile collisions. Visual examination of representative atlases confirms a systematic **point-top illustration versus flat-top game target mismatch**.
 - All **234 samples were extracted from opaque (non-alpha) artboards**, so they would require carefully masked transparent sprites.

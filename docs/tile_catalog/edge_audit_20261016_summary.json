@@ -6,10 +6,10 @@
   "sources": "Illustrated concept atlases, not approved game assets",
   "method": "Conservative image color segmentation, six-sided polygon bounding boxes, per-edge Lab samples, best visual candidate restricted to same sheet; orientations are estimates, NOT approvals",
   "not_proven": "Art silhouettes, pixel color and approximate edge continuity cannot establish route semantics, historical placement, native Unity sprite behavior or terrain elevation",
-  "sheet_count": 36,
+  "sheet_count": 41,
   "individual_hex_atlas_count": 32,
-  "object_overlay_sheet_count": 3,
-  "manual_split_sheet_count": 1,
+  "object_overlay_sheet_count": 6,
+  "manual_split_sheet_count": 3,
   "candidate_tiles": 234,
   "art_point_top": 186,
   "art_flat_top": 19,
@@ -28,6 +28,76 @@
       "filename": "19th_century_farmstead_building_tiles.png",
       "source_sha256": "1bd225a506873a03bf54e3c5ef9dd2934f8a3c0c0d5508240b82bb823ccf29ea",
       "raw_size_bytes": 3434383,
+      "tile_sheet_status": "object_overlays",
+      "tiles_detected": 0,
+      "grid": null,
+      "transparency": null,
+      "orientation_counts": {
+        "point_top": 0,
+        "flat_top": 0,
+        "ambiguous": 0
+      }
+    },
+    {
+      "filename": "a_clean_flat_lay_graphic_art_sheet_a_grid_of_man.png",
+      "source_sha256": "13fd17dfaf505e7dd565ebf94a29bc6911e055bfda8681fd70edca339fa67b11",
+      "raw_size_bytes": 3377559,
+      "tile_sheet_status": "manual_segmentation_needed",
+      "tiles_detected": 0,
+      "grid": null,
+      "transparency": null,
+      "orientation_counts": {
+        "point_top": 0,
+        "flat_top": 0,
+        "ambiguous": 0
+      }
+    },
+    {
+      "filename": "a_clean_high_resolution_concept_art_game_asset.png",
+      "source_sha256": "aedf1e3baad7fab25d4292a8573e1fc7c6e82541f4e68cda0a55241bf5370b0d",
+      "raw_size_bytes": 3659261,
+      "tile_sheet_status": "manual_segmentation_needed",
+      "tiles_detected": 0,
+      "grid": null,
+      "transparency": null,
+      "orientation_counts": {
+        "point_top": 0,
+        "flat_top": 0,
+        "ambiguous": 0
+      }
+    },
+    {
+      "filename": "a_clean_illustration_asset_sheet_on_a_neutral_ligh.png",
+      "source_sha256": "76659fa06231d064da352e30e595e8c722a88d73564ce15f2e4e33c40f94caf5",
+      "raw_size_bytes": 3563419,
+      "tile_sheet_status": "object_overlays",
+      "tiles_detected": 0,
+      "grid": null,
+      "transparency": null,
+      "orientation_counts": {
+        "point_top": 0,
+        "flat_top": 0,
+        "ambiguous": 0
+      }
+    },
+    {
+      "filename": "a_clean_illustration_asset_sheet_style_composition.png",
+      "source_sha256": "0b84c6e2e6a8adf533653c9a9cbd65cffd8878c29acaa79cba097e63ef8a9739",
+      "raw_size_bytes": 3684750,
+      "tile_sheet_status": "object_overlays",
+      "tiles_detected": 0,
+      "grid": null,
+      "transparency": null,
+      "orientation_counts": {
+        "point_top": 0,
+        "flat_top": 0,
+        "ambiguous": 0
+      }
+    },
+    {
+      "filename": "a_clean_illustration_diagram_style_overhead_isomet.png",
+      "source_sha256": "0ed26a67bc6f42f52a5a31e4d48d8c2ddc65a6adb4ed8db11b7851a72ebf3236",
+      "raw_size_bytes": 3110445,
       "tile_sheet_status": "object_overlays",
       "tiles_detected": 0,
       "grid": null,

@@ -29,18 +29,23 @@ EDGE_NAMES = {
     "flat_top": ["N", "NE", "SE", "S", "SW", "NW"],
 }
 CANDIDATE_WORDS = ("tile", "terrain", "countryside", "spring", "hex", "farmstead",
-    "floodplain", "road", "appalachian", "crossing", "transport", "watercolor")
-OMIT_NAMES = ("_preview", "grok_", "stonewall", "_map_preview", "valley_map", "asset_connections", "test_", "imagegen", "tile_variants_montage", "vintage_winchester_kernstown")
+    "floodplain", "road", "appalachian", "crossing", "transport", "watercolor", "a_clean_")
+OMIT_NAMES = ("_preview", "grok_", "stonewall", "_map_preview", "valley_map", "asset_connections", "test_", "imagegen", "tile_variants_montage", "vintage_winchester_kernstown", "a_clean_infographic")
 # These sheets are standalone objects without a hexagonal ground footprint.
 # Building-roof peaks should NOT be confused with the north point of a hex.
 OBJECT_OVERLAY_SHEETS = {
     "19th_century_farmstead_building_tiles.png",
     "watercolor_farm_terrain_tile_sheet.png",
     "watercolor_countryside_industry_asset_sheet.png",
+    "a_clean_illustration_asset_sheet_on_a_neutral_ligh.png",
+    "a_clean_illustration_asset_sheet_style_composition.png",
+    "a_clean_illustration_diagram_style_overhead_isomet.png",
 }
 # Dense mosaic touching across boundaries cannot be reliably isolated by
 # simple rectangular cells; retain as review art but do not issue misleading port results.
-MANUAL_SEGMENTATION_REQUIRED = {"top_down_isometric_style_game_terrain_tile_sheet.png"}
+MANUAL_SEGMENTATION_REQUIRED = {"top_down_isometric_style_game_terrain_tile_sheet.png",
+    "a_clean_flat_lay_graphic_art_sheet_a_grid_of_man.png",
+    "a_clean_high_resolution_concept_art_game_asset.png"}
 NOT_INDIVIDUAL_HEXES = OBJECT_OVERLAY_SHEETS | MANUAL_SEGMENTATION_REQUIRED
 # Some compositions deliberately mix 5 tiles within a 3x2 artboard;
 # a blank cell is not an asset. Connected silhouettes can touch at corners.
