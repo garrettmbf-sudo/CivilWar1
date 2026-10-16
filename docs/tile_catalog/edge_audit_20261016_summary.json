@@ -1,0 +1,756 @@
+{
+  "schema_version": "0.3",
+  "target_geometry": "flat_top",
+  "game": "Hex of Steel",
+  "target_hex_width_yards": 250,
+  "sources": "Illustrated concept atlases, not approved game assets",
+  "method": "Conservative image color segmentation, six-sided polygon bounding boxes, per-edge Lab samples, best visual candidate restricted to same sheet; orientations are estimates, NOT approvals",
+  "not_proven": "Art silhouettes, pixel color and approximate edge continuity cannot establish route semantics, historical placement, native Unity sprite behavior or terrain elevation",
+  "sheet_count": 36,
+  "individual_hex_atlas_count": 32,
+  "object_overlay_sheet_count": 3,
+  "manual_split_sheet_count": 1,
+  "candidate_tiles": 234,
+  "art_point_top": 186,
+  "art_flat_top": 19,
+  "art_orientation_ambiguous": 29,
+  "not_rgba": 234,
+  "edge_comparisons": 1404,
+  "near_pixel_matched_edges": 4,
+  "no_near_pixel_match": 1400,
+  "explicit_port_links_registered": 0,
+  "explicit_port_links_verified": 0,
+  "port_validation_errors": [],
+  "edge_port_status": "NOT REGISTERED; no graphical feature ports can be certified without matching source-authored typed/positioned edge port data",
+  "overall_result": "FAIL: do not package as production flat-top hex art until orientation and exact road/rail/river/fence ports are rebuilt and reviewed",
+  "sheets": [
+    {
+      "filename": "19th_century_farmstead_building_tiles.png",
+      "source_sha256": "1bd225a506873a03bf54e3c5ef9dd2934f8a3c0c0d5508240b82bb823ccf29ea",
+      "raw_size_bytes": 3434383,
+      "tile_sheet_status": "object_overlays",
+      "tiles_detected": 0,
+      "grid": null,
+      "transparency": null,
+      "orientation_counts": {
+        "point_top": 0,
+        "flat_top": 0,
+        "ambiguous": 0
+      }
+    },
+    {
+      "filename": "civil_war_countryside_hex_map_tiles.png",
+      "source_sha256": "9a06ee9ee6fc906e41a16986b2688894faf23dcc3bc95a8c2453498f77d34f98",
+      "raw_size_bytes": 2834618,
+      "tile_sheet_status": "hex_atlas",
+      "pixel_size": [
+        1448,
+        1086
+      ],
+      "grid": [
+        4,
+        2
+      ],
+      "tiles_detected": 8,
+      "transparency": false,
+      "orientation_counts": {
+        "point_top": 7,
+        "flat_top": 1,
+        "ambiguous": 0
+      }
+    },
+    {
+      "filename": "civil_war_era_hex_tile_terrain_sheet.png",
+      "source_sha256": "8e7932e6e38fd45bb794ea06db88bfac628b336c092da1a8b136fb6e410e06ac",
+      "raw_size_bytes": 3224899,
+      "tile_sheet_status": "hex_atlas",
+      "pixel_size": [
+        1448,
+        1086
+      ],
+      "grid": [
+        4,
+        3
+      ],
+      "tiles_detected": 12,
+      "transparency": false,
+      "orientation_counts": {
+        "point_top": 9,
+        "flat_top": 1,
+        "ambiguous": 2
+      }
+    },
+    {
+      "filename": "civil_war_hex_terrain_tile_sheet.png",
+      "source_sha256": "e6578f423b710c25e397ff05c2486ae2337abb0452ee979b2b52ae8844d2ea88",
+      "raw_size_bytes": 3103942,
+      "tile_sheet_status": "hex_atlas",
+      "pixel_size": [
+        1448,
+        1086
+      ],
+      "grid": [
+        3,
+        2
+      ],
+      "tiles_detected": 6,
+      "transparency": false,
+      "orientation_counts": {
+        "point_top": 3,
+        "flat_top": 1,
+        "ambiguous": 2
+      }
+    },
+    {
+      "filename": "early_spring_floodplain_hex_tiles.png",
+      "source_sha256": "cede75fc1c6995f2021218ec841198bdb5d8ee1876aa09062d1894e762aefe05",
+      "raw_size_bytes": 3099587,
+      "tile_sheet_status": "hex_atlas",
+      "pixel_size": [
+        1448,
+        1086
+      ],
+      "grid": [
+        4,
+        3
+      ],
+      "tiles_detected": 12,
+      "transparency": false,
+      "orientation_counts": {
+        "point_top": 4,
+        "flat_top": 4,
+        "ambiguous": 4
+      }
+    },
+    {
+      "filename": "five_tile_spring_crossing_set.png",
+      "source_sha256": "e75d77a4da01f89ed1b803f677fc4142d6ca139a2354d77b2a7064bfe3d58693",
+      "raw_size_bytes": 3043348,
+      "tile_sheet_status": "hex_atlas",
+      "pixel_size": [
+        1448,
+        1086
+      ],
+      "grid": [
+        3,
+        2
+      ],
+      "tiles_detected": 6,
+      "transparency": false,
+      "orientation_counts": {
+        "point_top": 3,
+        "flat_top": 1,
+        "ambiguous": 2
+      }
+    },
+    {
+      "filename": "hand_painted_appalachian_terrain_hexes.png",
+      "source_sha256": "901964ab816bf80e7357ac359977bc4915d57e27adda6b2ad42853321494d0cc",
+      "raw_size_bytes": 3334085,
+      "tile_sheet_status": "hex_atlas",
+      "pixel_size": [
+        1448,
+        1086
+      ],
+      "grid": [
+        3,
+        2
+      ],
+      "tiles_detected": 6,
+      "transparency": false,
+      "orientation_counts": {
+        "point_top": 6,
+        "flat_top": 0,
+        "ambiguous": 0
+      }
+    },
+    {
+      "filename": "hand_painted_countryside_hex_map_tiles.png",
+      "source_sha256": "3e429d6f07cd262ec3dc1ed1c3ab50e5e634240a488c5a9a56acb774066331c0",
+      "raw_size_bytes": 3358406,
+      "tile_sheet_status": "hex_atlas",
+      "pixel_size": [
+        1448,
+        1086
+      ],
+      "grid": [
+        3,
+        2
+      ],
+      "tiles_detected": 6,
+      "transparency": false,
+      "orientation_counts": {
+        "point_top": 6,
+        "flat_top": 0,
+        "ambiguous": 0
+      }
+    },
+    {
+      "filename": "hex_gridded_spring_country_roads.png",
+      "source_sha256": "755ff3728c7c292ecca5d242b6656a369aabaa85f2b225e1d0db0ec1961f8c7f",
+      "raw_size_bytes": 3192880,
+      "tile_sheet_status": "hex_atlas",
+      "pixel_size": [
+        1448,
+        1086
+      ],
+      "grid": [
+        3,
+        2
+      ],
+      "tiles_detected": 6,
+      "transparency": false,
+      "orientation_counts": {
+        "point_top": 6,
+        "flat_top": 0,
+        "ambiguous": 0
+      }
+    },
+    {
+      "filename": "hex_terrain_road_map_tiles.png",
+      "source_sha256": "1516ccd9d00da5d458b0492db08abd0b850aa4f1e819885561256a42727b7e07",
+      "raw_size_bytes": 3253765,
+      "tile_sheet_status": "hex_atlas",
+      "pixel_size": [
+        1448,
+        1086
+      ],
+      "grid": [
+        3,
+        2
+      ],
+      "tiles_detected": 6,
+      "transparency": false,
+      "orientation_counts": {
+        "point_top": 6,
+        "flat_top": 0,
+        "ambiguous": 0
+      }
+    },
+    {
+      "filename": "hexagonal_farmstead_terrain_set.png",
+      "source_sha256": "41a2a63b70d687eadd8f2ce98c2a186b2cdccb3efc6f8b07314560d54da4656a",
+      "raw_size_bytes": 3308866,
+      "tile_sheet_status": "hex_atlas",
+      "pixel_size": [
+        1448,
+        1086
+      ],
+      "grid": [
+        3,
+        2
+      ],
+      "tiles_detected": 6,
+      "transparency": false,
+      "orientation_counts": {
+        "point_top": 4,
+        "flat_top": 0,
+        "ambiguous": 2
+      }
+    },
+    {
+      "filename": "hexagonal_rural_terrain_tiles.png",
+      "source_sha256": "de8a0f5d6aed3d5a6afb252318879248fff2b8143770293c0089d6db13887320",
+      "raw_size_bytes": 3234925,
+      "tile_sheet_status": "hex_atlas",
+      "pixel_size": [
+        1448,
+        1086
+      ],
+      "grid": [
+        3,
+        2
+      ],
+      "tiles_detected": 6,
+      "transparency": false,
+      "orientation_counts": {
+        "point_top": 6,
+        "flat_top": 0,
+        "ambiguous": 0
+      }
+    },
+    {
+      "filename": "isometric_civil_war_countryside_tile_set.png",
+      "source_sha256": "09d6f28e8675ab10f6cd0a89034ae4f15ae84a7ff1573647508c512264120346",
+      "raw_size_bytes": 3152890,
+      "tile_sheet_status": "hex_atlas",
+      "pixel_size": [
+        1448,
+        1086
+      ],
+      "grid": [
+        3,
+        2
+      ],
+      "tiles_detected": 6,
+      "transparency": false,
+      "orientation_counts": {
+        "point_top": 6,
+        "flat_top": 0,
+        "ambiguous": 0
+      }
+    },
+    {
+      "filename": "isometric_countryside_terrain_tiles.png",
+      "source_sha256": "c31f5add8e36a65cc4b9870eb98b0769669b90756ea1b799841adcf85ab45f2f",
+      "raw_size_bytes": 2977619,
+      "tile_sheet_status": "hex_atlas",
+      "pixel_size": [
+        1448,
+        1086
+      ],
+      "grid": [
+        3,
+        2
+      ],
+      "tiles_detected": 6,
+      "transparency": false,
+      "orientation_counts": {
+        "point_top": 5,
+        "flat_top": 0,
+        "ambiguous": 1
+      }
+    },
+    {
+      "filename": "isometric_spring_terrain_hex_tiles.png",
+      "source_sha256": "442684408e6ab4d048c6afc2f22b70eaa5c7d854b7961acfd15c921e115b9067",
+      "raw_size_bytes": 3090251,
+      "tile_sheet_status": "hex_atlas",
+      "pixel_size": [
+        1448,
+        1086
+      ],
+      "grid": [
+        3,
+        2
+      ],
+      "tiles_detected": 6,
+      "transparency": false,
+      "orientation_counts": {
+        "point_top": 5,
+        "flat_top": 1,
+        "ambiguous": 0
+      }
+    },
+    {
+      "filename": "isometric_transportation_terrain_tile_set.png",
+      "source_sha256": "ea17a4150d4eb70c9d1a46ab04f7497bd355fad553cafa2f3f0b115f1c999886",
+      "raw_size_bytes": 2892699,
+      "tile_sheet_status": "hex_atlas",
+      "pixel_size": [
+        1448,
+        1086
+      ],
+      "grid": [
+        3,
+        2
+      ],
+      "tiles_detected": 6,
+      "transparency": false,
+      "orientation_counts": {
+        "point_top": 4,
+        "flat_top": 0,
+        "ambiguous": 2
+      }
+    },
+    {
+      "filename": "shenandoah_terrain_hex_tile_sheet.png",
+      "source_sha256": "0c1fbdeba735789480bdc6d7e74499e47254358f1c7c398dcd983fb0e180616e",
+      "raw_size_bytes": 3499717,
+      "tile_sheet_status": "hex_atlas",
+      "pixel_size": [
+        1448,
+        1086
+      ],
+      "grid": [
+        5,
+        4
+      ],
+      "tiles_detected": 20,
+      "transparency": false,
+      "orientation_counts": {
+        "point_top": 15,
+        "flat_top": 1,
+        "ambiguous": 4
+      }
+    },
+    {
+      "filename": "shenandoah_valley_hex_terrain_set.png",
+      "source_sha256": "3acf37f259315d5652d99d847400370b936c8e7d9afd48b931a392410bd6920c",
+      "raw_size_bytes": 3276265,
+      "tile_sheet_status": "hex_atlas",
+      "pixel_size": [
+        1448,
+        1086
+      ],
+      "grid": [
+        3,
+        2
+      ],
+      "tiles_detected": 6,
+      "transparency": false,
+      "orientation_counts": {
+        "point_top": 6,
+        "flat_top": 0,
+        "ambiguous": 0
+      }
+    },
+    {
+      "filename": "shenandoah_valley_hex_tile_set.png",
+      "source_sha256": "f5b0370ba043da543b84b22c26204bab213178a1f20d372f77b3848a5b6386c5",
+      "raw_size_bytes": 2970721,
+      "tile_sheet_status": "hex_atlas",
+      "pixel_size": [
+        1448,
+        1086
+      ],
+      "grid": [
+        3,
+        2
+      ],
+      "tiles_detected": 6,
+      "transparency": false,
+      "orientation_counts": {
+        "point_top": 3,
+        "flat_top": 2,
+        "ambiguous": 1
+      }
+    },
+    {
+      "filename": "shenandoah_valley_spring_terrain_tiles.png",
+      "source_sha256": "f73fa3db8909a1b933485313a3c3b4795d4231bd6566257694a98d7f15b6140c",
+      "raw_size_bytes": 2919578,
+      "tile_sheet_status": "hex_atlas",
+      "pixel_size": [
+        1448,
+        1086
+      ],
+      "grid": [
+        3,
+        2
+      ],
+      "tiles_detected": 6,
+      "transparency": false,
+      "orientation_counts": {
+        "point_top": 5,
+        "flat_top": 0,
+        "ambiguous": 1
+      }
+    },
+    {
+      "filename": "shenandoah_valley_terrain_tile_set.png",
+      "source_sha256": "51491f9b13b9199035b1d2282eebba9a56496e281088a5bfd87f8d2d8beb5585",
+      "raw_size_bytes": 3508884,
+      "tile_sheet_status": "hex_atlas",
+      "pixel_size": [
+        1448,
+        1086
+      ],
+      "grid": [
+        4,
+        3
+      ],
+      "tiles_detected": 12,
+      "transparency": false,
+      "orientation_counts": {
+        "point_top": 10,
+        "flat_top": 1,
+        "ambiguous": 1
+      }
+    },
+    {
+      "filename": "shenandoah_valley_terrain_tile_sheet.png",
+      "source_sha256": "2a203c4ef40db4f360e4862c35bf8a46bdc7c7910b7326df0b0f9c6e4de7c943",
+      "raw_size_bytes": 3291190,
+      "tile_sheet_status": "hex_atlas",
+      "pixel_size": [
+        1448,
+        1086
+      ],
+      "grid": [
+        4,
+        3
+      ],
+      "tiles_detected": 12,
+      "transparency": false,
+      "orientation_counts": {
+        "point_top": 11,
+        "flat_top": 0,
+        "ambiguous": 1
+      }
+    },
+    {
+      "filename": "six_hex_countryside_terrain_tiles.png",
+      "source_sha256": "1790c4ad15b1133579d07ad1700c625fe7306acd2f7eb6ca2d165cb4eaf73ac8",
+      "raw_size_bytes": 3211882,
+      "tile_sheet_status": "hex_atlas",
+      "pixel_size": [
+        1448,
+        1086
+      ],
+      "grid": [
+        3,
+        2
+      ],
+      "tiles_detected": 6,
+      "transparency": false,
+      "orientation_counts": {
+        "point_top": 6,
+        "flat_top": 0,
+        "ambiguous": 0
+      }
+    },
+    {
+      "filename": "six_hexes_of_early_spring_countryside.png",
+      "source_sha256": "0bec4d012879b80e24c18a8b6d260cdc620b5fe40163fd3ae1ab9181f445b324",
+      "raw_size_bytes": 3287166,
+      "tile_sheet_status": "hex_atlas",
+      "pixel_size": [
+        1448,
+        1086
+      ],
+      "grid": [
+        3,
+        2
+      ],
+      "tiles_detected": 6,
+      "transparency": false,
+      "orientation_counts": {
+        "point_top": 6,
+        "flat_top": 0,
+        "ambiguous": 0
+      }
+    },
+    {
+      "filename": "six_tile_americana_terrain_collage.png",
+      "source_sha256": "093affef6075e2d782b70fa6fe5e6074e8289dc2dc1d65f32a54f8d4a4f94680",
+      "raw_size_bytes": 2907000,
+      "tile_sheet_status": "hex_atlas",
+      "pixel_size": [
+        1448,
+        1086
+      ],
+      "grid": [
+        3,
+        2
+      ],
+      "tiles_detected": 6,
+      "transparency": false,
+      "orientation_counts": {
+        "point_top": 0,
+        "flat_top": 4,
+        "ambiguous": 2
+      }
+    },
+    {
+      "filename": "six_tile_civil_war_railroad_map.png",
+      "source_sha256": "da5145239d94cc05c0de980ec884b1ea6b3260789900e3d625c2778a7e9ac2bc",
+      "raw_size_bytes": 3356474,
+      "tile_sheet_status": "hex_atlas",
+      "pixel_size": [
+        1448,
+        1086
+      ],
+      "grid": [
+        3,
+        2
+      ],
+      "tiles_detected": 6,
+      "transparency": false,
+      "orientation_counts": {
+        "point_top": 4,
+        "flat_top": 1,
+        "ambiguous": 1
+      }
+    },
+    {
+      "filename": "six_tile_rural_countryside_terrain_set.png",
+      "source_sha256": "b67e413aa443c2be81592d84c19d1dd31a278744e2d10dd23e03b285b8025a11",
+      "raw_size_bytes": 3334452,
+      "tile_sheet_status": "hex_atlas",
+      "pixel_size": [
+        1448,
+        1086
+      ],
+      "grid": [
+        3,
+        2
+      ],
+      "tiles_detected": 6,
+      "transparency": false,
+      "orientation_counts": {
+        "point_top": 6,
+        "flat_top": 0,
+        "ambiguous": 0
+      }
+    },
+    {
+      "filename": "six_tile_spring_terrain_map.png",
+      "source_sha256": "2272b3ea6dc6842b2a93c3ee5027f4086e4b2e01c8acd742d7b610cbda9ffde3",
+      "raw_size_bytes": 3281697,
+      "tile_sheet_status": "hex_atlas",
+      "pixel_size": [
+        1448,
+        1086
+      ],
+      "grid": [
+        3,
+        2
+      ],
+      "tiles_detected": 6,
+      "transparency": false,
+      "orientation_counts": {
+        "point_top": 5,
+        "flat_top": 0,
+        "ambiguous": 1
+      }
+    },
+    {
+      "filename": "spring_terrain_hex_tile_set.png",
+      "source_sha256": "7801c7d890add0cd03ea4909d9cf026509952a9f1d1a2a21c649697cc7f93745",
+      "raw_size_bytes": 3054497,
+      "tile_sheet_status": "hex_atlas",
+      "pixel_size": [
+        1448,
+        1086
+      ],
+      "grid": [
+        3,
+        2
+      ],
+      "tiles_detected": 6,
+      "transparency": false,
+      "orientation_counts": {
+        "point_top": 4,
+        "flat_top": 0,
+        "ambiguous": 2
+      }
+    },
+    {
+      "filename": "springtime_frontier_village_hex_map.png",
+      "source_sha256": "8fb21c350b1b63daa9e4ad63b9cab59beae910f3035a315f68bef46473a98612",
+      "raw_size_bytes": 3315347,
+      "tile_sheet_status": "hex_atlas",
+      "pixel_size": [
+        1448,
+        1086
+      ],
+      "grid": [
+        3,
+        2
+      ],
+      "tiles_detected": 6,
+      "transparency": false,
+      "orientation_counts": {
+        "point_top": 6,
+        "flat_top": 0,
+        "ambiguous": 0
+      }
+    },
+    {
+      "filename": "springtime_hex_tile_countryside_map.png",
+      "source_sha256": "2cb714934d2de6868e800be40390a41a0055923d78de3b5da36401462790ce7c",
+      "raw_size_bytes": 2868678,
+      "tile_sheet_status": "hex_atlas",
+      "pixel_size": [
+        1448,
+        1086
+      ],
+      "grid": [
+        4,
+        2
+      ],
+      "tiles_detected": 8,
+      "transparency": false,
+      "orientation_counts": {
+        "point_top": 7,
+        "flat_top": 1,
+        "ambiguous": 0
+      }
+    },
+    {
+      "filename": "top_down_isometric_style_game_terrain_tile_sheet.png",
+      "source_sha256": "eedea1a868b8e8cbeaf6d60231549f683010303b37d19547bfca17e462dbacf3",
+      "raw_size_bytes": 3943354,
+      "tile_sheet_status": "manual_segmentation_needed",
+      "tiles_detected": 0,
+      "grid": null,
+      "transparency": null,
+      "orientation_counts": {
+        "point_top": 0,
+        "flat_top": 0,
+        "ambiguous": 0
+      }
+    },
+    {
+      "filename": "watercolor_civil_war_terrain_hex_map.png",
+      "source_sha256": "7ee67d3420f9394b0fb1494f3b745c4572490b03451fb611c38f30a1d888a178",
+      "raw_size_bytes": 3354843,
+      "tile_sheet_status": "hex_atlas",
+      "pixel_size": [
+        1448,
+        1086
+      ],
+      "grid": [
+        3,
+        2
+      ],
+      "tiles_detected": 6,
+      "transparency": false,
+      "orientation_counts": {
+        "point_top": 6,
+        "flat_top": 0,
+        "ambiguous": 0
+      }
+    },
+    {
+      "filename": "watercolor_countryside_industry_asset_sheet.png",
+      "source_sha256": "7338b4257461cf88e6db1568d8648a95f3d3c84b79ea112568d32958e397621f",
+      "raw_size_bytes": 3369384,
+      "tile_sheet_status": "object_overlays",
+      "tiles_detected": 0,
+      "grid": null,
+      "transparency": null,
+      "orientation_counts": {
+        "point_top": 0,
+        "flat_top": 0,
+        "ambiguous": 0
+      }
+    },
+    {
+      "filename": "watercolor_farm_terrain_tile_sheet.png",
+      "source_sha256": "93c8319cd4a4f9ca7d07fd44646bfdf473bdce9723c1bb0b43d1877010ade833",
+      "raw_size_bytes": 3291927,
+      "tile_sheet_status": "object_overlays",
+      "tiles_detected": 0,
+      "grid": null,
+      "transparency": null,
+      "orientation_counts": {
+        "point_top": 0,
+        "flat_top": 0,
+        "ambiguous": 0
+      }
+    },
+    {
+      "filename": "watercolor_shenandoah_valley_hex_terrain.png",
+      "source_sha256": "c3a908d0fdded15221061d3fde5bbb3d5a83a819d111e54a4ff1c86d45ce21c1",
+      "raw_size_bytes": 3358700,
+      "tile_sheet_status": "hex_atlas",
+      "pixel_size": [
+        1448,
+        1086
+      ],
+      "grid": [
+        3,
+        2
+      ],
+      "tiles_detected": 6,
+      "transparency": false,
+      "orientation_counts": {
+        "point_top": 6,
+        "flat_top": 0,
+        "ambiguous": 0
+      }
+    }
+  ]
+}
