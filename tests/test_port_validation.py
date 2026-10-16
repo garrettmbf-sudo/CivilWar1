@@ -1,6 +1,13 @@
 """Topology regression tests: run `python -m unittest -v test_port_validation.py`."""
 import copy
 import unittest
+import sys
+from pathlib import Path
+# In the repository tests/ is a sibling of tools/edge_qa; local standalone
+# QA archives keep tests and modules together in one directory.
+repo_tools = Path(__file__).resolve().parents[1] / "tools" / "edge_qa"
+if repo_tools.is_dir():
+    sys.path.insert(0, str(repo_tools))
 from port_validation import validate_network
 
 

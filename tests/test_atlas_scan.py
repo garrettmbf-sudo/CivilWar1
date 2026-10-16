@@ -1,5 +1,12 @@
 """Synthetic shape and edge-profile smoke tests for the illustrative audit."""
 import unittest
+import sys
+from pathlib import Path
+# In the repository tests/ is a sibling of tools/edge_qa; local standalone
+# QA archives keep tests and modules together in one directory.
+repo_tools = Path(__file__).resolve().parents[1] / "tools" / "edge_qa"
+if repo_tools.is_dir():
+    sys.path.insert(0, str(repo_tools))
 import numpy as np
 import cv2
 from validate_tile_edges import assess_shape, compare_profiles, foreground, hex_vertices
