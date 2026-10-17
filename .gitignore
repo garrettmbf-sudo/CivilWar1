@@ -8,3 +8,9 @@ build/
 *.egg-info/
 maps/samples/
 maps/generated/
+
+# .NET build output and local game reference DLLs (never commit game DLLs)
+bin/
+obj/
+mods/*/.hos-libs/
+mods/*/output/
