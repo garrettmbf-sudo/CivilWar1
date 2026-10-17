@@ -1,0 +1,8 @@
+{
+    "modName": "Facing",
+    "modVersion": "0.1.0",
+    "modAuthor": "CivilWar1 project",
+    "supportedGameVersion": "8.4.14+",
+    "dependencies": "HarmonyCore (official, Steam Workshop 3574617535)",
+    "modDescription": "Adds 6-way unit facing for ground units: units keep their facing when attacked, flank and rear attacks deal more damage (front x1.0, flank x1.25, rear x1.5, set in FacingConfig.json), a chevron on each counter shows the facing, '.' and ',' turn the selected unit in place for 1 MP, and AI units turn toward the nearest enemy at the end of their turn."
+}

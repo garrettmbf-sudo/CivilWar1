@@ -1,0 +1,5 @@
+.hos-libs/
+output/
+bin/
+obj/
+dist/
