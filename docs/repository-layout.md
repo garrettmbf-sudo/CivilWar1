@@ -3,6 +3,7 @@
 **Status:** organizational layout documented, **no bulk asset move**. Many game files, portrait assets and scenario paths may refer to existing locations.
 
 ## Current inventory (October 14, 2026)
+- 17 Oct 2026: byte-identical duplicates removed with user approval (`docs/inventory/dedupe_2026-10-17.csv`); unit sprites canonical in `units/`, portraits at manifest paths.
 - Large legacy asset collection at repository root: `mdl_CSA_*.png`, `Unit_*.png`, and other artwork.
 - Additional portrait assets under `reference/`, including existing Union portraits and `reference/mdl_CSA_JAWalker.png`.
 - Four .sav map samples under `maps/`: `An American Civil War.sav`, `Battle for USA.sav`, `Hexerreich - Classic 2ACW.sav`, `TheWarOfTheRebellion.sav`.
