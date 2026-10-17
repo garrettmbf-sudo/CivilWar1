@@ -116,3 +116,14 @@ def test_point_to_offset_roundtrip():
 
 def test_tile_constants_match_kernstown_mask():
     assert (hu.TILE_PX, hu.HEX_WIDTH_PX, hu.HEX_HEIGHT_PX) == (2000, 1910, 1672)
+
+
+def test_hex_line_is_adjacent_chain_of_right_length():
+    import random
+    rnd = random.Random(5)
+    for _ in range(2000):
+        a = (rnd.randint(-5, 130), rnd.randint(-5, 140))
+        b = (rnd.randint(-5, 130), rnd.randint(-5, 140))
+        line = hu.hex_line(a, b)
+        assert line[0] == a and line[-1] == b and len(line) == hu.offset_distance(a, b) + 1
+        assert all(q in game_neighbours(*p) for p, q in zip(line, line[1:]))

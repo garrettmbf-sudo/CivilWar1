@@ -22,9 +22,17 @@
 
 The old odd-q layout and its `ROW_DIRECTION` switch are removed. `tests/test_hex_utils.py` checks neighbours and positions against transcriptions of the game's own code.
 
+## PowerShell map tools (converted 2026-10-17)
+All hex maths in `tools/powershell/` goes through `HexEvenQ.ps1`, a line-for-line port of this module (neighbours, axial, distance, `game_position`, `hex_center`, `point_to_offset`, `hex_line`).
+- **Shared frame.** `ValleyFrame.ps1` holds the one frame for both map scripts: 37.70–39.71 N and 79.65–77.70 W, 1 mile between rows and 0.8667 mile between columns. It sets one grid size, `round(w/0.8667)+1` × `round(h)+1` = **122 × 140**, and one lat/lon → hex rule (`Get-HexLatLon`). The box is not `data/map_shape.json`; take the 500-yd map's frame from there.
+- `valley_map_data.ps1` holds the geography (towns, gaps, ridges, rivers, the Valley Pike) and snaps it with the shared rule.
+- `build_valley_map.ps1` dot-sources `valley_map_data.ps1`, so it has no frame or geography of its own, and its town hexes are the data script's. It traces roads and rivers as chains of game-adjacent hexes, and judges ridges at each hex's true centre. Before 2026-10-17 it kept a hand-placed copy in an old 37.90 N frame, about 14 rows south.
+- `beautify_map.ps1` uses the game's neighbour table.
+  - **Rivers** use River1–12 (`$dirLookup`, `$junctionLookup`). Major Hotchkiss verified this table from PNG edge sampling and `TileEditorGO.SetAutoRivers`. Do not mirror it.
+  - **Roads** have their own table (`$roadLookup`), from `TileEditorGO.SetAutoRoads`: Road1–5 and Road10–13 only.
+
+`tests/test_powershell_even_q.py` pins the river and road tables and the Archivist's town and gap hexes. It checks everything against this module: it always parses the formulas, and runs the scripts under `pwsh` when pwsh is available. The pwsh part is skipped on CI unless `RUN_PWSH_TESTS=1`.
+
 ## Legacy code not yet converted
-- **`tools/powershell/valley_map_data.ps1`:** rectangular lat/lon rounding at 1 mile per X and Y, with no hex offset. Converting it means `HexX = round(miles_east / 0.8667)` plus the even-q row correction (even columns +½ row). Regenerating needs PowerShell, and `build_valley_map.ps1` has to be updated at the same time.
-- **`tools/powershell/build_valley_map.ps1`:** hand-placed X/Y with `H=125`.
-- **`tools/powershell/beautify_map.ps1`:** its comment says "even-q", but it uses N=(0,−1), so rows increase south, and its even-column NE is (c+1, r), which puts odd columns north. That is not the native layout. Its neighbour tables need replacing with the ones above before reuse.
 - **Branches outside main** still use other layouts: PR #8 corridor tools, and the v3/v4 experiments, which are even-q but may have a different row direction. They must be converted deliberately when merged.
 - **Kernstown:** Hotchkiss re-cuts it to native even-q as v0.4.2 on `kernstown-map`. Until that lands, `kernstown-map:scripts/hex_grid.py` (v0.4.1) is still odd-q. Other lanes don't edit it.
