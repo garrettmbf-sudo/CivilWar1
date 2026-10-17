@@ -1,0 +1,13 @@
+exit_id,via_feature,edge_side,approx_exit_lat,approx_exit_lon,leads_to_offmap,mechanic,status
+exit_potomac_bo,gap_harpers_ferry,east,39.33,-77.64,"Washington / Baltimore (B&O RR, C&O Canal)",Union reinforcement entry,PROVISIONAL
+exit_keys,gap_keys,east,39.25,-77.66,Leesburg,minor entry,PROVISIONAL
+exit_snickers,gap_snickers,east,39.11,-77.79,Leesburg / Aldie,Union entry,PROVISIONAL
+exit_ashbys,gap_ashbys,east,39.00,-77.88,Upperville / Middleburg,Union entry,PROVISIONAL
+exit_manassas_gap_rr,gap_manassas,east,38.87,-77.96,Manassas Junction,Union rail/road entry; Confederate exit,PROVISIONAL
+exit_chester,gap_chester,east,38.83,-78.05,Flint Hill / Washington VA,Union entry,PROVISIONAL
+exit_thorntons,gap_thorntons,east,38.65,-78.25,Sperryville / Culpeper,Union entry; Confederate exit,PROVISIONAL
+exit_fishers,gap_fishers,east,38.52,-78.36,Madison CH,minor,PROVISIONAL
+exit_swift_run,gap_swift_run,east,38.35,-78.48,Stanardsville / Gordonsville,"Ewell entry; 'leave for Richmond' exit",PROVISIONAL
+exit_browns_mechums,gap_browns,east,38.22,-78.64,Mechum's River Station (Virginia Central RR) -> Richmond,"Jackson June 1862 exit to Richmond",PROVISIONAL
+exit_jarmans,gap_jarmans,east,38.08,-78.72,Crozet / Charlottesville,minor,PROVISIONAL
+exit_rockfish_vcrr,gap_rockfish,east,38.01,-78.80,Charlottesville -> Richmond (Virginia Central RR),"rail exit to Richmond",PROVISIONAL
