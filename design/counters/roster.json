@@ -1,0 +1,222 @@
+[
+  {
+    "id": "k01",
+    "name": "GARNETT",
+    "formation": "STONEWALL",
+    "side": "CSA",
+    "kind": "INF",
+    "col": 17,
+    "row": 23,
+    "placement": "branch deployment",
+    "portrait": "mdl_CSA_RGarnett.png"
+  },
+  {
+    "id": "k02",
+    "name": "FULKERSON",
+    "formation": "VA BDE",
+    "side": "CSA",
+    "kind": "INF",
+    "col": 15,
+    "row": 23,
+    "placement": "branch deployment",
+    "portrait": null
+  },
+  {
+    "id": "k03",
+    "name": "BURKS",
+    "formation": "VA BDE",
+    "side": "CSA",
+    "kind": "INF",
+    "col": 17,
+    "row": 20,
+    "placement": "branch deployment",
+    "portrait": null
+  },
+  {
+    "id": "k04",
+    "name": "ASHBY",
+    "formation": "7TH VA CAV",
+    "side": "CSA",
+    "kind": "CAV",
+    "col": 27,
+    "row": 17,
+    "placement": "branch deployment",
+    "portrait": "mdl_CSA_TAshby.png"
+  },
+  {
+    "id": "k05",
+    "name": "CHEW",
+    "formation": "HORSE ART",
+    "side": "CSA",
+    "kind": "ART",
+    "col": 26,
+    "row": 18,
+    "placement": "branch deployment",
+    "portrait": null
+  },
+  {
+    "id": "k06",
+    "name": "POAGUE",
+    "formation": "ROCKBRIDGE",
+    "side": "CSA",
+    "kind": "ART",
+    "col": 16,
+    "row": 22,
+    "placement": "branch deployment",
+    "portrait": null
+  },
+  {
+    "id": "k07",
+    "name": "CARPENTER",
+    "formation": "ALLEGHANY",
+    "side": "CSA",
+    "kind": "ART",
+    "col": 18,
+    "row": 22,
+    "placement": "branch deployment",
+    "portrait": null
+  },
+  {
+    "id": "k08",
+    "name": "CASKIE",
+    "formation": "HAMPDEN",
+    "side": "CSA",
+    "kind": "ART",
+    "col": 15,
+    "row": 22,
+    "placement": "branch deployment",
+    "portrait": null
+  },
+  {
+    "id": "k09",
+    "name": "WOODING",
+    "formation": "DANVILLE",
+    "side": "CSA",
+    "kind": "ART",
+    "col": 20,
+    "row": 22,
+    "placement": "branch deployment",
+    "portrait": null
+  },
+  {
+    "id": "k10",
+    "name": "PLEASANTS",
+    "formation": "BATTERY",
+    "side": "CSA",
+    "kind": "ART",
+    "col": 20,
+    "row": 21,
+    "placement": "branch deployment",
+    "portrait": null
+  },
+  {
+    "id": "k11",
+    "name": "KIMBALL",
+    "formation": "1ST BDE",
+    "side": "USA",
+    "kind": "INF",
+    "col": 25,
+    "row": 26,
+    "placement": "branch deployment",
+    "portrait": "mdl_USA_NKimball.png"
+  },
+  {
+    "id": "k12",
+    "name": "SULLIVAN",
+    "formation": "2ND BDE",
+    "side": "USA",
+    "kind": "INF",
+    "col": 29,
+    "row": 24,
+    "placement": "branch deployment",
+    "portrait": "mdl_USA_JCSullivan.png"
+  },
+  {
+    "id": "k13",
+    "name": "TYLER",
+    "formation": "3RD BDE",
+    "side": "USA",
+    "kind": "INF",
+    "col": 17,
+    "row": 25,
+    "placement": "branch deployment",
+    "portrait": "mdl_USA_EBTyler.png"
+  },
+  {
+    "id": "k14",
+    "name": "JENKS",
+    "formation": "A / VA ART",
+    "side": "USA",
+    "kind": "ART",
+    "col": 25,
+    "row": 27,
+    "placement": "branch deployment",
+    "portrait": null
+  },
+  {
+    "id": "k15",
+    "name": "B / VA",
+    "formation": "VA BATTERY",
+    "side": "USA",
+    "kind": "ART",
+    "col": 27,
+    "row": 27,
+    "placement": "branch deployment",
+    "portrait": null
+  },
+  {
+    "id": "k16",
+    "name": "CLARK",
+    "formation": "E / 4TH US",
+    "side": "USA",
+    "kind": "ART",
+    "col": 26,
+    "row": 27,
+    "placement": "branch deployment",
+    "portrait": null
+  },
+  {
+    "id": "k17",
+    "name": "ROBINSON",
+    "formation": "L / 1ST OH",
+    "side": "USA",
+    "kind": "ART",
+    "col": 26,
+    "row": 26,
+    "placement": "branch deployment",
+    "portrait": null
+  },
+  {
+    "id": "k18",
+    "name": "BRODHEAD",
+    "formation": "CAVALRY",
+    "side": "USA",
+    "kind": "CAV",
+    "col": 13,
+    "row": 25,
+    "placement": "branch deployment",
+    "portrait": null
+  },
+  {
+    "id": "k19",
+    "name": "JACKSON",
+    "formation": "VALLEY HQ",
+    "side": "CSA",
+    "kind": "HQ",
+    "col": 20,
+    "row": 19,
+    "placement": "stress-test HQ placement only",
+    "portrait": "mdl_CSA_TJJackson.png"
+  },
+  {
+    "id": "k20",
+    "name": "KIMBALL",
+    "formation": "ACTING HQ",
+    "side": "USA",
+    "kind": "HQ",
+    "col": 27,
+    "row": 29,
+    "placement": "stress-test HQ placement only; same officer as 1st Brigade",
+    "portrait": "mdl_USA_NKimball.png"
+  }
+]

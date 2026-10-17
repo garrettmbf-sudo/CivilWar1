@@ -1,0 +1,12 @@
+{
+  "baseline_tag": "kernstown-v0.4.0",
+  "baseline_commit": "c1252963c3869b253d2548e41b3ef1da06224e47",
+  "portrait_inventory_commit": "ba8a79e8c6eaba2e818b7b0524cb37ef58aea8c5",
+  "review_status": "candidates only; no game import, installation, merge, or release",
+  "map_geometry_source": "scripts/compose_painted_map.py + data/basemap_meta.json",
+  "map_source": "previews/kernstown_full.jpg",
+  "normal_hex_radius_px": 44,
+  "counter_canvas_px": 70,
+  "counter_visible_width_px": 56,
+  "portrait_processing": "proportional placement only; intact source bytes embedded in SVG"
+}

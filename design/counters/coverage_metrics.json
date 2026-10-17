@@ -1,0 +1,38 @@
+[
+  {
+    "style": "A",
+    "opaque_pixels": 62720,
+    "map_pixels": 1577600,
+    "viewport_coverage_pct": 3.976,
+    "hex_radius_px": 44,
+    "counter_visible_width_px": 56,
+    "opaque_area_over_hex_area_pct": 62.35
+  },
+  {
+    "style": "B",
+    "opaque_pixels": 53760,
+    "map_pixels": 1577600,
+    "viewport_coverage_pct": 3.408,
+    "hex_radius_px": 44,
+    "counter_visible_width_px": 56,
+    "opaque_area_over_hex_area_pct": 53.44
+  },
+  {
+    "style": "C",
+    "opaque_pixels": 56000,
+    "map_pixels": 1577600,
+    "viewport_coverage_pct": 3.55,
+    "hex_radius_px": 44,
+    "counter_visible_width_px": 56,
+    "opaque_area_over_hex_area_pct": 55.67
+  },
+  {
+    "style": "D",
+    "opaque_pixels": 71680,
+    "map_pixels": 1577600,
+    "viewport_coverage_pct": 4.544,
+    "hex_radius_px": 44,
+    "counter_visible_width_px": 56,
+    "opaque_area_over_hex_area_pct": 71.25
+  }
+]
