@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Modelled on acorsicanfrog/Template-Mod-Harmony TemplateMod.csproj (commit 5fd716b, 2026-10-07):
+       same target framework (net48), no pdb, every game/Unity/Harmony reference Private=false. -->
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <OutputPath>output\</OutputPath>
+    <AssemblyName>HexOfSteelFacing</AssemblyName>
+    <RootNamespace>HexOfSteelFacing</RootNamespace>
+    <LangVersion>9.0</LangVersion>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <Version>0.1.0</Version>
+    <!-- Game DLLs are compile-only references and are never committed. Fetch them with tools/fetch_libs.sh. -->
+    <HoSLibs Condition="'$(HoSLibs)' == ''">$(MSBuildThisFileDirectory).hos-libs\</HoSLibs>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DebugType>none</DebugType>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="tests\**" />
+    <!-- Lets the SDK build net48 on Linux/macOS without a Windows targeting pack. Build-time only. -->
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="0Harmony"><HintPath>$(HoSLibs)0Harmony.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Assembly-CSharp"><HintPath>$(HoSLibs)Assembly-CSharp.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Newtonsoft.Json"><HintPath>$(HoSLibs)Newtonsoft.Json.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine"><HintPath>$(HoSLibs)UnityEngine.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.CoreModule"><HintPath>$(HoSLibs)UnityEngine.CoreModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="PhotonUnityNetworking"><HintPath>$(HoSLibs)PhotonUnityNetworking.dll</HintPath><Private>false</Private></Reference>
+  </ItemGroup>
+</Project>

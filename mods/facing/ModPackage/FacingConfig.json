@@ -1,0 +1,19 @@
+{
+  "enabled": true,
+  "frontMultiplier": 1.0,
+  "flankMultiplier": 1.25,
+  "rearMultiplier": 1.5,
+  "applyToSupportiveFire": true,
+  "legacyEastFacing": 1,
+  "legacyWestFacing": 5,
+  "showChevron": true,
+  "chevronDistance": 1.9,
+  "chevronScale": 0.7,
+  "chevronColorHex": "#F2C14E",
+  "turnInPlaceEnabled": true,
+  "turnInPlaceMPCost": 1,
+  "rotateClockwiseKey": "Period",
+  "rotateCounterClockwiseKey": "Comma",
+  "aiRefaceEnabled": true,
+  "aiRefaceRadius": 6
+}
