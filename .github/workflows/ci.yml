@@ -1,0 +1,30 @@
+name: CI
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  checks:
+    name: pytest + OOB validation + portrait manifest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          # used by map tooling/tests on some branches
+          pip install pillow numpy
+      - name: pytest
+        run: python -m pytest -q
+      - name: OOB validation (src/oob.py)
+        run: python src/oob.py
+      - name: Portrait manifest
+        run: python scripts/check_portrait_manifest.py
+      # PowerShell tooling (tools/powershell) is intentionally not run here (Linux only).
