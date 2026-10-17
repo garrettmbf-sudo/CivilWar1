@@ -1,7 +1,7 @@
 # Valley Campaign Map Beautifier
 # Loads the existing map and applies visual improvements:
 # 1. Directional river tiles (River1-9 based on neighbor connectivity)
-# 2. Directional road tiles (Road1-9 same encoding)
+# 2. Directional road tiles (Road1-5, Road10-13: the game's own SetAutoRoads numbering, NOT the river one)
 # 3. Valley floor variety (scatter ThinForest into plains)
 # 4. Mountain/forest transition smoothing
 # 5. Off-map edge cleanup
@@ -53,8 +53,10 @@ function Get-Neighbor {
 
 # ===== DIRECTION LOOKUP TABLE =====
 # Maps sorted edge-pair string to River/Road variant number
-# Derived from visual analysis of tile PNG graphics (edges are geographic N..NW; re-check in game,
-# because the old neighbour table was north/south mirrored relative to the game)
+# Derived from visual analysis of the River PNGs; edges are geographic N..NW (PNG up = north in game).
+# VERIFIED 2026-10-17 by Major Hotchkiss (PR #21 review): PNG edge sampling of River1-12 and the editor's
+# TileEditorGO.SetAutoRivers give exactly this table. Do NOT mirror it (the old mirrored neighbour table
+# was the bug; with geographic ports this table is right). Pinned by tests/test_powershell_even_q.py.
 
 $dirLookup = @{}
 # Straight through (opposite edges, 180°)
@@ -85,6 +87,13 @@ $junctionLookup = @{}
 $junctionLookup["1,3,5"] = 10  # alternating Y
 $junctionLookup["0,2,4"] = 11  # alternating Y (rotated)
 $junctionLookup["0,1,3"] = 12  # T-junction
+
+# ===== ROAD LOOKUP TABLE =====
+# Roads do NOT use the river numbering. The game's TileEditorGO.SetAutoRoads uses only Road1-5 and Road10-13:
+# 1=N-S, 2=NW-NE, 3=SW-SE, 4=NE-SW, 5=NW-SE, 10=S-NW, 11=N-SW, 12=N-SE, 13=NE-S
+# (Major Hotchkiss, PR #21 review, cross-checked against SetAutoRivers and the Railroad PNGs).
+$roadLookup = @{ "0,3"=1; "1,5"=2; "2,4"=3; "1,4"=4; "2,5"=5; "3,5"=10; "0,4"=11; "0,2"=12; "1,3"=13 }
+$roadSharpFallback = @{ "0,1"=2; "1,2"=12; "2,3"=3; "3,4"=3; "4,5"=11; "0,5"=2 }
 
 # ===== PASS 1: FIX RIVER DIRECTIONS =====
 Write-Output "`n--- Pass 1: Fixing river directions ---"
@@ -186,10 +195,10 @@ for ($x = 0; $x -lt $W; $x++) {
         $variant = $null
 
         if ($connEdges.Count -eq 2) {
-            if ($dirLookup.ContainsKey($edgeKey)) {
-                $variant = $dirLookup[$edgeKey]
-            } elseif ($sharpFallback.ContainsKey($edgeKey)) {
-                $variant = $sharpFallback[$edgeKey]
+            if ($roadLookup.ContainsKey($edgeKey)) {
+                $variant = $roadLookup[$edgeKey]
+            } elseif ($roadSharpFallback.ContainsKey($edgeKey)) {
+                $variant = $roadSharpFallback[$edgeKey]
             }
         } elseif ($connEdges.Count -ge 3) {
             $bestPair = $null; $bestDist = -1
@@ -203,8 +212,8 @@ for ($x = 0; $x -lt $W; $x++) {
                     }
                 }
             }
-            if ($bestPair -ne $null -and $dirLookup.ContainsKey($bestPair)) {
-                $variant = $dirLookup[$bestPair]
+            if ($bestPair -ne $null -and $roadLookup.ContainsKey($bestPair)) {
+                $variant = $roadLookup[$bestPair]
             }
         }
 

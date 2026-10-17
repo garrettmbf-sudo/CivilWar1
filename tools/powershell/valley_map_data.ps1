@@ -1,24 +1,9 @@
 # Valley Campaign Map Data Generator
 # Calculates hex positions for all geographic features at 1-mile-per-hex scale
 
-# --- Geographic Constants ---
-$centerLat = 38.75
-$miPerDegLat = 69.0
-$miPerDegLon = 69.0 * [Math]::Cos($centerLat * [Math]::PI / 180)  # ~53.8
-
-# --- Map Bounds ---
-$southBound = 37.70   # South of Lexington (was 37.90, south of Staunton; extended 2026-10-17 to include Lexington/VMI)
-$northBound = 39.71   # North of Martinsburg
-$westBound  = 79.65   # Into Alleghenies (west of McDowell)
-$eastBound  = 77.70   # East of Harpers Ferry
-
-# Native even-q grid (HexEvenQ.ps1 = src/hex_utils.py): rows are 1 mile apart N-S,
-# columns 4.42/5.1 = 0.8667 mile apart E-W; even columns sit half a row north.
-. (Join-Path $PSScriptRoot 'HexEvenQ.ps1')
-$heightMi  = ($northBound - $southBound) * $miPerDegLat                      # ~139 mi
-$widthMi   = ($westBound - $eastBound) * $miPerDegLon                        # ~105 mi
-$mapHeight = [Math]::Ceiling($heightMi) + 1                                  # rows
-$mapWidth  = [Math]::Ceiling($widthMi / $script:HexColPitchRatio) + 1        # columns (~122)
+# Frame, bounds, grid size and lat/lon -> hex snapping are shared with build_valley_map.ps1.
+# Native even-q grid (HexEvenQ.ps1 = src/hex_utils.py): rows 1 mile apart N-S, columns 0.8667 mile apart E-W.
+. (Join-Path $PSScriptRoot 'ValleyFrame.ps1')
 
 Write-Output "=== VALLEY CAMPAIGN MAP DIMENSIONS ==="
 Write-Output "Size: $mapWidth x $mapHeight hexes ($($mapWidth * $mapHeight) total)"
@@ -30,11 +15,7 @@ Write-Output "  Miles per degree lat: $miPerDegLat"
 Write-Output "  Miles per degree lon: $([Math]::Round($miPerDegLon, 1))"
 Write-Output ""
 
-# --- Coordinate conversion functions ---
-# lat/lon -> miles east/north of the SW corner -> nearest even-q hex (game PosX, PosY).
-function Get-HexLatLon($latN, $lonW) {
-    Get-HexFromXY (($westBound - $lonW) * $miPerDegLon) (($latN - $southBound) * $miPerDegLat) 1.0
-}
+# --- Coordinate conversion: Get-HexLatLon (ValleyFrame.ps1) ---
 
 # --- KEY TOWNS ---
 $towns = @(

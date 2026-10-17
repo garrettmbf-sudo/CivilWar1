@@ -56,9 +56,52 @@ def test_module_neighbour_tables_match_hex_utils():
     assert "($col % 2 -eq 0)" in t  # even columns are the north-shifted ones
 
 
-@pytest.mark.parametrize("script", ["beautify_map.ps1", "valley_map_data.ps1", "build_valley_map.ps1"])
-def test_tools_dot_source_the_shared_module(script):
-    assert ". (Join-Path $PSScriptRoot 'HexEvenQ.ps1')" in (PS / script).read_text()
+@pytest.mark.parametrize("script,module", [("beautify_map.ps1", "HexEvenQ.ps1"), ("ValleyFrame.ps1", "HexEvenQ.ps1"),
+                                           ("valley_map_data.ps1", "ValleyFrame.ps1"),
+                                           ("build_valley_map.ps1", "valley_map_data.ps1")])
+def test_tools_dot_source_the_shared_module(script, module):
+    assert ". (Join-Path $PSScriptRoot '%s')" % module in (PS / script).read_text()
+
+
+def test_one_frame_for_both_scripts():
+    # bounds live only in ValleyFrame.ps1; the builder has no frame or hand-placed geography of its own
+    for script in ("valley_map_data.ps1", "build_valley_map.ps1"):
+        t = (PS / script).read_text()
+        assert not re.search(r"^\$(south|north|west|east)Bound\s*=", t, re.M), script
+    b = (PS / "build_valley_map.ps1").read_text()
+    assert "37.90" not in b.replace("(Until 2026-10-17 this script had its own hand-placed copy in an old 37.90 N frame", "")
+    assert not re.search(r"\$valleyPike = @\(\d", b) and not re.search(r'X=\d+;\s*Y=\d+', b)
+
+
+def _ps_table(text, name):
+    """Edge-pair -> variant from either $name["a,b"] = n lines or a $name = @{ "a,b"=n; ... } literal."""
+    out = {k: int(v) for k, v in re.findall(r'\$%s\["([0-9,]+)"\]\s*=\s*(\d+)' % name, text)}
+    m = re.search(r"\$%s\s*=\s*@\{([^}]*)\}" % name, text)
+    if m:
+        out.update({k: int(v) for k, v in re.findall(r'"([0-9,]+)"\s*=\s*(\d+)', m.group(1))})
+    return out
+
+
+# Pinned by Major Hotchkiss (PR #21 review): River PNG edge sampling + TileEditorGO.SetAutoRivers,
+# and TileEditorGO.SetAutoRoads (roads use only Road1-5 and Road10-13). Ports 0=N 1=NE 2=SE 3=S 4=SW 5=NW.
+RIVER_TABLE = {"0,3": 1, "1,4": 2, "2,5": 3, "1,5": 4, "2,4": 5, "0,4": 6, "0,2": 7, "1,3": 8, "3,5": 9}
+RIVER_JUNCTIONS = {"1,3,5": 10, "0,2,4": 11, "0,1,3": 12}
+RIVER_SHARP = {"0,1": 4, "1,2": 7, "2,3": 5, "3,4": 5, "4,5": 6, "0,5": 4}
+ROAD_TABLE = {"0,3": 1, "1,5": 2, "2,4": 3, "1,4": 4, "2,5": 5, "3,5": 10, "0,4": 11, "0,2": 12, "1,3": 13}
+ROAD_SHARP = {"0,1": 2, "1,2": 12, "2,3": 3, "3,4": 3, "4,5": 11, "0,5": 2}
+
+
+def test_beautify_river_and_road_tables_are_pinned():
+    t = (PS / "beautify_map.ps1").read_text()
+    assert _ps_table(t, "dirLookup") == RIVER_TABLE
+    assert _ps_table(t, "junctionLookup") == RIVER_JUNCTIONS
+    assert _ps_table(t, "sharpFallback") == RIVER_SHARP
+    assert _ps_table(t, "roadLookup") == ROAD_TABLE
+    assert _ps_table(t, "roadSharpFallback") == ROAD_SHARP
+    assert set(ROAD_TABLE.values()) | set(ROAD_SHARP.values()) <= {1, 2, 3, 4, 5, 10, 11, 12, 13}
+    road_pass = t[t.index("# ===== PASS 2: FIX ROAD DIRECTIONS"):t.index("# ===== PASS 3")]
+    assert "$dirLookup" not in road_pass and "$sharpFallback" not in road_pass
+    assert "may be flipped" not in t and "re-check in game" not in t
 
 
 def test_old_layouts_are_gone():
@@ -132,13 +175,14 @@ $res | ConvertTo-Json -Depth 6 -Compress
 
 def test_valley_map_data_positions_match_hex_utils():
     text = (PS / "valley_map_data.ps1").read_text()
+    frame = (PS / "ValleyFrame.ps1").read_text()
     out = _run(f"& '{PS / 'valley_map_data.ps1'}'")
     m = re.search(r"Size: (\d+) x (\d+) hexes", out)
-    lat = lambda n: float(re.search(r"\$%s\s*=\s*([0-9.]+)" % n, text).group(1))  # noqa: E731
+    lat = lambda n: float(re.search(r"\$%s\s*=\s*([0-9.]+)" % n, frame).group(1))  # noqa: E731
     south, north, west, east = lat("southBound"), lat("northBound"), lat("westBound"), lat("eastBound")
     mi_lon = 69.0 * math.cos(38.75 * math.pi / 180)
     assert (int(m.group(1)), int(m.group(2))) == (
-        math.ceil((west - east) * mi_lon / hu.COL_PITCH_RATIO) + 1, math.ceil((north - south) * 69.0) + 1)
+        round((west - east) * mi_lon / hu.COL_PITCH_RATIO) + 1, round((north - south) * 69.0) + 1)
     towns = re.findall(r'Name="([^"]+)";\s*Lat=([0-9.]+);\s*Lon=([0-9.]+);\s*Type="[^"]+";\s*VP=\$\w+;\s*Primary=\$true', text)
     assert len(towns) >= 10
     for name, la, lo in towns:
@@ -149,45 +193,43 @@ def test_valley_map_data_positions_match_hex_utils():
     assert len(re.findall(r"\((\d+),(\d+)\)", pike)) == 19
 
 
-def test_build_valley_map_hex_part_matches_hex_utils(tmp_path):
+def test_build_valley_map_hex_part_matches_hex_utils():
     src = (PS / "build_valley_map.ps1").read_text()
     part = src[src.index("# ===== HEX GRID"):src.index("# ===== LOAD TEMPLATE =====")]
     part = part.replace("$PSScriptRoot", f"'{PS}'")
     out = json.loads(_run(part + r"""
 $res = @{ W=$W; H=$H; road=@($roadSet); river=@($riverSet);
-          towns=@($towns | ForEach-Object { ,@($_.N, $_.X, $_.Y) }) }
+          towns=@($towns | ForEach-Object { ,@($_.N, $_.D, $_.X, $_.Y) }) }
 $res | ConvertTo-Json -Depth 5 -Compress
 """).strip().splitlines()[-1])  # the script part also prints its terrain summary
-    assert (out["W"], out["H"]) == (math.ceil(105 / hu.COL_PITCH_RATIO), 125)
-    W = out["W"]
+    assert (out["W"], out["H"]) == (122, 140)  # same frame and rounding as valley_map_data.ps1
+    W, H = out["W"], out["H"]
 
-    def arr(name):
-        m = re.search(r"\$%s = @\(([^)]*)\)" % name, src)
-        v = [int(x) for x in re.findall(r"-?\d+", m.group(1))]
-        return list(zip(v[::2], v[1::2]))
-
-    def trace(wps):
+    def trace(name):
+        wps = _vmd_trace(name)
         cells = set()
         for a, b in zip(wps, wps[1:]):
-            for c, r in hu.hex_line(hu.point_to_offset(*a), hu.point_to_offset(*b)):
-                if 0 <= c < W and 0 <= r < out["H"]:
+            for c, r in hu.hex_line(a, b):
+                if 0 <= c < W and 0 <= r < H:
                     cells.add(r * W + c)
         return cells
 
-    assert set(out["road"]) == trace(arr("valleyPike"))
+    assert set(out["road"]) == trace("valleyPike")
     rivers = set()
-    for n in ("riverSouthFork", "riverNorthFork", "riverMainShen", "riverPotomac", "riverSouth"):
-        rivers |= trace(arr(n))
+    for n in ("southFork", "northFork", "mainShenandoah", "potomac", "southRiver"):
+        rivers |= trace(n)
     assert set(out["river"]) == rivers
-    town_src = re.findall(r'@\{N="([^"]+)";\s*X=(\d+);\s*Y=(\d+);', src)
-    got = {n: (x, y) for n, x, y in out["towns"]}
-    for n, x, y in town_src:
-        assert got[n] == hu.point_to_offset(int(x), int(y)), n
-    # the traced pike is a chain of game-adjacent hexes between its waypoints
-    wps = [hu.point_to_offset(*p) for p in arr("valleyPike")]
-    for a, b in zip(wps, wps[1:]):
-        line = hu.hex_line(a, b)
-        assert all(q in hu.offset_neighbors(*p) for p, q in zip(line, line[1:]))
+    # identical town hexes in both scripts: the builder vs valley_map_data.ps1's own run
+    data = _run(f"& '{PS / 'valley_map_data.ps1'}'")
+    places = _vmd_places()
+    for n, d, x, y in out["towns"]:
+        assert (x, y) == places[d], n
+        row = re.search(r"^%s\s+(-?\d+)\s+(-?\d+)\s" % re.escape(d), data, re.M)
+        if row:  # primary places are printed by the data script
+            assert (int(row.group(1)), int(row.group(2))) == (x, y), n
+        assert 0 <= x < W and 0 <= y < H, n
+    assert len(out["towns"]) == 22
+    assert dict((n, (x, y)) for n, _, x, y in out["towns"])["Staunton"] == (36, 31)
 
 
 def test_beautify_get_neighbor_matches_hex_utils():
@@ -204,7 +246,8 @@ def test_beautify_get_neighbor_matches_hex_utils():
 # ---------------------------------------------------------------- pinned geography (Archivist review, PR #21)
 def _vmd_frame():
     text = (PS / "valley_map_data.ps1").read_text()
-    num = lambda n: float(re.search(r"\$%s\s*=\s*([0-9.]+)" % n, text).group(1))  # noqa: E731
+    frame = (PS / "ValleyFrame.ps1").read_text()
+    num = lambda n: float(re.search(r"\$%s\s*=\s*([0-9.]+)" % n, frame).group(1))  # noqa: E731
     mi_lon = 69.0 * math.cos(38.75 * math.pi / 180)
     south, west = num("southBound"), num("westBound")
     snap = lambda la, lo: hu.point_to_offset((west - lo) * mi_lon, (la - south) * 69.0)  # noqa: E731

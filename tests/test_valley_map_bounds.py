@@ -3,6 +3,7 @@ import re
 from pathlib import Path
 
 PS1 = Path(__file__).resolve().parents[1] / "tools" / "powershell" / "valley_map_data.ps1"
+FRAME = PS1.with_name("ValleyFrame.ps1")  # bounds are shared with build_valley_map.ps1 since 2026-10-17
 
 
 def _bounds(text):
@@ -22,7 +23,7 @@ def test_lexington_present_with_real_coordinates():
 
 def test_all_named_locations_inside_bounds():
     text = PS1.read_text()
-    south, north, west, east = _bounds(text)
+    south, north, west, east = _bounds(FRAME.read_text())
     for name, (lat, lon) in _towns(text).items():
         assert south <= lat <= north, name
         assert east <= lon <= west, name  # west longitudes are positive degrees W

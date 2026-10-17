@@ -18,75 +18,87 @@ Write-Output "Loading game assemblies..."
 [System.Reflection.Assembly]::LoadFrom("$managedDir\UnityEngine.dll") | Out-Null
 [System.Reflection.Assembly]::LoadFrom("$managedDir\Assembly-CSharp.dll") | Out-Null
 
-# ===== HEX GRID (native even-q, shared with src/hex_utils.py) =====
-# Columns west -> east, rows increase NORTH, EVEN columns half a row north, MapGO pitch 4.42:5.1.
-# (col,row) here is exactly the game's Tile (PosX, PosY), with no conversion layer.
-. (Join-Path $PSScriptRoot 'HexEvenQ.ps1')
+# ===== HEX GRID AND FRAME (shared with valley_map_data.ps1) =====
+# Native even-q (HexEvenQ.ps1 = src/hex_utils.py): columns west -> east, rows increase NORTH, EVEN
+# columns half a row north, MapGO pitch 4.42:5.1. (col,row) is exactly the game's Tile (PosX, PosY).
+# The frame (37.70-39.71 N, 79.65-77.70 W), the grid size, the lat/lon -> hex rule AND all geography
+# come from valley_map_data.ps1 (via ValleyFrame.ps1), so both scripts put every feature on the same hex.
+# (Until 2026-10-17 this script had its own hand-placed copy in an old 37.90 N frame, ~14 rows south.)
+. (Join-Path $PSScriptRoot 'valley_map_data.ps1') | Out-Null   # defines the frame, $towns and the feature lists
 
 # ===== MAP DIMENSIONS =====
-$Wmi = 105  # frame width, miles east of 79.65 W
-$Hmi = 125  # frame height, miles north of 37.90 N
-$W = [int][Math]::Ceiling($Wmi / $script:HexColPitchRatio)  # 122 columns (0.8667 mi apart)
-$H = $Hmi                                                    # 125 rows (1 mi apart)
+$Wmi = $widthMi    # frame width, miles east of $westBound
+$Hmi = $heightMi   # frame height, miles north of $southBound
+$W = $mapWidth     # 122 columns (0.8667 mi apart)
+$H = $mapHeight    # 140 rows (1 mi apart)
 
 # ===== GEOGRAPHIC DATA =====
-# All waypoints below are FRAME MILES [x east, y north] from (79.65 W, 37.90 N) (the old
-# 1-mile square grid, from valley_map_data.ps1 with southBound 37.90). They are converted to
-# even-q hexes with Get-HexFromXY; ridges stay in miles and are tested at each hex centre.
+# Lat/lon lists from valley_map_data.ps1 -> flat arrays of FRAME MILES [x0,y0, x1,y1, ...].
+# Ridges are sorted south -> north (Interp-Ridge needs ascending y) and tested at each hex centre;
+# rivers and roads are snapped to hexes and traced as game-adjacent chains (Trace-Path).
+function ConvertTo-FrameMileArray {
+    param($Points, [switch]$SortByY)
+    $xy = foreach ($p in $Points) { ,(Get-FrameMiles $p.Lat $p.Lon) }
+    if ($SortByY) { $xy = $xy | Sort-Object { $_[1] } }
+    $flat = New-Object System.Collections.Generic.List[double]
+    foreach ($m in $xy) { $flat.Add($m[0]); $flat.Add($m[1]) }
+    return ,([double[]]$flat.ToArray())
+}
 
-# Mountain ridge waypoints as flat arrays [x0,y0, x1,y1, ...]
-$blueRidge = @(40,3, 43,10, 48,21, 54,31, 59,38, 70,48, 75,55, 83,66, 89,72, 94,83, 100,93, 102,100)
-$massanutten = @(50,34, 52,38, 54,41, 57,45, 59,48, 61,52, 63,55, 65,59, 67,62, 69,66, 71,69, 73,71)
-$northMtn = @(22,7, 24,17, 30,28, 35,38, 40,48, 46,59, 54,69, 59,79, 65,90, 67,100)
-$allegheny = @(3,3, 5,14, 5,28, 8,41, 13,55, 16,69, 19,83, 22,97, 24,110)
+# Mountain ridge waypoints
+$blueRidge   = ConvertTo-FrameMileArray $blueRidge -SortByY
+$massanutten = ConvertTo-FrameMileArray $massanutten -SortByY
+$northMtn    = ConvertTo-FrameMileArray $northMountain -SortByY
+$allegheny   = ConvertTo-FrameMileArray $allegheny -SortByY
 
-# River waypoints as flat arrays
-$riverSouthFork = @(46,28, 48,31, 50,34, 54,40, 59,45, 63,48, 66,52, 68,55, 71,59, 74,62, 76,66, 78,69, 79,70)
-$riverNorthFork = @(40,36, 43,41, 46,45, 48,48, 50,52, 52,57, 54,61, 58,66, 61,69, 65,72, 68,75, 73,74, 75,72, 78,70)
-$riverMainShen = @(79,70, 83,75, 89,79, 91,83, 94,86, 97,90, 100,93, 102,97, 103,99)
-$riverPotomac = @(35,117, 51,114, 67,110, 83,107, 91,105, 100,102, 103,99)
-$riverSouth = @(41,12, 43,15, 44,19, 45,23, 46,28)
+# River waypoints
+$riverSouthFork = ConvertTo-FrameMileArray $southFork
+$riverNorthFork = ConvertTo-FrameMileArray $northFork
+$riverMainShen  = ConvertTo-FrameMileArray $mainShenandoah
+$riverPotomac   = ConvertTo-FrameMileArray $potomac
+$riverSouth     = ConvertTo-FrameMileArray $southRiver
 $allRivers = @($riverSouthFork, $riverNorthFork, $riverMainShen, $riverPotomac, $riverSouth)
 
-# Valley Pike waypoints as flat array
-$valleyPike = @(31,17, 37,24, 40,31, 42,38, 45,45, 47,52, 53,52, 54,59, 58,64, 61,68, 65,72, 69,75, 74,78, 76,82, 79,86, 80,89, 86,97, 90,104, 91,108)
+# Valley Pike waypoints
+$valleyPike = ConvertTo-FrameMileArray $valleyPike
 
-# Town definitions: Name, X/Y in frame miles (converted to hex below), Size (1=village, 2=city), VP, Owner
+# Town definitions: Name, D = name in valley_map_data.ps1 (hex taken from there), Size (1=village, 2=city), VP, Owner
+$dataTowns = @{}
+foreach ($dt in $towns) { $dataTowns[$dt.Name] = $dt }
 $towns = @(
-    @{N="Staunton";       X=31; Y=17; S=2; VP=$true;  O="Confederacy"}
-    @{N="Waynesboro";     X=41; Y=12; S=1; VP=$false; O="Confederacy"}
-    @{N="McDowell";       X=9;  Y=28; S=1; VP=$true;  O="Confederacy"}
-    @{N="Port Republic";  X=46; Y=28; S=1; VP=$true;  O="Confederacy"}
-    @{N="Cross Keys";     X=45; Y=36; S=1; VP=$true;  O="Confederacy"}
-    @{N="Harrisonburg";   X=42; Y=38; S=2; VP=$true;  O="Confederacy"}
-    @{N="New Market";     X=53; Y=52; S=2; VP=$true;  O="Confederacy"}
-    @{N="Luray";          X=64; Y=53; S=1; VP=$false; O="Confederacy"}
-    @{N="Mt. Jackson";    X=54; Y=59; S=1; VP=$false; O="Confederacy"}
-    @{N="Edinburg";       X=58; Y=64; S=1; VP=$false; O="Confederacy"}
-    @{N="Woodstock";      X=61; Y=68; S=1; VP=$false; O="Confederacy"}
-    @{N="Strasburg";      X=69; Y=75; S=2; VP=$true;  O="Confederacy"}
-    @{N="Front Royal";    X=79; Y=70; S=2; VP=$true;  O="Confederacy"}
-    @{N="Middletown";     X=74; Y=78; S=1; VP=$false; O="Confederacy"}
-    @{N="Newtown";        X=76; Y=82; S=1; VP=$false; O="Confederacy"}
-    @{N="Kernstown";      X=79; Y=86; S=1; VP=$true;  O="Union"}
-    @{N="Winchester";     X=80; Y=89; S=2; VP=$true;  O="Union"}
-    @{N="Charles Town";   X=96; Y=96; S=1; VP=$false; O="Union"}
-    @{N="Martinsburg";    X=91; Y=107;S=2; VP=$true;  O="Union"}
-    @{N="Harpers Ferry";  X=103;Y=98; S=2; VP=$true;  O="Union"}
-    @{N="Moorefield";     X=37; Y=80; S=1; VP=$false; O="Confederacy"}
-    @{N="Franklin";       X=17; Y=51; S=1; VP=$false; O="Confederacy"}
+    @{N="Staunton";        D="Staunton";        S=2; VP=$true;  O="Confederacy"}
+    @{N="Waynesboro";      D="Waynesboro";      S=1; VP=$false; O="Confederacy"}
+    @{N="McDowell";        D="McDowell";        S=1; VP=$true;  O="Confederacy"}
+    @{N="Port Republic";   D="Port Republic";   S=1; VP=$true;  O="Confederacy"}
+    @{N="Cross Keys";      D="Cross Keys";      S=1; VP=$true;  O="Confederacy"}
+    @{N="Harrisonburg";    D="Harrisonburg";    S=2; VP=$true;  O="Confederacy"}
+    @{N="New Market";      D="New Market";      S=2; VP=$true;  O="Confederacy"}
+    @{N="Luray";           D="Luray";           S=1; VP=$false; O="Confederacy"}
+    @{N="Mt. Jackson";     D="Mount Jackson";   S=1; VP=$false; O="Confederacy"}
+    @{N="Edinburg";        D="Edinburg";        S=1; VP=$false; O="Confederacy"}
+    @{N="Woodstock";       D="Woodstock";       S=1; VP=$false; O="Confederacy"}
+    @{N="Strasburg";       D="Strasburg";       S=2; VP=$true;  O="Confederacy"}
+    @{N="Front Royal";     D="Front Royal";     S=2; VP=$true;  O="Confederacy"}
+    @{N="Middletown";      D="Middletown";      S=1; VP=$false; O="Confederacy"}
+    @{N="Newtown";         D="Newtown";         S=1; VP=$false; O="Confederacy"}
+    @{N="Kernstown";       D="Kernstown";       S=1; VP=$true;  O="Union"}
+    @{N="Winchester";      D="Winchester";      S=2; VP=$true;  O="Union"}
+    @{N="Charles Town";    D="Charles Town";    S=1; VP=$false; O="Union"}
+    @{N="Martinsburg";     D="Martinsburg";     S=2; VP=$true;  O="Union"}
+    @{N="Harpers Ferry";   D="Harpers Ferry";   S=2; VP=$true;  O="Union"}
+    @{N="Moorefield";      D="Moorefield";      S=1; VP=$false; O="Confederacy"}
+    @{N="Franklin";        D="Franklin";        S=1; VP=$false; O="Confederacy"}
 )
-
-# Convert town positions from frame miles to even-q hexes.
 foreach ($t in $towns) {
-    $townHex = Get-HexFromXY $t.X $t.Y 1.0   # (not $h: PowerShell names are case-insensitive, $h is $H)
-    $t.X = $townHex[0]; $t.Y = $townHex[1]
+    $src = $dataTowns[$t.D]
+    if ($null -eq $src) { throw "Town '$($t.D)' is missing from valley_map_data.ps1" }
+    $t.X = $src.HexX; $t.Y = $src.HexY
 }
 
 # ===== HELPER FUNCTIONS =====
 
 function Interp-Ridge {
-    param([int[]]$Ridge, [double]$Y)   # $Ridge in frame miles; returns ridge x (miles) at y = $Y miles
+    param([double[]]$Ridge, [double]$Y)   # $Ridge in frame miles; returns ridge x (miles) at y = $Y miles
     $count = $Ridge.Count / 2
     if ($Y -lt $Ridge[1] -or $Y -gt $Ridge[($count-1)*2+1]) { return $null }
     for ($i = 0; $i -lt $count - 1; $i++) {
@@ -104,7 +116,7 @@ function Interp-Ridge {
 function Trace-Path {
     # Waypoints in frame miles -> each snapped to its even-q hex -> joined by chains of
     # adjacent hexes (Get-HexLine = hex_utils.hex_line). Returns row*W+col indices.
-    param([int[]]$Waypoints)
+    param([double[]]$Waypoints)
     $hexes = New-Object System.Collections.Generic.HashSet[int]
     $count = $Waypoints.Count / 2
     for ($i = 0; $i -lt $count - 1; $i++) {
