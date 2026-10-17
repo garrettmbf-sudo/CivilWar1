@@ -58,9 +58,9 @@ A056,regiment,REG_OH04,FRM_US_KIMBALLR,1862-06-01,1862-06-30,,,SRC007
 A057,regiment,REG_OH08,FRM_US_KIMBALLR,1862-06-01,1862-06-30,,,SRC007
 A058,regiment,REG_WV07,FRM_US_KIMBALLR,1862-06-01,1862-06-30,,,SRC007
 A059,regiment,REG_IL39,FRM_US_FERRY2,1862-06-01,1862-06-30,,,SRC007
-A060,regiment,REG_OH05,FRM_US_FERRY2,1862-06-08,1862-06-30,Y,June roster Ferry; tactically with Carroll's brigade at Port Republic Jun 9 (documented tactical detachment),June roster Ferry; tactically detached to Carroll's brigade at Port Republic Jun 9 (documented tactical detachment)
+A060,regiment,REG_OH05,FRM_US_FERRY2,1862-06-08,1862-06-30,Y,June roster Ferry; tactically detached to Carroll's brigade at Port Republic Jun 9 (documented tactical detachment),SRC007|SRC009 p.689
 A061,regiment,REG_OH62,FRM_US_FERRY2,1862-06-01,1862-06-30,,,SRC007
-A062,regiment,REG_OH66,FRM_US_FERRY2,1862-06-08,1862-06-30,Y,June roster Ferry; tactically with Carroll's brigade at Port Republic Jun 9 (documented tactical detachment),June roster Ferry; tactically detached to Carroll's brigade at Port Republic Jun 9 (documented tactical detachment)
+A062,regiment,REG_OH66,FRM_US_FERRY2,1862-06-08,1862-06-30,Y,June roster Ferry; tactically detached to Carroll's brigade at Port Republic Jun 9 (documented tactical detachment),SRC007|SRC009 p.689
 A063,regiment,REG_OH67,FRM_US_FERRY2,1862-06-01,1862-06-30,,,SRC007
 A064,regiment,REG_IN13,FRM_US_TYLERR,1862-06-01,1862-06-30,,,SRC007
 A065,regiment,REG_OH29,FRM_US_TYLERR,1862-06-01,1862-06-30,,,SRC007
@@ -142,3 +142,4 @@ A140,brigade,FRM_CS_TAYLOR,FRM_CS_EWELLDIV,1862-05-20,1862-06-30,,,SRC007
 A142,hq,FRM_US_SHIELDSDIV_R,FRM_US_MCDOWELLDEPT,1862-05-01,1862-06-30,,Shields' division transfer Banks->McDowell,SRC007
 A143,hq,FRM_US_WILLIAMSDIV,FRM_US_BANKSDEPT,1862-05-01,1862-06-30,,,SRC007
 A144,hq,FRM_US_BLENKERDIV,FRM_US_FREMONTDEPT,1862-06-01,1862-06-30,,,SRC007
+A145,regiment,REG_NY04C,FRM_US_BLENKERDIV,1862-06-01,1862-06-30,,OR Cross Keys return lists 4th NY Cavalry directly under Blenker's Division (no brigade); Fremont's report names 'Dickel's Fourth New York Cavalry',SRC009 p.664|SRC009 p.18

@@ -15,6 +15,7 @@ from __future__ import annotations
 import csv
 import json
 import os
+import re
 from dataclasses import dataclass, field
 from datetime import date, timedelta
 
@@ -114,6 +115,11 @@ class OOB:
                 return c["commander_id"]
         return ""  # vacant / not applicable
 
+    def command_rows(self, formation_id: str, on: date) -> list[dict]:
+        """Command records (incl. documented vacancies) covering `on`."""
+        return [c for c in self.commands
+                if c["brigade_id"] == formation_id and c["valid_from"] <= on <= c["valid_to"]]
+
     def parent_on(self, formation_id: str, on: date) -> str:
         """Return a date-valid parent HQ without rewriting historical source rows."""
         parent = self.formations[formation_id]["parent_id"]
@@ -194,6 +200,17 @@ class OOB:
 
 
 # ---------- validation ----------
+# Pre-existing modelling gaps surfaced by the empty-counter check. Each needs a
+# source-backed fix; they are listed (not silently ignored) so new gaps fail.
+KNOWN_EMPTY_COUNTER_GAPS = {
+    # Scott's VA regiments move to Steuart from 5/24; Marylanders detached 5/23-5/24.
+    ("FRM_CS_STEUART", date(1862, 5, 23)),
+    # Tactical Port Republic Tyler brigade only populated from 6/9; 6/1-6/8 the
+    # roster lives in FRM_US_TYLERR. Unresolved roster-vs-tactical split.
+    *{("FRM_US_TYLER3", date(1862, 6, d)) for d in range(1, 9)},
+}
+
+
 def validate(oob: OOB, repo_root: str | None = None) -> list[str]:
     errors: list[str] = []
     e = errors.append
@@ -292,6 +309,46 @@ def validate(oob: OOB, repo_root: str | None = None) -> list[str]:
     for cid, c in oob.commanders.items():
         if c["first_mentioned"] and c["last_mentioned"] and c["first_mentioned"] > c["last_mentioned"]:
             e(f"commander {cid}: first_mentioned after last_mentioned")
+
+    # 13 every record cites at least one known source ("SRCxxx" or "SRCxxx p.N")
+    src_ids = set(oob.sources)
+    tables = [("formations", oob.formations.values(), "formation_id"),
+              ("regiments", oob.regiments.values(), "regiment_id"),
+              ("commanders", oob.commanders.values(), "commander_id"),
+              ("artillery", oob.artillery.values(), "battery_id"),
+              ("assignments", oob.assignments, "assignment_id"),
+              ("brigade_commands", oob.commands, "brigade_id"),
+              ("strength_returns", oob.returns, "return_id"),
+              ("reinforcements", oob.events, "event_id")]
+    for tname, rows, key in tables:
+        for r in rows:
+            cited = (r.get("sources") or "").strip()
+            if not cited:
+                e(f"{tname} {r.get(key)}: empty sources")
+                continue
+            ids = re.findall(r"SRC\d{3}", cited)
+            if not ids:
+                e(f"{tname} {r.get(key)}: sources {cited!r} has no SRCxxx id")
+            for sid in ids:
+                if sid not in src_ids:
+                    e(f"{tname} {r.get(key)}: unknown source {sid}")
+
+    # 14 counters must never be empty and must have a command record every active day
+    for fid, f in oob.formations.items():
+        if f.get("counter", "").strip() != "Y":
+            continue
+        for day in all_days:
+            if fid not in oob.active_formations(day):
+                continue
+            if not oob.members_of(fid, day) and (fid, day) not in KNOWN_EMPTY_COUNTER_GAPS:
+                e(f"{fid} on {day}: empty counter (no assigned regiments)")
+            if not oob.command_rows(fid, day):
+                e(f"{fid} on {day}: no commander record (add commander or documented vacancy)")
+
+    # 15 a documented vacancy (empty commander_id) must say why in its sources
+    for c in oob.commands:
+        if not c["commander_id"].strip() and "vacan" not in (c.get("sources") or "").lower():
+            e(f"command {c['brigade_id']} {c['valid_from']}: empty commander without documented vacancy")
 
     return errors
 

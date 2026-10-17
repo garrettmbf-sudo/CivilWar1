@@ -87,11 +87,11 @@ REG_VT01C,"1st Vermont Cavalry",VT,cavalry,Hatch's cavalry brigade,SRC007
 REG_NY08C,"8th New York Cavalry (5 dismounted companies)",NY,cavalry,Geary's command; dismounted,SRC007
 REG_WV01C,"1st West Virginia Cavalry",WV,cavalry,"Milroy's artillery/cavalry support at McDowell; detachment at Cross Keys",SRC007
 REG_WV03C,"3rd West Virginia Cavalry",WV,cavalry,Fremont additional cavalry,SRC007
-REG_OH13C,"13th Ohio Cavalry",OH,cavalry,"listed with Milroy support at McDowell as '12th Ohio Battery' ambiguity resolved to artillery; verify OR",SRC007
+REG_OH13C,13th Ohio Cavalry,OH,cavalry,UNVERIFIED/LIKELY SPURIOUS: full-text search of OR Ser. I Vol. 12 Pt. 1 finds no 13th Ohio Cavalry in the Valley; McDowell OR names Johnson's 12th Ohio Battery instead. Left UNASSIGNED pending source; do not make a counter,SRC007|SRC009 (negative search)
 REG_OH06C,"6th Ohio Cavalry",OH,cavalry,Fremont additional cavalry,SRC007
 REG_CT01CB,"1st Connecticut Cavalry Battalion",CT,cavalry,Schenck's Cross Keys organization,SRC007
 REG_NJ01C,"1st New Jersey Cavalry",NJ,cavalry,Bayard's attached command,SRC007
 REG_PA01C,"1st Pennsylvania Cavalry",PA,cavalry,Bayard's attached command,SRC007
-REG_NY04C,"4th New York Cavalry",NY,cavalry,Blenker's division cavalry,SRC007
+REG_NY04C,4th New York Cavalry,NY,cavalry,Blenker's division cavalry (Col. C. F. Dickel); assigned A145,SRC007|SRC009 p.664
 REG_MI01CD,"1st Michigan Cavalry (5 companies)",MI,cavalry,attached to Williams' Division,SRC007
 REG_PAZDA,"Pennsylvania Zouaves d'Afrique (detachment)",PA,infantry,Geary's command; detachment strength unknown,SRC007

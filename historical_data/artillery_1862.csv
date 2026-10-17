@@ -12,24 +12,24 @@ ART_COURTNEY,"Courtney's Battery",CSA,Capt. Alfred R. Courtney,1862-05-20,FRM_CS
 ART_LUSK,"Lusk's 2nd Rockbridge Artillery",CSA,Capt. John A. M. Lusk,1862-05-20,FRM_CS_ARTY_EWELL,Cross Keys and Port Republic OOB,SRC007
 ART_RAINE,"Raine's Lynchburg Artillery",CSA,Capt. Charles I. Raine,1862-05-20,FRM_CS_ARTY_EWELL,Cross Keys and Port Republic OOB,SRC007
 ART_RICE,"Rice's Eighth Star (Virginia) Artillery",CSA,Capt. William H. Rice,1862-05-20,FRM_CS_ARTY_EWELL,Cross Keys and Port Republic OOB,SRC007
-ART_US_WVA,"Battery A, West Virginia Light Artillery",USA,,1862-03-23,FRM_US_SHIELDSDIV_K,Kernstown,SRC007
+ART_US_WVA,"Battery A, West Virginia Light Artillery",USA,Capt. Jenks,1862-03-23,FRM_US_SHIELDSDIV_K,Kernstown,SRC007|SRC009 p.359
 ART_US_WVB,"Battery B, West Virginia Light Artillery",USA,,1862-03-23,FRM_US_SHIELDSDIV_K,Kernstown,SRC007
-ART_US_4USA_E,"Battery E, 4th U.S. Artillery",USA,,1862-03-23,FRM_US_SHIELDSDIV_K,"Kernstown and Port Republic rosters",SRC007
-ART_US_1OH_H,"Battery H, 1st Ohio Artillery",USA,,1862-03-23,FRM_US_SHIELDSDIV_K,"Marked unengaged at Kernstown; present at Port Republic",SRC007
-ART_US_1OH_L,"Battery L, 1st Ohio Artillery",USA,,1862-03-23,FRM_US_SHIELDSDIV_K,Kernstown; Port Republic,SRC007
-ART_US_1OH_I,"Battery I, 1st Ohio Artillery",USA,,1862-05-08,FRM_US_MILROY_MCD,McDowell; Cross Keys with Milroy,SRC007
-ART_US_1OH_K,"Battery K, 1st Ohio Artillery",USA,,1862-05-08,FRM_US_SCHENCK_MCD,McDowell; Cross Keys with Schenck,SRC007
-ART_US_12OH,"12th Ohio Battery (independent light battery)",USA,,1862-05-08,FRM_US_MILROY_MCD,McDowell; Cross Keys with Milroy,SRC007
-ART_US_1NY_M,"Battery M, 1st New York Light Artillery",USA,,1862-05-20,FRM_US_WILLIAMSDIV,First Winchester attached artillery,SRC007
-ART_US_PAF,"Battery F, Pennsylvania Light Artillery",USA,,1862-05-20,FRM_US_WILLIAMSDIV,First Winchester,SRC007
+ART_US_4USA_E,"Battery E, 4th U.S. Artillery",USA,"Capt. Joseph C. Clark, Jr.",1862-03-23,FRM_US_SHIELDSDIV_K,Kernstown and Port Republic rosters,SRC007|SRC009 p.359
+ART_US_1OH_H,"Battery H, 1st Ohio Artillery",USA,Capt. J. F. Huntington,1862-03-23,FRM_US_SHIELDSDIV_K,Marked unengaged at Kernstown; present at Port Republic,SRC007|SRC009 p.359
+ART_US_1OH_L,"Battery L, 1st Ohio Artillery",USA,Capt. Lucius N. Robinson,1862-03-23,FRM_US_SHIELDSDIV_K,Kernstown; Port Republic,SRC007|SRC009 p.359
+ART_US_1OH_I,"Battery I, 1st Ohio Artillery",USA,Capt. Hyman,1862-05-08,FRM_US_MILROY_MCD,McDowell; Cross Keys with Milroy; FLAG: OR p.465 calls Hyman's battery the 'Ninth Ohio Battery' - designation conflict unresolved,SRC007|SRC009 p.19
+ART_US_1OH_K,"Battery K, 1st Ohio Artillery",USA,Capt. De Beck,1862-05-08,FRM_US_SCHENCK_MCD,McDowell; Cross Keys with Schenck,SRC007|SRC009 p.462
+ART_US_12OH,12th Ohio Battery (independent light battery),USA,Capt. Johnson,1862-05-08,FRM_US_MILROY_MCD,McDowell; Cross Keys with Milroy,SRC007|SRC009 p.19|SRC009 p.467
+ART_US_1NY_M,"Battery M, 1st New York Light Artillery",USA,Capt. George W. Cothran,1862-05-20,FRM_US_WILLIAMSDIV,First Winchester attached artillery,SRC007|SRC009 p.418
+ART_US_PAF,"Battery F, Pennsylvania Light Artillery",USA,Capt. R. B. Hampton,1862-05-20,FRM_US_WILLIAMSDIV,First Winchester,SRC007|SRC009 p.519
 ART_US_4US_F,"Battery F, 4th U.S. Artillery",USA,,1862-05-20,FRM_US_WILLIAMSDIV,First Winchester,SRC007
 ART_US_PAE,"Battery E, Pennsylvania Light Artillery",USA,,1862-05-20,FRM_US_GEARY,First Winchester with Geary,SRC007
-ART_US_KNAPP,"Knapp's Pennsylvania Battery (section)",USA,,1862-05-20,FRM_US_KENLY,Front Royal garrison,SRC007
-ART_US_1OH_G,"Battery G, West Virginia Light Artillery",USA,,1862-06-01,FRM_US_MILROY_CK,Cross Keys,SRC007
-ART_US_RIGBY,"Rigby's Indiana Battery",USA,,1862-06-01,FRM_US_SCHENCK_CK,Cross Keys,SRC007
-ART_US_2NY,"2nd New York Light Artillery Battery",USA,,1862-06-01,FRM_US_BLENKERDIV,Cross Keys divisional artillery,SRC007
-ART_US_WVC,"Battery C, West Virginia Light Artillery",USA,,1862-06-01,FRM_US_BLENKERDIV,Cross Keys,SRC007
-ART_US_13NY,"13th New York Light Artillery Battery",USA,,1862-06-01,FRM_US_BLENKERDIV,Cross Keys,SRC007
-ART_US_1NY_I,"Battery I, 1st New York Light Artillery",USA,,1862-06-01,FRM_US_BLENKERDIV,Cross Keys,SRC007
+ART_US_KNAPP,Knapp's Pennsylvania Battery (section),USA,Lt. Charles A. Atwell (section),1862-05-20,FRM_US_KENLY,"Front Royal garrison; FLAG: OR p.519 identifies Atwell's guns as Battery E PA Light Artillery (Knap's) - possible overlap with ART_US_PAE, unresolved",SRC007|SRC009 p.519|SRC009 p.555
+ART_US_1OH_G,"Battery G, West Virginia Light Artillery",USA,Capt. Ewing,1862-06-01,FRM_US_MILROY_CK,Cross Keys,SRC007|SRC009 p.19
+ART_US_RIGBY,Rigby's Indiana Battery,USA,Capt. Rigby,1862-06-01,FRM_US_SCHENCK_CK,Cross Keys,SRC007|SRC009 p.19
+ART_US_2NY,2nd New York Light Artillery Battery,USA,Capt. Schirmer,1862-06-01,FRM_US_BLENKERDIV,Cross Keys divisional artillery,SRC007|SRC009 p.14|SRC009 p.18
+ART_US_WVC,"Battery C, West Virginia Light Artillery",USA,Capt. Buell,1862-06-01,FRM_US_BLENKERDIV,Cross Keys,SRC007|SRC009 p.14|SRC009 p.18
+ART_US_13NY,13th New York Light Artillery Battery,USA,Capt. Dieckmann,1862-06-01,FRM_US_BLENKERDIV,Cross Keys,SRC007|SRC009 p.19
+ART_US_1NY_I,"Battery I, 1st New York Light Artillery",USA,Capt. Michael Wiedrich,1862-06-01,FRM_US_BLENKERDIV,Cross Keys,SRC007|SRC009 p.520
 ART_US_ADDHOW,"Additional howitzer battery (Blenker) - organization UNCONFIRMED",USA,,1862-06-01,FRM_US_BLENKERDIV,"Reference says precise organization needs confirmation before separate counter - NO counter generated",SRC007
 ART_US_2MAINE,"2nd Maine Light Artillery Battery",USA,,1862-06-01,FRM_US_BAYARD,Bayard's attached command,SRC007
