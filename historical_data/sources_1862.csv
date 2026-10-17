@@ -7,3 +7,5 @@ SRC005,"Wikipedia battle order-of-battle tables (cited in reference/oob referenc
 SRC006,"Maryland State Archives history of Front Royal / Kenly's command (msa.maryland.gov)",Front Royal garrison composition May 23,high
 SRC007,"reference/oob reference (repo file, historical research document)",baseline extraction for all formations below,authoritative_starting_point
 SRC008,"game-mechanics assumption pending verification - see docs/unit-stats.md","strength conversion (HoS counter strength vs soldiers) is NOT yet verified against game internals",unverified
+SRC009,"OR Ser. I Vol. 12 Pt. 1 (Reports, Mar 23-Sep 2 1862), GPO 1885. Page numbers read from running heads of archive.org scan https://archive.org/details/warofrebellion121unit (djvu OCR)","page-cited battle returns, unit commanders, command changes",high_page_ocr_verified
+SRC010,"OR Ser. I Vol. 12 Pt. 3 (Correspondence, orders, returns), GPO 1885. archive.org scan https://archive.org/details/warofrebellion123unit",special/general orders assigning officers,high_page_ocr_verified
