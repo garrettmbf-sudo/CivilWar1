@@ -17,7 +17,7 @@
 | `reference/` | Non-release references and known existing portrait files | Record provenance, not auto-distribute |
 | `historical_data/` | Portrait inventory, future dated formations, commanders, OOB | CSV/YAML/JSON with explicit IDs |
 | `maps/` | Existing map samples and map pipeline documentation | Retain sample originals |
-| `scenarios/1862/` | Only active scenario period | Keep historical dates and links |
+| `scenarios/valley_campaign_1862/` | Primary scenario (full Valley campaign); per-battle folders beside it, see `scenarios/README.md` | Keep historical dates and links |
 | `mod/` | Verified release-ready resources only | No untested placeholders |
 | `docs/` | Design, format notes, workflow and audit trail | Separate facts from hypotheses |
 | `src/`, `scripts/`, `tests/` | Reusable code, command-line tools, and tests | Tests for each behavioral change |

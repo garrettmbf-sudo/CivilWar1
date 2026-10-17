@@ -7,12 +7,12 @@ $miPerDegLat = 69.0
 $miPerDegLon = 69.0 * [Math]::Cos($centerLat * [Math]::PI / 180)  # ~53.8
 
 # --- Map Bounds ---
-$southBound = 37.90   # South of Staunton
+$southBound = 37.70   # South of Lexington (was 37.90, south of Staunton; extended 2026-10-17 to include Lexington/VMI)
 $northBound = 39.71   # North of Martinsburg
 $westBound  = 79.65   # Into Alleghenies (west of McDowell)
 $eastBound  = 77.70   # East of Harpers Ferry
 
-$mapHeight = [Math]::Ceiling(($northBound - $southBound) * $miPerDegLat)  # ~125
+$mapHeight = [Math]::Ceiling(($northBound - $southBound) * $miPerDegLat)  # ~139 (was ~125 with southBound 37.90)
 $mapWidth  = [Math]::Ceiling(($westBound - $eastBound) * $miPerDegLon)    # ~105
 
 Write-Output "=== VALLEY CAMPAIGN MAP DIMENSIONS ==="
@@ -33,6 +33,7 @@ function Get-HexY($latN) { [Math]::Round(($latN - $southBound) * $miPerDegLat) }
 $towns = @(
     # Campaign-critical towns
     @{ Name="Staunton";        Lat=38.1496; Lon=79.0717; Type="city";    VP=$true;  Primary=$true  }
+    @{ Name="Lexington";       Lat=37.7840; Lon=79.4430; Type="town";    VP=$false; Primary=$false }  # Rockbridge Co. seat, Virginia Military Institute; southern map anchor (approx. town-centre coords, PROVISIONAL)
     @{ Name="Waynesboro";      Lat=38.0686; Lon=78.8894; Type="town";    VP=$false; Primary=$false }
     @{ Name="McDowell";        Lat=38.3069; Lon=79.4767; Type="village"; VP=$true;  Primary=$true  }
     @{ Name="Port Republic";   Lat=38.3000; Lon=78.8000; Type="village"; VP=$true;  Primary=$true  }
