@@ -1,0 +1,312 @@
+{
+  "date": "1862-03-23",
+  "roster_authority": "User-supplied production list; not an independent historical certification",
+  "units": [
+    {
+      "index": 1,
+      "name": "Stonewall Brigade",
+      "commander": "BG Richard B. Garnett",
+      "type": "Infantry",
+      "composition": "2nd, 4th, 5th, 27th, 33rd Virginia",
+      "grid_pos": [
+        17,
+        23
+      ],
+      "entrenchment": 2,
+      "portrait": null,
+      "available_portrait_not_used": "mdl_CSA_RGarnett.png",
+      "country": "Confederacy",
+      "filename": "Stonewall Brigade.png",
+      "install_path": "MODS/First Kernstown 1862/Graphics/Units/Confederacy/Stonewall Brigade.png"
+    },
+    {
+      "index": 2,
+      "name": "Fulkerson’s Brigade",
+      "commander": "Col. Samuel V. Fulkerson",
+      "type": "Infantry",
+      "composition": "23rd, 37th Virginia",
+      "grid_pos": [
+        15,
+        23
+      ],
+      "entrenchment": 2,
+      "portrait": null,
+      "available_portrait_not_used": null,
+      "country": "Confederacy",
+      "filename": "Fulkerson’s Brigade.png",
+      "install_path": "MODS/First Kernstown 1862/Graphics/Units/Confederacy/Fulkerson’s Brigade.png"
+    },
+    {
+      "index": 3,
+      "name": "Burks’ Brigade",
+      "commander": "Col. Jesse S. Burks",
+      "type": "Infantry",
+      "composition": "21st, 42nd, 48th Virginia, 1st VA Bn",
+      "grid_pos": [
+        17,
+        20
+      ],
+      "entrenchment": 0,
+      "portrait": null,
+      "available_portrait_not_used": null,
+      "country": "Confederacy",
+      "filename": "Burks’ Brigade.png",
+      "install_path": "MODS/First Kernstown 1862/Graphics/Units/Confederacy/Burks’ Brigade.png"
+    },
+    {
+      "index": 4,
+      "name": "Ashby’s Cavalry",
+      "commander": "Col. Turner Ashby",
+      "type": "Light Cavalry",
+      "composition": "7th Virginia Cavalry",
+      "grid_pos": [
+        27,
+        17
+      ],
+      "entrenchment": 0,
+      "portrait": null,
+      "available_portrait_not_used": "mdl_CSA_TAshby.png",
+      "country": "Confederacy",
+      "filename": "Ashby’s Cavalry.png",
+      "install_path": "MODS/First Kernstown 1862/Graphics/Units/Confederacy/Ashby’s Cavalry.png"
+    },
+    {
+      "index": 5,
+      "name": "Chew’s Horse Artillery",
+      "commander": "Capt. R. Preston Chew",
+      "type": "Artillery",
+      "composition": "3 guns (horse battery)",
+      "grid_pos": [
+        26,
+        17
+      ],
+      "entrenchment": 0,
+      "portrait": null,
+      "available_portrait_not_used": null,
+      "country": "Confederacy",
+      "filename": "Chew’s Horse Artillery.png",
+      "install_path": "MODS/First Kernstown 1862/Graphics/Units/Confederacy/Chew’s Horse Artillery.png"
+    },
+    {
+      "index": 6,
+      "name": "Rockbridge Artillery",
+      "commander": "Capt. William T. Poague",
+      "type": "Artillery",
+      "composition": "4 guns",
+      "grid_pos": [
+        16,
+        21
+      ],
+      "entrenchment": 0,
+      "portrait": null,
+      "available_portrait_not_used": null,
+      "country": "Confederacy",
+      "filename": "Rockbridge Artillery.png",
+      "install_path": "MODS/First Kernstown 1862/Graphics/Units/Confederacy/Rockbridge Artillery.png"
+    },
+    {
+      "index": 7,
+      "name": "Carpenter’s Battery",
+      "commander": "Capt. Joseph Carpenter",
+      "type": "Artillery",
+      "composition": "Alleghany Battery, 4 guns",
+      "grid_pos": [
+        18,
+        21
+      ],
+      "entrenchment": 0,
+      "portrait": null,
+      "available_portrait_not_used": null,
+      "country": "Confederacy",
+      "filename": "Carpenter’s Battery.png",
+      "install_path": "MODS/First Kernstown 1862/Graphics/Units/Confederacy/Carpenter’s Battery.png"
+    },
+    {
+      "index": 8,
+      "name": "Caskie’s Battery",
+      "commander": "Capt. William H. Caskie",
+      "type": "Artillery",
+      "composition": "Hampden Artillery, 4 guns",
+      "grid_pos": [
+        15,
+        22
+      ],
+      "entrenchment": 0,
+      "portrait": null,
+      "available_portrait_not_used": null,
+      "country": "Confederacy",
+      "filename": "Caskie’s Battery.png",
+      "install_path": "MODS/First Kernstown 1862/Graphics/Units/Confederacy/Caskie’s Battery.png"
+    },
+    {
+      "index": 9,
+      "name": "Wooding’s Battery",
+      "commander": "Capt. George W. Wooding",
+      "type": "Artillery",
+      "composition": "Danville Artillery, 4 guns",
+      "grid_pos": [
+        20,
+        21
+      ],
+      "entrenchment": 0,
+      "portrait": null,
+      "available_portrait_not_used": null,
+      "country": "Confederacy",
+      "filename": "Wooding’s Battery.png",
+      "install_path": "MODS/First Kernstown 1862/Graphics/Units/Confederacy/Wooding’s Battery.png"
+    },
+    {
+      "index": 10,
+      "name": "Pleasants’ Battery",
+      "commander": "Capt. James Pleasants",
+      "type": "Artillery",
+      "composition": "2 guns",
+      "grid_pos": [
+        20,
+        20
+      ],
+      "entrenchment": 0,
+      "portrait": null,
+      "available_portrait_not_used": null,
+      "country": "Confederacy",
+      "filename": "Pleasants’ Battery.png",
+      "install_path": "MODS/First Kernstown 1862/Graphics/Units/Confederacy/Pleasants’ Battery.png"
+    },
+    {
+      "index": 11,
+      "name": "1st Brigade (Kimball)",
+      "commander": "Col. Nathan Kimball",
+      "type": "Infantry",
+      "composition": "14th IN, 8th OH, 67th OH, 84th PA",
+      "grid_pos": [
+        25,
+        26
+      ],
+      "entrenchment": 0,
+      "portrait": null,
+      "available_portrait_not_used": "mdl_USA_NKimball.png",
+      "country": "Union",
+      "filename": "1st Brigade (Kimball).png",
+      "install_path": "MODS/First Kernstown 1862/Graphics/Units/Union/1st Brigade (Kimball).png"
+    },
+    {
+      "index": 12,
+      "name": "2nd Brigade (Sullivan)",
+      "commander": "Col. Jeremiah C. Sullivan",
+      "type": "Infantry",
+      "composition": "39th IL, 13th IN, 5th OH, 62nd OH",
+      "grid_pos": [
+        29,
+        24
+      ],
+      "entrenchment": 0,
+      "portrait": null,
+      "available_portrait_not_used": "mdl_USA_JCSullivan.png",
+      "country": "Union",
+      "filename": "2nd Brigade (Sullivan).png",
+      "install_path": "MODS/First Kernstown 1862/Graphics/Units/Union/2nd Brigade (Sullivan).png"
+    },
+    {
+      "index": 13,
+      "name": "3rd Brigade (Tyler)",
+      "commander": "Col. Erastus B. Tyler",
+      "type": "Infantry",
+      "composition": "7th IN, 7th OH, 29th OH, 110th PA, 1st WV",
+      "grid_pos": [
+        17,
+        25
+      ],
+      "entrenchment": 0,
+      "portrait": null,
+      "available_portrait_not_used": "mdl_USA_EBTyler.png",
+      "country": "Union",
+      "filename": "3rd Brigade (Tyler).png",
+      "install_path": "MODS/First Kernstown 1862/Graphics/Units/Union/3rd Brigade (Tyler).png"
+    },
+    {
+      "index": 14,
+      "name": "Battery A WV Artillery",
+      "commander": "Capt. John Jenks",
+      "type": "Artillery",
+      "composition": "6 guns",
+      "grid_pos": [
+        25,
+        27
+      ],
+      "entrenchment": 0,
+      "portrait": null,
+      "available_portrait_not_used": null,
+      "country": "Union",
+      "filename": "Battery A WV Artillery.png",
+      "install_path": "MODS/First Kernstown 1862/Graphics/Units/Union/Battery A WV Artillery.png"
+    },
+    {
+      "index": 15,
+      "name": "Battery B WV Artillery",
+      "commander": "(unknown)",
+      "type": "Artillery",
+      "composition": "6 guns",
+      "grid_pos": [
+        27,
+        27
+      ],
+      "entrenchment": 0,
+      "portrait": null,
+      "available_portrait_not_used": null,
+      "country": "Union",
+      "filename": "Battery B WV Artillery.png",
+      "install_path": "MODS/First Kernstown 1862/Graphics/Units/Union/Battery B WV Artillery.png"
+    },
+    {
+      "index": 16,
+      "name": "Battery E 4th US Artillery",
+      "commander": "Lt. Joseph C. Clark Jr.",
+      "type": "Artillery",
+      "composition": "Regular Army, 6 guns",
+      "grid_pos": [
+        26,
+        26
+      ],
+      "entrenchment": 0,
+      "portrait": null,
+      "available_portrait_not_used": null,
+      "country": "Union",
+      "filename": "Battery E 4th US Artillery.png",
+      "install_path": "MODS/First Kernstown 1862/Graphics/Units/Union/Battery E 4th US Artillery.png"
+    },
+    {
+      "index": 17,
+      "name": "Battery L 1st OH Artillery",
+      "commander": "Capt. James M. Robinson",
+      "type": "Artillery",
+      "composition": "6 guns",
+      "grid_pos": [
+        26,
+        25
+      ],
+      "entrenchment": 0,
+      "portrait": null,
+      "available_portrait_not_used": null,
+      "country": "Union",
+      "filename": "Battery L 1st OH Artillery.png",
+      "install_path": "MODS/First Kernstown 1862/Graphics/Units/Union/Battery L 1st OH Artillery.png"
+    },
+    {
+      "index": 18,
+      "name": "Brodhead’s Cavalry",
+      "commander": "Col. Thornton F. Brodhead",
+      "type": "Light Cavalry",
+      "composition": "Detachments: MI, PA, MD, WV, OH cavalry",
+      "grid_pos": [
+        13,
+        25
+      ],
+      "entrenchment": 0,
+      "portrait": null,
+      "available_portrait_not_used": null,
+      "country": "Union",
+      "filename": "Brodhead’s Cavalry.png",
+      "install_path": "MODS/First Kernstown 1862/Graphics/Units/Union/Brodhead’s Cavalry.png"
+    }
+  ]
+}

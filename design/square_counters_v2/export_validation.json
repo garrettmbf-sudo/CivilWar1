@@ -1,0 +1,258 @@
+{
+  "count": 18,
+  "results": [
+    {
+      "name": "Stonewall Brigade",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "alpha": true,
+      "visible_bounds": [
+        64,
+        64,
+        959,
+        959
+      ]
+    },
+    {
+      "name": "Fulkerson’s Brigade",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "alpha": true,
+      "visible_bounds": [
+        64,
+        64,
+        959,
+        959
+      ]
+    },
+    {
+      "name": "Burks’ Brigade",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "alpha": true,
+      "visible_bounds": [
+        64,
+        64,
+        959,
+        959
+      ]
+    },
+    {
+      "name": "Ashby’s Cavalry",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "alpha": true,
+      "visible_bounds": [
+        64,
+        64,
+        959,
+        959
+      ]
+    },
+    {
+      "name": "Chew’s Horse Artillery",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "alpha": true,
+      "visible_bounds": [
+        64,
+        64,
+        959,
+        959
+      ]
+    },
+    {
+      "name": "Rockbridge Artillery",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "alpha": true,
+      "visible_bounds": [
+        64,
+        64,
+        959,
+        959
+      ]
+    },
+    {
+      "name": "Carpenter’s Battery",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "alpha": true,
+      "visible_bounds": [
+        64,
+        64,
+        959,
+        959
+      ]
+    },
+    {
+      "name": "Caskie’s Battery",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "alpha": true,
+      "visible_bounds": [
+        64,
+        64,
+        959,
+        959
+      ]
+    },
+    {
+      "name": "Wooding’s Battery",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "alpha": true,
+      "visible_bounds": [
+        64,
+        64,
+        959,
+        959
+      ]
+    },
+    {
+      "name": "Pleasants’ Battery",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "alpha": true,
+      "visible_bounds": [
+        64,
+        64,
+        959,
+        959
+      ]
+    },
+    {
+      "name": "1st Brigade (Kimball)",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "alpha": true,
+      "visible_bounds": [
+        64,
+        64,
+        959,
+        959
+      ]
+    },
+    {
+      "name": "2nd Brigade (Sullivan)",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "alpha": true,
+      "visible_bounds": [
+        64,
+        64,
+        959,
+        959
+      ]
+    },
+    {
+      "name": "3rd Brigade (Tyler)",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "alpha": true,
+      "visible_bounds": [
+        64,
+        64,
+        959,
+        959
+      ]
+    },
+    {
+      "name": "Battery A WV Artillery",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "alpha": true,
+      "visible_bounds": [
+        64,
+        64,
+        959,
+        959
+      ]
+    },
+    {
+      "name": "Battery B WV Artillery",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "alpha": true,
+      "visible_bounds": [
+        64,
+        64,
+        959,
+        959
+      ]
+    },
+    {
+      "name": "Battery E 4th US Artillery",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "alpha": true,
+      "visible_bounds": [
+        64,
+        64,
+        959,
+        959
+      ]
+    },
+    {
+      "name": "Battery L 1st OH Artillery",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "alpha": true,
+      "visible_bounds": [
+        64,
+        64,
+        959,
+        959
+      ]
+    },
+    {
+      "name": "Brodhead’s Cavalry",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "alpha": true,
+      "visible_bounds": [
+        64,
+        64,
+        959,
+        959
+      ]
+    }
+  ],
+  "game_tested": false
+}

@@ -1,0 +1,23 @@
+{
+  "model": "Static inspected engine projection, not live game validation",
+  "orthographic_size": 20,
+  "screen_height": 1080,
+  "results": [
+    {
+      "mode": "deployment",
+      "units": 18,
+      "canvas_px": 102,
+      "hex_width_px": 159.12,
+      "minimum_canvas_clearance_px": 17.339999999999918,
+      "overlap": false
+    },
+    {
+      "mode": "adjacent",
+      "units": 18,
+      "canvas_px": 102,
+      "hex_width_px": 159.12,
+      "minimum_canvas_clearance_px": 17.339999999999918,
+      "overlap": false
+    }
+  ]
+}

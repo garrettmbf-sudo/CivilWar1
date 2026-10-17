@@ -1,0 +1,174 @@
+{
+  "units": [
+    {
+      "name": "Stonewall Brigade",
+      "sha256": "7ae7158edda24354ec723077c281e50957b279c065c83ace67415a7e7c1b51cc",
+      "size": [
+        1024,
+        1024
+      ],
+      "portrait_present": false
+    },
+    {
+      "name": "Fulkerson\u2019s Brigade",
+      "sha256": "46d935cd075c9b49fd29fc461527e56552e9a6ef138f2d66561f19748bf520bd",
+      "size": [
+        1024,
+        1024
+      ],
+      "portrait_present": false
+    },
+    {
+      "name": "Burks\u2019 Brigade",
+      "sha256": "ad3e6e9aac8c8f856514f5898a42f7f9d2b287665282a3baf70e10be35b84173",
+      "size": [
+        1024,
+        1024
+      ],
+      "portrait_present": false
+    },
+    {
+      "name": "Ashby\u2019s Cavalry",
+      "sha256": "8a60fc454498bc89a5913e6c0f402630edaca9d9db6f2f96b247ede4d2bce8e0",
+      "size": [
+        1024,
+        1024
+      ],
+      "portrait_present": false
+    },
+    {
+      "name": "Chew\u2019s Horse Artillery",
+      "sha256": "d4824b8d131622d45a956321b936d17e2bc8deefa3f6971ab62f5e0e02b83391",
+      "size": [
+        1024,
+        1024
+      ],
+      "portrait_present": false
+    },
+    {
+      "name": "Rockbridge Artillery",
+      "sha256": "28ee87f7235df5d3586a7e9acba2923d398c9488ebab277420a1bc0a918d99e5",
+      "size": [
+        1024,
+        1024
+      ],
+      "portrait_present": false
+    },
+    {
+      "name": "Carpenter\u2019s Battery",
+      "sha256": "8c2dd032a465c0cfec9e4b5c64662b26f35cdbdd6d21923fe44fabc0da203fa5",
+      "size": [
+        1024,
+        1024
+      ],
+      "portrait_present": false
+    },
+    {
+      "name": "Caskie\u2019s Battery",
+      "sha256": "7b023e585082ba1dc48878d1227498376309fdca85e242fb1422dd60d85629d4",
+      "size": [
+        1024,
+        1024
+      ],
+      "portrait_present": false
+    },
+    {
+      "name": "Wooding\u2019s Battery",
+      "sha256": "09a08c41d6eae367dca1ae8a9d0aa788052ba76808a3f31f74844891d7fda207",
+      "size": [
+        1024,
+        1024
+      ],
+      "portrait_present": false
+    },
+    {
+      "name": "Pleasants\u2019 Battery",
+      "sha256": "edd4c95cbdf13e46d1e2b45ab230114a3412aed5f4e319cf1cd492f520f09eb6",
+      "size": [
+        1024,
+        1024
+      ],
+      "portrait_present": false
+    },
+    {
+      "name": "1st Brigade (Kimball)",
+      "sha256": "7fa5886660cb428fac5fb07d5256769ad7ebc3b7debbfa566e342ab2b61b6180",
+      "size": [
+        1024,
+        1024
+      ],
+      "portrait_present": false
+    },
+    {
+      "name": "2nd Brigade (Sullivan)",
+      "sha256": "6dc030f02b41333a0d46701218d7c36fe0f7222edbcee8795e61bdf5dd34b9fa",
+      "size": [
+        1024,
+        1024
+      ],
+      "portrait_present": false
+    },
+    {
+      "name": "3rd Brigade (Tyler)",
+      "sha256": "81b000a1da8fe244080ab50d737fc3b303d0bc4201e54aae3e25b356be99a5ba",
+      "size": [
+        1024,
+        1024
+      ],
+      "portrait_present": false
+    },
+    {
+      "name": "Battery A WV Artillery",
+      "sha256": "eb23c82ac775bf3d4d7e6d387da5ec073909e20548cd4ee9f7ff6ca516a437f9",
+      "size": [
+        1024,
+        1024
+      ],
+      "portrait_present": false
+    },
+    {
+      "name": "Battery B WV Artillery",
+      "sha256": "4ccb39398e811fd65643cb0010132247c698840c35aae698bf8f9aca5e949ac2",
+      "size": [
+        1024,
+        1024
+      ],
+      "portrait_present": false
+    },
+    {
+      "name": "Battery E 4th US Artillery",
+      "sha256": "a3f952e089e4ddfa6cdf31f19e09b6c7a55a05a99dc01b266450ecc8292d786f",
+      "size": [
+        1024,
+        1024
+      ],
+      "portrait_present": false
+    },
+    {
+      "name": "Battery L 1st OH Artillery",
+      "sha256": "4665e6a7888a22ba72fce328e361dc73eaff74897f0c0c86a2e7d14a61fd4135",
+      "size": [
+        1024,
+        1024
+      ],
+      "portrait_present": false
+    },
+    {
+      "name": "Brodhead\u2019s Cavalry",
+      "sha256": "919aadf55e6817bb38cba05b35a91898d3c7980205cc28e811b75a3d9a897c43",
+      "size": [
+        1024,
+        1024
+      ],
+      "portrait_present": false
+    }
+  ],
+  "png_count": 18,
+  "unique_hashes": 18,
+  "portrait_inserts": 0,
+  "formation_source_sha256": "0f4296483c8d52b3c8c3346e701c0ebde9a5fa096c3815ef92018c91d055fe0e",
+  "game_tested": false,
+  "original_portraits_modified": false,
+  "installed_mod_modified": false,
+  "historical_roster_authority": "User supplied"
+}
