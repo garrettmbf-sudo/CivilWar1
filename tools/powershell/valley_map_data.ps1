@@ -33,7 +33,7 @@ function Get-HexY($latN) { [Math]::Round(($latN - $southBound) * $miPerDegLat) }
 $towns = @(
     # Campaign-critical towns
     @{ Name="Staunton";        Lat=38.1496; Lon=79.0717; Type="city";    VP=$true;  Primary=$true  }
-    @{ Name="Lexington";       Lat=37.7840; Lon=79.4430; Type="town";    VP=$false; Primary=$false }  # Rockbridge Co. seat, Virginia Military Institute; southern map anchor (approx. town-centre coords, PROVISIONAL)
+    @{ Name="Lexington";       Lat=37.7840; Lon=79.4428; Type="town";    VP=$false; Primary=$false }  # Rockbridge Co. seat, VMI; southern map anchor. VERIFIED 2026-10-17: USGS GNIS 1498506 (37.784028 N, 79.442819 W); period map: Hotchkiss Rockbridge Co. map, LoC G3883.R6 186- .R6 (H57) - see historical_data/sources_1862.csv SRC009, SRC016
     @{ Name="Waynesboro";      Lat=38.0686; Lon=78.8894; Type="town";    VP=$false; Primary=$false }
     @{ Name="McDowell";        Lat=38.3069; Lon=79.4767; Type="village"; VP=$true;  Primary=$true  }
     @{ Name="Port Republic";   Lat=38.3000; Lon=78.8000; Type="village"; VP=$true;  Primary=$true  }
