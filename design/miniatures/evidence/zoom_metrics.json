@@ -1,0 +1,22 @@
+[
+  {
+    "orthographic_size": 10,
+    "canvas_width_px": 204.5952,
+    "hex_row_pitch_px": 275.4
+  },
+  {
+    "orthographic_size": 20,
+    "canvas_width_px": 102.2976,
+    "hex_row_pitch_px": 137.7
+  },
+  {
+    "orthographic_size": 40,
+    "canvas_width_px": 51.1488,
+    "hex_row_pitch_px": 68.85
+  },
+  {
+    "orthographic_size": 80,
+    "canvas_width_px": 25.5744,
+    "hex_row_pitch_px": 34.425
+  }
+]

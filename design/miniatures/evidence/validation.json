@@ -1,0 +1,20 @@
+{
+  "suite": "python -m pytest -q --basetemp=<workspace-temp> -p no:cacheprovider --disable-warnings --tb=short",
+  "result": "17 passed",
+  "game_tested": false,
+  "desktop_control_result": "Computer Use was not approved to use hex of steel",
+  "protected_portrait_git_blobs_unchanged": {
+    "mdl_CSA_RGarnett.png": "78f729055b7593e993448dab07e2e62f2f7a8695",
+    "mdl_CSA_TAshby.png": "012659f729c5a9a8b803eb875d56906826007ba2",
+    "mdl_CSA_TJJackson.png": "fb3e728765bbb2bf7c50f281fc91d87eee60530b",
+    "reference/mdl_USA_NKimball.png": "0aa272d9217464d1dce0c18d19f60450ad27f53c"
+  },
+  "installed_build_id": "25825936",
+  "assembly_sha256": "56c43159feff012193aeda208247cca516cdba5e461bc9a00bdd4980ed40c95a",
+  "resources_sha256": "38c8d80155c8111f8a681b64c0da4218236fd8176d765e9a2e0ef6ffebb36c6f",
+  "static_inspection_tools": {"dnfile":"0.18.0","dncil":"1.0.2","UnityPy":"1.25.4"},
+  "composition_pillow": "12.3.0",
+  "test_environment_pillow": "13.0.0",
+  "proprietary_game_files_redistributed": false,
+  "harmony_switching_implemented": false
+}

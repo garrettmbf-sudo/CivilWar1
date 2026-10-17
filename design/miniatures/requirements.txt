@@ -1,0 +1,2 @@
+# Optional art tooling; install separately from the legacy game-format requirements.
+Pillow==12.3.0

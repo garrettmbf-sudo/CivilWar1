@@ -1,3 +1,6 @@
 asset_path,title,creator,source_url,license,redistribution_permission,notes
 reference/Stonewall in the ValleyMap.jpg,Stonewall in the Valley campaign map,unknown,,unknown,unverified,Published board-game map; reference only; do not redistribute artwork without permission
 reference/SJW IIMap.jpg,Shenandoah reference map,unknown,,unknown,unverified,Confirm provenance and rights before reuse
+design/miniatures/masters/*_blank.png,Kernstown miniature stand candidates,OpenAI image_gen via user request,,generated review art,user requested creation,Generated blank medallions; no officer portraits generated; see design/miniatures/generation_prompts.md
+design/miniatures/masters/*_composited_2048.png,Kernstown portrait composites,Existing approved portraits plus generated stands,,inherits original portrait provenance,review use requested; release rights not newly certified,Whole original portrait images fitted without cropping; paths and hashes in build_receipt.json
+design/miniatures/references/miniatures-art-spec.md,User supplied miniature art and OOB specification,user supplied,chatgpt-conversation://6ad2c078-1320-83ea-af4b-d34881ede8ed,user supplied reference,implementation requested,Primary specification; two uploaded reference images inspected but not redistributed

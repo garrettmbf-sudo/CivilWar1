@@ -1,0 +1,12 @@
+{
+  "date": "1862-03-23",
+  "status": "review candidates; not imported or released",
+  "oob_ref": "4357bfeb5d0a555da3336685984e534d82232ec3",
+  "generator": "built-in image_gen; portraits added only by deterministic postprocess",
+  "units": [
+    {"id":"FRM_CS_STONEWALL","key":"garnett","name":"Stonewall Brigade - Garnett","label":"GARNETT","country":"Confederacy","portrait":"mdl_CSA_RGarnett.png","medallion":[430,875,85],"nameplate":[568,858,951,933],"flag":"Virginia state colour per supplied spec; seal is illustrative, not an authenticated regimental reproduction","members":["2 VA","4 VA","5 VA","27 VA","33 VA"]},
+    {"id":"FRM_CS_ASHBY","key":"ashby","name":"Ashby Cavalry","label":"ASHBY","country":"Confederacy","portrait":"mdl_CSA_TAshby.png","medallion":[333,977,88],"nameplate":[449,962,866,1030],"flag":"none","members":["7 VA Cavalry"],"notes":"Chew battery is attached in OOB, not a separate gun on this stand; white horse for opening only"},
+    {"id":"FRM_US_KIMBALL1","key":"kimball","name":"Kimball Infantry","label":"KIMBALL","country":"Union","portrait":"mdl_USA_NKimball.png","medallion":[335,998,87],"nameplate":[459,978,907,1041],"flag":"none; generated national colour rejected because 34 stars were not reproduced correctly","members":["14 IN","8 OH","67 OH","84 PA"],"notes":"Colonel at Kernstown; approved existing portrait retained intact regardless of depicted later rank"},
+    {"id":"FRM_CS_VALLEY","key":"jackson","name":"Jackson Valley District HQ","label":"JACKSON HQ","country":"Confederacy","portrait":"mdl_CSA_TJJackson.png","medallion":[343,944,94],"nameplate":[489,925,958,991],"flag":"none; March HQ banner not verified","members":[],"notes":"Sorrel horse, dark blue coat and cap; generic courier carrying a folded dispatch, not Hotchkiss"}
+  ]
+}

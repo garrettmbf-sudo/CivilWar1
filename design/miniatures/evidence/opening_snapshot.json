@@ -1,0 +1,201 @@
+{
+  "date": "1862-03-23",
+  "headquarters": [
+    "FRM_CS_VALLEY",
+    "FRM_US_BANKSDEPT",
+    "FRM_US_SHIELDSDIV_K"
+  ],
+  "counters": [
+    {
+      "formation_id": "FRM_CS_ASHBY",
+      "designation": "Ashby's Cavalry Command",
+      "faction": "CSA",
+      "type": "cavalry",
+      "commander": "CMD_ASHBY",
+      "parent": "FRM_CS_VALLEY",
+      "command_chain": [
+        "FRM_CS_VALLEY"
+      ],
+      "origin_states": [
+        "VA"
+      ],
+      "state_flag": "VA",
+      "regiments": [
+        "REG_VA07C"
+      ],
+      "batteries": [
+        "ART_CHEWS"
+      ]
+    },
+    {
+      "formation_id": "FRM_CS_BURKS",
+      "designation": "Burks' Brigade (later Campbell's/Patton's)",
+      "faction": "CSA",
+      "type": "infantry",
+      "commander": "CMD_BURKS",
+      "parent": "FRM_CS_VALLEY",
+      "command_chain": [
+        "FRM_CS_VALLEY"
+      ],
+      "origin_states": [
+        "VA"
+      ],
+      "state_flag": "VA",
+      "regiments": [
+        "REG_VA21",
+        "REG_VA42",
+        "REG_VA48",
+        "REG_VA01B"
+      ],
+      "batteries": []
+    },
+    {
+      "formation_id": "FRM_CS_FULKERSON",
+      "designation": "Fulkerson's Brigade (later Taliaferro's)",
+      "faction": "CSA",
+      "type": "infantry",
+      "commander": "CMD_FULKERSON",
+      "parent": "FRM_CS_VALLEY",
+      "command_chain": [
+        "FRM_CS_VALLEY"
+      ],
+      "origin_states": [
+        "VA"
+      ],
+      "state_flag": "VA",
+      "regiments": [
+        "REG_VA23",
+        "REG_VA37"
+      ],
+      "batteries": []
+    },
+    {
+      "formation_id": "FRM_CS_STONEWALL",
+      "designation": "Stonewall Brigade",
+      "faction": "CSA",
+      "type": "infantry",
+      "commander": "CMD_GARNETT",
+      "parent": "FRM_CS_VALLEY",
+      "command_chain": [
+        "FRM_CS_VALLEY"
+      ],
+      "origin_states": [
+        "VA"
+      ],
+      "state_flag": "VA",
+      "regiments": [
+        "REG_VA02",
+        "REG_VA04",
+        "REG_VA05",
+        "REG_VA27",
+        "REG_VA33"
+      ],
+      "batteries": []
+    },
+    {
+      "formation_id": "FRM_US_CAV_BRODHEAD",
+      "designation": "Brodhead's Detached Cavalry (Kernstown)",
+      "faction": "USA",
+      "type": "cavalry",
+      "commander": "CMD_BRODHEAD",
+      "parent": "FRM_US_SHIELDSDIV_K",
+      "command_chain": [
+        "FRM_US_SHIELDSDIV_K",
+        "FRM_US_BANKSDEPT"
+      ],
+      "origin_states": [],
+      "state_flag": "UNKNOWN",
+      "regiments": [],
+      "batteries": []
+    },
+    {
+      "formation_id": "FRM_US_KIMBALL1",
+      "designation": "1st Brigade / Kimball's Brigade (Shields')",
+      "faction": "USA",
+      "type": "infantry",
+      "commander": "CMD_KIMBALL",
+      "parent": "FRM_US_SHIELDSDIV_K",
+      "command_chain": [
+        "FRM_US_SHIELDSDIV_K",
+        "FRM_US_BANKSDEPT"
+      ],
+      "origin_states": [
+        "IN",
+        "OH",
+        "PA"
+      ],
+      "state_flag": "MIXED",
+      "regiments": [
+        "REG_IN14",
+        "REG_OH08",
+        "REG_OH67",
+        "REG_PA84"
+      ],
+      "batteries": []
+    },
+    {
+      "formation_id": "FRM_US_SULLIVAN2",
+      "designation": "2nd Brigade / Sullivan's Brigade (Shields')",
+      "faction": "USA",
+      "type": "infantry",
+      "commander": "CMD_SULLIVAN",
+      "parent": "FRM_US_SHIELDSDIV_K",
+      "command_chain": [
+        "FRM_US_SHIELDSDIV_K",
+        "FRM_US_BANKSDEPT"
+      ],
+      "origin_states": [
+        "IL",
+        "IN",
+        "OH"
+      ],
+      "state_flag": "MIXED",
+      "regiments": [
+        "REG_OH05",
+        "REG_IN13",
+        "REG_OH62",
+        "REG_IL39"
+      ],
+      "batteries": []
+    },
+    {
+      "formation_id": "FRM_US_TYLER3",
+      "designation": "3rd Brigade / Tyler's Brigade (Shields')",
+      "faction": "USA",
+      "type": "infantry",
+      "commander": "CMD_TYLER",
+      "parent": "FRM_US_SHIELDSDIV_K",
+      "command_chain": [
+        "FRM_US_SHIELDSDIV_K",
+        "FRM_US_BANKSDEPT"
+      ],
+      "origin_states": [
+        "IN",
+        "OH",
+        "PA",
+        "WV"
+      ],
+      "state_flag": "MIXED",
+      "regiments": [
+        "REG_OH07",
+        "REG_IN07",
+        "REG_WV01",
+        "REG_OH29",
+        "REG_PA110"
+      ],
+      "batteries": []
+    }
+  ],
+  "support_batteries": [
+    "ART_ROCKBRIDGE",
+    "ART_WESTAUGUSTA",
+    "ART_HAMPDEN",
+    "ART_PLEASANTS",
+    "ART_DANVILLE",
+    "ART_US_WVA",
+    "ART_US_WVB",
+    "ART_US_4USA_E",
+    "ART_US_1OH_H",
+    "ART_US_1OH_L"
+  ]
+}

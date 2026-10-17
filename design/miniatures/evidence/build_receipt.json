@@ -1,0 +1,30 @@
+[
+  {
+    "id": "FRM_CS_STONEWALL",
+    "source": "mdl_CSA_RGarnett.png",
+    "source_sha256": "90348ea64c884d41a2e0be67f98cbf33b4742dd301a94f3928d79a850f92e96a",
+    "blank_sha256": "2ad0c55e400cb34cb5f7f23f75aa2a090c84ab0bfa1d2bcb68ec135401d45324",
+    "sprite_sha256": "d44cf6620ba9e7a2785fede9d7111cb2917e11ce956ba42f84dee036080233c4"
+  },
+  {
+    "id": "FRM_CS_ASHBY",
+    "source": "mdl_CSA_TAshby.png",
+    "source_sha256": "b86937aef2079818ab2a94d9b286eec3ad648c423becda2fab8f2b8a8ae2e714",
+    "blank_sha256": "b08527d0899a9b43bcd4fd4a0f7af1d0464c438744df9e95a7eeffbbf19c2468",
+    "sprite_sha256": "9092f39885a8628026530e5d76964538c101a6a98701c1d0ad927cde2c20f73e"
+  },
+  {
+    "id": "FRM_US_KIMBALL1",
+    "source": "reference/mdl_USA_NKimball.png",
+    "source_sha256": "e03643d11574781e1af27f0531d01f980ede65278ba02412fff0aa936164c26a",
+    "blank_sha256": "77da71f9767742d1552b7698285addffa78207995d20bd8b823b64ce0bd44041",
+    "sprite_sha256": "383b40177acbd97e85caa54c3b3f3f33ce5a1e60f6fd8bd08509e162df07777c"
+  },
+  {
+    "id": "FRM_CS_VALLEY",
+    "source": "mdl_CSA_TJJackson.png",
+    "source_sha256": "341fa1dbb9cf6113dc1b24ac010877855d39686aed266fd3095024f0ac9a7071",
+    "blank_sha256": "a177afe1c74506a0a107a9c5cbd6cb30819c9e81ee39ead25c0620ad2ce8d569",
+    "sprite_sha256": "7ae867dd831452423e748c0e161bdaedb29c7a9cda7472b238df3047969a120e"
+  }
+]
