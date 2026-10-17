@@ -15,6 +15,7 @@ from __future__ import annotations
 import csv
 import json
 import os
+import re
 from dataclasses import dataclass, field
 from datetime import date, timedelta
 
@@ -114,6 +115,11 @@ class OOB:
                 return c["commander_id"]
         return ""  # vacant / not applicable
 
+    def command_rows(self, formation_id: str, on: date) -> list[dict]:
+        """Command records (incl. documented vacancies) covering `on`."""
+        return [c for c in self.commands
+                if c["brigade_id"] == formation_id and c["valid_from"] <= on <= c["valid_to"]]
+
     def parent_on(self, formation_id: str, on: date) -> str:
         """Return a date-valid parent HQ without rewriting historical source rows."""
         parent = self.formations[formation_id]["parent_id"]
@@ -193,7 +199,58 @@ class OOB:
                 "support_batteries": loose_batts}
 
 
+OPENING_DATE = date(1862, 3, 22)  # campaign start, dawn (user decision 2026-10-17; docs/history/campaign_start.md)
+ARRIVAL_CERTAINTY = {"confirmed", "approximate", "unverified"}
+# background events before the start (E100-E102 context, E130 Sedgwick's departure)
+PRE_OPENING_TYPES = {"context", "departure"}
+
+
+def arrival_schedule_errors(oob: "OOB") -> list[str]:
+    """Every formation entering after the opening needs a located, dated, cited arrival row."""
+    errs = []
+    covered = {}
+    for ev in oob.events:
+        ids = {ev["subject_id"], *[c for c in (ev.get("covers") or "").split("|") if c]}
+        for i in ids:
+            covered.setdefault(i, []).append(ev)
+        cert = (ev.get("date_certainty") or "").strip()
+        if cert not in ARRIVAL_CERTAINTY:
+            errs.append(f"event {ev['event_id']}: date_certainty {cert!r} not in {sorted(ARRIVAL_CERTAINTY)}")
+        if not (ev.get("location") or "").strip():
+            errs.append(f"event {ev['event_id']}: missing location")
+        if cert != "unverified" and not re.search(r"SRC\d{3} p\.\d", ev.get("sources") or ""):
+            errs.append(f"event {ev['event_id']}: {cert} date needs a page-cited source")
+    for ev in oob.events:
+        ids = [ev["subject_id"], *[c for c in (ev.get("covers") or "").split("|") if c]]
+        typ = ev["event_type"]
+        if typ == "start_position":
+            if ev["date"] != OPENING_DATE:
+                errs.append(f"event {ev['event_id']}: start_position dated {ev['date']}, not OPENING_DATE")
+            for i in ids:
+                f = oob.formations.get(i)
+                if f is None:
+                    errs.append(f"event {ev['event_id']}: unknown formation {i}")
+        elif ev["date"] < OPENING_DATE and typ not in PRE_OPENING_TYPES:
+            errs.append(f"event {ev['event_id']}: {typ} dated {ev['date']} before OPENING_DATE")
+    for fid, f in oob.formations.items():
+        af = _d(f["active_from"])
+        if af and af > OPENING_DATE and fid not in covered:
+            errs.append(f"{fid}: enters {af} but has no arrival/entry event")
+    return errs
+
+
 # ---------- validation ----------
+# Pre-existing modelling gaps surfaced by the empty-counter check. Each needs a
+# source-backed fix; they are listed (not silently ignored) so new gaps fail.
+KNOWN_EMPTY_COUNTER_GAPS = {
+    # Scott's VA regiments move to Steuart from 5/24; Marylanders detached 5/23-5/24.
+    ("FRM_CS_STEUART", date(1862, 5, 23)),
+    # Tactical Port Republic Tyler brigade only populated from 6/9; 6/1-6/8 the
+    # roster lives in FRM_US_TYLERR. Unresolved roster-vs-tactical split.
+    *{("FRM_US_TYLER3", date(1862, 6, d)) for d in range(1, 9)},
+}
+
+
 def validate(oob: OOB, repo_root: str | None = None) -> list[str]:
     errors: list[str] = []
     e = errors.append
@@ -242,7 +299,7 @@ def validate(oob: OOB, repo_root: str | None = None) -> list[str]:
 
     # 3 every brigade references valid commander on its active dates
     # Check every day, not only the four published scenario snapshots.
-    first, last = date(1862, 3, 23), date(1862, 6, 30)
+    first, last = OPENING_DATE, date(1862, 6, 30)
     all_days = [first + timedelta(days=n) for n in range((last - first).days + 1)]
     for fid, f in oob.formations.items():
         if f["level"] != "brigade" or f["type"] == "hq":
@@ -293,6 +350,80 @@ def validate(oob: OOB, repo_root: str | None = None) -> list[str]:
         if c["first_mentioned"] and c["last_mentioned"] and c["first_mentioned"] > c["last_mentioned"]:
             e(f"commander {cid}: first_mentioned after last_mentioned")
 
+    # 13 every record cites at least one known source ("SRCxxx" or "SRCxxx p.N")
+    src_ids = set(oob.sources)
+    tables = [("formations", oob.formations.values(), "formation_id"),
+              ("regiments", oob.regiments.values(), "regiment_id"),
+              ("commanders", oob.commanders.values(), "commander_id"),
+              ("artillery", oob.artillery.values(), "battery_id"),
+              ("assignments", oob.assignments, "assignment_id"),
+              ("brigade_commands", oob.commands, "brigade_id"),
+              ("strength_returns", oob.returns, "return_id"),
+              ("reinforcements", oob.events, "event_id")]
+    for tname, rows, key in tables:
+        for r in rows:
+            cited = (r.get("sources") or "").strip()
+            if not cited:
+                e(f"{tname} {r.get(key)}: empty sources")
+                continue
+            ids = re.findall(r"SRC\d{3}", cited)
+            if not ids:
+                e(f"{tname} {r.get(key)}: sources {cited!r} has no SRCxxx id")
+            for sid in ids:
+                if sid not in src_ids:
+                    e(f"{tname} {r.get(key)}: unknown source {sid}")
+
+    # 14 counters must never be empty and must have a command record every active day
+    for fid, f in oob.formations.items():
+        if f.get("counter", "").strip() != "Y":
+            continue
+        for day in all_days:
+            if fid not in oob.active_formations(day):
+                continue
+            if not oob.members_of(fid, day) and (fid, day) not in KNOWN_EMPTY_COUNTER_GAPS:
+                e(f"{fid} on {day}: empty counter (no assigned regiments)")
+            if not oob.command_rows(fid, day):
+                e(f"{fid} on {day}: no commander record (add commander or documented vacancy)")
+
+    # 15 a documented vacancy (empty commander_id) must say why in its sources
+    for c in oob.commands:
+        if not c["commander_id"].strip() and "vacan" not in (c.get("sources") or "").lower():
+            e(f"command {c['brigade_id']} {c['valid_from']}: empty commander without documented vacancy")
+
+
+    # 16 historical ratings tables (history/veterancy-command-ratings): 1-5 scale, known ids, sources
+    for fname, idcol, cols in (("unit_ratings_1862.csv", "unit_id", ("experience", "cohesion_morale", "training")),
+                               ("command_ratings_1862.csv", "commander_id", ("initiative", "reliability", "tactical_skill", "administration"))):
+        try:
+            rrows = list(_rows(fname))
+        except FileNotFoundError:
+            continue
+        known = set(oob.commanders) if idcol == "commander_id" else set(oob.formations) | set(oob.regiments) | set(oob.artillery)
+        for r in rrows:
+            tag = f"{fname} {r['rating_id']}"
+            if r[idcol] not in known:
+                e(f"{tag}: unknown {idcol} {r[idcol]}")
+            for c in cols:
+                if r[c] not in ("1", "2", "3", "4", "5"):
+                    e(f"{tag}: {c}={r[c]!r} not 1-5")
+            if r["confidence"] not in ("verified", "probable", "provisional"):
+                e(f"{tag}: bad confidence {r['confidence']}")
+            if not re.match(r"1862-0[3-6]-\d\d$", r["as_of_date"]):
+                e(f"{tag}: as_of_date outside campaign window")
+            cited = r.get("sources", "")
+            ids = re.findall(r"SRC\d{3}", cited)
+            if not ids:
+                e(f"{tag}: no SRCxxx")
+            for sid in ids:
+                if sid not in src_ids:
+                    e(f"{tag}: unknown source {sid}")
+            for tok in cited.split("|"):
+                if not re.match(r"SRC\d{3}( p\.(\d+(-\d+)?| ?UNVERIFIED))?( \(.*\))?$", tok.strip()):
+                    e(f"{tag}: malformed source token {tok!r}")
+            if r["confidence"] == "verified" and not re.search(r"SRC\d{3} p\.\d", cited):
+                e(f"{tag}: verified rating needs at least one page-cited source")
+
+    errors.extend(arrival_schedule_errors(oob))
     return errors
 
 
@@ -308,6 +439,6 @@ if __name__ == "__main__":
             print("  -", x)
         sys.exit(1)
     print("validation OK")
-    for day in ["1862-03-23", "1862-05-08", "1862-05-25", "1862-06-09"]:
+    for day in ["1862-03-22", "1862-03-23", "1862-05-08", "1862-05-25", "1862-06-09"]:
         snap = oob.snapshot(date.fromisoformat(day))
         print(f"{day}: {len(snap['counters'])} counters, {len(snap['headquarters'])} HQs")

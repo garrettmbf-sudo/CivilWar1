@@ -1,10 +1,10 @@
 formation_id,designation,faction,type,level,parent_id,counter,active_from,active_to,notes,sources
-FRM_CS_VALLEY,Valley District / Army of the Valley,CSA,hq,army,,,1862-03-23,1862-06-30,Jackson's overall command; top of Confederate chain,SRC007
+FRM_CS_VALLEY,Valley District / Army of the Valley,CSA,hq,army,,,1862-03-22,1862-06-30,Jackson's overall command; top of Confederate chain,SRC007|SRC009 p.379
 FRM_CS_JACKSONDIV,Jackson's Division (Valley District),CSA,hq,division,FRM_CS_VALLEY,,1862-05-20,1862-06-30,Jackson exercised divisional command of his own original troops after Ewell junction,SRC007
-FRM_CS_STONEWALL,Stonewall Brigade,CSA,infantry,brigade,FRM_CS_JACKSONDIV,Y,1862-03-23,1862-06-30,Persistent brigade identity through Garnett->Winder change Apr 1; parent set to Jackson's Division retroactively for data consistency,SRC007
-FRM_CS_BURKS,Burks' Brigade (later Campbell's/Patton's),CSA,infantry,brigade,FRM_CS_JACKSONDIV,Y,1862-03-23,1862-06-30,"Same regiments as Campbell's/Patton's brigade - one persistent formation, renamed by commander",SRC007
-FRM_CS_FULKERSON,Fulkerson's Brigade (later Taliaferro's),CSA,infantry,brigade,FRM_CS_JACKSONDIV,Y,1862-03-23,1862-06-30,Kernstown: 23rd/37th VA; 10th VA joins Apr 21 forming Taliaferro's Brigade - same persistent formation,SRC007
-FRM_CS_ASHBY,Ashby's Cavalry Command,CSA,cavalry,brigade,FRM_CS_VALLEY,Y,1862-03-23,1862-06-06,7th Virginia Cavalry; ends with Ashby killed Jun 6,SRC007
+FRM_CS_STONEWALL,Stonewall Brigade,CSA,infantry,brigade,FRM_CS_JACKSONDIV,Y,1862-03-22,1862-06-30,Persistent brigade identity through Garnett->Winder change Apr 1; parent set to Jackson's Division retroactively for data consistency,SRC007|SRC009 p.384
+FRM_CS_BURKS,Burks' Brigade (later Campbell's/Patton's),CSA,infantry,brigade,FRM_CS_JACKSONDIV,Y,1862-03-22,1862-06-30,"Same regiments as Campbell's/Patton's brigade - one persistent formation, renamed by commander",SRC007|SRC009 p.384
+FRM_CS_FULKERSON,Fulkerson's Brigade (later Taliaferro's),CSA,infantry,brigade,FRM_CS_JACKSONDIV,Y,1862-03-22,1862-06-30,Kernstown: 23rd/37th VA; 10th VA joins Apr 21 forming Taliaferro's Brigade - same persistent formation,SRC007|SRC009 p.384|SRC009 p.408
+FRM_CS_ASHBY,Ashby's Cavalry Command,CSA,cavalry,brigade,FRM_CS_VALLEY,Y,1862-03-22,1862-06-06,7th Virginia Cavalry; ends with Ashby killed Jun 6,SRC007|SRC009 p.385
 FRM_CS_ASHBY_SUC,Valley Cavalry (post-Ashby),CSA,cavalry,brigade,FRM_CS_VALLEY,Y,1862-06-07,1862-06-30,Successor headquarters under Munford; reuses same regiment IDs - no duplication,SRC007
 FRM_CS_NW,Army of the Northwest,CSA,hq,army,,,1862-05-08,1862-05-23,Edward Johnson's independent command; wound May 8 leads to reorganization; absorbed into Ewell's Division ~May 23,SRC007
 FRM_CS_CONNER,Conner's Brigade,CSA,infantry,brigade,FRM_CS_NW,Y,1862-05-08,1862-05-23,"Reassigned to Ewell's Division (Elzey's Brigade) after Johnson wounded - transfer, not recreation",SRC007
@@ -17,18 +17,18 @@ FRM_CS_TAYLOR,Taylor's Louisiana Brigade,CSA,infantry,brigade,FRM_CS_EWELLDIV,Y,
 FRM_CS_MARYLAND_DET,1st Maryland Infantry (CS) - detached column,CSA,infantry,detachment,FRM_CS_STEUART,,1862-05-23,1862-05-24,Detachment record only: partitions strength of existing regiment during Front Royal; NOT a separate game counter outside that window,SRC007
 FRM_CS_MUNFORD,Munford's Mounted Troops,CSA,cavalry,battalion,FRM_CS_VALLEY,,1862-05-20,1862-06-30,2nd Virginia Cavalry,SRC007
 FRM_CS_FLOURNOY,Flournoy's Mounted Troops,CSA,cavalry,battalion,FRM_CS_VALLEY,,1862-05-20,1862-06-30,6th Virginia Cavalry,SRC007
-FRM_CS_ARTY_JACKSON,"Artillery, Jackson's Division (Crutchfield)",CSA,artillery,battalion_group,FRM_CS_JACKSONDIV,,1862-03-23,1862-06-30,Aggregate battery group; individual batteries in artillery_1862.csv,SRC007
+FRM_CS_ARTY_JACKSON,"Artillery, Jackson's Division (Crutchfield)",CSA,artillery,battalion_group,FRM_CS_JACKSONDIV,,1862-03-22,1862-06-30,Aggregate battery group; individual batteries in artillery_1862.csv,SRC007
 FRM_CS_ARTY_EWELL,"Artillery, Ewell's Division",CSA,artillery,battalion_group,FRM_CS_EWELLDIV,,1862-05-20,1862-06-30,Batteries recorded in artillery_1862.csv,SRC007
-FRM_US_BANKSDEPT,Department of the Shenandoah,USA,hq,department,,,1862-03-23,1862-06-30,Banks' command,SRC007
-FRM_US_SHIELDSDIV_K,Shields' Division (Banks' Department),USA,hq,division,FRM_US_BANKSDEPT,,1862-03-23,1862-04-30,Exists under Banks until Shields transferred to McDowell spring 1862; same brigades continue under FRM_US_SHIELDSDIV_R - no duplicate units,SRC007
-FRM_US_KIMBALL1,1st Brigade / Kimball's Brigade (Shields'),USA,infantry,brigade,FRM_US_SHIELDSDIV_K,Y,1862-03-23,1862-06-30,Persistent brigade; parent switches to Rappahannock division at transfer date,SRC007
-FRM_US_SULLIVAN2,2nd Brigade / Sullivan's Brigade (Shields'),USA,infantry,brigade,FRM_US_SHIELDSDIV_K,Y,1862-03-23,1862-05-31,Kernstown organization; later roster redistributes regiments to Ferry's 2nd Brigade,SRC007
-FRM_US_TYLER3,3rd Brigade / Tyler's Brigade (Shields'),USA,infantry,brigade,FRM_US_SHIELDSDIV_K,Y,1862-03-23,1862-06-30,At Port Republic Jun 9 fights as tactical brigade under Tyler (field commander),SRC007
+FRM_US_BANKSDEPT,Department of the Shenandoah,USA,hq,department,,,1862-03-22,1862-06-30,Banks' command,SRC007
+FRM_US_SHIELDSDIV_K,Shields' Division (Banks' Department),USA,hq,division,FRM_US_BANKSDEPT,,1862-03-22,1862-04-30,Exists under Banks until Shields transferred to McDowell spring 1862; same brigades continue under FRM_US_SHIELDSDIV_R - no duplicate units,SRC007|SRC009 p.346
+FRM_US_KIMBALL1,1st Brigade / Kimball's Brigade (Shields'),USA,infantry,brigade,FRM_US_SHIELDSDIV_K,Y,1862-03-22,1862-05-31,Persistent brigade; parent switches to Rappahannock division at transfer date; active_to closed 1862-05-31: all member assignments end 5/31 and the June roster continues as FRM_US_KIMBALLR (was an empty counter 6/1-6/30),SRC007|SRC009 p.346
+FRM_US_SULLIVAN2,2nd Brigade / Sullivan's Brigade (Shields'),USA,infantry,brigade,FRM_US_SHIELDSDIV_K,Y,1862-03-22,1862-05-31,Kernstown organization; later roster redistributes regiments to Ferry's 2nd Brigade,SRC007|SRC009 p.346
+FRM_US_TYLER3,3rd Brigade / Tyler's Brigade (Shields'),USA,infantry,brigade,FRM_US_SHIELDSDIV_K,Y,1862-03-22,1862-06-30,At Port Republic Jun 9 fights as tactical brigade under Tyler (field commander),SRC007|SRC009 p.346
 FRM_US_CARROLL4,Carroll's Brigade (Port Republic tactical),USA,infantry,brigade,FRM_US_SHIELDSDIV_R,Y,1862-06-01,1862-06-30,June roster '4th Brigade'; tactical grouping at Port Republic differs from monthly roster - flagged in assignments,SRC007
-FRM_US_KIMBALLR,Kimball's Brigade (Rappahannock roster),USA,infantry,brigade,FRM_US_SHIELDSDIV_R,Y,1862-06-01,1862-06-30,Same persistent brigade identity as 1st Brigade under new department,SRC007
+FRM_US_KIMBALLR,Kimball's Brigade (Rappahannock roster),USA,infantry,brigade,FRM_US_SHIELDSDIV_R,Y,1862-06-01,1862-06-30,"Same persistent brigade identity as 1st Brigade under new department; Kimball's regiments: no reported casualties, OR 12/1 p.690",SRC007|SRC009 p.690
 FRM_US_FERRY2,Ferry's 2nd Brigade (Rappahannock roster),USA,infantry,brigade,FRM_US_SHIELDSDIV_R,Y,1862-06-01,1862-06-30,Operating elsewhere at Port Republic but remains available,SRC007
 FRM_US_TYLERR,Tyler's 3rd Brigade (Rappahannock roster),USA,infantry,brigade,FRM_US_SHIELDSDIV_R,Y,1862-06-01,1862-06-30,Same persistent brigade identity,SRC007
-FRM_US_CAV_BRODHEAD,Brodhead's Detached Cavalry (Kernstown),USA,cavalry,battalion,FRM_US_SHIELDSDIV_K,,1862-03-23,1862-03-23,Detachments of PA/MD/WV/OH/MI cavalry; precise strength unknown,SRC007
+FRM_US_CAV_BRODHEAD,Brodhead's Detached Cavalry (Kernstown),USA,cavalry,battalion,FRM_US_SHIELDSDIV_K,,1862-03-22,1862-03-23,Detachments of PA/MD/WV/OH/MI cavalry; precise strength unknown,SRC007|SRC009 p.346|SRC009 p.354
 FRM_US_WILLIAMSDIV,Williams' Division (Banks),USA,hq,division,FRM_US_BANKSDEPT,,1862-05-01,1862-06-30,Fought at First Winchester May 25,SRC007
 FRM_US_DONNELLY,Donnelly's Brigade,USA,infantry,brigade,FRM_US_WILLIAMSDIV,Y,1862-05-20,1862-06-30,First Winchester roster,SRC007
 FRM_US_GORDON,Gordon's Brigade,USA,infantry,brigade,FRM_US_WILLIAMSDIV,Y,1862-05-20,1862-06-30,First Winchester roster,SRC007
@@ -37,15 +37,15 @@ FRM_US_GEARY,Geary's Independent Command,USA,hq,brigade,FRM_US_BANKSDEPT,,1862-0
 FRM_US_KENLY,Kenly's Front Royal Garrison,USA,infantry,detachment,FRM_US_BANKSDEPT,,1862-05-20,1862-05-23,"Captured May 23; includes 2-company detachment of 29th Pennsylvania (partitioned strength, documented)",SRC007
 FRM_US_FREMONTDEPT,Mountain Department,USA,hq,department,,,1862-05-08,1862-06-30,Fremont; subordinate generals fought at McDowell without him,SRC007
 FRM_US_MILROY_MCD,Milroy's Brigade (McDowell org),USA,infantry,brigade,FRM_US_FREMONTDEPT,Y,1862-05-08,1862-05-31,"Composition differs from Cross Keys org - handled via dated assignments, one brigade ID family",SRC007
-FRM_US_SCHENCK_MCD,Schenck's Brigade (McDowell org),USA,infantry,brigade,FRM_US_FREMONTDEPT,Y,1862-05-08,1862-05-31,SRC007,
+FRM_US_SCHENCK_MCD,Schenck's Brigade (McDowell org),USA,infantry,brigade,FRM_US_FREMONTDEPT,Y,1862-05-08,1862-05-31,"McDowell organization (Schenck's report: 3 regiments, De Beck's battery, 1st Bn Connecticut Cav)",SRC007|SRC009 p.462-463
 FRM_US_MILROY_CK,Milroy's Brigade (Cross Keys org),USA,infantry,brigade,FRM_US_FREMONTDEPT,Y,1862-06-01,1862-06-30,Post-reassignment composition,SRC007
 FRM_US_SCHENCK_CK,Schenck's Brigade (Cross Keys org),USA,infantry,brigade,FRM_US_FREMONTDEPT,Y,1862-06-01,1862-06-30,Post-reassignment composition,SRC007
 FRM_US_BLENKERDIV,Blenker's Division,USA,hq,division,FRM_US_FREMONTDEPT,,1862-06-01,1862-06-30,Cross Keys,SRC007
-FRM_US_STAHEL,Stahel's Brigade,USA,infantry,brigade,FRM_US_BLENKERDIV,Y,1862-06-01,1862-06-30,SRC007,
-FRM_US_KOLTES,Koltes' Brigade,USA,infantry,brigade,FRM_US_BLENKERDIV,Y,1862-06-01,1862-06-30,SRC007,
-FRM_US_BOHLEN,Bohlen's Brigade,USA,infantry,brigade,FRM_US_BLENKERDIV,Y,1862-06-01,1862-06-30,SRC007,
+FRM_US_STAHEL,Stahel's Brigade,USA,infantry,brigade,FRM_US_BLENKERDIV,Y,1862-06-01,1862-06-30,"First Brigade, Blenker's Division at Cross Keys",SRC007|SRC009 p.664
+FRM_US_KOLTES,Koltes' Brigade,USA,infantry,brigade,FRM_US_BLENKERDIV,Y,1862-06-01,1862-06-30,"Second Brigade (Steinwehr's), Blenker's Division, Col. Koltes commanding at Cross Keys",SRC007|SRC009 p.664
+FRM_US_BOHLEN,Bohlen's Brigade,USA,infantry,brigade,FRM_US_BLENKERDIV,Y,1862-06-01,1862-06-30,"Third Brigade, Blenker's Division at Cross Keys",SRC007|SRC009 p.664
 FRM_US_CLUSERET,Cluseret's Brigade,USA,infantry,brigade,FRM_US_FREMONTDEPT,Y,1862-06-01,1862-06-30,Independent under Fremont,SRC007
 FRM_US_BAYARD,Bayard's Attached Cavalry Command,USA,cavalry,brigade,FRM_US_FREMONTDEPT,Y,1862-06-01,1862-06-30,Temporarily attached; contains infantry rifles (13th PA Reserves) classified as infantry,SRC007
-FRM_US_FRMC_CAV,"Fremont Additional Cavalry (3rd WV, 6th OH)",USA,cavalry,battalion,FRM_US_FREMONTDEPT,,1862-06-01,1862-06-30,SRC007,
+FRM_US_FRMC_CAV,"Fremont Additional Cavalry (3rd WV, 6th OH)",USA,cavalry,battalion,FRM_US_FREMONTDEPT,,1862-06-01,1862-06-30,"OR casualty return lists 'Unattached Cavalry' (3d WV detachment, 6th Ohio) with NO commander named; documented vacancy in brigade_commands",SRC007|SRC009 p.664
 FRM_US_MCDOWELLDEPT,Department of the Rappahannock,USA,hq,department,,,1862-04-01,1862-06-30,McDowell; receives Shields' division spring 1862,SRC007
 FRM_US_SHIELDSDIV_R,Shields' Division (Rappahannock),USA,hq,division,FRM_US_MCDOWELLDEPT,,1862-05-01,1862-06-30,Continuation of FRM_US_SHIELDSDIV_K under new department - same brigade/regiment IDs,SRC007

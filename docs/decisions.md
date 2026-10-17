@@ -1,0 +1,29 @@
+# Decisions log
+
+Settled decisions; change them only with the user's say-so, and add the date (ET) and PR. Open questions are at the bottom; resolved ones move up into the table.
+
+| # | Decision | Date (ET) | Where |
+| --- | --- | --- | --- |
+| D1 | Timezone for the project is **ET**. | 2026-10-17 | user |
+| D2 | **Hex of Steel stays the engine** (engine evaluation found no better fit; facing is feasible via Harmony). | 2026-10-17 | PR #10 `docs/engine-evaluation.md` |
+| D3 | **One big Valley sandbox map** is the goal; linked fixed battle maps are not the default. Stays the goal until proven impossible. | 2026-10-17 | PR #10 `docs/valley-map-build-plan.md` §6 |
+| D4 | Scale **500 yd per hex, provisional**; fallback **750 yd**, then **1 mile**. File size does not decide the scale. **Superseded by D16.** | 2026-10-17 | PR #10 §1, §6.1 |
+| D5 | **Piedmont removed** from the map; the east edge lies just east of the Blue Ridge. | 2026-10-17 | PR #10 `map_shape.json` |
+| D6 | **Eastern Blue Ridge passes** are kept with roads to east-edge exits; they serve as **Richmond exits** (and Union entries). | 2026-10-17 | PR #10 `blue_ridge_passes.csv`, `east_exit_edges.csv` |
+| D7 | **Western roads to Romney and McDowell** are on the map. | 2026-10-17 | PR #10 `western_roads.csv` |
+| D8 | **Lexington** (VMI) is on the map at the **south edge**. | 2026-10-17 | PR #9 `LEXINGTON.md` |
+| D9 | **Kernstown** is the **250-yd standalone** test map, left as-is (no re-render; read-only for other lanes). | 2026-10-17 | user |
+| D10 | Tile strategy: **edge-matched library + regional tint/brightness modulation from a low-res painted basemap + unique hero tiles** (towns, battlefields, pike/river corridors); 7-bit + oxipng encoding; sector maps only as last resort. | 2026-10-17 | PR #10 §3–4 |
+| D11 | **Byte-identical duplicates removed**, except files in distinct slots (log in `docs/inventory/dedupe_2026-10-17.csv`). | 2026-10-17 | PR #9 |
+| D12 | **Flat-top hex layout.** Superseded in its parity by D15. | 2026-10-17 | PR #9 `docs/hex-convention.md` |
+| D13 | **Campaign start 1862-03-22 at dawn** (user decision, recorded in PR #15 `docs/history/campaign_start.md`; code change in PR #17). | 2026-10-17 | PR #15, #17 |
+| D14 | **Unit facing via the Harmony mod**; the user wants it. | 2026-10-17 | PR #18 `mods/facing` |
+| D15 | **Hex parity (resolved Q1):** even-q native, per MapGO.cs, decided by Major Hotchkiss 2026-10-17; Kernstown re-cut as v0.4.2. Flat-top, even columns shifted half a row north, rows increase north, column-to-row pitch 4.42:5.1, no conversion layer; `ROW_DIRECTION` removed. | 2026-10-17 | `MapGO.cs:452-459`; PR #9 / #10 `src/hex_utils.py`, `docs/hex-convention.md` |
+| D16 | **Scale is 750 yd per hex** (user decision). About 312 × 319 hexes, roughly 54,500 playable inside the outline, scaled from the 500-yd count of 122,709 (recompute from `map_shape.json`). Why: one brigade's first line of two regiments (about 300–600 yd) fills about one hex; a large Union brigade with all five regiments in line runs to about 1,150 yd (about 1.5 hexes). Sizes at Kernstown: about 460 men per Union regiment and about 2,300 per Union brigade (Tyler; NPS; *Battles and Leaders* Vol. 2); Jackson's brigades about 1,000–1,300 (provisional). The OR Vol. 12 Pt. 1, Cozzens and Hardee/Casey frontage pages are still unverified (Archivist review on #22); artillery reaches 2–3 hexes; the map is inside the developer-reported smooth range (about 60k hexes). **Fallback: 1 mile** if the blank-map stress test (313 × 319, about 300 units) fails. | 2026-10-17 | user |
+| D17 | **Units are brigades** (plus batteries and cavalry regiments), not divisions. Hex of Steel allows **one land unit per hex** (aircraft may share), so there's no stacking; a division is 3–4 adjacent hexes with its batteries behind. Division and army commanders are leader units. | 2026-10-17 | user |
+
+## Open questions
+| # | Question | Owner | Notes |
+| --- | --- | --- | --- |
+| Q2 | **Campaign time model:** at 750 yd (D16): native day turns vs a Harmony half-day clock (march 10–20 hexes/day on roads). Needs the blank-map stress test and a Harmony clock prototype. | General Eggbot + user | PR #10 §6.1 |
+| Q3 | **Facing parameters:** front/flank/rear multipliers (1.0/1.25/1.5 default), turn-in-place cost (1 MP), whether the **AI gets a free end-of-turn re-face**. | user (Eggbot implements) | PR #18 `FacingConfig.json` |
