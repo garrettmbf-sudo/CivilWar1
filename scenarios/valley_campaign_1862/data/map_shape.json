@@ -14,5 +14,6 @@
   [-79.62, 37.70], [-79.62, 38.05], [-79.75, 38.30], [-79.70, 38.55], [-79.45, 38.76],
   [-79.20, 39.05], [-79.08, 39.36]
  ],
+ "verification_2026_10_17": "History check (branch history/verify-pr10-map-data): polygon vertices NOT changed and NOT checked against Hotchkiss. All GNIS-corrected gap, exit, road-waypoint and town points stay inside the polygon (tests/test_valley_map_shape.py).",
  "projection_for_grid": "equirectangular about the polygon's mid-latitude, the same as kernstown-map scripts/hex_grid.py GridSpec.lonlat_to_xy_m"
 }
