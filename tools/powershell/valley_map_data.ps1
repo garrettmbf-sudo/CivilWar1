@@ -33,9 +33,9 @@ function Get-HexY($latN) { [Math]::Round(($latN - $southBound) * $miPerDegLat) }
 $towns = @(
     # Campaign-critical towns
     @{ Name="Staunton";        Lat=38.1496; Lon=79.0717; Type="city";    VP=$true;  Primary=$true  }
-    @{ Name="Lexington";       Lat=37.7840; Lon=79.4430; Type="town";    VP=$false; Primary=$false }  # Rockbridge Co. seat, Virginia Military Institute; southern map anchor (approx. town-centre coords, PROVISIONAL)
+    @{ Name="Lexington";       Lat=37.7840; Lon=79.4428; Type="town";    VP=$false; Primary=$false }  # Rockbridge Co. seat, VMI; southern map anchor. VERIFIED 2026-10-17: USGS GNIS 1498506 (37.784028 N, 79.442819 W); period map: Hotchkiss Rockbridge Co. map, LoC G3883.R6 186- .R6 (H57) - see historical_data/sources_1862.csv SRC020, SRC027
     @{ Name="Waynesboro";      Lat=38.0686; Lon=78.8894; Type="town";    VP=$false; Primary=$false }
-    @{ Name="McDowell";        Lat=38.3069; Lon=79.4767; Type="village"; VP=$true;  Primary=$true  }
+    @{ Name="McDowell";        Lat=38.3357; Lon=79.4906; Type="village"; VP=$true;  Primary=$true  }  # VERIFIED 2026-10-17 (Captain Archivist, PR #16): SRC020 USGS GNIS (official point; was ~3.4 km off)
     @{ Name="Port Republic";   Lat=38.3000; Lon=78.8000; Type="village"; VP=$true;  Primary=$true  }
     @{ Name="Cross Keys";      Lat=38.4167; Lon=78.8167; Type="village"; VP=$true;  Primary=$true  }
     @{ Name="Harrisonburg";    Lat=38.4496; Lon=78.8689; Type="town";    VP=$true;  Primary=$true  }
@@ -56,14 +56,14 @@ $towns = @(
     @{ Name="Moorefield";      Lat=39.0622; Lon=78.9692; Type="village"; VP=$false; Primary=$false }
     @{ Name="Franklin";        Lat=38.6428; Lon=79.3306; Type="village"; VP=$false; Primary=$false }
     @{ Name="Monterey";        Lat=38.4128; Lon=79.5806; Type="village"; VP=$false; Primary=$false }
-    # Valley Pike stops
+    # Valley Turnpike stops (Winchester-Staunton; the Valley Turnpike ends at Staunton)
     @{ Name="Edinburg";        Lat=38.8261; Lon=78.5658; Type="village"; VP=$false; Primary=$false }
     @{ Name="Toms Brook";      Lat=38.9394; Lon=78.4386; Type="village"; VP=$false; Primary=$false }
     # Eastern passes
-    @{ Name="Manassas Gap";    Lat=38.8833; Lon=78.0833; Type="pass";    VP=$false; Primary=$false }
-    @{ Name="Thorntons Gap";   Lat=38.6333; Lon=78.3167; Type="pass";    VP=$false; Primary=$false }
-    @{ Name="Swift Run Gap";   Lat=38.3500; Lon=78.7000; Type="pass";    VP=$false; Primary=$true  }
-    @{ Name="Browns Gap";      Lat=38.2333; Lon=78.7500; Type="pass";    VP=$false; Primary=$false }
+    @{ Name="Manassas Gap";    Lat=38.9090; Lon=78.0753; Type="pass";    VP=$false; Primary=$false }  # VERIFIED 2026-10-17 (Captain Archivist, PR #16): SRC020 USGS GNIS 1470040
+    @{ Name="Thornton's Gap";  Lat=38.6612; Lon=78.3197; Type="pass";    VP=$false; Primary=$false }  # VERIFIED 2026-10-17 (Captain Archivist, PR #16): SRC020 USGS GNIS 1475667
+    @{ Name="Swift Run Gap";   Lat=38.3571; Lon=78.5450; Type="pass";    VP=$false; Primary=$true  }  # VERIFIED 2026-10-17 (Captain Archivist, PR #16): SRC020 USGS GNIS 1475392 (was ~14 km too far west); road from Harrisonburg to Gordonsville
+    @{ Name="Brown's Gap";     Lat=38.2404; Lon=78.7106; Type="pass";    VP=$false; Primary=$false }  # VERIFIED 2026-10-17 (Captain Archivist, PR #16): SRC020 USGS GNIS 1463928
     @{ Name="Rockfish Gap";    Lat=38.0333; Lon=78.8500; Type="pass";    VP=$false; Primary=$false }
     # Massanutten gaps
     @{ Name="New Market Gap";  Lat=38.6500; Lon=78.5500; Type="pass";    VP=$false; Primary=$true  }
@@ -95,11 +95,11 @@ $blueRidge = @(
     @{ Lat=39.25; Lon=77.80 }
     @{ Lat=39.10; Lon=77.90 }
     @{ Lat=38.95; Lon=78.00 }
-    @{ Lat=38.85; Lon=78.10 }  # Manassas Gap area
+    @{ Lat=38.909; Lon=78.075 }  # Manassas Gap (SRC020 GNIS 1470040)
     @{ Lat=38.70; Lon=78.25 }
-    @{ Lat=38.60; Lon=78.35 }  # Thornton's Gap
+    @{ Lat=38.661; Lon=78.320 }  # Thornton's Gap (SRC020 GNIS 1475667)
     @{ Lat=38.45; Lon=78.55 }
-    @{ Lat=38.35; Lon=78.65 }  # Swift Run Gap
+    @{ Lat=38.357; Lon=78.545 }  # Swift Run Gap (SRC020 GNIS 1475392)
     @{ Lat=38.20; Lon=78.75 }
     @{ Lat=38.05; Lon=78.85 }  # Rockfish Gap
     @{ Lat=37.95; Lon=78.90 }
