@@ -199,8 +199,10 @@ class OOB:
                 "support_batteries": loose_batts}
 
 
-OPENING_DATE = date(1862, 3, 23)  # campaign opening (Kernstown); matches validate() window
+OPENING_DATE = date(1862, 3, 22)  # campaign start, dawn (user decision 2026-10-17; docs/history/campaign_start.md)
 ARRIVAL_CERTAINTY = {"confirmed", "approximate", "unverified"}
+# background events before the start (E100-E102 context, E130 Sedgwick's departure)
+PRE_OPENING_TYPES = {"context", "departure"}
 
 
 def arrival_schedule_errors(oob: "OOB") -> list[str]:
@@ -218,6 +220,18 @@ def arrival_schedule_errors(oob: "OOB") -> list[str]:
             errs.append(f"event {ev['event_id']}: missing location")
         if cert != "unverified" and not re.search(r"SRC\d{3} p\.\d", ev.get("sources") or ""):
             errs.append(f"event {ev['event_id']}: {cert} date needs a page-cited source")
+    for ev in oob.events:
+        ids = [ev["subject_id"], *[c for c in (ev.get("covers") or "").split("|") if c]]
+        typ = ev["event_type"]
+        if typ == "start_position":
+            if ev["date"] != OPENING_DATE:
+                errs.append(f"event {ev['event_id']}: start_position dated {ev['date']}, not OPENING_DATE")
+            for i in ids:
+                f = oob.formations.get(i)
+                if f is None:
+                    errs.append(f"event {ev['event_id']}: unknown formation {i}")
+        elif ev["date"] < OPENING_DATE and typ not in PRE_OPENING_TYPES:
+            errs.append(f"event {ev['event_id']}: {typ} dated {ev['date']} before OPENING_DATE")
     for fid, f in oob.formations.items():
         af = _d(f["active_from"])
         if af and af > OPENING_DATE and fid not in covered:
@@ -285,7 +299,7 @@ def validate(oob: OOB, repo_root: str | None = None) -> list[str]:
 
     # 3 every brigade references valid commander on its active dates
     # Check every day, not only the four published scenario snapshots.
-    first, last = date(1862, 3, 23), date(1862, 6, 30)
+    first, last = OPENING_DATE, date(1862, 6, 30)
     all_days = [first + timedelta(days=n) for n in range((last - first).days + 1)]
     for fid, f in oob.formations.items():
         if f["level"] != "brigade" or f["type"] == "hq":
@@ -392,6 +406,6 @@ if __name__ == "__main__":
             print("  -", x)
         sys.exit(1)
     print("validation OK")
-    for day in ["1862-03-23", "1862-05-08", "1862-05-25", "1862-06-09"]:
+    for day in ["1862-03-22", "1862-03-23", "1862-05-08", "1862-05-25", "1862-06-09"]:
         snap = oob.snapshot(date.fromisoformat(day))
         print(f"{day}: {len(snap['counters'])} counters, {len(snap['headquarters'])} HQs")

@@ -1,13 +1,13 @@
 commander_id,name,rank,faction,portrait_file,portrait_status,first_mentioned,last_mentioned,notes,sources
-CMD_JACKSON,"Thomas J. Jackson","Major General",CSA,mdl_CSA_TJJackson.png,PRESENT,1862-03-23,1862-06-09,"Commander, Valley District / Army of the Valley; also division commander of Jackson's Division after Ewell junction",SRC007
+CMD_JACKSON,"Thomas J. Jackson","Major General",CSA,mdl_CSA_TJJackson.png,PRESENT,1862-03-22,1862-06-09,"Commander, Valley District / Army of the Valley; also division commander of Jackson's Division after Ewell junction",SRC007
 CMD_EWELL,"Richard S. Ewell","Major General",CSA,mdl_CSA_REwell.png,PRESENT,1862-05-20,1862-06-09,"Ewell's Division; arrives May 20-22, NOT with Jackson on Mar 23",SRC007
 CMD_JOHNSON_E,"Edward 'Allegheny' Johnson","Brigadier General",CSA,mdl_CSA_EJohnson.png,PRESENT,1862-05-08,1862-05-08,"Army of the Northwest; wounded at McDowell May 8; command reorganized afterward",SRC007
-CMD_GARNETT,"Richard B. Garnett","Brigadier General",CSA,mdl_CSA_RGarnett.png,PRESENT,1862-03-23,1862-03-23,"Stonewall Brigade at Kernstown; removed April 1",SRC007
+CMD_GARNETT,"Richard B. Garnett","Brigadier General",CSA,mdl_CSA_RGarnett.png,PRESENT,1862-03-22,1862-03-23,"Stonewall Brigade at Kernstown; removed April 1",SRC007
 CMD_WINDER,"Charles S. Winder","Brigadier General",CSA,mdl_CSA_CSWinder.png,PRESENT,1862-04-01,1862-06-09,"Succeeds Garnett in Stonewall Brigade Apr 1 through Port Republic",SRC007
-CMD_BURKS,"Jesse S. Burks","Colonel",CSA,mdl_CSA_JSBurks.png,MISSING,1862-03-23,1862-03-23,"Burks' Brigade at Kernstown; succeeded by Campbell",SRC007
+CMD_BURKS,"Jesse S. Burks","Colonel",CSA,mdl_CSA_JSBurks.png,MISSING,1862-03-22,1862-03-23,"Burks' Brigade at Kernstown; succeeded by Campbell",SRC007
 CMD_CAMPBELL,"John A. Campbell","Colonel",CSA,mdl_CSA_JACampbell.png,MISSING,1862-05-08,1862-05-25,"Campbell's Brigade; wounded at First Winchester May 25",SRC007
 CMD_PATTON,"John M. Patton Jr.","Colonel",CSA,mdl_CSA_JMPatton.png,MISSING,1862-05-25,1862-06-09,"Succeeds wounded Campbell in Campbell's (Patton's) Brigade",SRC007
-CMD_FULKERSON,"Samuel V. Fulkerson","Colonel",CSA,mdl_CSA_SVFulkerson.png,MISSING,1862-03-23,1862-05-25,"Fulkerson's Brigade at Kernstown; acts for sick Taliaferro May 23 onward",SRC007
+CMD_FULKERSON,"Samuel V. Fulkerson","Colonel",CSA,mdl_CSA_SVFulkerson.png,MISSING,1862-03-22,1862-05-25,"Fulkerson's Brigade at Kernstown; acts for sick Taliaferro May 23 onward",SRC007
 CMD_TALIAFERRO,"William B. Taliaferro","Brigadier General",CSA,mdl_CSA_WBTaliaferro.png,PRESENT,1862-04-21,1862-06-09,"Taliaferro's Brigade (formed around arrival of 10th Virginia Apr 21); temporarily unavailable late May",SRC007
 CMD_CONNER,"Zephaniah T. Conner","Colonel",CSA,mdl_CSA_ZTConner.png,MISSING,1862-05-08,1862-05-08,"Conner's Brigade, Army of the Northwest at McDowell",SRC007
 CMD_SCOTT,"William C. Scott","Colonel",CSA,mdl_CSA_WCScott.png,MISSING,1862-05-08,1862-06-09,"Scott's Brigade under Johnson at McDowell; joins Ewell; acts for wounded Steuart at Cross Keys Jun 8",SRC007
@@ -17,16 +17,16 @@ CMD_WALKER,"James A. Walker","Colonel",CSA,mdl_CSA_JAWalker.png,PRESENT,1862-06-
 CMD_TRIMBLE,"Isaac R. Trimble","Brigadier General",CSA,mdl_CSA_ITrimble.png,PRESENT,1862-05-20,1862-06-09,"Trimble's Brigade in Ewell's Division",SRC007
 CMD_TAYLOR,"Richard Taylor","Brigadier General",CSA,mdl_CSA_RTaylor.png,PRESENT,1862-05-20,1862-06-09,"Taylor's Louisiana Brigade in Ewell's Division; leads Front Royal assault May 23",SRC007
 CMD_BTJOHNSON,"Bradley T. Johnson","Colonel",CSA,mdl_CSA_BTJohnson.png,MISSING,1862-05-23,1862-06-09,"1st Maryland Infantry (CS); detached to Front Royal May 23 then back with Scott/Steuart's Brigade - never a duplicate counter",SRC007
-CMD_ASHBY,"Turner Ashby","Colonel",CSA,mdl_CSA_TAshby.png,PRESENT,1862-03-23,1862-06-06,"Valley cavalry command (7th Virginia Cavalry); killed June 6 near Harrisonburg",SRC007
+CMD_ASHBY,"Turner Ashby","Colonel",CSA,mdl_CSA_TAshby.png,PRESENT,1862-03-22,1862-06-06,"Valley cavalry command (7th Virginia Cavalry); killed June 6 near Harrisonburg",SRC007
 CMD_MUNFORD,"Thomas T. Munford","Colonel",CSA,mdl_CSA_TMunford.png,PRESENT,1862-05-20,1862-06-09,"2nd Virginia Cavalry attached; senior mounted commander after Ashby's death",SRC007
 CMD_FLOURNOY,"Thomas S. Flournoy","Colonel",CSA,mdl_CSA_TSFlournoy.png,MISSING,1862-05-20,1862-06-09,"6th Virginia Cavalry attached mounted troops",SRC007
 CMD_CRUTCHFIELD,"Stapleton Crutchfield","Colonel",CSA,mdl_CSA_SCrutchfield.png,MISSING,1862-03-23,1862-06-09,"Chief of artillery, Valley District",SRC007
-CMD_BANKS,"Nathaniel P. Banks","Major General",USA,mdl_USA_NPBanks.png,PRESENT,1862-03-23,1862-06-09,"Department of the Shenandoah",SRC007
+CMD_BANKS,"Nathaniel P. Banks","Major General",USA,mdl_USA_NPBanks.png,PRESENT,1862-03-22,1862-06-09,"Department of the Shenandoah",SRC007
 CMD_SHIELDS,"James Shields","Brigadier General",USA,mdl_USA_JShields.png,PRESENT,1862-03-22,1862-06-09,"Division commander; wounded Mar 22 (Kernstown); transferred from Banks to McDowell's Department of the Rappahannock spring 1862; absent from Port Republic battlefield",SRC007
-CMD_KIMBALL,"Nathan Kimball","Brigadier General",USA,mdl_USA_NKimball.png,PRESENT,1862-03-23,1862-06-09,"Exercises battlefield command of Shields' division Mar 23 as colonel; 1st Brigade (Shields' div) thereafter",SRC007
-CMD_SULLIVAN,"Jeremiah C. Sullivan","Colonel",USA,mdl_USA_JCSullivan.png,PRESENT,1862-03-23,1862-05-01,"2nd Brigade, Shields' Division at Kernstown; later brigadier",SRC007
-CMD_TYLER,"Erastus B. Tyler","Brigadier General",USA,mdl_USA_EBTyler.png,PRESENT,1862-03-23,1862-06-09,"3rd Brigade at Kernstown; directs engaged Union force at Port Republic Jun 9",SRC007
-CMD_BRODHEAD,"Thornton F. Brodhead","Colonel",USA,mdl_USA_TFBrodhead.png,MISSING,1862-03-23,1862-03-23,"Detached cavalry at Kernstown (PA/MD/WV/OH/MI detachments)",SRC007
+CMD_KIMBALL,"Nathan Kimball","Brigadier General",USA,mdl_USA_NKimball.png,PRESENT,1862-03-22,1862-06-09,"Exercises battlefield command of Shields' division Mar 23 as colonel; 1st Brigade (Shields' div) thereafter",SRC007
+CMD_SULLIVAN,"Jeremiah C. Sullivan","Colonel",USA,mdl_USA_JCSullivan.png,PRESENT,1862-03-22,1862-05-01,"2nd Brigade, Shields' Division at Kernstown; later brigadier",SRC007
+CMD_TYLER,"Erastus B. Tyler","Brigadier General",USA,mdl_USA_EBTyler.png,PRESENT,1862-03-22,1862-06-09,"3rd Brigade at Kernstown; directs engaged Union force at Port Republic Jun 9",SRC007
+CMD_BRODHEAD,"Thornton F. Brodhead","Colonel",USA,mdl_USA_TFBrodhead.png,MISSING,1862-03-22,1862-03-23,"Detached cavalry at Kernstown (PA/MD/WV/OH/MI detachments)",SRC007
 CMD_WILLIAMS,"Alpheus S. Williams","Brigadier General",USA,mdl_USA_AWilliams.png,PRESENT,1862-05-23,1862-06-09,"Williams' Division, Banks' Department; First Winchester May 25",SRC007
 CMD_DONNELLY,"Dudley Donnelly","Colonel",USA,mdl_USA_DDonnelly.png,MISSING,1862-05-25,1862-05-25,"Donnelly's Brigade, Williams' Division at First Winchester",SRC007
 CMD_GORDON,"George H. Gordon","Brigadier General",USA,mdl_USA_GHGordon.png,PRESENT,1862-05-25,1862-05-25,"Gordon's Brigade, Williams' Division at First Winchester",SRC007

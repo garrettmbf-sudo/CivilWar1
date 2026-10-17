@@ -16,6 +16,7 @@ def test_recovered_oob_validates_baseline_rules():
 def test_key_campaign_snapshots():
     oob = OOB.load()
     expected = {
+        '1862-03-22': (8, 3),
         '1862-03-23': (8, 3),
         '1862-05-08': (11, 7),
         '1862-05-25': (18, 9),
@@ -95,7 +96,7 @@ def test_validator_catches_empty_sources_counters_and_commanders():
 def test_opening_snapshot_complete_and_cited():
     from src.oob import OPENING_DATE
     oob = OOB.load()
-    assert OPENING_DATE == date(1862, 3, 23)
+    assert OPENING_DATE == date(1862, 3, 22)
     snap = oob.snapshot(OPENING_DATE)
     ids = {c["formation_id"] for c in snap["counters"]}
     # Kernstown OR returns: CS p.384 (Garnett, Burks, Fulkerson + Ashby p.385); US p.346 (Kimball, Sullivan, Tyler, Brodhead)
@@ -123,3 +124,30 @@ def test_arrival_schedule_complete():
     assert by_id["E016"]["date"] == date(1862, 5, 9)   # Blenker joins Fremont, p.8
     assert by_id["E017"]["date"] == date(1862, 5, 30)  # Shields back at Front Royal, p.282
     assert by_id["E013"]["date"] == date(1862, 4, 6)   # Taliaferro assigned, Pt.3 p.844
+
+
+def test_opening_0322_start_positions_and_commands():
+    from src.oob import OPENING_DATE
+    oob = OOB.load()
+    by_id = {e["event_id"]: e for e in oob.events}
+    assert all(f"E{n}" in by_id for n in range(100, 132))
+    starts = [e for e in oob.events if e["event_type"] == "start_position"]
+    assert len(starts) == 14 and all(e["date"] == OPENING_DATE for e in starts)
+    # Ewell's and Blenker's 3/22 camps are not in the OR: must stay unverified
+    assert by_id["E108"]["date_certainty"] == "unverified"
+    assert by_id["E115"]["date_certainty"] == "unverified"
+    # Shields commands at dawn 3/22; Kimball from 3/23 after Shields is wounded
+    assert oob.commander_of("FRM_US_SHIELDSDIV_K", date(1862, 3, 22)) == "CMD_SHIELDS"
+    assert oob.commander_of("FRM_US_SHIELDSDIV_K", date(1862, 3, 23)) == "CMD_KIMBALL"
+    assert oob.commander_of("FRM_CS_STONEWALL", OPENING_DATE) == "CMD_GARNETT"
+
+
+def test_opening_strength_flags():
+    oob = OOB.load()
+    r = {x["return_id"]: x for x in oob.returns}
+    for rid in ("R108", "R109", "R112"):
+        assert "UNION_0322_FROM_FEB_RETURN" in r[rid]["basis"]
+    shields = {k: r[k] for k in ("R110", "R119", "R120")}
+    assert all(v["subject_id"] == "FRM_US_SHIELDSDIV_K" for v in shields.values())
+    for k, page in (("R110", "p.342"), ("R119", "p.335"), ("R120", "p.336")):
+        assert page in shields[k]["sources"], k
