@@ -9,3 +9,4 @@ painted_sections/debug_*
 painted_sections/test_*
 painted_sections/guide_*
 painted_sections/closeup_*
+data/features/osm_raw.json
