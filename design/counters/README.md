@@ -1,10 +1,12 @@
 # Kernstown counter review — four native designs
 
-Review candidates based on `kernstown-v0.4.0`; not merged or installed in Hex of Steel.
+Review candidates based on `kernstown-v0.4.0` (tag at `c125296`); not merged or installed in Hex of Steel.
+
+**Current preferred direction, following review:** E combines infantry formations with a small approved officer inset on brigade counters and large officer portraits on headquarters. Open `previews/preferred_formation_and_hq.png`, `previews/e_map_20.png`, and `previews/e_dense_20.png`. These are included alongside the original four directions. Corps/army command would use the HQ visual convention when historically present; no such extra Kernstown formations are invented.
 
 Open `previews/four_designs_details.png` for enlarged art, `previews/four_designs_map_comparison.jpg` for all four treatments on the actual map, and `previews/four_designs_dense_20.png` for the decisive adjacent-hex test. Individual map panels preserve their original pixel dimensions. The source map is the branch's existing painted Kernstown preview, not a newly imagined battlefield or a game screenshot.
 
-A is a historical command card. B is a traditional wargame counter. C adds the repository's illustrated troop sprites and an officer medallion. D prioritizes the officer portrait. All use the same faction palette, positions, naming, center pivot, and 56 px visible width against 88 px point-to-point hex width. B is the recommended A/B hybrid: restrained board-counter geometry with approved historical imagery and a cream, oxblood, navy, and muted brass palette.
+A is a historical command card. B is a traditional wargame counter. C adds the repository's illustrated troop sprites and an officer medallion. D prioritizes the officer portrait. All use the same faction palette, positions, naming, center pivot, and 56 px visible width against 88 px point-to-point hex width. B remains the original A/B alternative: restrained board-counter geometry with approved historical imagery and a cream, oxblood, navy, and muted brass palette.
 
 ## Scale and terrain visibility
 
@@ -30,7 +32,7 @@ The source deployment is retained for comparison, not certified as a final histo
 
 ## Editable masters and packaging
 
-- `masters/`: 80 unit/design SVGs plus five state examples. Text, frames, military symbols, and embedded image objects remain editable.
+- `masters/`: 100 unit/design SVGs plus five state examples. Text, frames, military symbols, and embedded image objects remain editable.
 - `sprites/512`, `sprites/256`, `sprites/128`: transparent RGBA PNGs; consistent canvas and center pivot.
 - `sprites/*_atlas.png` and `atlas_manifest.json`: per-design atlases with pixel rectangles; no engine-specific loader assumptions.
 - `source/`: unchanged approved image copies with original filenames.

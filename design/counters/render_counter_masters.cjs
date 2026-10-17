@@ -12,5 +12,5 @@ const root = __dirname;
    await sharp(input).resize(size,size).png().toFile(path.join(dir,name.replace('.svg','.png')));
   }
  }
- console.log('Rendered 255 transparent PNGs from editable masters.');
+ console.log('Rendered 315 transparent PNGs from editable masters.');
 })().catch(e=>{console.error(e);process.exit(1)});

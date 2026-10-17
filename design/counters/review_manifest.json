@@ -8,5 +8,6 @@
   "normal_hex_radius_px": 44,
   "counter_canvas_px": 70,
   "counter_visible_width_px": 56,
-  "portrait_processing": "proportional placement only; intact source bytes embedded in SVG"
+  "portrait_processing": "proportional placement only; intact source bytes embedded in SVG",
+  "preferred_treatment": "E: infantry formations + small approved portrait inset for brigades; large officer face for headquarters"
 }

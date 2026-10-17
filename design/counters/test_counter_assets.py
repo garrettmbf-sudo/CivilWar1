@@ -10,11 +10,21 @@ class CounterAssets(unittest.TestCase):
    b=(D/'source'/name).read_bytes();self.assertEqual(hashlib.sha1(b'blob '+str(len(b)).encode()+b'\0'+b).hexdigest(),expected)
  def test_embedded_portraits_and_no_crops(self):
   roster=json.loads((D/'roster.json').read_text())
-  for style in 'abcd':
+  for style in 'abcde':
    for u in roster:
     root=ET.parse(D/'masters'/f'{style}_{u["id"]}.svg').getroot();self.assertFalse(list(root.iter('{http://www.w3.org/2000/svg}clipPath')))
     if u['portrait']:
      images=list(root.iter('{http://www.w3.org/2000/svg}image'));data=[base64.b64decode(i.attrib['href'].split(',')[1]) for i in images];self.assertIn((D/'source'/u['portrait']).read_bytes(),data)
+ def test_preferred_brigades_use_soldiers_and_hq_uses_face(self):
+  ns='{http://www.w3.org/2000/svg}'
+  brigade=ET.parse(D/'masters/e_k01.svg').getroot();hq=ET.parse(D/'masters/e_k19.svg').getroot()
+  self.assertEqual(len(list(brigade.iter(ns+'image'))),4)
+  self.assertEqual(len(list(hq.iter(ns+'image'))),1)
+  # Commander name text must fit vertically inside its banner, above the stats.
+  for file in (D/'masters').glob('*.svg'):
+   root=ET.parse(file).getroot();rects=list(root.iter(ns+'rect'));footer=next(r for r in rects if r.attrib.get('height')=='33');fy=float(footer.attrib['y'])
+   labels=[t for t in root.iter(ns+'text') if t.attrib.get('font-family')=='Georgia']
+   self.assertEqual(len(labels),1);baseline=float(labels[0].attrib['y']);self.assertGreaterEqual(baseline-18,fy);self.assertLessEqual(baseline+5,fy+33)
  def test_deployment_preserved(self):
   raw=json.loads((D.parents[1]/'data/layers/kernstown_units.json').read_text())['units'];r=json.loads((D/'roster.json').read_text());self.assertEqual(len(r),20)
   self.assertEqual([(u['col'],u['row']) for u in raw],[(u['col'],u['row']) for u in r[:18]])
@@ -22,13 +32,13 @@ class CounterAssets(unittest.TestCase):
   self.assertIsNone(next(u for u in r if u['name']=='BURKS')['portrait']);self.assertIsNone(next(u for u in r if u['name']=='FULKERSON')['portrait'])
  def test_transparent_raster_exports(self):
   for size in [512,256,128]:
-   paths=list((D/'sprites'/str(size)).glob('*.png'));self.assertEqual(len(paths),85)
+   paths=list((D/'sprites'/str(size)).glob('*.png'));self.assertEqual(len(paths),105)
    for p in paths:
     with Image.open(p) as im:
      self.assertEqual(im.mode,'RGBA');self.assertEqual(im.size,(size,size));a=im.getchannel('A');self.assertEqual(a.getpixel((0,0)),0);self.assertEqual(a.getextrema(),(0,255))
  def test_dense_counter_clearance(self):
   coords=[(16+i%5,23+i//5) for i in range(20)]
-  for style in 'abcd':
+  for style in 'abcde':
    masks=[]
    for i,(c,r) in enumerate(coords):
     im=Image.open(D/'sprites/512'/f'{style}_k{i+1:02}.png').resize((70,70),Image.Resampling.LANCZOS).getchannel('A').point(lambda a:255 if a>127 else 0)

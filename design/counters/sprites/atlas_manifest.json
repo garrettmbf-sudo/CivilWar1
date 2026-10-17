@@ -826,6 +826,211 @@
           "portrait": "mdl_USA_NKimball.png"
         }
       }
+    },
+    "E": {
+      "file": "e_atlas.png",
+      "frames": {
+        "k01": {
+          "rect": [
+            0,
+            0,
+            512,
+            512
+          ],
+          "name": "GARNETT",
+          "portrait": "mdl_CSA_RGarnett.png"
+        },
+        "k02": {
+          "rect": [
+            512,
+            0,
+            512,
+            512
+          ],
+          "name": "FULKERSON",
+          "portrait": null
+        },
+        "k03": {
+          "rect": [
+            1024,
+            0,
+            512,
+            512
+          ],
+          "name": "BURKS",
+          "portrait": null
+        },
+        "k04": {
+          "rect": [
+            1536,
+            0,
+            512,
+            512
+          ],
+          "name": "ASHBY",
+          "portrait": "mdl_CSA_TAshby.png"
+        },
+        "k05": {
+          "rect": [
+            0,
+            512,
+            512,
+            512
+          ],
+          "name": "CHEW",
+          "portrait": null
+        },
+        "k06": {
+          "rect": [
+            512,
+            512,
+            512,
+            512
+          ],
+          "name": "POAGUE",
+          "portrait": null
+        },
+        "k07": {
+          "rect": [
+            1024,
+            512,
+            512,
+            512
+          ],
+          "name": "CARPENTER",
+          "portrait": null
+        },
+        "k08": {
+          "rect": [
+            1536,
+            512,
+            512,
+            512
+          ],
+          "name": "CASKIE",
+          "portrait": null
+        },
+        "k09": {
+          "rect": [
+            0,
+            1024,
+            512,
+            512
+          ],
+          "name": "WOODING",
+          "portrait": null
+        },
+        "k10": {
+          "rect": [
+            512,
+            1024,
+            512,
+            512
+          ],
+          "name": "PLEASANTS",
+          "portrait": null
+        },
+        "k11": {
+          "rect": [
+            1024,
+            1024,
+            512,
+            512
+          ],
+          "name": "KIMBALL",
+          "portrait": "mdl_USA_NKimball.png"
+        },
+        "k12": {
+          "rect": [
+            1536,
+            1024,
+            512,
+            512
+          ],
+          "name": "SULLIVAN",
+          "portrait": "mdl_USA_JCSullivan.png"
+        },
+        "k13": {
+          "rect": [
+            0,
+            1536,
+            512,
+            512
+          ],
+          "name": "TYLER",
+          "portrait": "mdl_USA_EBTyler.png"
+        },
+        "k14": {
+          "rect": [
+            512,
+            1536,
+            512,
+            512
+          ],
+          "name": "JENKS",
+          "portrait": null
+        },
+        "k15": {
+          "rect": [
+            1024,
+            1536,
+            512,
+            512
+          ],
+          "name": "B / VA",
+          "portrait": null
+        },
+        "k16": {
+          "rect": [
+            1536,
+            1536,
+            512,
+            512
+          ],
+          "name": "CLARK",
+          "portrait": null
+        },
+        "k17": {
+          "rect": [
+            0,
+            2048,
+            512,
+            512
+          ],
+          "name": "ROBINSON",
+          "portrait": null
+        },
+        "k18": {
+          "rect": [
+            512,
+            2048,
+            512,
+            512
+          ],
+          "name": "BRODHEAD",
+          "portrait": null
+        },
+        "k19": {
+          "rect": [
+            1024,
+            2048,
+            512,
+            512
+          ],
+          "name": "JACKSON",
+          "portrait": "mdl_CSA_TJJackson.png"
+        },
+        "k20": {
+          "rect": [
+            1536,
+            2048,
+            512,
+            512
+          ],
+          "name": "KIMBALL",
+          "portrait": "mdl_USA_NKimball.png"
+        }
+      }
     }
   }
 }

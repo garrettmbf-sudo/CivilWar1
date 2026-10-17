@@ -34,5 +34,14 @@
     "hex_radius_px": 44,
     "counter_visible_width_px": 56,
     "opaque_area_over_hex_area_pct": 71.25
+  },
+  {
+    "style": "E",
+    "opaque_pixels": 57568,
+    "map_pixels": 1577600,
+    "viewport_coverage_pct": 3.649,
+    "hex_radius_px": 44,
+    "counter_visible_width_px": 56,
+    "opaque_area_over_hex_area_pct": 57.23
   }
 ]
