@@ -85,7 +85,7 @@ for h in hexes:
             filt="FilterVP"; typ="City"
         if p.get("owner"): flags["OwnerName"]=p["owner"]
     h.update(type=typ, filter=filt, label=flags.get("CityName",""), flags=flags)
-layers={"grid":{"cols":G.cols,"rows":G.rows,"hex_yards":G.hex_yards,"orientation":"flat-top odd-q",
+layers={"grid":{"cols":G.cols,"rows":G.rows,"hex_yards":G.hex_yards,"orientation":"flat-top even-q",
  "bbox":{"west":G.west,"south":G.south,"east":G.east,"north":G.north},"neighbor_m":G.hex_m,"size_m":G.size_m},
  "hexes":hexes,"season":"Summer",
  "notes":"2000px cl=6; continuous DEM slices; modest oblique props; no hex-stamped trees; counter-clear centers"}

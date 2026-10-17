@@ -44,6 +44,5 @@ Stone-wall hexes (DamageModificator 35) in the new grid: 14,22  15,23  16,22  17
 Stonewall Brigade (17,23) and Fulkerson (15,23) are still on wall hexes, as before.
 
 ## Builder shim
-`tools/build_kernstown_map.ps1` still has a TEMPORARY legacy-conversion shim (lines 174-178) that detects
-files without `"grid_convention": "game-native"` and adjusts even-column rows. Now that the file is marked,
-the shim is a no-op. It can be removed in a future cleanup.
+~~Done (2026-10-17).~~ The legacy-conversion shim in `tools/build_kernstown_map.ps1` was replaced with a
+hard guard that throws if `"grid_convention": "game-native"` is absent. No silent fallback remains.

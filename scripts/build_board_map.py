@@ -345,7 +345,7 @@ def build_basemap() -> Image.Image:
     return base, t, demh
 
 def draw_bold_hex_grid(draw, w, h, width=3, color=(32, 26, 20, 210)):
-    """Flat-top odd-q hex outlines matching G — SEPARATE overlay layer."""
+    """Flat-top even-q hex outlines matching G — SEPARATE overlay layer."""
     for col in range(G.cols):
         for row in range(G.rows):
             cx, cy = hexc(col, row)
@@ -527,7 +527,7 @@ def write_layers(hexes):
     layers = {
         "grid": {
             "cols": G.cols, "rows": G.rows, "hex_yards": G.hex_yards,
-            "orientation": "flat-top odd-q",
+            "orientation": "flat-top even-q",
             "bbox": {"west": G.west, "south": G.south, "east": G.east, "north": G.north},
             "neighbor_m": G.hex_m, "size_m": G.size_m,
         },
