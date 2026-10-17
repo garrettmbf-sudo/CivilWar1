@@ -13,6 +13,6 @@ AGENTS.md / directive note: Lexington "may be included only if it serves the sce
 ## Has to be regenerated (not done here; nothing faked)
 - Run `valley_map_data.ps1` again (needs PowerShell; not available on this Linux box) to get new HexX/HexY tables.
 - `tools/powershell/build_valley_map.ps1`: hardcoded `H = 125` and hand-placed town X/Y. Update it from the regenerated output; Lexington is **not** added there yet.
-- Ridge, river and road polylines in `valley_map_data.ps1` end around 37.95 N. Blue Ridge/western ridges, the North (Maury) River and the Staunton–Lexington Valley Turnpike need sourced geometry south to Lexington.
+- Ridge, river and road polylines in `valley_map_data.ps1` end around 37.95 N. Blue Ridge/western ridges, the North (Maury) River and the Staunton–Lexington road (not the Valley Turnpike, which ends at Staunton) need sourced geometry south to Lexington.
 - Any .sav, tile set, preview or v3/v4 prototype built from the old bounds.
 - Status: RESEARCH data change only. Not rendered, not built, not game-tested.

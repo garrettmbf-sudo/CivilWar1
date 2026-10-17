@@ -91,8 +91,9 @@ Data lives in `scenarios/valley_campaign_1862/data/`. Everything is PROVISIONAL 
   - Moorefield–Wardensville–Strasburg (Frémont's late-May route)
   - South Branch road (Moorefield–Petersburg–Franklin)
   - Franklin–Harrisonburg over Shenandoah Mountain
-  - **Staunton–Parkersburg Turnpike** (Staunton–Buffalo Gap–Shenandoah Mountain–Bull Pasture Mountain–McDowell–Monterey)
-  - Valley Turnpike south to Lexington
+  - **Staunton–Parkersburg Turnpike** (Staunton–West View–Shenandoah Mountain–Bull Pasture Mountain–McDowell–Monterey)
+  - Staunton–Lexington road (a separate road; the Valley Turnpike ends at Staunton)
+  - Note: Buffalo Gap is on the Virginia Central Railroad, not the Staunton–Parkersburg Turnpike
 
 Coordinates are approximate modern values and need checking against USGS GNIS and Hotchkiss. The history columns cite only works known to exist (OR Ser. I Vols. 5 and 12; Cozzens, *Shenandoah 1862*, 2008; Tanner, *Stonewall in the Valley*, 1976), without page numbers. Rows marked "needs 1862 source" have none yet.
 
@@ -236,8 +237,8 @@ This **needs Harmony**. The only native stand-in is a fixed-turn call with messa
   - Historical role: Virginia historical marker JD-14 (1949, hmdb.org m=16644) says "In June 1862 part of Jackson's army, moving to join Lee at Richmond, used this passage". It lay on the old Three Notch'd Road.
   - Campaign value: a second "leave for Richmond" exit next to Brown's and Rockfish.
   - Confidence: RELIABLE_SECONDARY. The marker is a secondary source; check it against the Official Records.
-- **Fisher's (Milam's) Gap: KEEP as a minor route.**
-  - Historical role: on 21 April 1862 Hotchkiss scouted "Milham's or Fisher's Gap" on the New Market–Madison Court House road, at Jackson's order, while looking for a concealed flanking road. His sketches 105/106 and Valley map No. 89 label it "Milam's or Fisher's Gap" and "Grave's Gap" (from his journal as quoted at milaminvirginia.com/milams-gap; check the Hotchkiss originals at the Library of Congress).
+- **Fisher's Gap: KEEP as a minor route.**
+  - Historical role: on 21 April 1862 Hotchkiss scouted Fisher's Gap ("Milham's or Fisher's Gap" in his journal) on the New Market–Madison Court House road, at Jackson's order, while looking for a concealed flanking road. His sketches 105/106 and Valley map No. 89 label the gap under period variant names (from his journal as quoted at milaminvirginia.com/milams-gap; check the Hotchkiss originals at the Library of Congress).
   - NPS says Jackson's Corps used the Fisher's Gap route in **November 1862**, which is outside our window.
   - Campaign value: a real April 1862 reconnaissance route and plausible alternate crossing between Thornton's and Swift Run.
   - Confidence: PROVISIONAL for 1862 troop use.
