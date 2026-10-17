@@ -54,7 +54,7 @@ ammo/fuel/HP resupply [M] p.35, p.57. Supply does **not** come from commanders/H
 - **Bonuses do not stack**: with several commanders covering a unit, only the highest bonus per category
   applies [M] p.47, confirmed in testing by [S1].
 - Cannot attack or retaliate; can be bought only once; death is permanent; cannot be bought in campaign
-  scenarios; cost cash, or HQ points with the Policies option [M] p.47, p.62.
+  scenarios; cost cash, or HQ points with the Policies option [M] p.47, p.61.
 - Per-leader data = an ordinary unit record in the Unit Editor (name, country, picture, soft/hard/air
   damage → bonus %, range → radius, MP, HP, cost). So radius and bonus are set **per commander unit**.
 - **Heroes** are different: random medal-winner bonuses auto-assigned to rank-5 units; "Heroes are not
@@ -102,7 +102,7 @@ Rules for generating scenarios from `src/oob.py` snapshots:
 - **Unit art is a sprite image, not a stat-derived NATO symbol**: PNG, **1024×1024** for land units
   (ships 1258×1258 per a community answer), file name must match the unit name exactly (case-sensitive),
   placed under `Graphics/Units/<Country>/` [S2], [Y]. The game also has a **NATO-symbol display toggle (key N)**
-  [M] p.5 — engine-generated, not per-unit art.
+  [M] p.4 — engine-generated, not per-unit art.
 - The counter frame (soft/hard/air damage, HP, range, MP, morale bar, veterancy/loadout icons) is drawn by the
   engine over the sprite [M] p.16.
 - Repo note: existing `Unit_*.png` / `mdl_*.png` are 104×126 and 170×280 respectively — **not** the 1024×1024
