@@ -137,3 +137,18 @@ def point_to_offset(x: float, y: float, spacing: float = 1.0) -> tuple[int, int]
             if best is None or d < best[0]:
                 best = (d, c, r)
     return best[1], best[2]
+
+
+def hex_line(a: tuple[int, int], b: tuple[int, int]) -> list[tuple[int, int]]:
+    """Chain of adjacent hexes from ``a`` to ``b`` inclusive (centre lerp + nearest-centre snap).
+
+    The tiny nudge breaks ties the same way in the PowerShell port (tools/powershell/HexEvenQ.ps1).
+    """
+    n = offset_distance(a, b)
+    ax, ay = hex_center(*a)
+    bx, by = hex_center(*b)
+    out = []
+    for i in range(n + 1):
+        t = 0.0 if n == 0 else i / n
+        out.append(point_to_offset(ax + (bx - ax) * t + 1e-6, ay + (by - ay) * t + 2e-6))
+    return out

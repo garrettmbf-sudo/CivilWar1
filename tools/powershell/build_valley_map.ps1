@@ -18,12 +18,21 @@ Write-Output "Loading game assemblies..."
 [System.Reflection.Assembly]::LoadFrom("$managedDir\UnityEngine.dll") | Out-Null
 [System.Reflection.Assembly]::LoadFrom("$managedDir\Assembly-CSharp.dll") | Out-Null
 
+# ===== HEX GRID (native even-q, shared with src/hex_utils.py) =====
+# Columns west -> east, rows increase NORTH, EVEN columns half a row north, MapGO pitch 4.42:5.1.
+# (col,row) here is exactly the game's Tile (PosX, PosY), with no conversion layer.
+. (Join-Path $PSScriptRoot 'HexEvenQ.ps1')
+
 # ===== MAP DIMENSIONS =====
-$W = 105  # columns (east-west)
-$H = 125  # rows (north-south)
+$Wmi = 105  # frame width, miles east of 79.65 W
+$Hmi = 125  # frame height, miles north of 37.90 N
+$W = [int][Math]::Ceiling($Wmi / $script:HexColPitchRatio)  # 122 columns (0.8667 mi apart)
+$H = $Hmi                                                    # 125 rows (1 mi apart)
 
 # ===== GEOGRAPHIC DATA =====
-# All coordinates are hex [x, y] where x=column(E-W), y=row(N-S from south)
+# All waypoints below are FRAME MILES [x east, y north] from (79.65 W, 37.90 N) (the old
+# 1-mile square grid, from valley_map_data.ps1 with southBound 37.90). They are converted to
+# even-q hexes with Get-HexFromXY; ridges stay in miles and are tested at each hex centre.
 
 # Mountain ridge waypoints as flat arrays [x0,y0, x1,y1, ...]
 $blueRidge = @(40,3, 43,10, 48,21, 54,31, 59,38, 70,48, 75,55, 83,66, 89,72, 94,83, 100,93, 102,100)
@@ -42,7 +51,7 @@ $allRivers = @($riverSouthFork, $riverNorthFork, $riverMainShen, $riverPotomac, 
 # Valley Pike waypoints as flat array
 $valleyPike = @(31,17, 37,24, 40,31, 42,38, 45,45, 47,52, 53,52, 54,59, 58,64, 61,68, 65,72, 69,75, 74,78, 76,82, 79,86, 80,89, 86,97, 90,104, 91,108)
 
-# Town definitions: Name, HexX, HexY, Size (1=village, 2=city), VP, Owner
+# Town definitions: Name, X/Y in frame miles (converted to hex below), Size (1=village, 2=city), VP, Owner
 $towns = @(
     @{N="Staunton";       X=31; Y=17; S=2; VP=$true;  O="Confederacy"}
     @{N="Waynesboro";     X=41; Y=12; S=1; VP=$false; O="Confederacy"}
@@ -68,10 +77,16 @@ $towns = @(
     @{N="Franklin";       X=17; Y=51; S=1; VP=$false; O="Confederacy"}
 )
 
+# Convert town positions from frame miles to even-q hexes.
+foreach ($t in $towns) {
+    $townHex = Get-HexFromXY $t.X $t.Y 1.0   # (not $h: PowerShell names are case-insensitive, $h is $H)
+    $t.X = $townHex[0]; $t.Y = $townHex[1]
+}
+
 # ===== HELPER FUNCTIONS =====
 
 function Interp-Ridge {
-    param([int[]]$Ridge, [int]$Y)
+    param([int[]]$Ridge, [double]$Y)   # $Ridge in frame miles; returns ridge x (miles) at y = $Y miles
     $count = $Ridge.Count / 2
     if ($Y -lt $Ridge[1] -or $Y -gt $Ridge[($count-1)*2+1]) { return $null }
     for ($i = 0; $i -lt $count - 1; $i++) {
@@ -80,35 +95,29 @@ function Interp-Ridge {
         if ($Y -ge $y1 -and $Y -le $y2) {
             if ($y2 -eq $y1) { return $x1 }
             $t = ($Y - $y1) / ($y2 - $y1)
-            return [int]($x1 + $t * ($x2 - $x1))
+            return ($x1 + $t * ($x2 - $x1))
         }
     }
     return $null
 }
 
 function Trace-Path {
+    # Waypoints in frame miles -> each snapped to its even-q hex -> joined by chains of
+    # adjacent hexes (Get-HexLine = hex_utils.hex_line). Returns row*W+col indices.
     param([int[]]$Waypoints)
     $hexes = New-Object System.Collections.Generic.HashSet[int]
     $count = $Waypoints.Count / 2
     for ($i = 0; $i -lt $count - 1; $i++) {
-        $x1 = $Waypoints[$i*2]; $y1 = $Waypoints[$i*2+1]
-        $x2 = $Waypoints[($i+1)*2]; $y2 = $Waypoints[($i+1)*2+1]
-        $dx = [Math]::Abs($x2 - $x1); $dy = [Math]::Abs($y2 - $y1)
-        $sx = if ($x1 -lt $x2) { 1 } else { -1 }
-        $sy = if ($y1 -lt $y2) { 1 } else { -1 }
-        $err = $dx - $dy
-        $cx = $x1; $cy = $y1
-        for ($j = 0; $j -lt 500; $j++) {
+        $a = Get-HexFromXY $Waypoints[$i*2] $Waypoints[$i*2+1] 1.0
+        $b = Get-HexFromXY $Waypoints[($i+1)*2] $Waypoints[($i+1)*2+1] 1.0
+        foreach ($cell in (Get-HexLine $a[0] $a[1] $b[0] $b[1])) {
+            $cx = $cell[0]; $cy = $cell[1]
             if ($cx -ge 0 -and $cx -lt $W -and $cy -ge 0 -and $cy -lt $H) {
                 $hexes.Add($cy * $W + $cx) | Out-Null
             }
-            if ($cx -eq $x2 -and $cy -eq $y2) { break }
-            $e2 = 2 * $err
-            if ($e2 -gt -$dy) { $err -= $dy; $cx += $sx }
-            if ($e2 -lt $dx) { $err += $dx; $cy += $sy }
         }
     }
-    return $hexes
+    return ,$hexes
 }
 
 function Make-Tile {
@@ -154,14 +163,16 @@ foreach ($t in $towns) { $townMap["$($t.Y)_$($t.X)"] = $t }
 $terrain = New-Object int[] ($W * $H)
 
 for ($y = 0; $y -lt $H; $y++) {
-    $brx = Interp-Ridge $blueRidge $y
-    $nmx = Interp-Ridge $northMtn $y
-    $alx = Interp-Ridge $allegheny $y
-    $msx = Interp-Ridge $massanutten $y
-
     for ($x = 0; $x -lt $W; $x++) {
         $idx = $y * $W + $x
         $key = "${y}_${x}"
+        # Terrain zones are judged in frame miles at this hex's true centre (even columns +0.5 mi north).
+        $ctr = Get-HexCenter $x $y 1.0
+        $xm = $ctr[0]; $ym = $ctr[1]
+        $brx = Interp-Ridge $blueRidge $ym
+        $nmx = Interp-Ridge $northMtn $ym
+        $alx = Interp-Ridge $allegheny $ym
+        $msx = Interp-Ridge $massanutten $ym
 
         # Priority: town > river > road > terrain zone
         if ($townMap.ContainsKey($key)) { $terrain[$idx] = 7; continue }
@@ -170,21 +181,21 @@ for ($y = 0; $y -lt $H; $y++) {
 
         # Allegheny check
         if ($alx -ne $null) {
-            $d = $x - $alx
+            $d = $xm - $alx
             if ($d -lt -4) { $terrain[$idx] = 0; continue }
             if ($d -lt 3) { $terrain[$idx] = 1; continue }
-        } elseif ($x -lt 6) { $terrain[$idx] = 0; continue }
+        } elseif ($xm -lt 6) { $terrain[$idx] = 0; continue }
 
         # Blue Ridge check
         if ($brx -ne $null) {
-            $d = $x - $brx
+            $d = $xm - $brx
             if ($d -gt 5) { $terrain[$idx] = 0; continue }
             if ($d -gt -2) { $terrain[$idx] = 1; continue }
-        } elseif ($x -gt ($W - 6)) { $terrain[$idx] = 0; continue }
+        } elseif ($xm -gt ($Wmi - 6)) { $terrain[$idx] = 0; continue }
 
         # Massanutten check
         if ($msx -ne $null) {
-            $d = [Math]::Abs($x - $msx)
+            $d = [Math]::Abs($xm - $msx)
             if ($d -lt 3) { $terrain[$idx] = 1; continue }
         }
 
@@ -192,30 +203,30 @@ for ($y = 0; $y -lt $H; $y++) {
         $isValley = $false
         if ($msx -ne $null) {
             # Two forks
-            if ($x -lt $msx -and $alx -ne $null -and $x -gt ($alx + 4)) {
+            if ($xm -lt $msx -and $alx -ne $null -and $xm -gt ($alx + 4)) {
                 # West fork (Valley Pike side)
-                if ($nmx -ne $null -and $x -gt ($nmx + 2)) { $isValley = $true }
+                if ($nmx -ne $null -and $xm -gt ($nmx + 2)) { $isValley = $true }
                 elseif ($nmx -eq $null) { $isValley = $true }
             }
-            if ($x -gt $msx -and $brx -ne $null -and $x -lt ($brx - 2)) {
+            if ($xm -gt $msx -and $brx -ne $null -and $xm -lt ($brx - 2)) {
                 # East fork (Luray/Page Valley)
                 $isValley = $true
             }
         } else {
             # No Massanutten - open valley
             $westEdge = if ($nmx -ne $null) { $nmx + 2 } elseif ($alx -ne $null) { $alx + 4 } else { 10 }
-            $eastEdge = if ($brx -ne $null) { $brx - 2 } else { $W - 10 }
-            if ($x -gt $westEdge -and $x -lt $eastEdge) { $isValley = $true }
+            $eastEdge = if ($brx -ne $null) { $brx - 2 } else { $Wmi - 10 }
+            if ($xm -gt $westEdge -and $xm -lt $eastEdge) { $isValley = $true }
         }
 
         if ($isValley) { $terrain[$idx] = 4; continue }
 
         # Hill near mountain ridges
         $isHill = $false
-        if ($brx -ne $null -and [Math]::Abs($x - $brx) -lt 5) { $isHill = $true }
-        if ($nmx -ne $null -and [Math]::Abs($x - $nmx) -lt 4) { $isHill = $true }
-        if ($msx -ne $null -and [Math]::Abs($x - $msx) -lt 5) { $isHill = $true }
-        if ($alx -ne $null -and ($x - $alx) -ge 3 -and ($x - $alx) -lt 7) { $isHill = $true }
+        if ($brx -ne $null -and [Math]::Abs($xm - $brx) -lt 5) { $isHill = $true }
+        if ($nmx -ne $null -and [Math]::Abs($xm - $nmx) -lt 4) { $isHill = $true }
+        if ($msx -ne $null -and [Math]::Abs($xm - $msx) -lt 5) { $isHill = $true }
+        if ($alx -ne $null -and ($xm - $alx) -ge 3 -and ($xm - $alx) -lt 7) { $isHill = $true }
 
         if ($isHill) { $terrain[$idx] = 2; continue }
 

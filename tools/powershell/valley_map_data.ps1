@@ -12,12 +12,17 @@ $northBound = 39.71   # North of Martinsburg
 $westBound  = 79.65   # Into Alleghenies (west of McDowell)
 $eastBound  = 77.70   # East of Harpers Ferry
 
-$mapHeight = [Math]::Ceiling(($northBound - $southBound) * $miPerDegLat)  # ~139 (was ~125 with southBound 37.90)
-$mapWidth  = [Math]::Ceiling(($westBound - $eastBound) * $miPerDegLon)    # ~105
+# Native even-q grid (HexEvenQ.ps1 = src/hex_utils.py): rows are 1 mile apart N-S,
+# columns 4.42/5.1 = 0.8667 mile apart E-W; even columns sit half a row north.
+. (Join-Path $PSScriptRoot 'HexEvenQ.ps1')
+$heightMi  = ($northBound - $southBound) * $miPerDegLat                      # ~139 mi
+$widthMi   = ($westBound - $eastBound) * $miPerDegLon                        # ~105 mi
+$mapHeight = [Math]::Ceiling($heightMi) + 1                                  # rows
+$mapWidth  = [Math]::Ceiling($widthMi / $script:HexColPitchRatio) + 1        # columns (~122)
 
 Write-Output "=== VALLEY CAMPAIGN MAP DIMENSIONS ==="
 Write-Output "Size: $mapWidth x $mapHeight hexes ($($mapWidth * $mapHeight) total)"
-Write-Output "Scale: 1 mile per hex"
+Write-Output "Scale: 1 mile per hex (native even-q, columns 0.8667 mi apart)"
 Write-Output "Geographic bounds:"
 Write-Output "  South: $southBound N  North: $northBound N"
 Write-Output "  West:  $westBound W   East:  $eastBound W"
@@ -26,8 +31,10 @@ Write-Output "  Miles per degree lon: $([Math]::Round($miPerDegLon, 1))"
 Write-Output ""
 
 # --- Coordinate conversion functions ---
-function Get-HexX($lonW) { [Math]::Round(($westBound - $lonW) * $miPerDegLon) }
-function Get-HexY($latN) { [Math]::Round(($latN - $southBound) * $miPerDegLat) }
+# lat/lon -> miles east/north of the SW corner -> nearest even-q hex (game PosX, PosY).
+function Get-HexLatLon($latN, $lonW) {
+    Get-HexFromXY (($westBound - $lonW) * $miPerDegLon) (($latN - $southBound) * $miPerDegLat) 1.0
+}
 
 # --- KEY TOWNS ---
 $towns = @(
@@ -74,8 +81,8 @@ Write-Output "=== KEY LOCATIONS ==="
 Write-Output ("{0,-20} {1,4} {2,4}  {3}" -f "Location", "HexX", "HexY", "Type")
 Write-Output ("-" * 50)
 foreach ($t in $towns) {
-    $hx = Get-HexX $t.Lon
-    $hy = Get-HexY $t.Lat
+    $townHex = Get-HexLatLon $t.Lat $t.Lon
+    $hx = $townHex[0]; $hy = $townHex[1]
     $t.HexX = $hx
     $t.HexY = $hy
     if ($t.Primary) {
@@ -152,10 +159,10 @@ $allegheny = @(
 )
 $alleghenyWidth = 6
 
-Write-Output "Blue Ridge: $(($blueRidge | ForEach-Object { "($( Get-HexX $_.Lon),$( Get-HexY $_.Lat))" }) -join ' -> ')"
-Write-Output "Massanutten: $(($massanutten | ForEach-Object { "($( Get-HexX $_.Lon),$( Get-HexY $_.Lat))" }) -join ' -> ')"
-Write-Output "North Mountain: $(($northMountain | ForEach-Object { "($( Get-HexX $_.Lon),$( Get-HexY $_.Lat))" }) -join ' -> ')"
-Write-Output "Allegheny: $(($allegheny | ForEach-Object { "($( Get-HexX $_.Lon),$( Get-HexY $_.Lat))" }) -join ' -> ')"
+Write-Output "Blue Ridge: $(($blueRidge | ForEach-Object { "($((Get-HexLatLon $_.Lat $_.Lon) -join ','))" }) -join ' -> ')"
+Write-Output "Massanutten: $(($massanutten | ForEach-Object { "($((Get-HexLatLon $_.Lat $_.Lon) -join ','))" }) -join ' -> ')"
+Write-Output "North Mountain: $(($northMountain | ForEach-Object { "($((Get-HexLatLon $_.Lat $_.Lon) -join ','))" }) -join ' -> ')"
+Write-Output "Allegheny: $(($allegheny | ForEach-Object { "($((Get-HexLatLon $_.Lat $_.Lon) -join ','))" }) -join ' -> ')"
 
 Write-Output ""
 Write-Output "=== RIVER COURSES ==="
@@ -229,10 +236,10 @@ $southRiver = @(
     @{ Lat=38.30; Lon=78.80 }  # Port Republic
 )
 
-Write-Output "South Fork: $(($southFork | ForEach-Object { "($( Get-HexX $_.Lon),$( Get-HexY $_.Lat))" }) -join ' -> ')"
-Write-Output "North Fork: $(($northFork | ForEach-Object { "($( Get-HexX $_.Lon),$( Get-HexY $_.Lat))" }) -join ' -> ')"
-Write-Output "Main Shenandoah: $(($mainShenandoah | ForEach-Object { "($( Get-HexX $_.Lon),$( Get-HexY $_.Lat))" }) -join ' -> ')"
-Write-Output "Potomac: $(($potomac | ForEach-Object { "($( Get-HexX $_.Lon),$( Get-HexY $_.Lat))" }) -join ' -> ')"
+Write-Output "South Fork: $(($southFork | ForEach-Object { "($((Get-HexLatLon $_.Lat $_.Lon) -join ','))" }) -join ' -> ')"
+Write-Output "North Fork: $(($northFork | ForEach-Object { "($((Get-HexLatLon $_.Lat $_.Lon) -join ','))" }) -join ' -> ')"
+Write-Output "Main Shenandoah: $(($mainShenandoah | ForEach-Object { "($((Get-HexLatLon $_.Lat $_.Lon) -join ','))" }) -join ' -> ')"
+Write-Output "Potomac: $(($potomac | ForEach-Object { "($((Get-HexLatLon $_.Lat $_.Lon) -join ','))" }) -join ' -> ')"
 
 Write-Output ""
 Write-Output "=== VALLEY PIKE (main road) ==="
@@ -261,7 +268,7 @@ $valleyPike = @(
     @{ Lat=39.46; Lon=77.96 }  # Martinsburg
 )
 
-Write-Output "Valley Pike: $(($valleyPike | ForEach-Object { "($( Get-HexX $_.Lon),$( Get-HexY $_.Lat))" }) -join ' -> ')"
+Write-Output "Valley Pike: $(($valleyPike | ForEach-Object { "($((Get-HexLatLon $_.Lat $_.Lon) -join ','))" }) -join ' -> ')"
 
 Write-Output ""
 Write-Output "=== SUMMARY ==="

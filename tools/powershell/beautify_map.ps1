@@ -40,30 +40,21 @@ $tiles = $map.TilesTable
 Write-Output "Map loaded: $W x $mapH ($($W * $mapH) hexes)"
 
 # ===== HEX NEIGHBOR SYSTEM =====
-# Flat-top hex grid, even-q offset
-# Edge numbering: 0=N, 1=NE, 2=SE, 3=S, 4=SW, 5=NW
-# Neighbor offsets stored as flat arrays [dx0,dy0, dx1,dy1, ..., dx5,dy5]
-
-# Even column (x%2==0):
-$evenOff = @( 0,-1,  1, 0,  1, 1,  0, 1, -1, 1, -1, 0)
-# Odd column (x%2==1):
-$oddOff  = @( 0,-1,  1,-1,  1, 0,  0, 1, -1, 0, -1,-1)
+# Hex of Steel native flat-top EVEN-Q (MapGO / Utils.GetAllTilesNeighbours), shared with
+# src/hex_utils.py via HexEvenQ.ps1: even columns half a row north, rows increase north.
+# Edge numbering: 0=N, 1=NE, 2=SE, 3=S, 4=SW, 5=NW (geographic, north up).
+# (Before 2026-10-17 this script used N=(0,-1) with odd columns north, which is not the game's layout.)
+. (Join-Path $PSScriptRoot 'HexEvenQ.ps1')
 
 function Get-Neighbor {
     param([int]$cx, [int]$cy, [int]$dir)
-    if ($cx % 2 -eq 0) {
-        $nx = $cx + $evenOff[$dir * 2]
-        $ny = $cy + $evenOff[$dir * 2 + 1]
-    } else {
-        $nx = $cx + $oddOff[$dir * 2]
-        $ny = $cy + $oddOff[$dir * 2 + 1]
-    }
-    return @($nx, $ny)
+    return (Get-HexNeighbor $cx $cy $dir)
 }
 
 # ===== DIRECTION LOOKUP TABLE =====
 # Maps sorted edge-pair string to River/Road variant number
-# Derived from visual analysis of tile PNG graphics
+# Derived from visual analysis of tile PNG graphics (edges are geographic N..NW; re-check in game,
+# because the old neighbour table was north/south mirrored relative to the game)
 
 $dirLookup = @{}
 # Straight through (opposite edges, 180°)
