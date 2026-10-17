@@ -12,7 +12,7 @@ function Say([string]$m, [string]$c = 'Gray') { Write-Host $m -ForegroundColor $
 function Install-Kernstown {
     $Repo    = 'garrettmbf-sudo/CivilWar1'
     $Branch  = 'kernstown-map'
-    $Tag     = 'kernstown-v0.4.0'
+    $Tag     = 'kernstown-v0.4.1'
     $ModName = 'First Kernstown 1862'
     $NeedGB  = 14
     $DryRun  = ($env:KERNSTOWN_DRYRUN -eq '1')
