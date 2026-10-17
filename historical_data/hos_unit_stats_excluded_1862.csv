@@ -1,0 +1,6 @@
+unit_id,excluded_reason
+ART_PLEASANTS,UNRATED: no battery-specific evidence in unit_ratings_1862.csv
+ART_US_ADDHOW,UNRATED: organization UNCONFIRMED (Blenker additional howitzers)
+ART_US_PAE,UNRATED: no battery-specific evidence in unit_ratings_1862.csv
+ART_US_WVB,UNRATED: no battery-specific evidence in unit_ratings_1862.csv
+REG_OH13C,UNRATED: likely spurious - no 13th Ohio Cavalry in OR 12/1 full-text search
