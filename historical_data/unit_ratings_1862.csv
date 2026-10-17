@@ -1,0 +1,54 @@
+rating_id,unit_id,as_of_date,experience,cohesion_morale,training,basis,confidence,sources
+UR001,FRM_CS_STONEWALL,1862-03-23,4,3,4,"1861 Manassas/Romney veterans (secondary); Kernstown: fought well, then fell back on Garnett's order",probable,SRC009 p.382|SRC051 p. UNVERIFIED
+UR002,FRM_CS_STONEWALL,1862-05-08,4,3,4,"April 1862 reorganization: Conscription Act held 12-month men, company officers re-elected - turnover of officers; in reserve at McDowell",provisional,SRC055 p. UNVERIFIED|SRC051 p. UNVERIFIED|SRC054 p. UNVERIFIED
+UR003,FRM_CS_STONEWALL,1862-05-25,4,4,4,Winder's tighter discipline; Winchester success,probable,SRC052 p. UNVERIFIED|SRC003 p. UNVERIFIED
+UR004,FRM_CS_STONEWALL,1862-06-08,5,4,4,"Port Republic: first charge repulsed in disorder, rallied (5th Va) and pursued",verified,SRC009 p.714-715
+UR005,FRM_CS_BURKS,1862-03-23,3,3,3,21st Va praised at Kernstown; 48th rear guard; 1st Va Bn separated in advance,verified,SRC009 p.381-382
+UR006,FRM_CS_BURKS,1862-05-08,3,3,3,Reorganization/elections; with Jackson at McDowell,provisional,SRC055 p. UNVERIFIED|SRC051 p. UNVERIFIED
+UR007,FRM_CS_BURKS,1862-05-25,3,3,3,Winchester; Patton in command from May 25,provisional,SRC009 p.764|SRC003 p. UNVERIFIED
+UR008,FRM_CS_BURKS,1862-06-08,4,3,3,"Reinforced Ewell at Cross Keys, rear guard June 9",verified,SRC009 p.714
+UR009,FRM_CS_FULKERSON,1862-03-23,3,4,3,23rd/37th Va held the stone wall and drove Union troops twice,verified,SRC009 p.381-382
+UR010,FRM_CS_FULKERSON,1862-05-08,4,3,3,Heavily engaged at McDowell under Taliaferro; elections turnover,probable,SRC003 p. UNVERIFIED|SRC055 p. UNVERIFIED
+UR011,FRM_CS_FULKERSON,1862-05-25,4,3,3,Winchester,provisional,SRC003 p. UNVERIFIED
+UR012,FRM_CS_FULKERSON,1862-06-08,4,4,3,Charged and cleared Port Republic bridge June 8,verified,SRC009 p.713
+UR013,FRM_CS_ASHBY,1862-03-23,4,2,1,Bold screening but faulty strength report; no regimental organization,verified,SRC009 p.381|SRC010 p.878-880
+UR014,FRM_CS_ASHBY,1862-05-08,4,2,1,"21 companies, no field organization; officers resigned rather than drill",verified,SRC010 p.878-880
+UR015,FRM_CS_ASHBY,1862-05-25,4,2,1,Dispersed to plunder Union trains (secondary),probable,SRC003 p. UNVERIFIED
+UR016,FRM_CS_ASHBY_SUC,1862-06-08,4,2,2,Ashby killed June 6; pickets fled 'in disgraceful disorder' June 8; Munford's pursuit June 9,verified,SRC009 p.713|SRC009 p.715-716|SRC009 p.817
+UR017,FRM_CS_CONNER,1862-05-08,3,3,3,Army of the Northwest; 1861 western Va service (secondary),provisional,SRC003 p. UNVERIFIED
+UR018,FRM_CS_SCOTTBRA,1862-05-08,3,3,3,Army of the Northwest; 1861 western Va service (secondary),provisional,SRC003 p. UNVERIFIED
+UR019,FRM_CS_STEUART,1862-05-25,3,2,3,Includes 1st Md (CS) whose men mutinied mid-May over enlistment expiry (secondary),probable,SRC003 p. UNVERIFIED|SRC051 p. UNVERIFIED
+UR020,FRM_CS_STEUART,1862-06-08,3,3,3,Ewell's left at Cross Keys; Scott's flank attack at Port Republic,verified,SRC009 p.713-715
+UR021,FRM_CS_ELZEY,1862-05-25,4,4,3,First Manassas brigade (secondary),provisional,SRC003 p. UNVERIFIED
+UR022,FRM_CS_ELZEY,1862-06-08,4,4,3,13th/25th Va supported Trimble's advance at Cross Keys,verified,SRC009 p.713
+UR023,FRM_CS_TRIMBLE,1862-05-25,3,4,3,Front Royal/Winchester,provisional,SRC003 p. UNVERIFIED
+UR024,FRM_CS_TRIMBLE,1862-06-08,4,4,4,Held fire then repulsed Stahel at Cross Keys; 15th Ala picket resisted gallantly,verified,SRC009 p.713
+UR025,FRM_CS_TAYLOR,1862-05-25,4,4,4,Front Royal spearhead,probable,SRC003 p. UNVERIFIED
+UR026,FRM_CS_TAYLOR,1862-06-08,4,4,4,Took and held the Coaling battery through three reversals,verified,SRC009 p.715
+UR027,FRM_CS_MARYLAND_DET,1862-05-23,3,3,4,Mutiny mid-May over enlistment terms; led at Front Royal (secondary),probable,SRC003 p. UNVERIFIED
+UR028,FRM_CS_MUNFORD,1862-05-25,3,3,2,"Virginia cavalry, little drill",provisional,SRC007
+UR029,FRM_CS_MUNFORD,1862-06-08,3,3,2,Pursuit after Port Republic,verified,SRC009 p.715-716
+UR030,FRM_CS_FLOURNOY,1862-05-25,3,4,2,Cedarville charges vs Kenly (secondary),probable,SRC003 p. UNVERIFIED
+UR031,FRM_CS_FLOURNOY,1862-06-08,3,3,2,Cavalry with Valley army,provisional,SRC007
+UR032,FRM_US_KIMBALL1,1862-03-23,3,4,3,Western Virginia service 1861 (secondary); won the decisive attack at Kernstown,probable,SRC009 p.346-347|SRC003 p. UNVERIFIED
+UR033,FRM_US_SULLIVAN2,1862-03-23,3,3,3,Left of the Kernstown line,provisional,SRC009 p.346-347
+UR034,FRM_US_TYLER3,1862-03-23,3,4,3,Attacked the stone wall; driven back then joined final assault,verified,SRC009 p.376-377|SRC009 p.381-382
+UR035,FRM_US_CAV_BRODHEAD,1862-03-23,2,3,2,Mixed cavalry at Kernstown,provisional,SRC009 p.354-355
+UR036,FRM_US_CARROLL4,1862-06-08,3,3,3,Port Republic raid then driven out; footsore and strung out,verified,SRC009 p.684|SRC009 p.695-696
+UR037,FRM_US_KIMBALLR,1862-06-08,4,4,3,23-mile march and Front Royal recapture May 30; not engaged June 8-9,verified,SRC009 p.694-695
+UR038,FRM_US_FERRY2,1862-06-08,3,3,3,Not engaged June 8-9,provisional,SRC007
+UR039,FRM_US_TYLERR,1862-06-08,4,4,3,Held the Lewis-Coaling line vs Winder; overwhelmed on the left,verified,SRC009 p.693-698
+UR040,FRM_US_DONNELLY,1862-05-25,3,3,3,Fought through Middletown in good order,verified,SRC009 p.547
+UR041,FRM_US_GORDON,1862-05-25,3,4,4,2nd Mass/3rd Wis rear guard; formed squares,verified,SRC009 p.548-550
+UR042,FRM_US_HATCH,1862-05-25,2,2,2,"Cut off, fought through on parallel roads",verified,SRC009 p.547-548
+UR043,FRM_US_KENLY,1862-05-23,2,4,3,1st Md (US) stood at Front Royal until overrun,verified,SRC009 p.555-558
+UR044,FRM_US_MILROY_MCD,1862-05-08,3,4,3,Western Va 1861 regiments; fought 'with coolness and order',verified,SRC009 p.462-464
+UR045,FRM_US_SCHENCK_MCD,1862-05-08,3,4,3,Ohio regiments at McDowell,verified,SRC009 p.462-464
+UR046,FRM_US_MILROY_CK,1862-06-08,3,3,3,Privation on march (near-mutiny instances),verified,SRC009 p.11
+UR047,FRM_US_SCHENCK_CK,1862-06-08,3,3,3,Privation on march,verified,SRC009 p.11
+UR048,FRM_US_STAHEL,1862-06-08,2,2,3,Repulsed at the crest by Trimble; Blenker logistics,verified,SRC009 p.713|SRC009 p.5-7
+UR049,FRM_US_KOLTES,1862-06-08,2,2,3,Blenker division privations,provisional,SRC009 p.5-7
+UR050,FRM_US_BOHLEN,1862-06-08,2,2,3,Blenker division privations,provisional,SRC009 p.5-7
+UR051,FRM_US_CLUSERET,1862-06-08,2,3,2,Advance guard of pursuit,provisional,SRC009 p.14-18
+UR052,FRM_US_BAYARD,1862-06-08,3,3,3,Harrisonburg June 6 fight,probable,SRC009 p.817
+UR053,FRM_US_FRMC_CAV,1862-06-08,2,2,2,"Starved, broken-down horses",verified,SRC009 p.7-8
