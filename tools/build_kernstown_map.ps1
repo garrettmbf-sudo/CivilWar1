@@ -131,9 +131,47 @@ $map.TilesTable = $tilesTable
 $map.ScenarioName = "First Kernstown $([char]0x2014) 23 March 1862"   # `u{...} is PS7-only; PS 5.1 printed a literal "u2014"
 $map.FileName = "First Kernstown 1862"
 Set-IfProp $map "ScenarioDescription" "Jackson attacks Kimball's division south of Winchester. CSA ~3,800 vs USA ~8,500. Sandy Ridge stone wall hexes give +35 defence."
+$map.Date = [DateTime]::new(1862, 3, 23)
+Set-IfProp $map "NumberOfDaysThatGoesByPerTurn" 1
+$map.NumberOfTurnsToWin = 20
+Set-IfProp $map "IsCampaign" $false
+Set-IfProp $map "turnCount" 0
+Set-IfProp $map "IsWinter" $false
+Set-IfProp $map "CircularMap" $false
+Set-IfProp $map "AllowSnowInWinter" $false
+Set-IfProp $map "DisableWeather" $false
 foreach ($n in @("NextMap","NextMap2","NextMapDefeat","NextMap2Defeat")) {
     if ($map.PSObject.Properties[$n]) { $map.$n = "" }
 }
+
+# Configure players (required for scenario to appear in Play > Custom scenario)
+$players = $gameData.listOfPlayers
+if ($null -ne $players) {
+    $players.Clear()
+    $csaPlayer = New-Object Player("Confederacy")
+    $csaPlayer.Country = "Confederacy"
+    Set-IfProp $csaPlayer "Faction" "Confederacy"
+    Set-IfProp $csaPlayer "MoneyAmount" 0
+    Set-IfProp $csaPlayer "ScenarioDescription" "Command Jackson's small Valley force against Kimball's division on Sandy Ridge."
+    $players.Add($csaPlayer)
+    $usaPlayer = New-Object Player("Union")
+    $usaPlayer.Country = "Union"
+    Set-IfProp $usaPlayer "Faction" "Union"
+    Set-IfProp $usaPlayer "MoneyAmount" 0
+    Set-IfProp $usaPlayer "ScenarioDescription" "Defend the Valley Pike approach to Winchester with Kimball's division."
+    $players.Add($usaPlayer)
+    Write-Output "Players: Confederacy, Union"
+}
+
+# Game settings
+$gs = $gameData.gameSettings
+if ($null -ne $gs) {
+    Set-IfProp $gs "fogOfWarON" $true
+    Set-IfProp $gs "moraleON" $true
+    Set-IfProp $gs "weatherON" $false
+    Set-IfProp $gs "overrunON" $true
+}
+
 # Clear units/events so template OOB does not pollute
 foreach ($bag in @($map, $gameData)) {
     foreach ($listName in @("ListOfUnits","Events","EventIDs","listOfUnitsThatNeedToBeKilled","listOfVPThatNeedsToBeHeld","PurchasedUnits")) {
