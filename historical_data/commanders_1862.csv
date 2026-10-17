@@ -20,7 +20,7 @@ CMD_BTJOHNSON,"Bradley T. Johnson","Colonel",CSA,mdl_CSA_BTJohnson.png,MISSING,1
 CMD_ASHBY,"Turner Ashby","Colonel",CSA,mdl_CSA_TAshby.png,PRESENT,1862-03-22,1862-06-06,"Valley cavalry command (7th Virginia Cavalry); killed June 6 near Harrisonburg",SRC007
 CMD_MUNFORD,"Thomas T. Munford","Colonel",CSA,mdl_CSA_TMunford.png,PRESENT,1862-05-20,1862-06-09,"2nd Virginia Cavalry attached; senior mounted commander after Ashby's death",SRC007
 CMD_FLOURNOY,"Thomas S. Flournoy","Colonel",CSA,mdl_CSA_TSFlournoy.png,MISSING,1862-05-20,1862-06-09,"6th Virginia Cavalry attached mounted troops",SRC007
-CMD_CRUTCHFIELD,"Stapleton Crutchfield","Colonel",CSA,mdl_CSA_SCrutchfield.png,MISSING,1862-03-23,1862-06-09,"Chief of artillery, Valley District",SRC007
+CMD_CRUTCHFIELD,"Stapleton Crutchfield","Colonel",CSA,mdl_CSA_SCrutchfield.png,MISSING,1862-05-08,1862-06-09,"Chief of artillery, Valley District; attested only from 8 May (OR 12/1 p.470), 03-23 claim dropped",SRC009 p.470|SRC007
 CMD_BANKS,"Nathaniel P. Banks","Major General",USA,mdl_USA_NPBanks.png,PRESENT,1862-03-22,1862-06-09,"Department of the Shenandoah",SRC007
 CMD_SHIELDS,"James Shields","Brigadier General",USA,mdl_USA_JShields.png,PRESENT,1862-03-22,1862-06-09,"Division commander; wounded Mar 22 (Kernstown); transferred from Banks to McDowell's Department of the Rappahannock spring 1862; absent from Port Republic battlefield",SRC007
 CMD_KIMBALL,"Nathan Kimball","Brigadier General",USA,mdl_USA_NKimball.png,PRESENT,1862-03-22,1862-06-09,"Exercises battlefield command of Shields' division Mar 23 as colonel; 1st Brigade (Shields' div) thereafter",SRC007

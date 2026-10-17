@@ -390,6 +390,39 @@ def validate(oob: OOB, repo_root: str | None = None) -> list[str]:
         if not c["commander_id"].strip() and "vacan" not in (c.get("sources") or "").lower():
             e(f"command {c['brigade_id']} {c['valid_from']}: empty commander without documented vacancy")
 
+
+    # 16 historical ratings tables (history/veterancy-command-ratings): 1-5 scale, known ids, sources
+    for fname, idcol, cols in (("unit_ratings_1862.csv", "unit_id", ("experience", "cohesion_morale", "training")),
+                               ("command_ratings_1862.csv", "commander_id", ("initiative", "reliability", "tactical_skill", "administration"))):
+        try:
+            rrows = list(_rows(fname))
+        except FileNotFoundError:
+            continue
+        known = set(oob.commanders) if idcol == "commander_id" else set(oob.formations) | set(oob.regiments) | set(oob.artillery)
+        for r in rrows:
+            tag = f"{fname} {r['rating_id']}"
+            if r[idcol] not in known:
+                e(f"{tag}: unknown {idcol} {r[idcol]}")
+            for c in cols:
+                if r[c] not in ("1", "2", "3", "4", "5"):
+                    e(f"{tag}: {c}={r[c]!r} not 1-5")
+            if r["confidence"] not in ("verified", "probable", "provisional"):
+                e(f"{tag}: bad confidence {r['confidence']}")
+            if not re.match(r"1862-0[3-6]-\d\d$", r["as_of_date"]):
+                e(f"{tag}: as_of_date outside campaign window")
+            cited = r.get("sources", "")
+            ids = re.findall(r"SRC\d{3}", cited)
+            if not ids:
+                e(f"{tag}: no SRCxxx")
+            for sid in ids:
+                if sid not in src_ids:
+                    e(f"{tag}: unknown source {sid}")
+            for tok in cited.split("|"):
+                if not re.match(r"SRC\d{3}( p\.(\d+(-\d+)?| ?UNVERIFIED))?( \(.*\))?$", tok.strip()):
+                    e(f"{tag}: malformed source token {tok!r}")
+            if r["confidence"] == "verified" and not re.search(r"SRC\d{3} p\.\d", cited):
+                e(f"{tag}: verified rating needs at least one page-cited source")
+
     errors.extend(arrival_schedule_errors(oob))
     return errors
 
