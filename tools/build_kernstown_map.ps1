@@ -171,15 +171,12 @@ if (-not $NoUnits -and (Test-Path $UnitsJson)) {
         }
     }
     Write-Output ("Unit templates found in source: " + (($templates.Keys | Sort-Object) -join ", "))
-    # TEMPORARY (until Quartermaster re-issues kernstown_units.json in game coordinates, see
-    # docs/kernstown_unit_coord_change.md): a units file without "grid_convention": "game-native" still uses the
-    # legacy v0.4.1 grid, so even-column units move down one row (same ground hex). Remove once the file is marked.
-    $legacyUnits = -not ($unitsSpec.PSObject.Properties["grid_convention"] -and [string]$unitsSpec.grid_convention -eq "game-native")
-    if ($legacyUnits) { Write-Warning "kernstown_units.json is in the legacy v0.4.1 grid - converting unit hexes (even columns: row-1)" }
+    if (-not ($unitsSpec.PSObject.Properties["grid_convention"] -and [string]$unitsSpec.grid_convention -eq "game-native")) {
+        throw "kernstown_units.json must have `grid_convention: game-native` (see docs/kernstown_unit_coord_change.md)"
+    }
     $nU = 0
     foreach ($u0 in $unitsSpec.units) {
         $u = $u0 | Select-Object *
-        if ($legacyUnits -and ([int]$u.col % 2 -eq 0)) { $u.row = [int]$u.row - 1 }
         $key = "$($u.template_name)|$($u.country)"
         if (-not $templates.ContainsKey($key)) { Write-Warning "No template unit '$key' in $UnitSourceMap - skipped $($u.custom_name)"; continue }
         if ([int]$u.col -lt 0 -or [int]$u.col -ge $GridW -or [int]$u.row -lt 0 -or [int]$u.row -ge $GridH) {

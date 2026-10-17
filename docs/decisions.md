@@ -34,4 +34,4 @@ this map is a bug.
 - The map is now 62 x 54. The legacy even row 0 and odd row 54 were dropped: 62 hexes, all open ground, no units.
 - See `scripts/migrate_legacy_oddq_to_game.py` and `docs/kernstown_unit_coord_change.md`.
 - Validators place tiles exactly as `MapGO.cs:452-459` does: `tools/validate/*`, `docs/EDGE_VALIDATION.md`.
-- ~~The builder had a temporary shim converting legacy unit coords.~~ `kernstown_units.json` was re-issued in game-native coordinates with `"grid_convention": "game-native"` (2026-10-17). The shim in `build_kernstown_map.ps1` is now a no-op and can be removed in cleanup.
+- ~~The builder had a temporary shim converting legacy unit coords.~~ `kernstown_units.json` was re-issued in game-native coordinates with `"grid_convention": "game-native"` (2026-10-17). The shim was replaced with a hard guard that throws if the marker is absent (2026-10-17).
