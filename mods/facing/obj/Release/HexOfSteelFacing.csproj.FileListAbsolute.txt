@@ -1,7 +1,0 @@
-/workspace/CivilWar1/mods/facing/output/HexOfSteelFacing.dll
-/workspace/CivilWar1/mods/facing/obj/Release/HexOfSteelFacing.csproj.AssemblyReference.cache
-/workspace/CivilWar1/mods/facing/obj/Release/HexOfSteelFacing.GeneratedMSBuildEditorConfig.editorconfig
-/workspace/CivilWar1/mods/facing/obj/Release/HexOfSteelFacing.AssemblyInfoInputs.cache
-/workspace/CivilWar1/mods/facing/obj/Release/HexOfSteelFacing.AssemblyInfo.cs
-/workspace/CivilWar1/mods/facing/obj/Release/HexOfSteelFacing.csproj.CoreCompileInputs.cache
-/workspace/CivilWar1/mods/facing/obj/Release/HexOfSteelFacing.dll
