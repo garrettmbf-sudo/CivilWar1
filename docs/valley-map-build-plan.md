@@ -1,6 +1,6 @@
 # Valley campaign map: build plan (scale, shape, rendering)
 
-**Status:** PLAN + PROTOTYPE. No game tile or .sav has been made and nothing has been tested in Hex of Steel. The grid is flat-top odd-q from `src/hex_utils.py` (in-game corner test still pending).
+**Status:** PLAN + PROTOTYPE. No game tile or .sav has been made and nothing has been tested in Hex of Steel. The grid is Hex of Steel's native flat-top even-q from `src/hex_utils.py` (MapGO pitch 4.42:5.1; decided 2026-10-17, see `docs/hex-convention.md`).
 
 **Kernstown stays as it is:** the 250-yd standalone test scenario on `kernstown-map`. It is not re-rendered, and its files are only read.
 
@@ -91,22 +91,23 @@ Data lives in `scenarios/valley_campaign_1862/data/`. Everything is PROVISIONAL 
   - Moorefield–Wardensville–Strasburg (Frémont's late-May route)
   - South Branch road (Moorefield–Petersburg–Franklin)
   - Franklin–Harrisonburg over Shenandoah Mountain
-  - **Staunton–Parkersburg Turnpike** (Staunton–Buffalo Gap–Shenandoah Mountain–Bull Pasture Mountain–McDowell–Monterey)
-  - Valley Turnpike south to Lexington
+  - **Staunton–Parkersburg Turnpike** (Staunton–West View–Shenandoah Mountain–Bull Pasture Mountain–McDowell–Monterey)
+  - Staunton–Lexington road (a separate road; the Valley Turnpike ends at Staunton)
+  - Note: Buffalo Gap is on the Virginia Central Railroad, not the Staunton–Parkersburg Turnpike
 
 Coordinates are approximate modern values and need checking against USGS GNIS and Hotchkiss. The history columns cite only works known to exist (OR Ser. I Vols. 5 and 12; Cozzens, *Shenandoah 1862*, 2008; Tanner, *Stonewall in the Valley*, 1976), without page numbers. Rows marked "needs 1862 source" have none yet.
 
-**Hex counts** (the playable count is the hexes whose centres fall inside the polygon; the rectangle is the polygon's bounding grid):
+**Hex counts** (recomputed on the even-q grid at the game's 4.42:5.1 pitch, 2026-10-17; the playable count is the hexes whose centres fall inside the polygon; the rectangle is the polygon's bounding grid):
 
 | Hex | Grid (cols × rows) | Rectangle | **Playable** |
 | --- | --- | --- | --- |
-| 250 yd | 935 × 954 | 891,990 | 491,315 |
-| 400 yd | 585 × 597 | 349,245 | 191,902 |
-| **500 yd** | **468 × 478** | 223,704 | **122,790** |
-| 750 yd | 313 × 319 | 99,847 | 54,624 |
-| 1000 yd | 235 × 240 | 56,400 | 30,691 |
+| 250 yd | 934 × 954 | 891,036 | 490,907 |
+| 400 yd | 585 × 597 | 349,245 | 191,785 |
+| **500 yd** | **468 × 478** | 223,704 | **122,709** |
+| 750 yd | 312 × 319 | 99,528 | 54,550 |
+| 1000 yd | 235 × 240 | 56,400 | 30,678 |
 
-The shape trims about 45% of the bounding grid. At 500 yd, a 468 × 478 grid is within the 900 × 700 map size HoS v8.1.6 reports handling ("13 minutes to 30 seconds on a 900x700 map" scene unloading). Load and turn performance at 122k playable hexes still has to be measured.
+The shape trims about 45% of the bounding grid. At 500 yd, a 468 × 478 grid is within the 900 × 700 map size HoS v8.1.6 reports handling ("13 minutes to 30 seconds on a 900x700 map" scene unloading). Load and turn performance at ~123k playable hexes still has to be measured.
 
 ## 3. Rendering: primary plan (revised with the Kernstown bot, 17 Oct)
 Unique slices for all 123k hexes don't scale: about 100 GB even after optimisation. Primary plan:
@@ -236,8 +237,8 @@ This **needs Harmony**. The only native stand-in is a fixed-turn call with messa
   - Historical role: Virginia historical marker JD-14 (1949, hmdb.org m=16644) says "In June 1862 part of Jackson's army, moving to join Lee at Richmond, used this passage". It lay on the old Three Notch'd Road.
   - Campaign value: a second "leave for Richmond" exit next to Brown's and Rockfish.
   - Confidence: RELIABLE_SECONDARY. The marker is a secondary source; check it against the Official Records.
-- **Fisher's (Milam's) Gap: KEEP as a minor route.**
-  - Historical role: on 21 April 1862 Hotchkiss scouted "Milham's or Fisher's Gap" on the New Market–Madison Court House road, at Jackson's order, while looking for a concealed flanking road. His sketches 105/106 and Valley map No. 89 label it "Milam's or Fisher's Gap" and "Grave's Gap" (from his journal as quoted at milaminvirginia.com/milams-gap; check the Hotchkiss originals at the Library of Congress).
+- **Fisher's Gap: KEEP as a minor route.**
+  - Historical role: on 21 April 1862 Hotchkiss scouted Fisher's Gap ("Milham's or Fisher's Gap" in his journal) on the New Market–Madison Court House road, at Jackson's order, while looking for a concealed flanking road. His sketches 105/106 and Valley map No. 89 label the gap under period variant names (from his journal as quoted at milaminvirginia.com/milams-gap; check the Hotchkiss originals at the Library of Congress).
   - NPS says Jackson's Corps used the Fisher's Gap route in **November 1862**, which is outside our window.
   - Campaign value: a real April 1862 reconnaissance route and plausible alternate crossing between Thornton's and Swift Run.
   - Confidence: PROVISIONAL for 1862 troop use.
