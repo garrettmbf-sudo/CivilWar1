@@ -2,7 +2,7 @@
 
 **Not yet verified:** a complete native package layout, loader behavior, or a ready-to-install release.
 
-The proposed `mod/` folder remains reserved for **tested game-ready assets**, not reference images or arbitrary zip contents. Existing Harmony example files under `docs/3574617535/` are **research examples**, not permission to redistribute their binaries.
+The proposed `mod/` folder remains reserved for **tested game-ready assets**, not reference images or arbitrary zip contents. `docs/3574617535/` keeps only the HarmonyCore manifest and folder notes as **research examples**. Its DLLs were removed on 2026-10-17, so get them from the official **HarmonyCore** mod, Steam Workshop id **3574617535** (https://steamcommunity.com/sharedfiles/filedetails/?id=3574617535), which ships `0Harmony.dll`/`HarmonyCore.dll`.
 
 Validation required before releasing:
 1. Inspect the installed game's actual mod folder structure and compatible Workshop mods.

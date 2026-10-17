@@ -7,7 +7,7 @@
 - Additional portrait assets under `reference/`, including existing Union portraits and `reference/mdl_CSA_JAWalker.png`.
 - Four .sav map samples under `maps/`: `An American Civil War.sav`, `Battle for USA.sav`, `Hexerreich - Classic 2ACW.sav`, `TheWarOfTheRebellion.sav`.
 - Historical reference images `reference/Stonewall in the ValleyMap.jpg` and `reference/SJW IIMap.jpg`.
-- `docs/3574617535/` contains mod/Harmony examples and binary libraries; do not assume redistribution rights.
+- `docs/3574617535/` contains the HarmonyCore mod manifest and folder notes (no binaries; get `0Harmony.dll`/`HarmonyCore.dll` from Steam Workshop mod 3574617535).
 - Python tooling under `src/` and `scripts/`; tests under `tests/`; draft scenarios under `scenarios/`.
 
 ## Canonical ownership going forward
