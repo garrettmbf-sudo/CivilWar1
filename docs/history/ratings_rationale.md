@@ -147,7 +147,26 @@ Data: `historical_data/command_ratings_1862.csv`, `historical_data/unit_ratings_
 - **Bayard's Attached Cavalry Command** (FRM_US_BAYARD, 1862-06-08): experience 3, cohesion/morale 3, training 3. Harrisonburg June 6 fight. [probable; SRC009 p.817]
 - **Fremont Additional Cavalry (3rd WV, 6th OH)** (FRM_US_FRMC_CAV, 1862-06-08): experience 2, cohesion/morale 2, training 2. Starved, broken-down horses. [verified; SRC009 p.7-8]
 
+## Regiments and batteries
+
+216 rows: 95 of 96 regiments and 30 of 34 batteries. Confidence: {'provisional': 46, 'verified': 153, 'probable': 17}.
+
+Method: a regiment starts from its parent brigade's rating on that date (parent taken from `assignments_1862.csv`). It is moved by at most one point only where an OR page I viewed says something about that regiment's conduct. Casualty figures were read from page images of the archive.org scan, because the tables are garbled in the OCR text: Kernstown OR 12/1 p.346 (Union) and p.384 (Confederate); McDowell p.462 (Union) and p.476 (Confederate); Banks's retreat pp.553-554; Ewell's division May 23-25 p.780; Cross Keys pp.664-665 (Union); Port Republic p.690 (Union); Cross Keys and Port Republic pp.717-718 (Confederate). A casualty figure alone does not move a rating; it is recorded in `basis` for Quartermaster. Rows with no regiment-specific evidence say 'inherits ...' and are `provisional`.
+
+Dates rated: Confederate Valley army units on every date they appear in `assignments_1862.csv`. Shields's division only 03-23 and 06-08 (it was east of the Blue Ridge in May). Banks's division 05-25, plus 05-23 for the Front Royal garrison. Frémont's units 05-08 and 06-08.
+
+Notable:
+- `REG_VA12` is designated **12th Georgia** in regiments_1862.csv (the ID is a misnomer). It took 175 casualties at McDowell, the heaviest of either side (p.476). The OR return of June 8-9 lists it in Elzey's Fourth Brigade (p.718).
+- Union regiments that fought at Port Republic regardless of their June roster brigade: 5th Ohio (264 lost), 66th Ohio (205) and 84th Pa (32) (p.690). The 13th Ind, 62nd Ohio, 67th Ohio, 39th Ill and Kimball's regiments are absent from the return and are rated as present but not engaged.
+- ART_WESTAUGUSTA still conflates Waters' and Carpenter's batteries (existing FLAG). Its rows describe both.
+
+## Crutchfield start date (note only; commanders_1862.csv and brigade_commands_1862.csv unchanged)
+- The repo dates CMD_CRUTCHFIELD as chief of artillery from 1862-03-23. No Kernstown report I read (OR 12/1 pp.379-401) mentions a chief of artillery: Jackson names the batteries by their captains (pp.381-382).
+- Jackson's McDowell report (OR 12/1 p.470, located by OCR running head) says 'Colonel Crutchfield, chief of artillery, did not have an opportunity of bringing his command into action on the 8th', so he was in post by 8 May 1862. His own report covers May 23-June 9 (p.724), and Jackson's report praises him (p.707).
+- Recommendation: change the start to 'by 1862-05-08 (exact appointment date UNVERIFIED; secondary works put it in April)' and treat 03-23 as unsupported. The Kernstown artillery had no chief-of-artillery commander counter. His command ratings are dated 05-25 and 06-08 only.
+
 ## Not yet rated
-- All 96 regiments (REG_*) and 34 batteries (ART_*) are not yet rated. Following the priority order, commanders and brigades were done first. Until regiment-level OR reports are read, Quartermaster should inherit each regiment's rating from its parent brigade on that date.
-- HQ formations (army/department/division) carry no unit rating; their quality is in the commander rating.
-- Not rated because they are absent from commanders_1862.csv: McDowell, Crawford, Hatch's successors.
+- Regiments: REG_OH13C. (flagged likely spurious and unassigned).
+- Batteries: ART_PLEASANTS, ART_US_ADDHOW, ART_US_PAE, ART_US_WVB. No OR casualty or report entry found yet; ART_US_ADDHOW's organization is unconfirmed; ART_US_PAE may duplicate the Front Royal 'section Battery E' rated under ART_US_KNAPP (FLAG).
+- Shields's Kernstown batteries other than WV Battery A have no losses in the p.346 return and are not rated for 03-23.
+- HQ formations carry no unit rating.
