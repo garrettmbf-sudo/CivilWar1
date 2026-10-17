@@ -11,7 +11,7 @@ Deliver **one playable Stonewall Jackson Shenandoah Valley Campaign, March–Jun
 5. Changes to the original portraits or bulk asset moves require explicit user authorization and a verified migration of every consumer path.
 
 6. **User-approved consolidation (17 Oct 2026, PR #9):** the user explicitly authorized deleting byte-identical duplicate files, including 15 portrait duplicate sets, overriding rule 1/5 for that purpose only. Every removal is logged in `docs/inventory/dedupe_2026-10-17.csv` (removed -> kept). Canonical locations: `Unit_*.png` in `units/`; portraits at the path in `historical_data/portrait_manifest.csv` (root for CSA, `reference/` for most USA). Rules 1 and 5 still apply to everything else.
-7. Hex coordinates: use `src/hex_utils.py` (flat-top odd-q, rows increase north, pending in-game corner test). See `docs/hex-convention.md`.
+7. Hex coordinates: use `src/hex_utils.py` (Hex of Steel native flat-top even-q: even columns half a row north, rows increase north, pitch 4.42:5.1; decided 2026-10-17). See `docs/hex-convention.md`.
 
 ## Current project boundaries
 - **In:** full 1862 Valley campaign, Valley Pike, main Valley / Luray Valley, Massanutten, Shenandoah rivers, McDowell/Franklin western approaches; researched Union and Confederate brigade OOBs; commander relationships; map production and test tools.
