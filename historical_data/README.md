@@ -18,7 +18,7 @@ Run `python scripts/check_portrait_manifest.py` to verify file references and mi
 
 ## Opening OOB and arrival schedule
 
-- Campaign opening date is **1862-03-23** (Kernstown), `OPENING_DATE` in `src/oob.py`. The opening counters cite the OR Kernstown casualty returns: Confederate SRC009 p.384 (Ashby p.385-386), Union SRC009 p.346-347.
+- Campaign opening date is **1862-03-22** (dawn, the day before Kernstown; user decision 2026-10-17), `OPENING_DATE` in `src/oob.py`. The opening counters cite the OR Kernstown casualty returns: Confederate SRC009 p.384 (Ashby p.385-386), Union SRC009 p.346-347.
 - `reinforcements_1862.csv` is the arrival/entry schedule. Columns: `event_id,date,event_type,subject_id,detail,effect,sources,location,covers,date_certainty`.
   - `covers`: pipe-separated formation IDs that enter with this event.
   - `date_certainty`: `confirmed` (OR states the date), `approximate` (OR brackets it, or the repo's modelling date differs), or `unverified` (no OR page found yet).
