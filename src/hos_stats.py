@@ -14,7 +14,7 @@ import csv
 import os
 from datetime import date
 
-from src.oob import OOB, DATA_DIR, _d, _rows, canonical_id
+from src.oob import OOB, DATA_DIR, _d, _rows
 
 OUT = os.path.join(DATA_DIR, "hos_unit_stats_1862.csv")
 OUT_EXCLUDED = os.path.join(DATA_DIR, "hos_unit_stats_excluded_1862.csv")
@@ -54,13 +54,23 @@ def clamp(v, lo, hi):
     return max(lo, min(hi, v))
 
 
+RANK_CAP = 4  # rank 5 assigns a random WW2 medal-winner "hero" (manual 8.4.15 p.18-19)
+TRAINING_SOFT_PCT = 0.05     # crosswalk: training 1..5 -> -10%..+10% soft attack
+COHESION_HP = {1: 0.70, 2: 0.85}  # crosswalk option (b): straggling/desertion; 3-5 full
+TACTICAL_BRIGADE_PCT = {1: 1, 2: 3, 3: 5, 4: 7, 5: 9}
+ECHELON_MULT = {"brigade": 1.0, "division": 1.3, "department": 1.5, "army": 1.6}
+RANGE_BASE = {"brigade": 2, "division": 4, "department": 5, "army": 6}
+CMD_MP = 14
+
+
 def unit_stats(unit_class: str, exp: int, coh: int, trn: int, n_regiments: int) -> dict:
     soft, hard, ammo, fuel, mp, rng, vis = BASE[unit_class]
-    q = (trn - 3) + (exp - 3)            # -4..+4 quality offset
+    t = 1 + TRAINING_SOFT_PCT * (trn - 3)   # experience is NOT here: rank already adds +4%/rank
     hp = clamp(HP_PER_REGIMENT * max(n_regiments, 1), HP_MIN, HP_MAX)
+    hp = max(1, round(hp * COHESION_HP.get(coh, 1.0)))
     return {
-        "soft_damage": soft + 2 * q,
-        "hard_damage": max(1, hard + q // 2),
+        "soft_damage": round(soft * t),
+        "hard_damage": max(1, round(hard * t)),
         "air_damage": 0,
         "armor": 0,
         "hp": hp,
@@ -69,22 +79,24 @@ def unit_stats(unit_class: str, exp: int, coh: int, trn: int, n_regiments: int) 
         "movement_points": mp,
         "range": rng,
         "visibility": vis,
-        # cohesion has no engine field (morale is a global option): it goes into rank only
-        "rank": clamp(round(0.6 * exp + 0.4 * coh), 1, 5),
+        "rank": clamp(round((2 * exp + coh) / 3), 1, RANK_CAP),
     }
 
 
 def commander_stats(echelon: str, ini: int, rel: int, tac: int, adm: int) -> dict:
+    """tactical -> bonus %, administration -> radius, initiative -> MP.
+    reliability is deliberately unused (no engine parameter; scenario design only)."""
     lo, hi = ECHELON_RANGE[echelon]
-    reach = (ini + adm) / 2
-    soft = clamp(2 * tac + (ini - 3) + (rel - 3), 1, BONUS_MAX)
+    adj = 1 if adm >= 4 else (-1 if adm <= 2 else 0)
+    soft = clamp(round(TACTICAL_BRIGADE_PCT[tac] * ECHELON_MULT[echelon]), 1, BONUS_MAX)
+    mp = CMD_MP + (1 if ini == 5 else (-1 if ini <= 2 else 0))
     return {
-        "range": hi if reach >= 3.5 else lo,
+        "range": clamp(RANGE_BASE[echelon] + adj, lo, hi),
         "soft_damage": soft,
-        "hard_damage": soft // 2,
+        "hard_damage": 0,            # no armoured targets in 1862 (crosswalk)
         "air_damage": 0,
-        "armor": 0, "hp": 20, "ammo": 0, "fuel": 70, "movement_points": 14, "visibility": 2,
-        "rank": clamp(round((ini + rel + tac + adm) / 4), 1, 5),
+        "armor": 0, "hp": 20, "ammo": 0, "fuel": 70, "movement_points": mp, "visibility": 2,
+        "rank": clamp(round((ini + tac + adm) / 3), 1, RANK_CAP),
     }
 
 
@@ -110,8 +122,6 @@ def build(oob: OOB | None = None) -> list[dict]:
     out: list[dict] = []
 
     oob_units = set(oob.regiments) | set(oob.artillery)
-    for r in urs:
-        r["unit_id"] = canonical_id(r["unit_id"])
     # direct regiment/battery ratings; rows whose basis says "inherits" are not direct evidence
     direct = [r for r in urs if r["unit_id"] in oob_units and "inherits" not in r["basis"].lower()]
 

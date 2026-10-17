@@ -39,7 +39,7 @@ REG_PA84,"84th Pennsylvania Infantry",PA,infantry,Kernstown: Kimball's 1st Bde; 
 REG_OH05,"5th Ohio Infantry",OH,infantry,Kernstown: Sullivan's 2nd Bde; Port Republic: Carroll's - dated assignment resolves; Port Republic (Jun 9) losses 264 (OR 12/1 p.690),SRC007|SRC009 p.690
 REG_IN13,"13th Indiana Infantry",IN,infantry,Kernstown: Sullivan's 2nd Bde; June roster: Tyler's 3rd Bde,SRC007
 REG_OH62,"62nd Ohio Infantry",OH,infantry,Sullivan's 2nd Bde; June roster: Ferry's 2nd Bde,SRC007
-REG_IL39,"39th Illinois Infantry",IL,infantry,Kernstown: Sullivan's (marked unengaged); June roster: Ferry's 2nd Bde,SRC007
+REG_IL39,"39th Illinois Infantry",IL,infantry,"Kernstown: Sullivan's, on the return (OR 12/1 p.346) and with the brigade sent left (p.360); NPS 'unengaged' UNVERIFIED; June roster: Ferry's 2nd Bde",SRC007|SRC009 p.346|SRC009 p.360
 REG_OH07,"7th Ohio Infantry",OH,infantry,Kernstown: Tyler's 3rd Bde; Port Republic: Tyler's tactical Bde,SRC007
 REG_IN07,"7th Indiana Infantry",IN,infantry,Kernstown: Tyler's 3rd Bde; Port Republic: Tyler's tactical Bde,SRC007
 REG_WV01,"1st West Virginia Infantry",WV,infantry,Kernstown: Tyler's 3rd Bde; Port Republic: Tyler's tactical Bde,SRC007

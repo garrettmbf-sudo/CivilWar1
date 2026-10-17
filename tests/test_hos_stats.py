@@ -27,7 +27,7 @@ def test_only_engine_fields_and_ranges():
             assert lo <= r["range"] <= hi
             assert 1 <= r["soft_damage"] <= H.BONUS_MAX
         else:
-            assert H.HP_MIN <= r["hp"] <= H.HP_MAX
+            assert round(H.HP_MIN * min(H.COHESION_HP.values())) <= r["hp"] <= H.HP_MAX
             assert r["range"] in (1, 3)
     assert "morale" not in " ".join(H.FIELDS).replace("cohesion_morale", "")
 
@@ -77,3 +77,22 @@ def test_crutchfield_starts_may_8():
     oob = OOB.load()
     assert oob.commanders["CMD_CRUTCHFIELD"]["first_mentioned"] in ("1862-05-08", date(1862, 5, 8))
     assert all(c["valid_from"] >= date(1862, 5, 8) for c in oob.commands if c["commander_id"] == "CMD_CRUTCHFIELD")
+
+
+def test_no_rank_5_heroes():
+    assert H.RANK_CAP == 4
+    assert all(r["rank"] <= 4 for r in H.build())
+
+
+def test_crosswalk_alignment():
+    # training alone moves soft attack; experience does not (rank carries it)
+    assert H.unit_stats("infantry", 5, 3, 3, 3)["soft_damage"] == H.unit_stats("infantry", 1, 3, 3, 3)["soft_damage"]
+    assert H.unit_stats("infantry", 3, 3, 5, 3)["soft_damage"] > H.unit_stats("infantry", 3, 3, 1, 3)["soft_damage"]
+    # cohesion 1-2 trims HP (straggling), 3-5 full
+    assert H.unit_stats("infantry", 3, 1, 3, 5)["hp"] == 70 and H.unit_stats("infantry", 3, 3, 3, 5)["hp"] == 100
+    # commanders: tactical -> bonus, administration -> range, initiative -> MP, reliability unused
+    c = H.commander_stats
+    assert c("division", 3, 3, 5, 3)["soft_damage"] > c("division", 3, 3, 2, 3)["soft_damage"]
+    assert c("division", 3, 3, 3, 4)["range"] == 4 and c("division", 3, 3, 3, 2)["range"] == 3
+    assert c("army", 5, 3, 3, 3)["movement_points"] == 15 and c("army", 2, 3, 3, 3)["movement_points"] == 13
+    assert c("brigade", 3, 1, 3, 3) == c("brigade", 3, 5, 3, 3)

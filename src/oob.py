@@ -29,15 +29,6 @@ def _d(s: str) -> date | None:
     return date.fromisoformat(s)
 
 
-# Renamed ids still present in files owned by other branches (PR #13 ratings tables).
-# Resolved on read; new data must use the new id.
-LEGACY_ID_ALIASES = {"REG_VA12": "REG_GA12"}  # 12th Georgia (OR 12/1 p.476)
-
-
-def canonical_id(ident: str) -> str:
-    return LEGACY_ID_ALIASES.get(ident, ident)
-
-
 def _rows(name: str) -> list[dict]:
     path = os.path.join(DATA_DIR, name)
     with open(path, newline="", encoding="utf-8-sig") as f:
@@ -396,7 +387,7 @@ def validate(oob: OOB, repo_root: str | None = None) -> list[str]:
         known = set(oob.commanders) if idcol == "commander_id" else set(oob.formations) | set(oob.regiments) | set(oob.artillery)
         for r in rrows:
             tag = f"{fname} {r['rating_id']}"
-            if canonical_id(r[idcol]) not in known:
+            if r[idcol] not in known:
                 e(f"{tag}: unknown {idcol} {r[idcol]}")
             for c in cols:
                 if r[c] not in ("1", "2", "3", "4", "5"):
