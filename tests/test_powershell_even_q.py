@@ -199,3 +199,75 @@ def test_beautify_get_neighbor_matches_hex_utils():
         f"@(0..5 | ForEach-Object {{ ,(Get-Neighbor {c} {r} $_) }})" for c, r in cells) + ") | ConvertTo-Json -Depth 4 -Compress"))
     for (c, r), nbs in zip(cells, out):
         assert [tuple(n) for n in nbs] == hu.offset_neighbors(c, r), (c, r)
+
+
+# ---------------------------------------------------------------- pinned geography (Archivist review, PR #21)
+def _vmd_frame():
+    text = (PS / "valley_map_data.ps1").read_text()
+    num = lambda n: float(re.search(r"\$%s\s*=\s*([0-9.]+)" % n, text).group(1))  # noqa: E731
+    mi_lon = 69.0 * math.cos(38.75 * math.pi / 180)
+    south, west = num("southBound"), num("westBound")
+    snap = lambda la, lo: hu.point_to_offset((west - lo) * mi_lon, (la - south) * 69.0)  # noqa: E731
+    return text, snap
+
+
+def _vmd_places():
+    text, snap = _vmd_frame()
+    return {n: snap(float(la), float(lo)) for n, la, lo in
+            re.findall(r'Name="([^"]+)";\s*Lat=([0-9.]+);\s*Lon=([0-9.]+)', text)}
+
+
+def _vmd_trace(name):
+    text, snap = _vmd_frame()
+    block = re.search(r"\$%s = @\((.*?)\n\)" % name, text, re.S).group(1)
+    return [snap(float(la), float(lo)) for la, lo in re.findall(r"Lat=([0-9.]+); Lon=([0-9.]+)", block)]
+
+
+# Correct hexes from Captain Archivist's review table (PR #21 comment 6229686760), from GNIS coordinates.
+ARCHIVIST_HEXES = {
+    "Swift Run Gap": (69, 45),
+    "Cross Keys": (50, 45),
+    "New Market Gap": (65, 65),
+    "Brown's Gap": (58, 37),
+    "McDowell": (10, 43),
+    "Thornton's Gap": (83, 66),
+    "Manassas Gap": (98, 83),
+    "Newtown": (89, 95),
+    "Luray": (74, 66),
+    "Rockfish Gap": (50, 22),
+    # The Archivist's table gives (52,40) from the Wikipedia coordinates 38.2892/-78.8133. The official
+    # GNIS 1496108 point (38.2962/-78.8106) snaps to (52,41), and the file follows GNIS. FLAGGED in the PR.
+    "Port Republic": (52, 41),
+}
+
+
+@pytest.mark.parametrize("name", sorted(ARCHIVIST_HEXES))
+def test_valley_map_data_pinned_hexes(name):
+    assert _vmd_places()[name] == ARCHIVIST_HEXES[name]
+
+
+def test_valley_pike_rows_north_to_south():
+    p = _vmd_places()
+    rows = [p[n][1] for n in ("Martinsburg", "Winchester", "Kernstown", "Newtown", "Middletown", "Strasburg",
+                              "Toms Brook", "Woodstock", "Edinburg", "Mount Jackson", "New Market",
+                              "Harrisonburg", "Staunton", "Lexington")]
+    assert rows == [121, 102, 100, 95, 92, 88, 86, 82, 78, 72, 65, 51, 31, 6]
+
+
+def test_south_fork_runs_west_of_luray():
+    luray = _vmd_places()["Luray"]
+    same_row = [c for c, r in _vmd_trace("southFork") if abs(r - luray[1]) <= 1]
+    assert same_row and max(same_row) < luray[0]
+
+
+def test_ridges_pass_through_their_gaps():
+    p = _vmd_places()
+    assert p["New Market Gap"] in _vmd_trace("massanutten")
+    br = _vmd_trace("blueRidge")
+    for g in ("Swift Run Gap", "Brown's Gap", "Thornton's Gap", "Manassas Gap"):
+        assert p[g] in br, g
+
+
+def test_massanutten_gap_stays_flagged_unidentified():
+    line = next(l for l in (PS / "valley_map_data.ps1").read_text().splitlines() if 'Name="Massanutten Gap"' in l)
+    assert "UNIDENTIFIED" in line

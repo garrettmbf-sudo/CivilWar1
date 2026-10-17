@@ -43,8 +43,8 @@ $towns = @(
     @{ Name="Lexington";       Lat=37.7840; Lon=79.4428; Type="town";    VP=$false; Primary=$false }  # Rockbridge Co. seat, VMI; southern map anchor. VERIFIED 2026-10-17: USGS GNIS 1498506 (37.784028 N, 79.442819 W); period map: Hotchkiss Rockbridge Co. map, LoC G3883.R6 186- .R6 (H57) - see historical_data/sources_1862.csv SRC020, SRC027
     @{ Name="Waynesboro";      Lat=38.0686; Lon=78.8894; Type="town";    VP=$false; Primary=$false }
     @{ Name="McDowell";        Lat=38.3357; Lon=79.4906; Type="village"; VP=$true;  Primary=$true  }  # VERIFIED 2026-10-17 (Captain Archivist, PR #16): SRC020 USGS GNIS (official point; was ~3.4 km off)
-    @{ Name="Port Republic";   Lat=38.3000; Lon=78.8000; Type="village"; VP=$true;  Primary=$true  }
-    @{ Name="Cross Keys";      Lat=38.4167; Lon=78.8167; Type="village"; VP=$true;  Primary=$true  }
+    @{ Name="Port Republic";   Lat=38.2962; Lon=78.8106; Type="village"; VP=$true;  Primary=$true  }  # FIXED 2026-10-17: GNIS 1496108 (Captain Archivist review of PR #21; USGS GNIS via The National Map geonames service, queried 2026-10-17, SRC020)
+    @{ Name="Cross Keys";      Lat=38.3593; Lon=78.8420; Type="village"; VP=$true;  Primary=$true  }  # FIXED 2026-10-17: GNIS 1495443 (Captain Archivist review of PR #21; USGS GNIS via The National Map geonames service, queried 2026-10-17, SRC020); was 4.4 mi NNE
     @{ Name="Harrisonburg";    Lat=38.4496; Lon=78.8689; Type="town";    VP=$true;  Primary=$true  }
     @{ Name="New Market";      Lat=38.6479; Lon=78.6717; Type="town";    VP=$true;  Primary=$true  }
     @{ Name="Luray";           Lat=38.6654; Lon=78.4594; Type="town";    VP=$false; Primary=$true  }
@@ -53,7 +53,7 @@ $towns = @(
     @{ Name="Strasburg";       Lat=38.9885; Lon=78.3586; Type="town";    VP=$true;  Primary=$true  }
     @{ Name="Front Royal";     Lat=38.9182; Lon=78.1944; Type="town";    VP=$true;  Primary=$true  }
     @{ Name="Middletown";      Lat=39.0275; Lon=78.2814; Type="village"; VP=$false; Primary=$false }
-    @{ Name="Newtown";         Lat=39.0867; Lon=78.2317; Type="village"; VP=$false; Primary=$false }
+    @{ Name="Newtown";         Lat=39.0834; Lon=78.2181; Type="village"; VP=$false; Primary=$false }  # 1862 Newtown = Stephens City. FIXED 2026-10-17: GNIS 1500159 (Captain Archivist review of PR #21; USGS GNIS via The National Map geonames service, queried 2026-10-17, SRC020)
     @{ Name="Kernstown";       Lat=39.1500; Lon=78.1833; Type="village"; VP=$true;  Primary=$true  }
     @{ Name="Winchester";      Lat=39.1857; Lon=78.1633; Type="city";    VP=$true;  Primary=$true  }
     @{ Name="Martinsburg";     Lat=39.4562; Lon=77.9639; Type="town";    VP=$true;  Primary=$true  }
@@ -73,8 +73,8 @@ $towns = @(
     @{ Name="Brown's Gap";     Lat=38.2404; Lon=78.7106; Type="pass";    VP=$false; Primary=$false }  # VERIFIED 2026-10-17 (Captain Archivist, PR #16): SRC020 USGS GNIS 1463928
     @{ Name="Rockfish Gap";    Lat=38.0333; Lon=78.8500; Type="pass";    VP=$false; Primary=$false }
     # Massanutten gaps
-    @{ Name="New Market Gap";  Lat=38.6500; Lon=78.5500; Type="pass";    VP=$false; Primary=$true  }
-    @{ Name="Massanutten Gap"; Lat=38.9167; Lon=78.3000; Type="pass";    VP=$false; Primary=$false }
+    @{ Name="New Market Gap";  Lat=38.6429; Lon=78.6122; Type="pass";    VP=$false; Primary=$true  }  # FIXED 2026-10-17: GNIS 1485851 (Gap; Page/Shenandoah county line) (Captain Archivist review of PR #21; USGS GNIS via The National Map geonames service, queried 2026-10-17, SRC020); was 3.4 mi east
+    @{ Name="Massanutten Gap"; Lat=38.9167; Lon=78.3000; Type="pass";    VP=$false; Primary=$false }  # UNIDENTIFIED: no GNIS feature of this name (geonames query 2026-10-17 returned none); position UNVERIFIED, not fixed. Needs Archivist identification
 )
 
 Write-Output "=== KEY LOCATIONS ==="
@@ -105,9 +105,9 @@ $blueRidge = @(
     @{ Lat=38.909; Lon=78.075 }  # Manassas Gap (SRC020 GNIS 1470040)
     @{ Lat=38.70; Lon=78.25 }
     @{ Lat=38.661; Lon=78.320 }  # Thornton's Gap (SRC020 GNIS 1475667)
-    @{ Lat=38.45; Lon=78.55 }
+    @{ Lat=38.4679; Lon=78.4572 }  # Bootens Gap, Blue Ridge crest (GNIS 1463669, on the Greene/Page county line); was 38.45/78.55, ~5 mi west of the crest
     @{ Lat=38.357; Lon=78.545 }  # Swift Run Gap (SRC020 GNIS 1475392)
-    @{ Lat=38.20; Lon=78.75 }
+    @{ Lat=38.2404; Lon=78.7106 }  # Brown's Gap, Blue Ridge crest (SRC020 GNIS 1463928); was 38.20/78.75
     @{ Lat=38.05; Lon=78.85 }  # Rockfish Gap
     @{ Lat=37.95; Lon=78.90 }
 )
@@ -119,9 +119,9 @@ $massanutten = @(
     @{ Lat=38.45; Lon=78.68 }
     @{ Lat=38.50; Lon=78.65 }
     @{ Lat=38.55; Lon=78.60 }
-    @{ Lat=38.60; Lon=78.56 }
-    @{ Lat=38.65; Lon=78.52 }  # New Market Gap area
-    @{ Lat=38.70; Lon=78.48 }
+    @{ Lat=38.6032; Lon=78.6433 }  # Bird Knob, Massanutten crest (GNIS 1481812, on the Rockingham/Page county line); was 38.60/78.56
+    @{ Lat=38.6429; Lon=78.6122 }  # New Market Gap (GNIS 1485851, on the Page/Shenandoah county line); was 38.65/78.52
+    @{ Lat=38.6851; Lon=78.5904 }  # Kerns Mountain, Massanutten crest (GNIS 1484565, on the Shenandoah/Page county line); was 38.70/78.48
     @{ Lat=38.75; Lon=78.44 }
     @{ Lat=38.80; Lon=78.40 }
     @{ Lat=38.85; Lon=78.36 }
@@ -168,20 +168,22 @@ Write-Output ""
 Write-Output "=== RIVER COURSES ==="
 
 # --- RIVERS ---
-# South Fork Shenandoah: Port Republic -> Front Royal
+# South Fork Shenandoah: Port Republic -> Front Royal. Intermediate points = where the USGS NHD High Resolution
+# flowline "South Fork Shenandoah River" (GNIS 01487411; hydro.nationalmap.gov nhd/MapServer/6, queried 2026-10-17)
+# crosses each latitude. It runs WEST of Luray, not east.
 $southFork = @(
-    @{ Lat=38.30; Lon=78.80 }  # Port Republic
-    @{ Lat=38.35; Lon=78.75 }
-    @{ Lat=38.40; Lon=78.72 }
-    @{ Lat=38.48; Lon=78.65 }
-    @{ Lat=38.55; Lon=78.55 }
-    @{ Lat=38.60; Lon=78.48 }  # Alongside Massanutten (east side)
-    @{ Lat=38.65; Lon=78.42 }
-    @{ Lat=38.70; Lon=78.38 }
-    @{ Lat=38.75; Lon=78.33 }
-    @{ Lat=38.80; Lon=78.28 }
-    @{ Lat=38.85; Lon=78.23 }
-    @{ Lat=38.90; Lon=78.20 }
+    @{ Lat=38.2962; Lon=78.8106 }  # Port Republic (GNIS 1496108)
+    @{ Lat=38.35; Lon=78.705 }  # NHD flowline crossing (was 78.75)
+    @{ Lat=38.40; Lon=78.627 }  # NHD flowline crossing (was 78.72)
+    @{ Lat=38.48; Lon=78.624 }  # NHD flowline crossing (was 78.65)
+    @{ Lat=38.55; Lon=78.586 }  # NHD flowline crossing (was 78.55)
+    @{ Lat=38.60; Lon=78.572 }  # NHD flowline crossing (was 78.48); Alongside Massanutten (east side)
+    @{ Lat=38.65; Lon=78.544 }  # NHD flowline crossing (was 78.42); was east of Luray, now west (Luray GNIS 1498510 is 38.6654/78.4594)
+    @{ Lat=38.70; Lon=78.489 }  # NHD flowline crossing (was 78.38); river meanders here (crossings 78.501/78.489/78.487), middle one used
+    @{ Lat=38.75; Lon=78.418 }  # NHD flowline crossing (was 78.33)
+    @{ Lat=38.80; Lon=78.387 }  # NHD flowline crossing (was 78.28)
+    @{ Lat=38.85; Lon=78.331 }  # NHD flowline crossing (was 78.23)
+    @{ Lat=38.90; Lon=78.224 }  # NHD flowline crossing (was 78.20); crossings 78.253/78.224/78.219, middle one used
     @{ Lat=38.92; Lon=78.19 }  # Front Royal
 )
 
@@ -233,7 +235,7 @@ $southRiver = @(
     @{ Lat=38.12; Lon=78.85 }
     @{ Lat=38.18; Lon=78.82 }
     @{ Lat=38.23; Lon=78.80 }
-    @{ Lat=38.30; Lon=78.80 }  # Port Republic
+    @{ Lat=38.2962; Lon=78.8106 }  # Port Republic (GNIS 1496108)
 )
 
 Write-Output "South Fork: $(($southFork | ForEach-Object { "($((Get-HexLatLon $_.Lat $_.Lon) -join ','))" }) -join ' -> ')"
