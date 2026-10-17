@@ -25,12 +25,14 @@ Every patched or touched member was checked against the decompiled `Assembly-CSh
 | Prefix: AI re-face | `TurnManager.NextTurn(bool p_sendRPC)` → void | `TurnManager.cs:262`. `currPlayer` is still the player ending the turn. |
 | MonoBehaviour: turn in place | reads `UnityEngine.Input.GetKeyDown` by reflection (Squad of Steel's method); writes `Unit.CurrMP` (byte) and `Unit.FacingRotation` | `Unit.cs:232`, `:274` |
 
-## Grid geometry: important for the map pipeline
-`MapGO` places tiles at `x = col × 4.42`, `y = row × 5.1`, plus **2.55 for EVEN columns**:
+## Grid geometry
+The project uses the game's native layout: flat-top **even-q**, with rows increasing north and no conversion layer (decided 2026-10-17, `docs/decisions.md`). `MapGO` places tiles at `x = col × 4.42`, `y = row × 5.1`, plus **2.55 for EVEN columns**:
 - world +y is north;
-- **even columns sit half a row north**, i.e. "even-q" in north-up terms.
+- **even columns sit half a row north**.
 
-`src/hex_utils.py` (PR #9) and Kernstown's `hex_grid.py` use **odd** columns shifted north. A tile pipeline mapping (col,row) one-to-one onto game PosX/PosY would mis-stagger every column. The mod itself is unaffected: it uses the game's own formula (`FacingMath.GameCenter`). The fixture tests prove the direction math agrees with `hex_utils` in hex_utils' own geometry.
+The mod does **not** call the game's neighbour list (`Utils.GetAllTilesNeighbours`). It takes the vector between the two tiles' centres, computed from `Tile.PosX/PosY` with the game's own `MapGO` formula (`FacingMath.GameCenter`), and snaps it to the nearest of the six 60° sectors (`FacingMath.DirectionOf`). On that geometry, each of the game's six neighbours lands in its named sector: N, NE, SE, S, SW, NW for both even and odd columns (`GameGeometryNeighbours` tests).
+
+The fixture `tests/fixtures/hex_utils_neighbors.json` (288 cases) is regenerated from the even-q `src/hex_utils.py` (PR #9), which uses the same formula. The tests check `GameCenter` against `hex_utils.game_position`, and check that every `hex_utils` port is the direction `DirectionOf` returns.
 
 ## Facing storage
 - The mod reuses the vanilla serialised field `Unit.FacingRotation` (enum `FacingRotations : byte`). N, NE, SE, S, SW and NW map to facings 0–5.

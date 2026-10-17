@@ -14,14 +14,17 @@ public class FacingMathTests
     }
 
     [Fact]
-    public void CenterMatchesHexUtils_OddQ()
+    public void CenterMatchesHexUtils_EvenQ()
     {
-        // hex_utils.hex_center: x = col*sqrt(3)/2, y = row + 0.5*(col&1)  (odd columns shifted north)
+        // hex_utils is now the game's native even-q: game_position = MapGO, hex_center = MapGO / 5.1
         foreach (var c in Fixture().GetProperty("cases").EnumerateArray())
         {
-            FacingMath.Center(c.GetProperty("col").GetInt32(), c.GetProperty("row").GetInt32(), 1, Math.Sqrt(3) / 2, 1.0, out double x, out double y);
-            Assert.Equal(c.GetProperty("cx").GetDouble(), x, 9);
-            Assert.Equal(c.GetProperty("cy").GetDouble(), y, 9);
+            int col = c.GetProperty("col").GetInt32(), row = c.GetProperty("row").GetInt32();
+            FacingMath.GameCenter(col, row, out double gx, out double gy);
+            Assert.Equal(c.GetProperty("gx").GetDouble(), gx, 5);
+            Assert.Equal(c.GetProperty("gy").GetDouble(), gy, 5);
+            Assert.Equal(c.GetProperty("cx").GetDouble(), gx / FacingMath.GameRowPitch, 5);
+            Assert.Equal(c.GetProperty("cy").GetDouble(), gy / FacingMath.GameRowPitch, 5);
         }
     }
 

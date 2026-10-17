@@ -7,7 +7,7 @@ Results come in two kinds:
 **Done on the box:**
 - [Box] `dotnet build -c Release`: 0 warnings, 0 errors (net48, against template DLLs at commit 5fd716b).
 - [Box] 39 unit tests pass:
-  - direction math matches `src/hex_utils.py` (288 neighbour cases);
+  - direction math matches the even-q `src/hex_utils.py` (288 neighbour cases; centres equal `MapGO`);
   - the game's grid geometry;
   - front/flank/rear arcs, rounding and enum mapping;
   - every patched method and field exists with the exact signature in `Assembly-CSharp.dll`.
