@@ -42,7 +42,10 @@ def test_no_faction_bias():
 def test_inheritance_flags_and_echelons():
     rows = H.build()
     regs = [r for r in rows if r["row_type"] in ("regiment", "battery")]
-    assert regs and all("INHERITED_FROM_PARENT" in r["flags"] for r in regs)
+    assert regs and all(("INHERITED_FROM_PARENT" in r["flags"]) != ("OWN_RATING" in r["flags"]) for r in regs)
+    for r in regs:
+        if "OWN_RATING" in r["flags"]:
+            assert r["rating_from"] == r["unit_id"]
     provisional = [r for r in rows if r["confidence"] == "provisional"]
     assert provisional and all(r["flags"].startswith("PROVISIONAL_RATING") for r in provisional)
     cmd = {(r["unit_id"], r["as_of_date"]): r for r in rows if r["row_type"] == "commander"}
@@ -50,3 +53,27 @@ def test_inheritance_flags_and_echelons():
     assert cmd[("CMD_EWELL", "1862-05-25")]["echelon"] == "division"
     assert cmd[("CMD_BANKS", "1862-03-23")]["echelon"] == "department"
     assert cmd[("CMD_JOHNSON_E", "1862-05-08")]["echelon"] == "division"  # documented override
+
+
+def test_own_rating_preferred_and_inherits_rows_skipped():
+    rows = {(r["unit_id"], r["as_of_date"]): r for r in H.build()}
+    ga = rows[("REG_GA12", "1862-05-25")]   # UR169 says "inherits" -> falls back to UR168 (own)
+    assert ga["rating_id"] == "UR168" and "OWN_RATING" in ga["flags"]
+    assert not any(k[0] == "REG_VA12" for k in rows)
+
+
+def test_excluded_units_absent_with_reason():
+    ids = {r["unit_id"] for r in H.build()}
+    assert not ids & set(H.EXCLUDED)
+    with open(H.OUT_EXCLUDED, newline="", encoding="utf-8") as f:
+        ex = {r["unit_id"]: r["excluded_reason"] for r in csv.DictReader(f)}
+    assert set(ex) == {"REG_OH13C", "ART_PLEASANTS", "ART_US_WVB", "ART_US_ADDHOW", "ART_US_PAE"}
+    assert all(v.startswith("UNRATED") for v in ex.values())
+
+
+def test_crutchfield_starts_may_8():
+    from src.oob import OOB
+    from datetime import date
+    oob = OOB.load()
+    assert oob.commanders["CMD_CRUTCHFIELD"]["first_mentioned"] in ("1862-05-08", date(1862, 5, 8))
+    assert all(c["valid_from"] >= date(1862, 5, 8) for c in oob.commands if c["commander_id"] == "CMD_CRUTCHFIELD")

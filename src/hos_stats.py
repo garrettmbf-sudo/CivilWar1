@@ -14,9 +14,18 @@ import csv
 import os
 from datetime import date
 
-from src.oob import OOB, DATA_DIR, _d, _rows
+from src.oob import OOB, DATA_DIR, _d, _rows, canonical_id
 
 OUT = os.path.join(DATA_DIR, "hos_unit_stats_1862.csv")
+OUT_EXCLUDED = os.path.join(DATA_DIR, "hos_unit_stats_excluded_1862.csv")
+# Unrated / doubtful items: kept flagged in the OOB, never given stats.
+EXCLUDED = {
+    "REG_OH13C": "UNRATED: likely spurious - no 13th Ohio Cavalry in OR 12/1 full-text search",
+    "ART_PLEASANTS": "UNRATED: no battery-specific evidence in unit_ratings_1862.csv",
+    "ART_US_WVB": "UNRATED: no battery-specific evidence in unit_ratings_1862.csv",
+    "ART_US_ADDHOW": "UNRATED: organization UNCONFIRMED (Blenker additional howitzers)",
+    "ART_US_PAE": "UNRATED: no battery-specific evidence in unit_ratings_1862.csv",
+}
 FIELDS = ["row_type", "unit_id", "name", "faction", "unit_class", "as_of_date", "rating_id",
           "rating_from", "experience", "cohesion_morale", "training", "initiative", "reliability",
           "tactical_skill", "administration", "echelon", "soft_damage", "hard_damage",
@@ -100,11 +109,38 @@ def build(oob: OOB | None = None) -> list[dict]:
     crs = _rows("command_ratings_1862.csv")
     out: list[dict] = []
 
-    for r in sorted(urs, key=lambda r: (r["unit_id"], r["as_of_date"])):
+    oob_units = set(oob.regiments) | set(oob.artillery)
+    for r in urs:
+        r["unit_id"] = canonical_id(r["unit_id"])
+    # direct regiment/battery ratings; rows whose basis says "inherits" are not direct evidence
+    direct = [r for r in urs if r["unit_id"] in oob_units and "inherits" not in r["basis"].lower()]
+
+    def own_rating(uid: str, on: date) -> dict | None:
+        past = [r for r in direct if r["unit_id"] == uid and _d(r["as_of_date"]) <= on]
+        return max(past, key=lambda r: r["as_of_date"]) if past else None
+
+    def child(row_type, uid, name, cls, parent, extra):
+        own = own_rating(uid, _d(parent["as_of_date"]))
+        if own:
+            src, how = own, ["OWN_RATING"]
+        else:
+            src, how = None, ["INHERITED_FROM_PARENT"]
+        e, c, t = ((int(src["experience"]), int(src["cohesion_morale"]), int(src["training"]))
+                   if src else (parent["experience"], parent["cohesion_morale"], parent["training"]))
+        conf = src["confidence"] if src else parent["confidence"]
+        return {**parent, "row_type": row_type, "unit_id": uid, "name": name, "unit_class": cls,
+                "experience": e, "cohesion_morale": c, "training": t, "confidence": conf,
+                "rating_id": src["rating_id"] if src else parent["rating_id"],
+                "rating_from": uid if src else parent["rating_from"],
+                "sources": src["sources"] if src else parent["sources"],
+                **unit_stats(cls, e, c, t, 1), "flags": _flags(conf, how + extra)}
+
+    for r in sorted((r for r in urs if r["unit_id"] in oob.formations),
+                    key=lambda r: (r["unit_id"], r["as_of_date"])):
         fid, on = r["unit_id"], _d(r["as_of_date"])
         f = oob.formations[fid]
         cls = f["type"] if f["type"] in BASE else "infantry"
-        regs = oob.members_of(fid, on)
+        regs = [x for x in oob.members_of(fid, on) if x not in EXCLUDED]
         exp, coh, trn = int(r["experience"]), int(r["cohesion_morale"]), int(r["training"])
         flags = ["HP_PROXY_REGIMENT_COUNT"]
         if not regs:
@@ -115,20 +151,15 @@ def build(oob: OOB | None = None) -> list[dict]:
         out.append({**base, "row_type": "formation", "unit_id": fid, "name": f["designation"],
                     "unit_class": cls, **unit_stats(cls, exp, coh, trn, len(regs)),
                     "flags": _flags(r["confidence"], flags)})
-        # regiments and batteries inherit the parent brigade's rating on that date
         for rid in regs:
             reg = oob.regiments[rid]
             rc = reg["type"] if reg.get("type") in BASE else "infantry"
-            out.append({**base, "row_type": "regiment", "unit_id": rid, "name": reg["designation"],
-                        "unit_class": rc, **unit_stats(rc, exp, coh, trn, 1),
-                        "flags": _flags(r["confidence"], ["INHERITED_FROM_PARENT"])})
+            out.append(child("regiment", rid, reg["designation"], rc, base, []))
         for b in oob.artillery.values():
-            if b["attached_to"] == fid and _d(b["attached_to_from"]) and _d(b["attached_to_from"]) <= on:
-                out.append({**base, "row_type": "battery", "unit_id": b["battery_id"],
-                            "name": b["designation"], "unit_class": "artillery",
-                            **unit_stats("artillery", exp, coh, trn, 1),
-                            "flags": _flags(r["confidence"], ["INHERITED_FROM_PARENT",
-                                                              "GUN_TYPE_UNVERIFIED_RANGE_3"])})
+            if (b["battery_id"] not in EXCLUDED and b["attached_to"] == fid
+                    and _d(b["attached_to_from"]) and _d(b["attached_to_from"]) <= on):
+                out.append(child("battery", b["battery_id"], b["designation"], "artillery", base,
+                                 ["GUN_TYPE_UNVERIFIED_RANGE_3"]))
 
     for r in sorted(crs, key=lambda r: (r["commander_id"], r["as_of_date"])):
         cid, on = r["commander_id"], _d(r["as_of_date"])
@@ -164,6 +195,11 @@ def write(path: str = OUT) -> int:
         w.writeheader()
         for r in rows:
             w.writerow({k: r.get(k, "") for k in FIELDS})
+    with open(OUT_EXCLUDED, "w", newline="", encoding="utf-8") as f:
+        w = csv.writer(f, lineterminator="\n")
+        w.writerow(["unit_id", "excluded_reason"])
+        for k in sorted(EXCLUDED):
+            w.writerow([k, EXCLUDED[k]])
     return len(rows)
 
 

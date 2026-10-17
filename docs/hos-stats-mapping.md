@@ -31,7 +31,11 @@ There is no "defense" field in HoS (Armor applies vs. hard attacks), and no per-
 
 **Cohesion/morale** has no per-unit field: HoS morale is a global option with dynamic levels. So cohesion feeds **only the starting rank**. It isn't put into Armor, because Armor only affects hard attacks and would be meaningless here.
 
-Regiments and batteries emit rows that **inherit the parent brigade's rating** for that date (`INHERITED_FROM_PARENT`). Batteries attached to HQ/artillery groups have no unit rating and are not emitted.
+Regiments and batteries use their **own rating** when there is one (`OWN_RATING`): the latest regiment- or battery-level row dated on or before the brigade's rating date. Rows whose basis says "inherits [brigade] rating" don't count as direct evidence. Without a direct rating, the unit **inherits the parent brigade's rating** (`INHERITED_FROM_PARENT`).
+
+**Excluded (unrated):** REG_OH13C, ART_PLEASANTS, ART_US_WVB, ART_US_ADDHOW and ART_US_PAE stay in the OOB with their flags but get no stats. They're listed with an `excluded_reason` in `historical_data/hos_unit_stats_excluded_1862.csv` and don't count toward brigade HP.
+
+**Legacy id:** REG_VA12 was renamed to REG_GA12 (12th Georgia, OR 12/1 p.476). The PR #13 ratings files still use the old id, which `src.oob.LEGACY_ID_ALIASES` resolves when the files are read. Batteries attached to HQ/artillery groups have no unit rating and are not emitted.
 
 ## Commander units
 | Field | Formula |
