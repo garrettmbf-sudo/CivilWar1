@@ -39,4 +39,4 @@ Examples: `map/valley-tile-plan`, `history/verify-pr10-map-data`, `mod/facing`. 
 Labels: `status:needs-user` (waiting on a user decision), `status:needs-ingame-test` (only Hex of Steel can prove it), `status:blocked` (conflict or dependency), `status:stacked`.
 
 ## CI
-`.github/workflows/ci.yml` (staged at `docs/ci/ci.yml` until the user grants the `workflow` scope) runs on every push and PR (Linux): `pytest`, `python src/oob.py` (OOB validation), `python scripts/check_portrait_manifest.py`. PowerShell tooling isn't run in CI. A red CI blocks merge once branch protection is on.
+`.github/workflows/ci.yml` runs on every push and PR (Linux): `pytest`, `python src/oob.py` (OOB validation), `python scripts/check_portrait_manifest.py`. PowerShell tooling isn't run in CI. A red CI blocks merge once branch protection is on.

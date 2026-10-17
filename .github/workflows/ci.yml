@@ -1,5 +1,3 @@
-# PENDING: move to .github/workflows/ci.yml. The bot token lacks the GitHub `workflow` scope, so it could not push this file there.
-# One-time fix by the user: `gh auth refresh -s workflow` (then a bot can move it), or move it in the GitHub web UI.
 name: CI
 on:
   push:

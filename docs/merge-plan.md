@@ -15,7 +15,7 @@ Only the user merges or closes anything. Conflicts below come from simulating th
 | 8 | #16 | history/verify-pr10-map-data → #10 | history | **conflict** with the #10 fixes (96c8a0b) in `sources_1862.csv` and `tools/powershell/valley_map_data.ps1`. Archivist resolves; user merges into #10. |
 | 9 | #10 | map/valley-tile-plan → #9 | map | draft; the user marks it ready, then merges after #9 |
 | 10 | #18 | mod/facing → main | engine | clean; needs the in-game test before merge |
-| 11 | #19 | repo/workflow → main | repo | clean; the CI file has to be moved to `.github/workflows/` |
+| 11 | #19 | repo/workflow → main | repo | clean |
 
 When a base PR merges, retarget its stacked PRs to `main` (GitHub does this automatically if the base branch is deleted; otherwise run `gh pr edit N --base main`).
 
