@@ -1,6 +1,6 @@
 """Hex counts, basemap size and per-scale 1862 mechanics for the Valley map polygon.
 
-Uses the shared flat-top odd-q convention (src/hex_utils.py). Hex size is measured across
+Uses the game's native flat-top even-q convention (src/hex_utils.py, MapGO pitch 4.42:5.1). Hex size is measured across
 the flats, which equals the centre-to-centre spacing.
 """
 from __future__ import annotations
@@ -58,14 +58,12 @@ def grid_counts(poly, hex_yd: float) -> dict:
     f = Frame(poly)
     s = hex_yd * YD
     w, h = f.size_m
-    cols = math.ceil(w / (s * math.sqrt(3) / 2)) + 1
+    cols = math.ceil(w / (s * hu.COL_PITCH_RATIO)) + 1
     rows = math.ceil(h / s) + 1
     inside = 0
     for c in range(cols):
         for r in range(rows):
             x, y = hu.hex_center(c, r, s)
-            if hu.ROW_DIRECTION < 0:
-                y = -y
             if point_in_polygon(*f.to_lonlat(x, y), poly):
                 inside += 1
     px_scale = DETAIL_PX_PER_HEX / s

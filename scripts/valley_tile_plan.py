@@ -1,6 +1,6 @@
 """Prototype: assign Valley-map tile names from a finite library and render a preview mosaic.
 
-Grid: flat-top odd-q from ``src.hex_utils`` (rows increase north; pending in-game test).
+Grid: Hex of Steel native flat-top even-q from ``src.hex_utils`` (even columns half a row north, rows increase north).
 
 Rules
 -----
@@ -108,18 +108,18 @@ def trace_path(grid, cls: str, path: list[tuple[int, int]]) -> None:
 
 # ---------------------------------------------------------------- preview
 def render_preview(assign, thumb_for, out_png: Path, thumb_px: int = 200, overlay=None):
-    """Mosaic downscaled tiles on the flat-top odd-q grid (north up)."""
+    """Mosaic downscaled tiles on the native even-q grid (north up, game pitch 4.42:5.1)."""
     from PIL import Image, ImageDraw
     w_hex, h_hex = thumb_px * hu.HEX_WIDTH_PX / hu.TILE_PX, thumb_px * hu.HEX_HEIGHT_PX / hu.TILE_PX
     cols = [c for c, _ in assign]; rows = [r for _, r in assign]
     c0, r0, r1 = min(cols), min(rows), max(rows)
 
     def xy(c, r):
-        x = (c - c0) * 0.75 * w_hex
-        y = (r1 - r - 0.5 * (c & 1) * hu.ROW_DIRECTION) * h_hex + 0.5 * h_hex
+        x = (c - c0) * hu.COL_PITCH_RATIO * h_hex
+        y = (r1 - r + (0.0 if hu.is_shifted_north(c) else 0.5)) * h_hex  # even columns sit half a row north
         return x, y
 
-    W = int((max(cols) - c0) * 0.75 * w_hex + thumb_px)
+    W = int((max(cols) - c0) * hu.COL_PITCH_RATIO * h_hex + thumb_px)
     H = int((r1 - r0 + 1.5) * h_hex + thumb_px)
     canvas = Image.new("RGBA", (W, H), (235, 230, 220, 255))
     for (c, r) in sorted(assign, key=lambda k: -k[1]):  # paint north first, south on top
@@ -198,8 +198,7 @@ def demo_grid(cols=24, rows=18) -> tuple[dict, list]:
             d = (c - 0.9 * r) - 4
             g[(c, r)] = Cell("woods" if abs(d) < 1.6 else "hill" if abs(d) < 3.0 else "open")
     pike = [(12, r) for r in range(rows)]
-    creek = [(0, 3), (1, 3), (2, 4), (3, 4), (4, 5), (5, 5), (6, 6), (7, 6), (8, 7), (9, 7), (10, 8), (11, 8),
-             (12, 9), (13, 9), (14, 10), (15, 10), (16, 11), (17, 11), (18, 12)]
+    creek = [(c, 3 + (c + 1) // 2) for c in range(19)]  # zig-zag NE on even-q: (0,3) (1,4) (2,4) ... (18,12)
     for path in (pike, creek):  # make sure consecutive cells are true neighbours
         for a, b in zip(path, path[1:]):
             assert b in hu.offset_neighbors(*a), (a, b)

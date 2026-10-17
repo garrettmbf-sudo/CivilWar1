@@ -51,7 +51,7 @@ Sources are cited inline. **[DLL]** means the developer-shipped `Assembly-CSharp
 ```
 [HarmonyPatch(typeof(UnitGO), nameof(UnitGO.RotateAttackedUnit))]  Prefix: if mod unit → return false (keep facing)
 [HarmonyPatch(typeof(Unit), nameof(Unit.GetPotentialDamage))]      Postfix(Unit __instance, UnitGO p_targetUnitGO, bool p_isSupportiveFire, ref int __result):
-     dir = HexDir(target tile → attacker tile)          // odd-q, same as src/hex_utils.py
+     dir = HexDir(target tile → attacker tile)          // native even-q, same as src/hex_utils.py / Utils.GetAllTilesNeighbours
      rel = (dir - Facing6(target.FacingRotation)) mod 6   // 0 = front, 1/5 = flank, 2/4 = rear-flank, 3 = rear
      __result = round(__result * table[rel])              // skip when artillery fires at range (UNKNOWN design)
 [HarmonyPatch(typeof(UnitGO), nameof(UnitGO.SetUnitRotation))]    Postfix: update a child chevron sprite to the facing

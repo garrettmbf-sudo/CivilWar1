@@ -77,7 +77,7 @@ Main sources:
   - Memory: about **0.25 MB per unique tile** (DXT5, 512²), all loaded at mod start.
 - **Consequences:**
   - (a) Painting detail above 512 px per hex is invisible in game.
-  - (b) Unique slices for every hex are impossible on memory grounds, not just disk: 122,790 × 0.25 MB ≈ 31 GB at 500 yd.
+  - (b) Unique slices for every hex are impossible on memory grounds, not just disk: 122,709 × 0.25 MB ≈ 31 GB at 500 yd.
   - (c) A one-method Harmony patch could load 512-px files at the right scale, cutting disk use ~15×. This is UNTESTED.
 - **Map size:**
   - `MapEditorMenu.NewMap` does `int.Parse` on X/Y with **no clamp**. The map is a rectangular `Tile[,]` and **every cell becomes a GameObject** with a sprite renderer and collider (`MapGO`; [DEV-U]). Hexes outside our polygon still cost.
