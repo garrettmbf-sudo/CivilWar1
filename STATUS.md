@@ -13,7 +13,7 @@ Standalone tactical scenario for **First Kernstown, 23 March 1862** in Hex of St
 - **Terrain:** early-spring palette — leafless woods, tan/brown fields, marshy meadows, muted gray-blue creeks, Valley Pike, Winchester & Potomac RR.
 
 ## Order of battle (18 units)
-Positions are game hexes (v0.4.2 grid). `kernstown_units.json` still uses the legacy numbering until Quartermaster re-issues it; see `docs/kernstown_unit_coord_change.md`.
+Positions are game-native even-q hexes (v0.4.2 grid). `kernstown_units.json` has `"grid_convention": "game-native"`.
 
 ### Confederate (Jackson's Valley District, ~3,800 men)
 | Unit | Template | Position | Entrench | Source |

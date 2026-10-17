@@ -1,7 +1,6 @@
 # Kernstown unit coordinates: change for Quartermaster (v0.4.2)
 
-**Owner of `data/layers/kernstown_units.json`: Quartermaster.** This file was *not* edited by the map work.
-Please re-issue it in the new coordinates below and add `"grid_convention": "game-native"` at the top level.
+**Done.** `kernstown_units.json` re-issued in game-native even-q coordinates with `"grid_convention": "game-native"` (2026-10-17).
 
 ## What changed
 From v0.4.2 the Kernstown map uses Hex of Steel's own hex convention (see `docs/decisions.md`):
@@ -44,8 +43,7 @@ new_row = old_row       if old_col is odd
 Stone-wall hexes (DamageModificator 35) in the new grid: 14,22  15,23  16,22  17,23  18,22  19,22  20,22.
 Stonewall Brigade (17,23) and Fulkerson (15,23) are still on wall hexes, as before.
 
-## Until the file is re-issued
-`tools/build_kernstown_map.ps1` detects a units file **without** `"grid_convention": "game-native"` and applies the
-rule above to the units only (with a warning), so v0.4.2 scenarios already place the units correctly. When you
-re-issue the file in the new coordinates, you **must** add the marker, or the builder would move even-column units
-a second time. After that the shim can be deleted (see the TEMPORARY block in the builder).
+## Builder shim
+`tools/build_kernstown_map.ps1` still has a TEMPORARY legacy-conversion shim (lines 174-178) that detects
+files without `"grid_convention": "game-native"` and adjusts even-column rows. Now that the file is marked,
+the shim is a no-op. It can be removed in a future cleanup.
