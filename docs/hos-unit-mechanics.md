@@ -92,6 +92,8 @@ Rules for generating scenarios from `src/oob.py` snapshots:
 6. **UNVERIFIED:** whether a commander occupies a tile exclusively (blocking a combat unit) and whether
    scenario-placed (not purchased) commanders behave identically. Test in the editor before mass generation.
 
+> Radius restriction to specific units: see [hos-commander-radius-restriction.md](hos-commander-radius-restriction.md).
+
 ## 4. Custom units, mod structure, counter art
 - Create a mod in-game (Mods menu). Local mods: `%USERPROFILE%\AppData\LocalLow\Valentin's studios\Hex of Steel\MODS`;
   Workshop copies: `steamapps\workshop\content\1240630\` (read-only, Steam restores them) [S4], [S3].
