@@ -23,7 +23,7 @@ An in-progress **Hex of Steel** modification focused exclusively on the **Marchâ
 | Root `mdl_*.png` / `Unit_*.png` | Existing art with established names | **Frozen paths** until consumer/dependency audit |
 | `historical_data/` | Portrait manifest and future sourced OOB / formation history | Inventory ready; historical OOB TBD |
 | `maps/` | Existing .sav samples; generated files kept separate | Samples **not** evidence of writer compatibility |
-| `scenarios/1862/` | Campaign design and planned scenarios | In progress |
+| `scenarios/valley_campaign_1862/` (primary) + per-battle folders, see `scenarios/README.md` | Campaign design and planned scenarios | In progress |
 | `scenarios/1864/` | Archived future concept, **out of scope** | Preserve; do not expand |
 | `src/`, `scripts/`, `tests/` | Hex math, inspection, experimental tools, automated tests | Mixed readiness; see roadmap |
 | `mod/` | Reserved for **verified** game-ready output | No completed release yet |
