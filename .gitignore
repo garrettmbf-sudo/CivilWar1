@@ -5,3 +5,7 @@ dist/
 mod/Graphics/Tiles/
 data/basemap_*.png
 *.bak*
+painted_sections/debug_*
+painted_sections/test_*
+painted_sections/guide_*
+painted_sections/closeup_*
