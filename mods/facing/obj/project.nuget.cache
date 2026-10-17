@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "JISQH0L5F7E=",
+  "success": true,
+  "projectFilePath": "/workspace/CivilWar1/mods/facing/HexOfSteelFacing.csproj",
+  "expectedPackageFiles": [
+    "/home/box/.nuget/packages/microsoft.netframework.referenceassemblies/1.0.3/microsoft.netframework.referenceassemblies.1.0.3.nupkg.sha512",
+    "/home/box/.nuget/packages/microsoft.netframework.referenceassemblies.net48/1.0.3/microsoft.netframework.referenceassemblies.net48.1.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}

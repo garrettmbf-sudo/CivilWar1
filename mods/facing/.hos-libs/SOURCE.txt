@@ -1,0 +1,2 @@
+template commit 5fd716b1fa32a4b511ecf2e210686d0240f2f047 Wed Oct 7 10:02:39 2026 +0200
+495f9af5a582fee9ead9dda2ae72f1dc0ce814dedcd910b682af7beb04d97c44  /workspace/CivilWar1/mods/facing/.hos-libs/Assembly-CSharp.dll

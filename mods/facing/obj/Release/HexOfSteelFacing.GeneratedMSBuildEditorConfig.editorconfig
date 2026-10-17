@@ -1,0 +1,5 @@
+is_global = true
+build_property.RootNamespace = HexOfSteelFacing
+build_property.ProjectDir = /workspace/CivilWar1/mods/facing/
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
