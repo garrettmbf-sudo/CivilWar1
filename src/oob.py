@@ -199,6 +199,32 @@ class OOB:
                 "support_batteries": loose_batts}
 
 
+OPENING_DATE = date(1862, 3, 23)  # campaign opening (Kernstown); matches validate() window
+ARRIVAL_CERTAINTY = {"confirmed", "approximate", "unverified"}
+
+
+def arrival_schedule_errors(oob: "OOB") -> list[str]:
+    """Every formation entering after the opening needs a located, dated, cited arrival row."""
+    errs = []
+    covered = {}
+    for ev in oob.events:
+        ids = {ev["subject_id"], *[c for c in (ev.get("covers") or "").split("|") if c]}
+        for i in ids:
+            covered.setdefault(i, []).append(ev)
+        cert = (ev.get("date_certainty") or "").strip()
+        if cert not in ARRIVAL_CERTAINTY:
+            errs.append(f"event {ev['event_id']}: date_certainty {cert!r} not in {sorted(ARRIVAL_CERTAINTY)}")
+        if not (ev.get("location") or "").strip():
+            errs.append(f"event {ev['event_id']}: missing location")
+        if cert != "unverified" and not re.search(r"SRC\d{3} p\.\d", ev.get("sources") or ""):
+            errs.append(f"event {ev['event_id']}: {cert} date needs a page-cited source")
+    for fid, f in oob.formations.items():
+        af = _d(f["active_from"])
+        if af and af > OPENING_DATE and fid not in covered:
+            errs.append(f"{fid}: enters {af} but has no arrival/entry event")
+    return errs
+
+
 # ---------- validation ----------
 # Pre-existing modelling gaps surfaced by the empty-counter check. Each needs a
 # source-backed fix; they are listed (not silently ignored) so new gaps fail.
@@ -350,6 +376,7 @@ def validate(oob: OOB, repo_root: str | None = None) -> list[str]:
         if not c["commander_id"].strip() and "vacan" not in (c.get("sources") or "").lower():
             e(f"command {c['brigade_id']} {c['valid_from']}: empty commander without documented vacancy")
 
+    errors.extend(arrival_schedule_errors(oob))
     return errors
 
 

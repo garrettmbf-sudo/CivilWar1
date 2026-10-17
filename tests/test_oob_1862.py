@@ -90,3 +90,36 @@ def test_validator_catches_empty_sources_counters_and_commanders():
     assert "FRM_US_STAHEL: empty sources" in errs
     assert "FRM_US_KOLTES on 1862-06-09: no commander record" in errs
     assert "FRM_US_BOHLEN on 1862-06-09: empty counter" in errs
+
+
+def test_opening_snapshot_complete_and_cited():
+    from src.oob import OPENING_DATE
+    oob = OOB.load()
+    assert OPENING_DATE == date(1862, 3, 23)
+    snap = oob.snapshot(OPENING_DATE)
+    ids = {c["formation_id"] for c in snap["counters"]}
+    # Kernstown OR returns: CS p.384 (Garnett, Burks, Fulkerson + Ashby p.385); US p.346 (Kimball, Sullivan, Tyler, Brodhead)
+    for fid in ["FRM_CS_STONEWALL", "FRM_CS_BURKS", "FRM_CS_FULKERSON", "FRM_CS_ASHBY",
+                "FRM_US_KIMBALL1", "FRM_US_SULLIVAN2", "FRM_US_TYLER3", "FRM_US_CAV_BRODHEAD"]:
+        assert fid in ids, fid
+        assert "p." in oob.formations[fid]["sources"], fid
+    for c in snap["counters"]:
+        if oob.formations[c["formation_id"]]["counter"] == "Y":
+            assert c["commander"], c["formation_id"]
+            assert c["regiments"], c["formation_id"]
+
+
+def test_arrival_schedule_complete():
+    from src.oob import OPENING_DATE, arrival_schedule_errors
+    oob = OOB.load()
+    assert arrival_schedule_errors(oob) == []
+    later = [fid for fid, f in oob.formations.items()
+             if f["active_from"] and date.fromisoformat(f["active_from"]) > OPENING_DATE]
+    assert later  # later-date data retained, not deleted
+    by_id = {e["event_id"]: e for e in oob.events}
+    # key historical arrivals present with OR pages
+    assert by_id["E005"]["subject_id"] == "FRM_CS_EWELLDIV" and "p.470" in by_id["E005"]["sources"]
+    assert by_id["E014"]["date"] == date(1862, 5, 7)   # Johnson junction, OR 12/1 p.471
+    assert by_id["E016"]["date"] == date(1862, 5, 9)   # Blenker joins Fremont, p.8
+    assert by_id["E017"]["date"] == date(1862, 5, 30)  # Shields back at Front Royal, p.282
+    assert by_id["E013"]["date"] == date(1862, 4, 6)   # Taliaferro assigned, Pt.3 p.844
