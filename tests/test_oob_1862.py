@@ -151,3 +151,10 @@ def test_opening_strength_flags():
     assert all(v["subject_id"] == "FRM_US_SHIELDSDIV_K" for v in shields.values())
     for k, page in (("R110", "p.342"), ("R119", "p.335"), ("R120", "p.336")):
         assert page in shields[k]["sources"], k
+
+
+def test_shields_r120_is_estimate():
+    oob = OOB.load()
+    r = {x["return_id"]: x for x in oob.returns}["R120"]
+    assert r["kind"] == "estimate"
+    assert "between 7,000 and 8,000" in r["basis"]
