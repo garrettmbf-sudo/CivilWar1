@@ -2,7 +2,7 @@
   "hexsides": [
     {
       "col": 14,
-      "row": 23,
+      "row": 22,
       "edge": 0,
       "edge_name": "N",
       "draw_edge": 1
@@ -16,7 +16,7 @@
     },
     {
       "col": 16,
-      "row": 23,
+      "row": 22,
       "edge": 0,
       "edge_name": "N",
       "draw_edge": 1
@@ -30,7 +30,7 @@
     },
     {
       "col": 18,
-      "row": 23,
+      "row": 22,
       "edge": 0,
       "edge_name": "N",
       "draw_edge": 1
@@ -44,7 +44,7 @@
     },
     {
       "col": 20,
-      "row": 23,
+      "row": 22,
       "edge": 0,
       "edge_name": "N",
       "draw_edge": 1
@@ -53,7 +53,7 @@
   "confederate_hexes": [
     [
       14,
-      23
+      22
     ],
     [
       15,
@@ -61,7 +61,7 @@
     ],
     [
       16,
-      23
+      22
     ],
     [
       17,
@@ -69,7 +69,7 @@
     ],
     [
       18,
-      23
+      22
     ],
     [
       19,
@@ -77,7 +77,7 @@
     ],
     [
       20,
-      23
+      22
     ]
   ],
   "notes": "Wall INSIDE Confed hexes along N edge. Layers tagged; DamageModificator=35. HoS: no hexside/directional combat. Prefer DM35 over fortification tile.",
@@ -92,5 +92,6 @@
       "earthwork_fort_tile": "Named fort tiles exist in ACW.sav as VPs; not a field wall"
     },
     "ps1": "build_kernstown_map.ps1 sets DamageModificator=35 on stone_wall-tagged hexes"
-  }
+  },
+  "grid_convention": "game-native: flat-top, rows north, even columns raised, 4.42:5.1 (v0.4.2)"
 }

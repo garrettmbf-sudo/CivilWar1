@@ -50,11 +50,9 @@ def load_font(size, bold=False):
     return ImageFont.load_default()
 
 def hex_dist(a, b):
-    def to_cube(c, r):
-        x = c; z = r - (c - (c & 1)) // 2; y = -x - z
-        return x, y, z
-    x1, y1, z1 = to_cube(*a); x2, y2, z2 = to_cube(*b)
-    return (abs(x1 - x2) + abs(y1 - y2) + abs(z1 - z2)) // 2
+    """Hex distance in the game convention (shared implementation in hex_grid.py)."""
+    from hex_grid import hex_distance
+    return hex_distance(tuple(a), tuple(b))
 
 # ---------- textures ----------
 def _noise(w, h, scale=8, seed=0):

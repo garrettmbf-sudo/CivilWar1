@@ -12,7 +12,8 @@ function Say([string]$m, [string]$c = 'Gray') { Write-Host $m -ForegroundColor $
 function Install-Kernstown {
     $Repo    = 'garrettmbf-sudo/CivilWar1'
     $Branch  = 'kernstown-map'
-    $Tag     = 'kernstown-v0.4.1'
+    $Tag     = 'kernstown-v0.4.2'
+    $NTiles  = 3348      # 62 x 54 game-native hexes (v0.4.2)
     $ModName = 'First Kernstown 1862'
     $NeedGB  = 14
     $DryRun  = ($env:KERNSTOWN_DRYRUN -eq '1')
@@ -112,6 +113,12 @@ function Install-Kernstown {
 
     # ---- 5. Extract (strip leading 'mod/' so files land in MODS\First Kernstown 1862) ----
     New-Item -ItemType Directory -Force -Path $ModDir | Out-Null
+    # v0.4.2 re-indexed the grid to the game's convention: tiles from an older install would sit in the wrong hexes
+    $oldTiles = Join-Path $ModDir 'Graphics\Tiles\Summer'
+    if (Test-Path -LiteralPath $oldTiles) {
+        $stale = @(Get-ChildItem -LiteralPath $oldTiles -Filter 'SV_K_*.png' -ErrorAction SilentlyContinue)
+        if ($stale.Count) { Say "Removing $($stale.Count) tiles from a previous version..." Yellow; $stale | Remove-Item -Force }
+    }
     $modFull = [IO.Path]::GetFullPath($ModDir).TrimEnd('\') + '\'
     foreach ($a in $assets) {
         Say "Extracting $($a.name)..." Cyan
@@ -135,14 +142,14 @@ function Install-Kernstown {
         } finally { $zip.Dispose() }
     }
     $tiles = @(Get-ChildItem -LiteralPath (Join-Path $ModDir 'Graphics\Tiles\Summer') -Filter 'SV_K_*.png' -ErrorAction SilentlyContinue).Count
-    Say "Tiles installed: $tiles (expected 3410)" $(if ($tiles -ge 3410) { 'Green' } else { 'Yellow' })
+    Say "Tiles installed: $tiles (expected $NTiles)" $(if ($tiles -ge $NTiles) { 'Green' } else { 'Yellow' })
 
     # ---- 6. Build the scenario (.sav) ----
     $built = $false
     if ($GameDir) {
         Say "Downloading the map builder and data..." Cyan
         $src = Join-Path $Temp 'src'
-        $raw = "https://raw.githubusercontent.com/$Repo/$Branch"
+        $raw = "https://raw.githubusercontent.com/$Repo/$Tag"     # builder + data pinned to the release (was: branch head)
         foreach ($p in 'tools/build_kernstown_map.ps1', 'data/layers/kernstown_game.json', 'data/layers/kernstown_units.json', 'templates/ACW_sample_102x60.sav') {
             $d = Join-Path $src ($p -replace '/', '\')
             New-Item -ItemType Directory -Force -Path (Split-Path $d -Parent) | Out-Null
@@ -158,12 +165,14 @@ function Install-Kernstown {
     }
 
     # ---- 7. Clean up ----
-    if ($built -and $tiles -ge 3410) { Remove-Item -LiteralPath $Temp -Recurse -Force -ErrorAction SilentlyContinue; Say "Temporary files removed." }
+    if ($built -and $tiles -ge $NTiles) { Remove-Item -LiteralPath $Temp -Recurse -Force -ErrorAction SilentlyContinue; Say "Temporary files removed." }
     else { Say "Downloads kept in $Temp so you can re-run the installer without downloading again." Yellow }
 
     Say ""
     Say "=== Done! ===" Green
-    if (-not $built) {
+    if (-not $built -and (Test-Path -LiteralPath (Join-Path $ModDir "Maps\$ModName.sav"))) {
+        Say "Using the pre-built scenario from the release (built against Hex of Steel 8.4.14). If it does not load, set KERNSTOWN_GAMEDIR and re-run to build it locally." Yellow
+    } elseif (-not $built) {
         Say "The scenario file was NOT built. Find your Hex of Steel folder (Steam > right-click Hex of Steel > Manage > Browse local files)," Yellow
         Say "then run in PowerShell:  `$env:KERNSTOWN_GAMEDIR='<that folder>'  and paste the install line again." Yellow
     }

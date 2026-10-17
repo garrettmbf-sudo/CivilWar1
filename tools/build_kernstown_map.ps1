@@ -4,6 +4,8 @@
 # SAFETY: BinaryFormatter can execute code — deserialize only a personally trusted local .sav.
 # Does NOT install to Workshop by default.
 # OOB cross-referenced against CivilWar1 historical_data (SRC001/SRC007).
+# v0.4.2: (col,row) in kernstown_game.json IS the game's (PosX, PosY) - flat-top, rows north, EVEN columns raised
+# (MapGO.cs:452-459; scripts/hex_grid.py; docs/decisions.md). No conversion is applied to the map.
 
 param(
     [string]$LayersJson = "",
@@ -35,14 +37,16 @@ if ([string]::IsNullOrWhiteSpace($UnitsJson)) { $UnitsJson = Join-Path $Root "da
 if ([string]::IsNullOrWhiteSpace($UnitSourceMap)) { $UnitSourceMap = $TemplateMap }
 if (-not (Test-Path $LayersJson)) { throw "Layer file not found: $LayersJson" }
 $layers = Get-Content -Raw -Path $LayersJson | ConvertFrom-Json
-$W = [int]$layers.cols
-$H = [int]$layers.rows
-Write-Output "Kernstown layers: ${W}x${H} ($($layers.hexes.Count) hexes) from $LayersJson"
+# NB: PowerShell variables are case-insensitive - $GridW/$GridH must not be $W/$H, or the per-hex $h loops overwrite them
+$GridW = [int]$layers.cols
+$GridH = [int]$layers.rows
+Write-Output "Kernstown layers: ${GridW}x${GridH} ($($layers.hexes.Count) hexes) from $LayersJson"
 
 # Rules required by the scenario (applied again here so they hold even if the JSON is edited)
-$WallHexes = @("14_23","15_23","16_23","17_23","18_23","19_22","20_23")
-$PrimaryVP = "42_41"
-$SecondaryVP = @{ "27_20" = "Kernstown"; "30_19" = "Opequon Church" }
+# (game-native hexes; legacy v0.4.1 ids were 14_23,15_23,16_23,17_23,18_23,19_22,20_23 / 42_41 / 30_19)
+$WallHexes = @("14_22","15_23","16_22","17_23","18_22","19_22","20_22")
+$PrimaryVP = "42_40"
+$SecondaryVP = @{ "27_20" = "Kernstown"; "30_18" = "Opequon Church" }
 
 if ($GeometryOnly) {
     $missing = 0
@@ -102,12 +106,12 @@ function Make-Tile {
     return $t
 }
 
-$tilesTable = [System.Array]::CreateInstance([Tile], $W, $H)
+$tilesTable = [System.Array]::CreateInstance([Tile], $GridW, $GridH)
 $index = @{}
 foreach ($h in $layers.hexes) { $index["$($h.col)_$($h.row)"] = $h }
 $placed = 0
-for ($y=0; $y -lt $H; $y++) {
-    for ($x=0; $x -lt $W; $x++) {
+for ($y=0; $y -lt $GridH; $y++) {
+    for ($x=0; $x -lt $GridW; $x++) {
         $k = "${x}_${y}"; $h = $index[$k]
         if ($null -eq $h) { throw "No layer entry for hex $k" }
         $mp = [int]$h.mp; $dmg = [int]$h.dmg
@@ -122,9 +126,9 @@ for ($y=0; $y -lt $H; $y++) {
     }
 }
 Write-Output "Placed $placed tiles"
-$map.SizeX = $W; $map.SizeY = $H
+$map.SizeX = $GridW; $map.SizeY = $GridH
 $map.TilesTable = $tilesTable
-$map.ScenarioName = "First Kernstown `u2014 23 March 1862"
+$map.ScenarioName = "First Kernstown $([char]0x2014) 23 March 1862"   # `u{...} is PS7-only; PS 5.1 printed a literal "u2014"
 $map.FileName = "First Kernstown 1862"
 Set-IfProp $map "ScenarioDescription" "Jackson attacks Kimball's division south of Winchester. CSA ~3,800 vs USA ~8,500. Sandy Ridge stone wall hexes give +35 defence."
 foreach ($n in @("NextMap","NextMap2","NextMapDefeat","NextMap2Defeat")) {
@@ -167,22 +171,29 @@ if (-not $NoUnits -and (Test-Path $UnitsJson)) {
         }
     }
     Write-Output ("Unit templates found in source: " + (($templates.Keys | Sort-Object) -join ", "))
+    # TEMPORARY (until Quartermaster re-issues kernstown_units.json in game coordinates, see
+    # docs/kernstown_unit_coord_change.md): a units file without "grid_convention": "game-native" still uses the
+    # legacy v0.4.1 grid, so even-column units move down one row (same ground hex). Remove once the file is marked.
+    $legacyUnits = -not ($unitsSpec.PSObject.Properties["grid_convention"] -and [string]$unitsSpec.grid_convention -eq "game-native")
+    if ($legacyUnits) { Write-Warning "kernstown_units.json is in the legacy v0.4.1 grid - converting unit hexes (even columns: row-1)" }
     $nU = 0
-    foreach ($u in $unitsSpec.units) {
+    foreach ($u0 in $unitsSpec.units) {
+        $u = $u0 | Select-Object *
+        if ($legacyUnits -and ([int]$u.col % 2 -eq 0)) { $u.row = [int]$u.row - 1 }
         $key = "$($u.template_name)|$($u.country)"
         if (-not $templates.ContainsKey($key)) { Write-Warning "No template unit '$key' in $UnitSourceMap - skipped $($u.custom_name)"; continue }
-        if ([int]$u.col -lt 0 -or [int]$u.col -ge $W -or [int]$u.row -lt 0 -or [int]$u.row -ge $H) {
-            Write-Warning "Unit '$($u.custom_name)' at ($($u.col),$($u.row)) is outside grid ${W}x${H} - skipped"
+        if ([int]$u.col -lt 0 -or [int]$u.col -ge $GridW -or [int]$u.row -lt 0 -or [int]$u.row -ge $GridH) {
+            Write-Warning "Unit '$($u.custom_name)' at ($($u.col),$($u.row)) is outside grid ${GridW}x${GridH} - skipped"
             continue
         }
-        $nu = Clone-Obj $templates[$key]
-        Set-IfProp $nu "PosX" ([int]$u.col); Set-IfProp $nu "PosY" ([int]$u.row)
-        Set-IfProp $nu "CustomName" ([string]$u.custom_name); Set-IfProp $nu "ForcedCustomName" $true
-        Set-IfProp $nu "EntrenchmentLevelOnStart" ([int]$u.entrenchment_on_start)
-        Set-IfProp $nu "EntrenchmentLevel" ([int]$u.entrenchment_on_start)
-        Set-IfProp $nu "CurrHP" $nu.MaxHP; Set-IfProp $nu "CurrMP" $nu.MaxMP; Set-IfProp $nu "CurrAmmo" $nu.MaxAmmo
+        $newUnit = Clone-Obj $templates[$key]
+        Set-IfProp $newUnit "PosX" ([int]$u.col); Set-IfProp $newUnit "PosY" ([int]$u.row)
+        Set-IfProp $newUnit "CustomName" ([string]$u.custom_name); Set-IfProp $newUnit "ForcedCustomName" $true
+        Set-IfProp $newUnit "EntrenchmentLevelOnStart" ([int]$u.entrenchment_on_start)
+        Set-IfProp $newUnit "EntrenchmentLevel" ([int]$u.entrenchment_on_start)
+        Set-IfProp $newUnit "CurrHP" $newUnit.MaxHP; Set-IfProp $newUnit "CurrMP" $newUnit.MaxMP; Set-IfProp $newUnit "CurrAmmo" $newUnit.MaxAmmo
         $tile = $tilesTable[[int]$u.col, [int]$u.row]
-        $tile.GroundUnit = $nu
+        $tile.GroundUnit = $newUnit
         $nU++
         Write-Output ("  unit {0,-12} {1,-45} at {2},{3} entrench {4}" -f $u.country, $u.custom_name, $u.col, $u.row, $u.entrenchment_on_start)
     }
@@ -200,6 +211,7 @@ if ($compressed) {
 } else { $outMs.Write($raw, 0, $raw.Length) }
 $dir = Split-Path -Parent $OutputFile
 if (-not (Test-Path $dir)) { New-Item -ItemType Directory -Path $dir | Out-Null }
-[System.IO.File]::WriteAllBytes($OutputFile, $outMs.ToArray())
-Write-Output "Wrote $OutputFile ($($outMs.Length) compressed bytes, $($raw.Length) raw)"
+$outBytes = $outMs.ToArray()
+[System.IO.File]::WriteAllBytes($OutputFile, $outBytes)
+Write-Output "Wrote $OutputFile ($($outBytes.Length) bytes on disk, $($raw.Length) raw)"
 Write-Output "Activate the Kernstown mod in the MODS menu before loading."

@@ -1,26 +1,29 @@
-"""Edge-by-edge validator for SV_K tiles as Hex of Steel lays them out.
-Game layout model (matches data/layers/kernstown_game.json + scripts/hex_grid.py, tile SV_K_c_r -> hex (c,r)):
-  flat-top, odd-q, rows increase NORTH, odd columns shifted half a row north.
-  The game abuts tiles by their stock alpha hex (data/hex_mask.png): hex W=1910px, H=1672px inside the 2000px PNG,
-  so col pitch = 0.75*1910 = 1432.5 px, row pitch = 1672 px (screen y down => north = -y).
+"""Edge-by-edge validator for SV_K tiles laid out exactly as Hex of Steel places them.
+Game layout (MapGO.cs:452-459; scripts/hex_grid.py): tile SV_K_c_r is tile (PosX=c, PosY=r), centred at world
+  (4.42*c, 5.1*r + 2.55 if c even); rows run NORTH, EVEN columns are raised; neighbours as Utils.GetAllTilesNeighbours.
+  Tile sprites: 330 px per world unit (ModsManager.cs:1023-1026) -> row pitch 1683 px, column pitch 1458.6 px;
+  the cell hex inside the 2000 px PNG has half-height 841.5 px and vertex half-width 972.4 px (screen y down).
 For each unique edge (A, B) we sample 96 points along the shared edge, k px inside each tile (mirrored), and measure
-  dE (CIE76 Lab) of A vs B, luminance-profile lag (linear feature offset along edge), alpha seam (aA+aB<250 on edge).
+  dE (CIE76 Lab) of A vs B, luminance-profile lag (linear feature offset along edge), alpha seam (aA+aB<250 on edge),
+  and bleed (alpha of A and B >= 250 up to 20 px beyond the edge, i.e. +-20 px of placement error stays covered).
 Usage: python3 tools/validate/validate_tile_edges.py <tile_dir> <out_csv> <out_heatmap_png>"""
 import sys, os, csv, math
 from multiprocessing import Pool
 import numpy as np
 from PIL import Image, ImageDraw
-COLS, ROWS = 62, 55
-HW, HH = 1910.0, 1672.0; C0 = 999.5
-CP, RP = 0.75*HW, HH
-V = {'E': (HW/2, 0), 'NE': (HW/4, -HH/2), 'NW': (-HW/4, -HH/2), 'W': (-HW/2, 0), 'SW': (-HW/4, HH/2), 'SE': (HW/4, HH/2)}
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'scripts'))
+from hex_grid import (KERNSTOWN as G, neighbor, game_xy, TILE_PX_PER_UNIT as PPU, TILE_CENTER_PX as C0,
+                      TILE_ROW_PITCH_PX as RP, TILE_COL_PITCH_PX as CP, TILE_HEX_HALF_W_PX as HA, TILE_HEX_HALF_H_PX as HB)
+COLS, ROWS = G.cols, G.rows
+HW = 2 * HA
+V = {'E': (HA, 0), 'NE': (HA/2, -HB), 'NW': (-HA/2, -HB), 'W': (-HA, 0), 'SW': (-HA/2, HB), 'SE': (HA/2, HB)}
 DIRS = {'N': ((0, -RP), V['NW'], V['NE']), 'NE': ((CP, -RP/2), V['NE'], V['E']), 'SE': ((CP, RP/2), V['E'], V['SE'])}
-T = np.linspace(0.08, 0.92, 96); KS = (6, 16, 18)  # k=18 vs k=6 inside A = same 12px separation -> intrinsic texture noise floor
+T = np.linspace(0.08, 0.92, 96); KS = (6, 16, 18, -20)  # k=18 vs k=6 inside A = same 12px separation -> intrinsic texture noise floor
+PARITY_CONTROL = os.environ.get('PARITY_CONTROL') == '1'   # negative control: odd-raised adjacency (the v0.4.1 bug)
 def nb(c, r, d):
-    up = c & 1  # odd col sits half row north
-    if d == 'N': return c, r+1
-    if d == 'NE': return c+1, (r+1 if up else r)
-    if d == 'SE': return c+1, (r if up else r-1)
+    if PARITY_CONTROL:
+        c2, r2 = neighbor(c + 1, r, d); return c2 - 1, r2   # same offsets with column parity swapped
+    return neighbor(c, r, d)          # game adjacency (Utils.GetAllTilesNeighbours)
 def bil(img, x, y):
     h, w = img.shape[:2]; x = np.clip(x, 0, w-1.001); y = np.clip(y, 0, h-1.001)
     x0 = x.astype(int); y0 = y.astype(int); fx = (x-x0)[:, None]; fy = (y-y0)[:, None]
@@ -71,23 +74,26 @@ if __name__ == '__main__':
             floor = float(np.mean(np.linalg.norm(lab(A[1, :, :3])-lab(A[3, :, :3]), axis=1)))
             LA = A[1, :, :3]@[.299, .587, .114]; LB = B[1, :, :3]@[.299, .587, .114]
             lg, amp = lag(LA, LB)
+            bleedA = float(np.mean(A[4, :, 3] >= 250)); bleedB = float(np.mean(B[4, :, 3] >= 250))
+            L_edge = float(np.hypot(*np.subtract(DIRS[d][2], DIRS[d][1])))
             rows.append(dict(col=c, row=r, dir=d, ncol=c2, nrow=r2, dE_k6=round(dE[0], 2), dE_k16=round(dE[1], 2), dE_floor_same_tile=round(floor, 2),
-                             feature_lag_px=round(lg*HW*(T[1]-T[0])*(1 if d == 'N' else 1), 1), feature_amp=round(amp, 1),
-                             alpha_seam_frac=round(seam, 3), alpha_gap_frac=round(max(gapA, gapB), 3),
-                             bad=int(dE[0] > 5 or abs(lg) >= 2 and amp > 15 or seam > 0.02)))
+                             feature_lag_px=round(lg*L_edge*(T[1]-T[0]), 1), feature_amp=round(amp, 1),
+                             alpha_seam_frac=round(seam, 3), alpha_gap_frac=round(max(gapA, gapB), 3), bleed20_frac=round(min(bleedA, bleedB), 3),
+                             bad=int(dE[0] > 5 or abs(lg) >= 2 and amp > 15 or seam > 0.02 or min(bleedA, bleedB) < 0.98)))
     with open(OUT, 'w', newline='') as f:
         w = csv.DictWriter(f, rows[0].keys()); w.writeheader(); w.writerows(rows)
     dE = np.array([x['dE_k6'] for x in rows]); bad = sum(x['bad'] for x in rows)
     feat = [x for x in rows if x['feature_amp'] > 15]; fbad = sum(abs(x['feature_lag_px']) >= 30 for x in feat)
-    seams = sum(x['alpha_seam_frac'] > 0.02 for x in rows)
+    seams = sum(x['alpha_seam_frac'] > 0.02 for x in rows); bleed_bad = sum(x['bleed20_frac'] < 0.98 for x in rows)
     fl = np.mean([x['dE_floor_same_tile'] for x in rows])
     summ = (f'edges={len(rows)} mean_dE={dE.mean():.2f} median_dE={np.median(dE):.2f} p95_dE={np.percentile(dE,95):.2f} texture_floor_dE={fl:.2f} '
             f'dE>5={int((dE>5).sum())} feature_edges={len(feat)} feature_misaligned(>=30px)={fbad} '
-            f'alpha_seam_edges={seams} bad_edges={bad}')
+            f'alpha_seam_edges={seams} bleed20_short_edges={bleed_bad} bad_edges={bad}')
     print(summ); open(OUT.replace('.csv', '_summary.txt'), 'w').write(summ+'\n')
-    s = 0.012; Wd = int(COLS*CP*s+HW*s)+20; Hd = int((ROWS+1)*RP*s+20)
+    s = 0.012; Wd = int(COLS*CP*s+HW*s)+20; Hd = int((ROWS+1)*RP*s+20); YMAX = game_xy(0, ROWS)[1]
     im = Image.new('RGB', (Wd, Hd+40), (20, 20, 20)); dr = ImageDraw.Draw(im)
-    def ctr(c, r): return (10+HW/2*s+c*CP*s, 10+Hd-20-(r+0.5*(c & 1)+0.5)*RP*s)
+    def ctr(c, r):
+        gx, gy = game_xy(c, r); return (10+HA*s+gx*PPU*s, 10+(YMAX-gy)*PPU*s)   # MapGO placement, north up
     for x in rows:
         cx, cy = ctr(x['col'], x['row']); off, e1, e2 = DIRS[x['dir']]
         v = min(x['dE_k6']/10, 1); col = (int(255*v), int(255*(1-v)), 40)

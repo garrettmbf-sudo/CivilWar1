@@ -1,8 +1,11 @@
-"""v0.4 full 62x55 painted basemap (March 1862, First Kernstown + Winchester).
+"""v0.4 full 62x54 (game-native grid, v0.4.2) painted basemap (March 1862, First Kernstown + Winchester).
 Stage A (cached): painting-quilted broom ground + DEM hillshade  -> painted_sections/v04_ground_cache.py
 Stage B (this file): field parcels that flow across hexes, early-spring bare woods, thin muddy creeks,
 graded roads, dry-stone wall, wider 1862 Winchester, landmarks (compose_painted_map sprites), W&P railroad.
-Writes data/basemap_painted_full.png (+_labeled), data/layers/painted_buildings.json, previews/v04_*.jpg"""
+Writes data/basemap_painted_full.png (+_labeled), data/layers/painted_buildings.json (+ _masks.npz),
+data/layers/painted_lines.json (the exact road/Pike/rail/creek lines painted, for game-layer tracing), previews/v04_*.jpg
+v0.4.2: hex grid = game convention (scripts/hex_grid.py); buildings are never pasted over roads, the Pike, the
+railroad, town streets or water (nudged to the nearest clear spot; checked by tools/validate/check_buildings.py)."""
 import os, sys, math, json, subprocess
 sys.path.insert(0, 'scripts')
 import numpy as np
@@ -202,7 +205,7 @@ def creek_path(wps, seed, amp=2.2):
         out.append((pts[i][0] + nx * off, pts[i][1] + ny * off))
     return out
 WIN_BB = (-78.172, 39.173, -78.155, 39.193)
-creeks = []
+creeks = []; CREEK_NAMES = []
 for name, ww, seed in (('opequon_creek', 4, 0), ('hoge_run', 3, 11), ('abrams_creek', 3, 5), ('buffalo_lick', 2, 7), ('town_run', 2, 3)):
     if name not in FE['rivers']: continue
     wps = FE['rivers'][name]['waypoints']; runs = [[]]
@@ -212,7 +215,7 @@ for name, ww, seed in (('opequon_creek', 4, 0), ('hoge_run', 3, 11), ('abrams_cr
             continue
         runs[-1].append((lon, lat))
     for rr_ in runs:
-        if len(rr_) >= 2: creeks.append((creek_path(rr_, seed), ww))
+        if len(rr_) >= 2: creeks.append((creek_path(rr_, seed), ww)); CREEK_NAMES.append(name)
 cl = Image.new('RGBA', (W, H), (0, 0, 0, 0)); cd = ImageDraw.Draw(cl)
 for pts, ww in creeks:   # dead grass fringe, muddy bank, water
     cd.line(pts, fill=(160, 142, 100, 70), width=ww + 16, joint='curve')
@@ -374,13 +377,53 @@ print('trees', ntree)
 
 # ---------- 9. buildings: landmarks (logged) + wider 1862 Winchester ----------
 lib = CPM.build_sprite_library()
+# ---------- 9a. no-build mask (v0.4.2): roads, the Pike, the railroad, water; town streets added in place_winchester ----------
+NOBUILD_DILATE = 2
+LINES = {'px_per_m': P, 'H': BH, 'W': BW, 'dilate_px': NOBUILD_DILATE, 'roads': {}, 'creeks': [], 'rail': None, 'streets': []}
+def _lw(k):
+    return 20 if FE['roads'][k].get('kind') == 'pike' else (7 if k in ('apple_valley_road', 'stone_lane') else 13)
+fim = Image.new('L', (W, H), 0); fd = ImageDraw.Draw(fim)
+for k, pts in road_pts.items():
+    fd.line(pts, fill=255, width=_lw(k), joint='curve')
+    LINES['roads'][k] = {'kind': FE['roads'][k].get('kind', 'road'), 'width_px': _lw(k), 'pts': [[round(x, 1), round(y, 1)] for x, y in pts]}
+fd.line(rr, fill=255, width=11, joint='curve'); LINES['rail'] = {'width_px': 11, 'pts': [[round(x, 1), round(y, 1)] for x, y in rr]}
+for (pts, ww), nm in zip(creeks, CREEK_NAMES):
+    fd.line(pts, fill=255, width=ww + 6, joint='curve')
+    LINES['creeks'].append({'name': nm, 'width_px': ww + 6, 'pts': [[round(x, 1), round(y, 1)] for x, y in pts]})
+FORBID = ndi.binary_dilation(np.asarray(fim) > 0, iterations=NOBUILD_DILATE); del fim
+NUDGED, SKIPPED, FOOT, FOOT_MASKS = [], [], [], []
+CHECK = {'on': True}
+EXEMPT = {id(lib['bridge'])} if lib.get('bridge') is not None else set()     # a bridge belongs on the water/road
+def _box(sprite, x, y, anchor):
+    sw_, sh_ = sprite.size
+    if anchor == 'foot': return int(x - sw_ / 2), int(y - sh_ + 4)
+    if anchor == 'center': return int(x - sw_ / 2), int(y - sh_ / 2)
+    return int(x), int(y)
+def _hits(am, px, py):
+    h_, w_ = am.shape; x0, y0, x1, y1 = max(px, 0), max(py, 0), min(px + w_, W), min(py + h_, H)
+    if x1 <= x0 or y1 <= y0: return False
+    return bool((FORBID[y0:y1, x0:x1] & am[y0 - py:y1 - py, x0 - px:x1 - px]).any())
 BUILDINGS = []
 _orig_paste = CPM.paste_sprite
 def logged_paste(base, sprite, x, y, anchor='foot'):
+    if CHECK['on'] and id(sprite) not in EXEMPT:
+        am = np.asarray(sprite.convert('RGBA'))[..., 3] > 64
+        px, py = _box(sprite, x, y, anchor)
+        if _hits(am, px, py):
+            found = None
+            for rad in range(3, 91, 3):
+                for k_ in range(24):
+                    a_ = 2 * math.pi * k_ / 24; dx, dy = round(rad * math.cos(a_)), round(rad * math.sin(a_))
+                    if not _hits(am, px + dx, py + dy): found = (dx, dy); break
+                if found: break
+            if found is None:
+                SKIPPED.append((float(x), float(y))); return None
+            NUDGED.append(math.hypot(*found)); x, y = x + found[0], y + found[1]; px, py = px + found[0], py + found[1]
+        FOOT.append([px, py, am.shape[1], am.shape[0]]); FOOT_MASKS.append(np.packbits(am, axis=1))
     BUILDINGS.append((float(x), float(y), int(sprite.size[0] * sprite.size[1])))
     return _orig_paste(base, sprite, x, y, anchor)
 CPM.paste_sprite = logged_paste
-canvas = CPM.place_fords(canvas, lib); del BUILDINGS[:]
+CHECK['on'] = False; canvas = CPM.place_fords(canvas, lib); del BUILDINGS[:]; CHECK['on'] = True   # fords sit on the water by design
 canvas = CPM.place_landmarks(canvas, lib)
 
 def place_winchester(base):
@@ -402,6 +445,11 @@ def place_winchester(base):
         p0, p1 = ll(lo0, la0), ll(lo1, la1); wd = 13 if main else 8
         d.line([p0, p1], fill=(100, 82, 60, 90), width=wd + 3)
         d.line([p0, p1], fill=(150, 138, 114, 255) if main else (130, 106, 80, 225), width=wd)
+    stm = Image.new('L', base.size, 0); smd = ImageDraw.Draw(stm)
+    for (lo0, la0), (lo1, la1), main in segs:
+        p0, p1 = ll(lo0, la0), ll(lo1, la1); wd = (13 if main else 8) + 2
+        smd.line([p0, p1], fill=255, width=wd); LINES['streets'].append({'width_px': wd, 'pts': [[round(p0[0], 1), round(p0[1], 1)], [round(p1[0], 1), round(p1[1], 1)]]})
+    np.logical_or(FORBID, ndi.binary_dilation(np.asarray(stm) > 0, iterations=NOBUILD_DILATE), out=FORBID); del stm
     canvas_ = Image.alpha_composite(base, sl.filter(ImageFilter.GaussianBlur(0.9)))
     tr = np.random.default_rng(41)
     rows_ = lib['townhouse_rows'] + lib['shop_rows']; bricks = lib['brick_houses']; houses = lib['houses']; outs = lib['outbuildings']
@@ -483,8 +531,14 @@ cells = [(c, r) for c in range(G.cols) for r in range(G.rows)]
 cxy = np.array([hexc(c, r) for c, r in cells]); kd = cKDTree(cxy)
 for x, y, area in BUILDINGS:
     j = kd.query((x, y - 6))[1]; k = f'{cells[j][0]},{cells[j][1]}'; cnt_hex[k] = cnt_hex.get(k, 0) + 1; area_hex[k] = area_hex.get(k, 0) + area
-json.dump({'note': 'buildings painted per hex (v0.4 build_full_map.py); used by build_game_layers.py for town hexes', 'counts': cnt_hex, 'sprite_area_px': area_hex},
+np.savez_compressed('data/layers/painted_buildings_masks.npz', **{f'm{i}': mk for i, mk in enumerate(FOOT_MASKS)})
+json.dump({'note': 'buildings painted per hex (build_full_map.py, game-convention grid); used by build_game_layers.py for town hexes',
+           'grid': 'game-native (scripts/hex_grid.py)', 'counts': cnt_hex, 'sprite_area_px': area_hex,
+           'footprints_px': FOOT, 'footprint_masks': 'data/layers/painted_buildings_masks.npz (packbits axis=1, alpha>64)',
+           'nudged_off_roads_water': len(NUDGED), 'nudge_px_max': round(max(NUDGED), 1) if NUDGED else 0, 'skipped': SKIPPED},
           open('data/layers/painted_buildings.json', 'w'), indent=0)
+json.dump(LINES, open('data/layers/painted_lines.json', 'w'))
+print('buildings', len(FOOT), 'nudged off roads/rail/water', len(NUDGED), 'max', max(NUDGED) if NUDGED else 0, 'skipped', len(SKIPPED))
 fieldfrac = {KINDS[k]: float((k_full == k)[openfull > 0.6].mean()) for k in range(5)}
 print('field fractions of open ground', fieldfrac)
 lab = CPM.draw_labels(out.convert('RGBA'), scale=1.15).convert('RGB')
@@ -496,6 +550,6 @@ def crop(x0, y0, x1, y1, name):
 crop(wcx - 900, wcy - 820, wcx + 900, wcy + 760, 'v04_closeup_winchester.jpg')
 x0k, y1k = ll(-78.240, 39.135); x1k, y0k = ll(-78.192, 39.162)
 crop(x0k, y0k, x1k, y1k, 'v04_closeup_kernstown_wall.jpg')
-fx, fy = hexc(14, 12)
+fx, fy = hexc(14, 11)   # legacy (14,12)
 crop(fx - 700, fy - 500, fx + 700, fy + 500, 'v04_closeup_fields.jpg')
 print('FULL DONE', out.size)

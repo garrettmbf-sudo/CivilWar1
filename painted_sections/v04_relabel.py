@@ -27,6 +27,6 @@ def crop(x0, y0, x1, y1, name): lab.crop((int(x0), int(y0), int(x1), int(y1))).s
 crop(wcx - 900, wcy - 820, wcx + 900, wcy + 760, 'v04_closeup_winchester.jpg')
 x0k, y1k = ll(-78.240, 39.135); x1k, y0k = ll(-78.192, 39.162)
 crop(x0k, y0k, x1k, y1k, 'v04_closeup_kernstown_wall.jpg')
-fx, fy = hexc(14, 12); crop(fx - 700, fy - 500, fx + 700, fy + 500, 'v04_closeup_fields.jpg')
+fx, fy = hexc(14, 11); crop(fx - 700, fy - 500, fx + 700, fy + 500, 'v04_closeup_fields.jpg')
 crop(wx - 600, wy - 160, wx + 400, wy + 220, 'v04_closeup_wall_label.jpg')
 print('relabeled')

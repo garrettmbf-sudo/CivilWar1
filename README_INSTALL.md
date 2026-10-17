@@ -10,19 +10,19 @@ You need: Hex of Steel (Steam, version 8 or newer) and Windows PowerShell (alrea
    ```
    irm https://raw.githubusercontent.com/garrettmbf-sudo/CivilWar1/kernstown-map/install.ps1 | iex
    ```
-4. Wait (≈5.5 GB download). The installer downloads the release files, puts the mod into
+4. Wait (≈2.9 GB download). The installer downloads the release files, puts the mod into
    `%USERPROFILE%\AppData\LocalLow\Valentin's studios\Hex of Steel\MODS\First Kernstown 1862`,
    builds `Maps\First Kernstown 1862.sav`, and tells you the next steps. If it is interrupted, run the same line again: it resumes.
 5. Then follow step 4 "Play" below. The manual steps below are only needed if the easy install fails.
 
 ## 0. Get the map tiles (GitHub Release)
-The 3410 tile images (~5.5 GB) are not in git. Download them from the release
-https://github.com/garrettmbf-sudo/CivilWar1/releases/tag/kernstown-v0.3.1 :
+The 3348 tile images (~2.9 GB) are not in git. Download them from the release
+https://github.com/garrettmbf-sudo/CivilWar1/releases/tag/kernstown-v0.4.2 :
 - `Kernstown_tiles_part1of4_cols00-15.zip` … `Kernstown_tiles_part4of4_cols47-61.zip` (all four are required)
-- `Kernstown_mod_base.zip` (Manifest.json and empty mod folders)
+- `Kernstown_mod_base.zip` (Manifest.json, empty mod folders, and a pre-built `Maps\First Kernstown 1862.sav`; step 2 rebuilds it against your game version)
 
 Extract every zip into the **same** folder (your `Kernstown1862_mod` folder from step 1; merge/overwrite folders when asked).
-Each zip contains `mod\Graphics\Tiles\Summer\`, so together they fill `mod\Graphics\Tiles\Summer\` with all 3410 `SV_K_<col>_<row>.png` files.
+Each zip contains `mod\Graphics\Tiles\Summer\`, so together they fill `mod\Graphics\Tiles\Summer\` with all 3348 `SV_K_<col>_<row>.png` files.
 
 ## 1. Unzip
 1. Right-click `Kernstown1862_mod.zip` → **Extract All…** → pick e.g. `C:\Kernstown1862`.
@@ -45,7 +45,7 @@ Each zip contains `mod\Graphics\Tiles\Summer\`, so together they fill `mod\Graph
 1. Press **Win+R**, paste `%USERPROFILE%\AppData\LocalLow` and press Enter.
 2. Open `Valentin's studios\Hex of Steel\MODS` (on some versions the studio folder is named `War Frogs Studio`).
 3. Copy the whole `mod` folder there and rename it to `First Kernstown 1862`.
-   You should end up with `...\MODS\First Kernstown 1862\Manifest.json` and `...\Graphics\Tiles\Summer\SV_K_0_0.png` (3410 tiles).
+   You should end up with `...\MODS\First Kernstown 1862\Manifest.json` and `...\Graphics\Tiles\Summer\SV_K_0_0.png` (3348 tiles).
 
 ## 4. Play
 1. Start Hex of Steel → **MODS** → tick **Shenandoah Valley 1862 — First Kernstown** → **Apply changes** (the game may restart).

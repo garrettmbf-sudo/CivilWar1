@@ -2,7 +2,7 @@
 
 ## Overview
 Standalone tactical scenario for **First Kernstown, 23 March 1862** in Hex of Steel.
-62x55 hexes at ~250 yards per hex. 3,410 unique painted tiles (Summer, 2000x2000 px, no baked grid).
+62x54 hexes at ~250 yards per hex, in the game's native grid (even columns raised, rows north; see `docs/decisions.md`). 3,348 unique painted tiles (Summer, 2000x2000 px, no baked grid).
 
 ## Map features
 - **Winchester (March 1862):** ~39 buildings on Loudoun St commercial strip with side streets, outbuildings, orchards. Landmarks: Courthouse (primary VP), Taylor Hotel, Jackson's HQ, Fort Collier, Fort Alabama earthworks.
@@ -13,6 +13,7 @@ Standalone tactical scenario for **First Kernstown, 23 March 1862** in Hex of St
 - **Terrain:** early-spring palette — leafless woods, tan/brown fields, marshy meadows, muted gray-blue creeks, Valley Pike, Winchester & Potomac RR.
 
 ## Order of battle (18 units)
+Positions are game hexes (v0.4.2 grid). `kernstown_units.json` still uses the legacy numbering until Quartermaster re-issues it; see `docs/kernstown_unit_coord_change.md`.
 
 ### Confederate (Jackson's Valley District, ~3,800 men)
 | Unit | Template | Position | Entrench | Source |
@@ -21,12 +22,12 @@ Standalone tactical scenario for **First Kernstown, 23 March 1862** in Hex of St
 | Fulkerson's Bde 23,37 VA | Infantry | 15,23 | 2 | SRC007 |
 | Burks' Bde 21,42,48 VA, 1 VA Bn | Infantry | 17,20 | 0 | SRC007 |
 | Ashby's 7th Virginia Cavalry | Light Cavalry | 27,17 | 0 | SRC007 |
-| Chew's Horse Artillery | Napoleon 12pdr | 26,18 | 0 | SRC007 |
-| Rockbridge Artillery (Poague) | Napoleon 12pdr | 16,22 | 0 | SRC007 |
-| Carpenter's Alleghany Battery | Napoleon 12pdr | 18,22 | 0 | SRC007 |
+| Chew's Horse Artillery | Napoleon 12pdr | 26,17 | 0 | SRC007 |
+| Rockbridge Artillery (Poague) | Napoleon 12pdr | 16,21 | 0 | SRC007 |
+| Carpenter's Alleghany Battery | Napoleon 12pdr | 18,21 | 0 | SRC007 |
 | Caskie's Hampden Artillery | Napoleon 12pdr | 15,22 | 0 | SRC007 |
-| Wooding's Danville Artillery | Napoleon 12pdr | 20,22 | 0 | SRC007 |
-| Pleasants' Battery | Napoleon 12pdr | 20,21 | 0 | SRC007 |
+| Wooding's Danville Artillery | Napoleon 12pdr | 20,21 | 0 | SRC007 |
+| Pleasants' Battery | Napoleon 12pdr | 20,20 | 0 | SRC007 |
 
 ### Union (Shields' Division under Col. Kimball, ~8,500 men)
 | Unit | Template | Position | Source |
@@ -36,13 +37,13 @@ Standalone tactical scenario for **First Kernstown, 23 March 1862** in Hex of St
 | 3rd Bde (Tyler) 7 IN, 7,29 OH, 110 PA, 1 WV | Infantry | 17,25 | SRC007 |
 | Btry A West Virginia Arty (Jenks) | Napoleon 12pdr | 25,27 | SRC007 |
 | Btry B West Virginia Arty | Napoleon 12pdr | 27,27 | SRC007 |
-| Btry E 4th US Artillery (Clark) | Napoleon 12pdr | 26,27 | SRC007 |
-| Btry L 1st Ohio Arty (Robinson) | Napoleon 12pdr | 26,26 | SRC007 |
+| Btry E 4th US Artillery (Clark) | Napoleon 12pdr | 26,26 | SRC007 |
+| Btry L 1st Ohio Arty (Robinson) | Napoleon 12pdr | 26,25 | SRC007 |
 | Brodhead's Cav (MI/PA/MD/WV/OH detachments) | Light Cavalry | 13,25 | SRC007 |
 
 ## Victory conditions
-- **Primary:** Winchester Courthouse (42,41)
-- **Secondary:** Kernstown (27,20), Opequon Church (30,19)
+- **Primary:** Winchester Courthouse (42,40)
+- **Secondary:** Kernstown (27,20), Opequon Church (30,18)
 
 ## Game mechanics
 - Stone wall hexes: DamageModificator 35, Confederate units start entrenched level 2
@@ -51,7 +52,7 @@ Standalone tactical scenario for **First Kernstown, 23 March 1862** in Hex of St
 
 ## Build status
 - `tools/build_kernstown_map.ps1` reads `kernstown_game.json` + `kernstown_units.json`, loads HoS DLLs, writes .sav. Parses cleanly in pwsh 7.4. **Untested against running game.**
-- 3,410 SV_K tiles sliced from continuous painted basemap (Summer folder, no grid).
+- 3,348 SV_K tiles sliced from the continuous painted basemap at the game's placement (330 px per world unit, MapGO.cs:452-459), 21.5 px bleed. Validation: `docs/EDGE_VALIDATION.md`.
 - `mod/Manifest.json` present. See `README_INSTALL.md` for installation.
 
 ## Art provenance

@@ -12,7 +12,7 @@
     "wall_hexes": [
       [
         14,
-        23
+        22
       ],
       [
         15,
@@ -20,7 +20,7 @@
       ],
       [
         16,
-        23
+        22
       ],
       [
         17,
@@ -32,7 +32,7 @@
       ],
       [
         18,
-        23
+        22
       ],
       [
         19,
@@ -40,7 +40,7 @@
       ],
       [
         20,
-        23
+        22
       ],
       [
         21,
@@ -56,5 +56,6 @@
     "hoge_min_dist_wall_m": 570.0,
     "vex": 1.0
   },
-  "note": "previews only; no tile re-slice"
+  "note": "previews only; no tile re-slice",
+  "grid_convention": "game-native: flat-top, rows north, even columns raised, 4.42:5.1 (v0.4.2)"
 }

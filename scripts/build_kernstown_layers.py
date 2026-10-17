@@ -50,55 +50,20 @@ def slope_at(dem, grid, lon, lat, delta=0.0004):
     dy = delta * m_lat
     return math.degrees(math.atan(math.hypot((e2 - e) / dx, (e3 - e) / dy)))
 
+# Hex math lives in hex_grid.py (game convention: rows north, EVEN columns raised, MapGO.cs:452-459).
+# v0.4.2 fix: these helpers used an even-raised cube conversion while hex_grid used odd-raised, so traced
+# lines bridged every odd/even step with an extra hex. They now delegate to the single shared implementation.
+from hex_grid import cube_round as _cube_round, offset_to_cube, cube_to_offset, hex_line  # noqa: E402,F401
+
 def cube_round(q, r, s):
-    qq, rr, ss = round(q), round(r), round(s)
-    dq, dr, ds = abs(qq - q), abs(rr - r), abs(ss - s)
-    if dq > dr and dq > ds:
-        qq = -rr - ss
-    elif dr > ds:
-        rr = -qq - ss
-    else:
-        ss = -qq - rr
-    return qq, rr, ss
-
-def offset_to_cube(col, row):
-    q = col
-    r = row - (col + (col & 1)) // 2  # even-q
-    return q, r, -q - r
-
-def cube_to_offset(q, r):
-    col = q
-    row = r + (q + (q & 1)) // 2
-    return col, row
-
-def hex_line(a, b):
-    q1, r1, s1 = offset_to_cube(*a)
-    q2, r2, s2 = offset_to_cube(*b)
-    n = max(abs(q2 - q1), abs(r2 - r1), abs(s2 - s1))
-    if n == 0:
-        return [a]
-    out = []
-    for i in range(n + 1):
-        t = i / n
-        q, r, s = cube_round(q1 + (q2 - q1) * t, r1 + (r2 - r1) * t, s1 + (s2 - s1) * t)
-        out.append(cube_to_offset(q, r))
-    # dedupe
-    dedup = []
-    for p in out:
-        if not dedup or dedup[-1] != p:
-            dedup.append(p)
-    return dedup
+    return _cube_round(q, r, s)
 
 def trace_waypoints(grid, waypoints):
-    hexes = []
-    pts = [grid.lonlat_to_hex(lon, lat) for lon, lat in waypoints]
-    for a, b in zip(pts, pts[1:]):
-        hexes.extend(hex_line(a, b))
-    return {(c, r) for c, r in hexes if 0 <= c < grid.cols and 0 <= r < grid.rows}
+    """Hexes under a lon/lat polyline (dense sampling, exact cell membership, gap-free chain)."""
+    return {h for h in grid.trace_lonlat(waypoints) if grid.in_grid(*h)}
 
 def edge_variant(a, b):
-    """Pick RiverN/RoadN variant from neighbor direction (flat-top even-q)."""
-    # directions even-q: N=0, NE=1, SE=2, S=3, SW=4, NW=5 approx
+    """Pick RiverN/RoadN variant from neighbor direction (legacy stock-tile path; unused by the SV_K pipeline)."""
     dc, dr = b[0] - a[0], b[1] - a[1]
     # map to 1..9 like stock tiles
     if dc == 0 and dr < 0:
