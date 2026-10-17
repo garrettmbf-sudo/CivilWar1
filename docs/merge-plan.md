@@ -35,3 +35,12 @@ When a base PR merges, retarget its stacked PRs to `main` (GitHub does this auto
 - kernstown-map
 - art/kernstown-miniatures-zoom-review
 - counters/kernstown-four-design-comparison
+
+## Status after the merge run (2026-10-17 ET)
+- **Merged into main:** #11, #12, #13, #14, #9, #20 (Harmony DLLs removed), then this PR (#19, squash). **#16** merged into #10's branch.
+- **Closed (superseded):** #1, #5, #6, #7, #8. **Deleted branches:** the five listed above.
+- **Blocked on Captain Archivist:**
+  - **#15:** conflict with main in `historical_data/sources_1862.csv`.
+  - **#10:** conflict with main in `historical_data/sources_1862.csv`; the map's SRC020-030 rows vs main's SRC009/010/050-055 (SRC021/022 and SRC009/010 cite the same OR volumes).
+- **Blocked behind #15:** **#17** (Quartermaster resolves the unit and OOB CSV conflicts once #15 lands).
+- **Waiting for the user's in-game test:** #18.
