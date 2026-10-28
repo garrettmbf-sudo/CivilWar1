@@ -1,3 +1,9 @@
 asset_path,title,creator,source_url,license,redistribution_permission,notes
 reference/Stonewall in the ValleyMap.jpg,Stonewall in the Valley campaign map,unknown,,unknown,unverified,Published board-game map; reference only; do not redistribute artwork without permission
 reference/SJW IIMap.jpg,Shenandoah reference map,unknown,,unknown,unverified,Confirm provenance and rights before reuse
+tools/sekigahara_valley/terrain_masters/meadow.png,Valley meadow terrain,OpenAI image generation,,Generated output,user project use,Generated 2026-10-28; exact prompt in terrain_prompts_v3.json; illustrative rather than surveyed
+tools/sekigahara_valley/terrain_masters/woodland.png,Valley woodland terrain,OpenAI image generation,,Generated output,user project use,Generated 2026-10-28; generic library texture; no historical vegetation claim
+tools/sekigahara_valley/terrain_masters/ridge.png,Valley ridge terrain,OpenAI image generation,,Generated output,user project use,Generated 2026-10-28; illustrative relief rather than DEM data
+tools/sekigahara_valley/terrain_masters/village.png,Valley village terrain,OpenAI image generation,,Generated output,user project use,Generated 2026-10-28; generic village rather than a named historical settlement
+tools/sekigahara_valley/terrain_masters/channel.png,Valley channel surface,OpenAI image generation,,Generated output,user project use,Generated 2026-10-28; generic water surface
+tools/sekigahara_valley/terrain_masters/continuous_landscape.png,Continuous woodland meadow and hamlet fitting proof,OpenAI image generation,,Generated output,user project use,Generated 2026-10-28; illustrative continuous art master; not Kernstown geography
