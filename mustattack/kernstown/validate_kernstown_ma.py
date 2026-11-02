@@ -16,13 +16,21 @@ Checks (exit 1 on any ERROR):
     secondbullrun1862 / chancellorsville1863); named non-VP hexes: boxes[9] = name (antietam)
   * meta.boardArt (v2): same geometry fields/values as antietam1862's, image decodes to the size the
     grid implies, transparent outside the board, hash = SHA-1 of the PNG (our assumption)
-  * victory thresholds vs the formula that fits all six stock scenarios (inferred; warning only)
+  * victory thresholds vs the editor's guidance (5/40/80% of objective values + average side CS),
+    and whether each side can reach each threshold (v3.3)
+  * v3.3: standby trigger fields are sane (<= 5 groups a side, containment groups really are
+    contained at the start, enemyGroup names an existing opposing group); with replacements on,
+    every unit not on the BELOW_3_OK list has CS >= 3; doctrine words are stock words
 """
 import base64, hashlib, io, itertools, json, math, os, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 # v3.2: stacks this close to the enemy at the start (cavalry MP 6 + 2) must pass the two-flank test.
 FLANK_REACH = 8
+# v3.3: units allowed below CS 3 (no replacement on AE/DE): HQs, the cavalry, Chew's 3-gun horse
+# battery and the two single regiments.  Everything else must be CS >= 3.
+BELOW_3_OK = {"Kimball Shields' Div. HQ", "Jackson Valley District HQ", "Ashby 7 VA Cav", "Chew Horse Bty",
+              "Brodhead 1 MI Cav", "Brodhead OH/MD Cav", "Sullivan 39 IL", "Burks 42 VA"}
 DIRS_EVEN = [(1, 0), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1)]
 DIRS_ODD = [(1, 0), (1, 1), (0, 1), (-1, 0), (0, -1), (1, -1)]
 # dicts whose keys are data (ids / language codes), not schema
@@ -290,17 +298,68 @@ def main(path, refdir):
     for h, n in stack.items():
         if n > lim:
             err(f"{n} units on hex {h} (stacking_limit {lim})")
+    # v3.3: trigger fields (editor STANDBY FORCE panel): guardHexes = containment range, guardCs =
+    # containment strength needed, mainForcePct = joins when main body falls to %, enemyGroup = joins
+    # when opposing group n activates (0 = none; per-side numbering assumed).
+    def _cube(q, r):
+        x = q - (r - (r & 1)) // 2
+        return x, -x - r, r
+    def _hd(a, b):
+        A, B = _cube(*a), _cube(*b)
+        return max(abs(A[i] - B[i]) for i in range(3))
     for side in (0, 1):
         own = [g for g in groups if g["side"] == side]
+        opp = [g for g in groups if g["side"] != side]
+        if len(own) > 5:
+            err(f"side {side} has {len(own)} standby groups (editor maximum 5)")
         for i, g in enumerate(own, 1):
             who = sg_use.get((side, i), [])
             if not who:
                 warn(f"side {side} standby group {i} has no units")
-            for k in ("guardHexes", "guardCs"):
-                if g.get(k, 0) != 0:
-                    warn(f"side {side} standby group {i}: {k} = {g[k]} (every stock value is 0; meaning unknown)")
+            if not (0 <= g["chance"] <= 100 and 0 <= g["rise"] <= 100 and 0 <= g["turn"] <= sc["maxTurns"]):
+                err(f"side {side} group {i}: turn/chance/rise out of range {g}")
+            if g["turn"] == 0 and g["chance"] > 0 or g["turn"] > 0 and g["chance"] == 0 and g["rise"] == 0:
+                warn(f"side {side} group {i}: join turn and chance disagree {g}")
+            rng, need = g.get("guardHexes", 0), g.get("guardCs", 0)
+            trig = []
+            if (rng > 0) != (need > 0):
+                err(f"side {side} group {i}: containment range {rng} and strength {need} must both be set or both 0")
+            elif rng:
+                gu = [u for u in sc["units"] if u["side"] == side and u["standbyGroup"] == i]
+                en = [u for u in sc["units"] if u["side"] != side]
+                per_unit = [sum(e["combatStrength"] for e in en if _hd((u["q"], u["r"]), (e["q"], e["r"])) <= rng) for u in gu]
+                union = sum(e["combatStrength"] for e in en if any(_hd((u["q"], u["r"]), (e["q"], e["r"])) <= rng for u in gu))
+                if min(per_unit) < need or union < need:
+                    err(f"side {side} group {i}: containment {need} CS within {rng} hexes is already short at the "
+                        f"start (per unit {per_unit}, group {union}) -- it would activate on turn 1")
+                trig.append(f"containment {rng} hexes/{need} CS (start: {union})")
+            mp = g.get("mainForcePct", 0)
+            if not 0 <= mp < 100:
+                err(f"side {side} group {i}: mainForcePct {mp} not in 0..99")
+            elif mp:
+                trig.append(f"main body <= {mp}%")
+            eg = g.get("enemyGroup", 0)
+            if eg:
+                if not 1 <= eg <= len(opp):
+                    err(f"side {side} group {i}: enemyGroup {eg} but the other side has {len(opp)} groups")
+                elif not sg_use.get((1 - side, eg)):
+                    err(f"side {side} group {i}: enemyGroup {eg} has no units")
+                else:
+                    trig.append(f"enemy group {eg} wakes")
             kind = "hold" if g["turn"] == 0 and g["chance"] == 0 else f"turn {g['turn']} {g['chance']}%+{g['rise']}"
-            print(f"  standby side {side} group {i} ({kind}): {', '.join(who)}")
+            print(f"  standby side {side} group {i} ({kind}{'; ' + ', '.join(trig) if trig else ''}): {', '.join(who)}")
+    # v3.3: replacements need CS >= 3
+    if rules.get("replacement"):
+        low = [u["name"] for u in sc["units"] if u["combatStrength"] < 3]
+        bad = [n for n in low if n not in BELOW_3_OK]
+        if bad:
+            err(f"replacements on, but these units are below CS 3 and get no replacement: {bad}")
+        ok = len(sc["units"]) - len(low)
+        print(f"  replacements on: {ok} of {len(sc['units'])} units are CS >= 3; below 3 by design: {', '.join(low)}")
+    seen_doc = {st["doctrine"][k] for nm, st in stock.items() if not nm.startswith("user_") and "doctrine" in st for k in ("blue", "red")}
+    for k in ("blue", "red"):
+        if d["doctrine"][k] not in seen_doc:
+            err(f"doctrine.{k} = {d['doctrine'][k]!r} is not a word any stock file uses ({sorted(seen_doc)})")
     # ---- boardArt
     ba = d["meta"].get("boardArt")
     if ba is not None:
@@ -410,11 +469,23 @@ def main(path, refdir):
           f"stack space, strictly farther from the nearest enemy unit)")
     print(f"  two-flank test: {len(flank_ok)} stacks within {FLANK_REACH} hexes of the enemy pass")
     print(f"  batteries: " + "; ".join(pairs_out))
-    # ---- thresholds formula (inferred from the six stock scenarios)
+    # ---- thresholds: editor guidance (v3.3), same as the formula that fit the stock files
     vc = d["victoryCondition"]
-    op = round(0.2 * sum(u["combatStrength"] for u in sc["units"]) + 0.4 * sum(h["vp"]["first"] for h in hexes))
-    if (vc["tacticalThreshold"], vc["operationalThreshold"], vc["strategicThreshold"]) != (round(op / 8), op, 2 * op):
-        warn(f"thresholds {vc} differ from the stock-fitted formula ({round(op/8)}, {op}, {2*op})")
+    vps = sum(h["vp"]["first"] for h in hexes)
+    cs = [sum(u["combatStrength"] for u in sc["units"] if u["side"] == k) for k in (0, 1)]
+    total = vps + sum(cs) / 2
+    want = (round(0.05 * total), round(0.4 * total), round(0.8 * total))
+    got = (vc["tacticalThreshold"], vc["operationalThreshold"], vc["strategicThreshold"])
+    if got != want:
+        warn(f"thresholds {got} differ from the editor guidance 5/40/80% of {total:g} = {want}")
+    # best case for each side relative to winLine: every objective held, the enemy destroyed, no losses
+    best = {0: vps + cs[1] - vc["winLine"], 1: vps + cs[0] + vc["winLine"]}
+    for k, nm in ((0, "tactical"), (1, "operational"), (2, "strategic")):
+        cant = [str(sd) for sd in (0, 1) if best[sd] < got[k]]
+        if cant:
+            (err if k < 2 else warn)(f"side {'/'.join(cant)} cannot reach a {nm} victory ({got[k]}; best possible {[best[int(c)] for c in cant]})")
+    print(f"  victory: total contested {total:g} (VP {vps} + avg CS {sum(cs)/2:g}; CS U {cs[0]} / C {cs[1]}), "
+          f"thresholds {got}, best margin past the line U {best[0]} / C {best[1]}")
     if not vc["tacticalThreshold"] < vc["operationalThreshold"] < vc["strategicThreshold"]:
         err("victory thresholds not increasing")
     if sc["turnClock"] and sc["turnClock"][0]["turn"] != 1:

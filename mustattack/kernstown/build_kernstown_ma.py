@@ -306,6 +306,11 @@ NAMED_SITES = [
 # Antietam's Pelham horse artillery).  Range 3 for field guns: stock range 2 at 500-700 m hexes is
 # 1.0-1.4 km; at 300 m hexes the same ground is 3 hexes (range 3 is itself stock: Malvern Hill
 # Hunt's reserve, Second Bull Run S.D. Lee).
+# v3.3: every CS in this table is multiplied by CS_SCALE (2) when the scenario is written, and
+# scaleMen halves from 300 to 150.  With rules.replacement on, a unit of CS 3+ destroyed by an AE or
+# DE falls back up to twice its MP and fights on at half strength (editor help); x2 lifts every
+# brigade to 4-6.  All strengths double, so every attack's odds ratio is unchanged.
+CS_SCALE = 2
 UNITS = [
     # v3.2 layout.  Every battery starts stacked with one infantry (or, for Chew, cavalry) unit, never
     # two batteries alone together: playtest 3 lost Rockbridge and Carpenter, stacked alone, to one
@@ -336,7 +341,7 @@ UNITS = [
     (0, "Sullivan", "39 IL", "inf", 1, 4, 1, (22, 6), 3),            # v3.2: was (24,14); with Huntington
     (0, "Huntington", "H 1 OH Bty", "art", 2, 3, 3, (22, 6), 3),
     # --- Confederate: Jackson's Valley District.  2,742 inf engaged, 290 cav, 18 of 27 guns.
-    (1, "Jackson", "Valley District HQ", "hq", 1, 4, 1, (11, 26), 2),  # v3.2: was (12,24)
+    (1, "Jackson", "Valley District HQ", "hq", 1, 4, 1, (11, 26), 4),  # v3.3: own group 4 (was 2 with Ashby)
     (1, "Ashby", "7 VA Cav", "cav", 1, 6, 1, (20, 24), 2),
     (1, "Chew", "Horse Bty", "art", 1, 3, 3, (20, 24), 2),
     # Sandy Ridge: each of the three Stonewall Brigade / Fulkerson batteries with its own infantry.
@@ -355,36 +360,55 @@ UNITS = [
 # standby_groups.  v3.2 FINDING: a unit's standbyGroup n means the n-th entry OF ITS OWN SIDE, not
 # the n-th entry of the list.  Evidence: malvernhill1862 lists [s0, s0, s1, s1, s1] and its side-1
 # units use groups 1-3; secondbullrun1862 lists [s1, s0] and units of BOTH sides use group 1;
-# sevenpines1862 has one side-1 entry, used as group 1.  v3/v3.1 gave Confederate units groups 4 and
-# 5, which do not exist on side 1 (2 entries), and playtests 2 and 3 load every Confederate unit
-# with StandbyGroup 0 / StandbyActive true: the groups were dropped, and Ashby, Jackson, Burks and
-# the Sandy Ridge guns moved from turn 1.  The Union groups 1-3 loaded (SG 1/2/3, inactive).
-# guardHexes / guardCs: scalar integers, 0 in every stock entry; no non-zero value has been seen, so
-# their meaning is unknown (they are not hex lists).  Kept 0.  "Hold" = turn 0 / chance 0 (Antietam
-# V Corps, Malvern Hill's Union line); in playtest 3 the Union hold group stayed put through turn 3.
-# Unknown: whether a unit on standby fires or joins attacks before its group activates.
-STANDBY = [  # Antietam schema; listed per side in order: side 0 groups 1-4, then side 1 groups 1-3
-    # U1: Tyler's brigade, halted on the pike north of the toll gate at 2 PM; Kimball sent it west
-    #     against Jackson's flank about 3:30-4 PM (v1: turn 3 / 40 / 30).
-    {"side": 0, "turn": 4, "chance": 50, "rise": 25, "guardHexes": 0, "guardCs": 0},
-    # U2: Sullivan, watching Ashby east of the pike; his regiments went to Sandy Ridge only late.
-    {"side": 0, "turn": 6, "chance": 30, "rise": 25, "guardHexes": 0, "guardCs": 0},
-    # U3: Kimball's HQ, 39 IL and Huntington's battery, held back (Antietam's V Corps pattern).
-    {"side": 0, "turn": 0, "chance": 0, "rise": 0, "guardHexes": 0, "guardCs": 0},
-    # U4 (v3.2): the guns on Pritchard's Hill, which historically stayed there all afternoon.  Held
-    #     until turn 6 at the earliest so the AI does not walk them down into the infantry fight
-    #     (playtest 2: Robinson lost on an AR, playtest 3: Jenks and Keeper wandered off the hill).
-    {"side": 0, "turn": 6, "chance": 30, "rise": 25, "guardHexes": 0, "guardCs": 0},
-    # C1: Burks' brigade with Marye's and Lanier's guns, Jackson's reserve near Bartonsville;
-    #     Jackson brought it up to the wall about 5 PM.
-    {"side": 1, "turn": 5, "chance": 40, "rise": 30, "guardHexes": 0, "guardCs": 0},
-    # C2: Ashby and Chew screening east of the pike, with Jackson's HQ: held (Malvern Hill's side-1
-    #     hold pattern) so the AI cannot throw them forward alone into Kernstown (playtests 1-3).
-    {"side": 1, "turn": 0, "chance": 0, "rise": 0, "guardHexes": 0, "guardCs": 0},
-    # C3 (v3.2): the Sandy Ridge guns (Rockbridge, Carpenter, Waters), which fired from the ridge
-    #     all afternoon.  Held until turn 6 at the earliest; playtest 3 lost two of them on turn 2
-    #     after they moved forward to (12,18).
-    {"side": 1, "turn": 6, "chance": 30, "rise": 25, "guardHexes": 0, "guardCs": 0},
+# sevenpines1862 has one side-1 entry, used as group 1.  Playtests 2 and 3 (v3/v3.1, Confederate
+# groups 4/5 of only 2 side-1 entries) loaded every Confederate unit as StandbyGroup 0, active.
+#
+# v3.3: field meanings from the editor (STANDBY FORCE panel; its fields appear in the same order
+# as the keys of malvernhill1862's entries, the only stock file that has all seven):
+#   turn = Join turn, chance = Chance %, rise = Rise/turn %,
+#   guardHexes = Containment range (hexes), guardCs = Containment strength needed (0 = no rule):
+#     the group activates if the total CS of enemy units within that range of its units drops
+#     below the number,
+#   mainForcePct = "Joins when main body falls to %" (0 = off),
+#   enemyGroup = "Joins when opposing group activates" (0 = None; n = the opposing side's group n,
+#     numbered per side like standbyGroup -- inferred, not yet seen non-zero in a stock file).
+# Editor help: a unit on standby cannot move on its own, but attacks, defends, fires, exerts ZOC,
+# advances after combat and retreats normally, so held batteries DO fire.  A group also activates
+# when one of its units attacks or is attacked, or an enemy becomes adjacent.  Up to 5 groups/side.
+# Containment is only given to a group whose units all stand together facing the enemy (Ashby), so
+# the rule reads the same whether the engine sums the enemy around each unit or around the group:
+# for a rear group the enemy CS within range is 0 from the start, which would wake it at once.
+def SG(side, turn, chance, rise, rng=0, need=0, main=0, enemy=0):
+    return {"side": side, "turn": turn, "chance": chance, "rise": rise, "guardHexes": rng,
+            "guardCs": need, "mainForcePct": main, "enemyGroup": enemy}
+
+
+STANDBY = [  # per side in order: side 0 groups 1-4, then side 1 groups 1-4.  CS below are x2 values.
+    # U1: Tyler, halted on the pike north of the toll gate at 2 PM.  Kimball sent him west against
+    #     Jackson's flank about 3:30-4 PM, as Jackson's attack developed.  Wakes on turn 4 (50%,
+    #     +25/turn), at once if Jackson commits Burks (C1), or if Kimball's main body falls to 70%.
+    SG(0, 4, 50, 25, main=70, enemy=1),
+    # U2: Sullivan's 13 IN/5 OH and 62 OH, watching Ashby east of the pike; they went to Sandy Ridge
+    #     only late.  Turn 6 (30%, +25), at once if Ashby's group (C2) comes on, or main body 60%.
+    SG(0, 6, 30, 25, main=60, enemy=2),
+    # U3: Kimball's HQ, 39 IL and Huntington's battery at Winchester: held, unless the main body
+    #     falls to half.
+    SG(0, 0, 0, 0, main=50),
+    # U4: the guns on Pritchard's Hill (Robinson, Jenks, Clark, Keeper), which stayed there all
+    #     afternoon: held for good.  They fire while held; an adjacent enemy still wakes them.
+    SG(0, 0, 0, 0),
+    # C1: Burks with Marye's and Lanier's guns, Jackson's reserve near Bartonsville; Jackson fed it
+    #     in as Tyler struck.  Turn 5 (40%, +30), at once when Tyler (U1) wakes, or main body 70%.
+    SG(1, 5, 40, 30, main=70, enemy=1),
+    # C2: Ashby and Chew east of the pike, held while Sullivan stands in front of them: containment
+    #     4 hexes, 6 CS (13 IN/5 OH alone is 6; OH/MD Cav is 2).  If Sullivan's infantry leaves for
+    #     the west, Ashby is free to press up the pike, as his troopers did.
+    SG(1, 0, 0, 0, rng=4, need=6),
+    # C3: the Sandy Ridge guns (Rockbridge, Carpenter, Waters), which fired from the ridge all
+    #     afternoon: held for good.  They fire while held.
+    SG(1, 0, 0, 0),
+    # C4: Jackson's HQ: held unless the main body falls to half.
+    SG(1, 0, 0, 0, main=50),
 ]
 
 
@@ -857,23 +881,25 @@ Banks' army is leaving the Valley for the defence of Washington, and Jackson's o
 
 [If you command the Confederates: Jackson] Jackson attacked because he believed the enemy weak. Fulkerson's brigade, with Garnett's Stonewall Brigade behind it, swung west onto Sandy Ridge and reached the stone wall before Tyler did. From the ridge Jackson's aide, Sandie Pendleton, counted the Federals and put them at 10,000. Jackson answered: "Say nothing about it. We are in for it." Hold the wall and Glass Farm, and make Kimball pay for them. You will not win by pushing up the pike into the Union guns. Burks' brigade is your only reserve. Keep a way back open behind every regiment. Near 6 PM Garnett's men ran out of ammunition and he pulled them back without orders. Jackson had him arrested for it, but the brigade survived.
 
-[The afternoon] Each turn is half an hour. Turn 1 is 2:00 PM. On turn 4 (3:30) a computer-run Tyler may start west. On turn 5 (4:00) a computer-run Burks may come up, and the Union may move two more units a turn. Historically Tyler's attack on the wall began about now. On turn 6 (4:30) a computer-run Sullivan may join, and computer-run batteries may leave the ridges they start on; until then the AI keeps its guns on Pritchard's Hill and Sandy Ridge. On turn 9 (6:00) Burks arrived historically and Garnett's line fell back. The sun sets about 6:15 and dusk ends about 6:40. Turn 11 (7:00) is night, and the game ends after it.
+[The afternoon] Each turn is half an hour. Turn 1 is 2:00 PM. When the computer runs a side, some of its units wait in reserve. A waiting unit does not move, but it fights, fires and holds its ground, and it comes on at once if an enemy unit moves next to it or attacks it. On turn 4 (3:30) Tyler may start west. He comes sooner if Jackson commits Burks, or if Kimball's front loses 30% of its strength. On turn 5 (4:00) Burks may come up, and he comes at once when Tyler moves. The Union may move two more units a turn from turn 5. Historically Tyler's attack on the wall began about now. On turn 6 (4:30) Sullivan may join; he comes sooner if Ashby moves. Ashby waits as long as Sullivan's infantry stands in front of him, and is free once it leaves. The guns on Pritchard's Hill and Sandy Ridge stay where they are and fire from there. On turn 9 (6:00) Burks arrived historically and Garnett's line fell back. The sun sets about 6:15 and dusk ends about 6:40. Turn 11 (7:00) is night, and the game ends after it.
 
-[How to win] The dividing line is Union +55, the score if nothing changes hands. The Stone Wall (15) starts neutral. Pritchard's Hill (20), Kernstown (15) and Winchester (30) start Union, and Bartonsville (10) starts Confederate. Two hexes are command points (+2): Glass Farm, at the west end of the stone wall, and Grade Junction, where the Cedar Creek Grade meets the pike. Both start neutral. The side holding one may move two more units each turn. A Union side that keeps what it has and takes the wall scores about 70; a Jackson who holds the wall until dark and keeps Bartonsville holds the Union to about 40.
+[How to win] The score is the Union's objective points minus the Confederates', plus the strength the Union destroys minus the strength it loses. The dividing line is Union +55, the score if nothing changes hands. The Stone Wall (15) starts neutral. Pritchard's Hill (20), Kernstown (15) and Winchester (30) start Union, and Bartonsville (10) starts Confederate. Two hexes are command points (+2): Glass Farm, at the west end of the stone wall, and Grade Junction, where the Cedar Creek Grade meets the pike. Both start neutral. The side holding one may move two more units each turn. A Union side that keeps what it has and takes the wall scores about 70, and a Jackson who holds the wall until dark and keeps Bartonsville holds the Union to about 40, before losses. Losses count: every strength point destroyed moves the score one point. A margin of 7 either way is a tactical victory, 58 an operational one and 116 a strategic one.
 
-[Combat] This board uses its own combat table, gentler than the default. At odds from 1:2 to 2:1, a low roll repulses the attacker (AR), a middle roll has no effect (C) and a high roll drives the defender back (DR); at even odds only a 6 does. Every battery starts stacked with infantry (Chew with Ashby's cavalry). A unit is destroyed outright only at 5:1 or better on the highest rolls, or when attacking at 1:3 and rolling a 1. A unit that must retreat with no open hex behind it is lost, so most losses come from being hemmed in, not from the die. The wall hexes are high ground (defence x2). A beaten defender falls back from them instead of being destroyed in place.
+[Combat] This board uses its own combat table, gentler than the default. At odds from 1:2 to 2:1, a low roll repulses the attacker (AR), a middle roll has no effect (C) and a high roll drives the defender back (DR); at even odds only a 6 does. Every battery starts stacked with infantry (Chew with Ashby's cavalry). A unit is destroyed by the die only at 5:1 or better on the highest rolls, or when attacking at 1:3 and rolling a 1. Replacements are on: a unit of strength 3 or more destroyed that way falls back up to twice its movement and fights on at half strength. A unit that must retreat with no open hex behind it is lost for good, with no replacement, so keep a way back open. The wall hexes are high ground (defence x2). A beaten defender falls back from them instead of being destroyed in place.
 
 [Order of battle] Union, Shields' division, Col. Nathan Kimball. Kimball's brigade: 14th Indiana (Lt. Col. Harrow), 84th Pennsylvania (Col. Murray, killed), 8th Ohio (Col. Carroll), 67th Ohio (Lt. Col. Voris). Tyler's brigade, Col. Erastus B. Tyler: 7th and 29th Ohio, 7th Indiana, 1st West Virginia (Col. Thoburn), 110th Pennsylvania. Sullivan's brigade, Col. Jeremiah C. Sullivan: 13th Indiana, 5th Ohio, 62nd Ohio, 39th Illinois (not engaged). Brodhead's cavalry: 1st Michigan, with Ohio and Maryland companies. Batteries: Jenks (A, West Virginia), Clark (E, 4th U.S.), Robinson (L, 1st Ohio), Keeper (B, West Virginia), Huntington (H, 1st Ohio).
-Confederate, Valley District, Maj. Gen. Thomas J. Jackson. Stonewall Brigade, Brig. Gen. Richard B. Garnett: 2nd (Col. Allen), 4th (Lt. Col. Ronald), 5th (Col. Harman), 27th (Col. Echols, wounded) and 33rd (Col. Cummings) Virginia, with McLaughlin's Rockbridge, Waters' West Augusta and Carpenter's Alleghany batteries. Burks' brigade, Col. Jesse S. Burks: 21st Virginia (Lt. Col. Patton), 42nd Virginia (Lt. Col. Langhorne), 1st Virginia Battalion (Irish), Marye's Hampden battery. Fulkerson's brigade, Col. Samuel V. Fulkerson: 23rd and 37th Virginia, Lanier's Danville battery. Ashby's 7th Virginia Cavalry and Chew's horse battery. Kimball and Jackson appear as headquarters counters (strength 1) with their portraits. The computer keeps them back; a human player may move them.
+Confederate, Valley District, Maj. Gen. Thomas J. Jackson. Stonewall Brigade, Brig. Gen. Richard B. Garnett: 2nd (Col. Allen), 4th (Lt. Col. Ronald), 5th (Col. Harman), 27th (Col. Echols, wounded) and 33rd (Col. Cummings) Virginia, with McLaughlin's Rockbridge, Waters' West Augusta and Carpenter's Alleghany batteries. Burks' brigade, Col. Jesse S. Burks: 21st Virginia (Lt. Col. Patton), 42nd Virginia (Lt. Col. Langhorne), 1st Virginia Battalion (Irish), Marye's Hampden battery. Fulkerson's brigade, Col. Samuel V. Fulkerson: 23rd and 37th Virginia, Lanier's Danville battery. Ashby's 7th Virginia Cavalry and Chew's horse battery. Kimball and Jackson appear as headquarters counters (strength 2) with their portraits. The computer keeps them back; a human player may move them.
 
-[Counters] The commander is on top and the unit in large type below, with the commander's portrait where one exists. The NATO mark shows the branch: X infantry, / cavalry, a dot for artillery; III is a regiment, I a battery. Combat strength is bottom left and movement bottom right. Batteries carry an R3 plate because they fire three hexes. One strength point is about 300 men, and a full battery is 2. Each hex is about 300 m. The board runs from Sandy Ridge in the west to Opequon Creek, and from Bartonsville north to Winchester. Sources: the reports of Jackson, Shields and Kimball in the Official Records (Series I, Vol. 12, Part 1); Gary Ecelbarger, "We Are in for It!" (1997); Peter Cozzens, Shenandoah 1862 (2008); the American Battlefield Trust map of First Kernstown (2024)."""
+[Counters] The commander is on top and the unit in large type below, with the commander's portrait where one exists. The NATO mark shows the branch: X infantry, / cavalry, a dot for artillery; III is a regiment, I a battery. Combat strength is bottom left and movement bottom right. Batteries carry an R3 plate because they fire three hexes. One strength point is about 150 men, and a full battery is 4. Each hex is about 300 m. The board runs from Sandy Ridge in the west to Opequon Creek, and from Bartonsville north to Winchester. Sources: the reports of Jackson, Shields and Kimball in the Official Records (Series I, Vol. 12, Part 1); Gary Ecelbarger, "We Are in for It!" (1997); Peter Cozzens, Shenandoah 1862 (2008); the American Battlefield Trust map of First Kernstown (2024)."""
 
 
 def thresholds(units, vp_values):
-    """Fits all six stock scenarios exactly (inferred, not documented):
-    operational = 0.2 * sum(CS of all units) + 0.4 * sum(VP), tactical = op / 8, strategic = 2 * op."""
-    op = round(0.2 * sum(u["combatStrength"] for u in units) + 0.4 * sum(vp_values))
-    return round(op / 8), op, 2 * op
+    """Editor guidance (v3.3): total contested = sum of objective values + the average of both sides'
+    CS; thresholds 5% / 40% / 80% of it.  It is the same formula that fit all six stock scenarios
+    (0.4 * (VP + CS/2) = 0.4 * VP + 0.2 * CS).  The margin is objective points held minus the
+    enemy's, plus damage dealt minus damage taken."""
+    total = sum(vp_values) + sum(u["combatStrength"] for u in units) / 2
+    return round(0.05 * total), round(0.4 * total), round(0.8 * total)
 
 
 # ---------------------------------------------------------------- assemble
@@ -979,6 +1005,7 @@ def build(repo, stock_path, out_path, painted=None, art=True, art_png=None):
     placed = place_units(lambda h, side: G.inside(*h))
     units, templates = [], []
     for i, ((side, leader, uname, kind, cs, mp, rng, _h, sb), (q, r)) in enumerate(placed, 1):
+        cs *= CS_SCALE
         full = f"{leader} {uname}"
         boxes = [side, 0, i, leader, uname, cs, mp, rng] + [0] * 12
         tid = f"local_{i}"
@@ -1003,7 +1030,7 @@ def build(repo, stock_path, out_path, painted=None, art=True, art_png=None):
         "exportedAt": "2026-11-02T00:00:00.000Z",
         "description": {l: DESCRIPTION for l in LANGS},
         "briefingImage": "",
-        "scaleMeters": 300, "scaleMinutes": 30, "scaleMen": 300,
+        "scaleMeters": 300, "scaleMinutes": 30, "scaleMen": 300 // CS_SCALE,
         "scenarioName": "Kernstown 1862 (CivilWar1)" if art else "Kernstown 1862 (CivilWar1, no art)",
         "gameId": "mustattack",
         "regionMap": {"image": b64png(rmap.convert("P", palette=Image.ADAPTIVE, colors=64)), "labels": labels_json(rlabels)},
@@ -1025,9 +1052,16 @@ def build(repo, stock_path, out_path, painted=None, art=True, art_png=None):
         art_info = (src, im.size, len(png))
 
     scenario = {
-        # Antietam's pair (Union attacking a held line with fences: "line" vs "brk").  v1 used
-        # def/off; "off" sent the Confederates into 1:2 attacks in playtest 1.  Meanings inferred.
-        "doctrine": {"blue": "line", "red": "brk"},
+        # v3.3: Union "def" (editor: Cautious), Confederate "off" (Aggressive).  Kimball stood on
+        # Pritchard's Hill and struck back only when Jackson's flank attack developed (the standby
+        # triggers above release Tyler and Sullivan); Jackson attacked a force he thought small.
+        # Holding the wall comes from the board: the Stone Wall VP, the Glass Farm CP, the wall's x2
+        # defence, the guns held on Sandy Ridge and Burks held in reserve.  v1 used the same pair and
+        # playtest 1 saw 1:2 Confederate attacks; v3.3's CRT, x2 strengths and replacements make
+        # those repulses rather than losses.  Word -> button: off/def by name (also used by
+        # gettysburg1863 / sevenpines1862 / the user's own file); v2-v3.2 used line/brk, which
+        # playtests 2 and 3 saved as indices 10/9, the last two buttons after Auto is skipped.
+        "doctrine": {"blue": "def", "red": "off"},
         "meta": meta,
         "scenario": {
             "name": meta["scenarioName"],
@@ -1042,7 +1076,8 @@ def build(repo, stock_path, out_path, painted=None, art=True, art_png=None):
                 "max_advance_units": 2, "zoc_exit_allowed": False, "full_move_entry_allowed": False,
                 "activation_limit": {"first": 5, "second": 6},
                 "activation_steps": {"first": [{"turn": 5, "add": 2}], "second": []},
-                "replacement": False,
+                # v3.3: replacements on (gettysburg1863 has replacement: true).
+                "replacement": True,
                 "night_turns": [11],
                 "standby_groups": STANDBY,
                 "crt": CRT,
