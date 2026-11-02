@@ -274,7 +274,7 @@ def make_board_art(grid, terrain, chains, fences, elev, painted=None, seed=1862)
     f1, f2 = ImageFont.truetype(F_CAPS, 64), ImageFont.truetype(F_ITAL, 38)
     d.rounded_rectangle([cx - 300, cy - 90, cx + 300, cy + 90], 14, fill=(242, 234, 212, 215), outline=(80, 60, 40, 255), width=4)
     d.text((cx, cy - 26), "Kernstown", font=f1, anchor="mm", fill=(60, 42, 28, 255))
-    d.text((cx, cy + 40), "Frederick County, Va.  23 March 1862", font=f2, anchor="mm", fill=(60, 42, 28, 255))
+    d.text((cx, cy + 40), "Frederick County, Va., 23 March 1862", font=f2, anchor="mm", fill=(60, 42, 28, 255))
     ax, ay = cx - 360, cy
     d.polygon([(ax, ay - 70), (ax - 18, ay), (ax + 18, ay)], fill=(60, 42, 28, 255))
     d.text((ax, ay + 30), "N", font=f2, anchor="mm", fill=(60, 42, 28, 255))

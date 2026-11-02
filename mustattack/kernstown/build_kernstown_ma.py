@@ -222,12 +222,12 @@ def build_features(feats):
     chains["labels"] = [
         ("Valley Turnpike", rc["valley_pike"], 0.30, 34, "road"),
         ("Valley Turnpike", rc["valley_pike"], 0.80, 34, "road"),
-        ("Middle Road", rc["middle_road"], 0.55, 30, "road"),
+        ("Middle Road", rc["middle_road"], 0.80, 30, "road"),
         ("Cedar Creek Grade", rc["cedar_creek_grade"], 0.45, 30, "road"),
         ("Opequon Creek", rv["opequon_creek"], 0.45, 36, "water"),
         ("Hoge Run", rv["hoge_run"], 0.70, 32, "water"),
-        ("Abrams Creek", rv["abrams_creek"], 0.55, 32, "water"),
-        ("Buffalo Lick", rv["buffalo_lick"], 0.50, 32, "water"),
+        ("Abrams Creek", rv["abrams_creek"], 0.85, 32, "water"),
+        ("Buffalo Lick Run", rv["buffalo_lick"], 0.50, 32, "water"),
     ]
     # trails never duplicate a road on the same hexside
     for h in list(trails):
@@ -268,27 +268,27 @@ VP_SITES = [
 # every stock file.  v1 had a "+2" on the Sandy Ridge crest behind the wall: the playtest AI parked
 # Garnett on it instead of the wall, so it moves onto the wall itself.
 CP_SITES = [
-    ("Stone Wall West", "W1", 2),
-    ("Pike & Cedar Creek Grade", "grade", 2),
+    ("Wall", "W1", 2),                  # v3.1: was "Stone Wall West"; short, so it does not run into Glass Farm / Stone Wall
+    ("Grade Junction", "grade", 2),     # v3.1: was "Pike & Cedar Creek Grade" (too long for one hex)
 ]
 # Named hexes without VP (Antietam "North Woods", Malvern "Willis Church" pattern: name + boxes[9]).
 # Places are the repo's own (data/features/kernstown_features.json places/fords) or the ABT map.
 NAMED_SITES = [
     ("Sandy Ridge", (10, 21)),                       # crest just behind the wall (the v1 CP hex)
-    ("Stone Wall East", "W3"),
+    # v3.1: "Stone Wall East" (W3) dropped: four names in a row ran together
     ("Opequon Church", (-78.1915, 39.1392)),
     ("Pritchard Farm", (-78.2015, 39.1418)),
     ("Milltown", (-78.175, 39.165)),
-    ("Hoge Run Ford", (-78.19977, 39.14140)),
+    # v3.1: "Hoge Run Ford" dropped: it ran into Pritchard Farm; the board art names Hoge Run
     ("Opequon Ford", (-78.172, 39.146)),
-    ("Middle Road", (-78.2330, 39.1350)),
+    # v3.1: "Middle Road" dropped as a hex name: the board art already labels the road
     ("Frederick County Courthouse", None),           # same hex as Winchester VP: skipped
     # v3: farmhouses marked as 19th-century structures on the American Battlefield Trust map
     # (First Kernstown, Sept. 2024 edition, data/historic_maps/First-Kernstown-ABT-2024.pdf).  Placed
     # by their offset on that map from Glass, Pritchard and Kernstown, so +/- 1 hex.
     ("Marcauley Farm", (12, 21)),
     ("Mahaney House", (15, 22)),
-    ("Triplett House", (17, 22)),
+    ("Triplett House", (17, 23)),       # v3.1: was (17,22), next to Opequon Church
 ]
 
 
@@ -313,7 +313,7 @@ UNITS = [
     (0, "Jenks", "A 1 WV Bty", "art", 2, 3, 3, (13, 17), 0),
     (0, "Clark", "E 4 US Bty", "art", 2, 3, 3, (13, 17), 0),
     (0, "Robinson", "L 1 OH Bty", "art", 2, 3, 3, (13, 16), 0),
-    (0, "Davey", "B 1 WV Bty", "art", 2, 3, 3, (16, 17), 0),    # v3: was (17,18), 1 rear hex
+    (0, "Keeper", "B 1 WV Bty", "art", 2, 3, 3, (16, 17), 0),    # v3: was (17,18), 1 rear hex
     (0, "Brodhead", "1 MI Cav", "cav", 1, 6, 1, (6, 12), 0),    # v3: was (7,12), 1 rear hex
     (0, "Brodhead", "OH/MD Cav", "cav", 1, 6, 1, (19, 21), 0),
     (0, "Sullivan", "13 IN/5 OH", "inf", 3, 4, 1, (19, 18), 2),
@@ -328,15 +328,15 @@ UNITS = [
     (1, "Ashby", "7 VA Cav", "cav", 1, 6, 1, (20, 24), 5),
     (1, "Chew", "Horse Bty", "art", 1, 3, 3, (20, 24), 5),
     (1, "Fulkerson", "23/37 VA", "inf", 2, 4, 1, (9, 21), 0),
-    (1, "McLaughlin", "Rockbridge Bty", "art", 2, 3, 3, (12, 20), 0),
-    (1, "Carpenter", "Alleghany Bty", "art", 2, 3, 3, (12, 20), 0),
+    (1, "McLaughlin", "Rockbridge", "art", 2, 3, 3, (12, 20), 0),
+    (1, "Carpenter", "Alleghany", "art", 2, 3, 3, (12, 20), 0),
     (1, "Garnett", "2/4/27 VA", "inf", 2, 4, 1, (10, 23), 0),   # v3: was (10,22), 1 rear hex
     (1, "Garnett", "5/33 VA", "inf", 2, 4, 1, (11, 22), 0),
-    (1, "Waters", "W. Augusta Bty", "art", 2, 3, 3, (11, 21), 0),
-    (1, "Burks", "21 VA/1 VA Bn", "inf", 2, 4, 1, (13, 27), 4),
+    (1, "Waters", "W. Augusta", "art", 2, 3, 3, (11, 21), 0),
+    (1, "Burks", "21 VA/1 Bn", "inf", 2, 4, 1, (13, 27), 4),
     (1, "Burks", "42 VA", "inf", 1, 4, 1, (13, 28), 4),
-    (1, "Marye", "Hampden Bty", "art", 2, 3, 3, (14, 28), 4),
-    (1, "Lanier", "Danville Bty", "art", 2, 3, 3, (14, 29), 4),
+    (1, "Marye", "Hampden", "art", 2, 3, 3, (14, 28), 4),
+    (1, "Lanier", "Danville", "art", 2, 3, 3, (14, 29), 4),
 ]
 
 STANDBY = [  # standby_groups[n-1] for standbyGroup n; Antietam schema
@@ -589,7 +589,7 @@ def template_shapes(side, kind, leader, uname, portrait=None):
     if side == 0:
         plate, col, scol, sw = "img_side_253a69_nonato", "#ffffff", "#000000", 0.6
     else:
-        plate, col, scol, sw = "img_side_b5b0a1_nonato", "#1b1b1b", "#efece2", 0.35
+        plate, col, scol, sw = "img_side_b5b0a1_nonato", "#111111", "#f2efe6", 0.4
     def txt(link, z, x, y, fs, fw):
         return {"type": "text", "link": link, "z": z, "x": x, "y": y, "fontSize": fs, "color": col,
                 "fontFamily": "Playfair Display", "fontWeight": fw, "strokeWidth": sw, "strokeColor": scol}
@@ -718,11 +718,11 @@ def region_map(repo=None):
         return round(x / W, 4), round(y / H, 4)
     labels = [
         (fr(-78.215, 39.143), "battle", "KERNSTOWN"),
-        (fr(-78.15, 39.20), "city", "Winchester (Banks' HQ until 22 March)"),
-        (fr(-78.36, 38.975), "city", "Strasburg (Jackson, 22 March)"),
+        (fr(-78.15, 39.20), "city", "Winchester"),
+        (fr(-78.36, 38.975), "city", "Strasburg"),
         (fr(-77.74, 39.30), "city", "Harpers Ferry"),
-        (fr(-78.30, 39.06), "force", "Jackson, 36 miles in two days"),
-        (fr(-77.95, 39.17), "force", "Williams' division, leaving for Manassas"),
+        (fr(-78.30, 39.06), "force", "Jackson, 40 miles in two days"),
+        (fr(-77.95, 39.17), "force", "Williams' division, leaving the Valley"),
         (fr(-78.15, 39.44), "force", "Potomac River"),
         (fr(-77.86, 39.05), "force", "Blue Ridge"),
         (fr(-78.45, 38.89), "force", "Massanutten"),
@@ -790,7 +790,7 @@ def battle_map(terrain, roads, rivers, vp_hexes, repo=None, wall=()):
         (fr(-78.196, 39.158), "battle", "Pritchard's Hill (Union guns)"),
         (fr(-78.232, 39.146), "battle", "The stone wall"),
         (fr(-78.228, 39.128), "force", "Sandy Ridge"),
-        (fr(-78.18, 39.17), "force", "Tyler (arrives 2 PM)"),
+        (fr(-78.18, 39.17), "force", "Tyler's brigade"),
         (fr(-78.21, 39.112), "force", "Jackson"),
         (fr(-78.18, 39.135), "force", "Ashby (east of the pike)"),
         (fr(-78.150, 39.15), "force", "Opequon Creek"),
@@ -803,24 +803,24 @@ def labels_json(labels):
 
 
 # ---------------------------------------------------------------- description
-DESCRIPTION = """23 March 1862, a cold Sunday afternoon. Kernstown, Frederick County, Virginia, four miles south of Winchester on the Valley Turnpike.
+DESCRIPTION = """Sunday, 23 March 1862. Kernstown, Frederick County, Virginia, a hamlet on the Valley Turnpike three miles south of Winchester.
 
-Turner Ashby's troopers have watched Winchester all week. On Saturday evening they skirmished with what they took to be a rear guard, and Ashby sent word to Jackson: four regiments left, the rest of Banks' army gone east. Jackson has marched his 3,000 infantry thirty-six miles in two days to keep those troops in the Valley. Ashby is wrong by about 6,000 men. James Shields' whole division is still here. Shields himself was struck by a shell fragment in that Saturday skirmish, his arm broken, and lies in Winchester; Colonel Nathan Kimball, an Indiana doctor, fights the battle for him from Pritchard's Hill.
+Banks' army is leaving the Valley for the defence of Washington, and Jackson's orders are to hold it here. On the 22nd Turner Ashby's cavalry skirmished with the Federals, and a shell fragment broke Brig. Gen. James Shields' arm. Confederate loyalists in Winchester then told Ashby that Shields had left only four regiments and a few guns, under orders to march for Harpers Ferry in the morning. Ashby did not check the report and sent it on to Jackson. Jackson marched his men 25 miles on the 22nd and 15 more on the morning of the 23rd, and came up before Kernstown about 11 o'clock with some 3,000 men. Shields' whole division, more than twice that number, was still there. Col. Nathan Kimball commanded it on the field.
 
-[If you command the Union: Kimball] You hold the high ground and you have the numbers: your own brigade and four batteries are up, Tyler's brigade is halted on the pike behind you, and Sullivan's regiments watch Ashby east of the road. Jackson has seen only part of your force. When his guns appear on Sandy Ridge he is trying to turn your right. Send Tyler west along the ridge to the stone wall, as Kimball did about 4 PM, and feed in what you can spare. Do not strip the pike: Winchester and Pritchard's Hill are worth more than the wall.
+[If you command the Union: Kimball] Kimball has posted 16 guns and 800 infantry on Pritchard's Hill. On this board Tyler's brigade waits behind you, and Sullivan's regiments stand east of the pike facing Ashby. When the Confederate guns open from Sandy Ridge, Jackson is reaching for your right flank and the road to Winchester. Kimball sent Tyler west to meet him, and about 4 PM Tyler attacked the stone wall. Do not strip the pike to do it. Winchester and Pritchard's Hill are worth more than the wall.
 
-[If you command the Confederates: Jackson] You attack because you believe the enemy is weak, and by the time you learn otherwise you are committed. Fulkerson's small brigade leads onto Sandy Ridge, Garnett's Stonewall Brigade follows, and your guns on the ridge duel with Pritchard's Hill. The stone wall along the north crest is the place to stand. You cannot win by pushing straight up the pike into the Union guns; you score by holding the wall and Glass Farm and costing Kimball men. Burks' brigade is your only reserve. Keep a line of retreat open behind every regiment: when Garnett's men ran out of ammunition at dusk he pulled them back without orders, and Jackson never forgave him, but the brigade lived to fight again.
+[If you command the Confederates: Jackson] Jackson attacked because he believed the enemy weak. Fulkerson's brigade, with Garnett's Stonewall Brigade behind it, swung west onto Sandy Ridge and reached the stone wall before Tyler did. From the ridge Jackson's aide, Sandie Pendleton, counted the Federals and put them at 10,000. Jackson answered: "Say nothing about it. We are in for it." Hold the wall and Glass Farm, and make Kimball pay for them. You will not win by pushing up the pike into the Union guns. Burks' brigade is your only reserve. Keep a way back open behind every regiment. Near 6 PM Garnett's men ran out of ammunition and he pulled them back without orders. Jackson had him arrested for it, but the brigade survived.
 
-[The afternoon] Each turn is half an hour. Turn 1, 2:00 PM: Fulkerson and the guns on Sandy Ridge. Turn 4, 3:30 PM: a computer-run Tyler may start west. Turn 5, 4:00 PM: historically the Stonewall Brigade reached the wall about now; a computer-run Burks may come up, and the Union gains two moves a turn. Turn 6, 4:30 PM: a computer-run Sullivan may join. Turn 9, 6:00 PM: historically Garnett's line gave way about now. Sunset is at 6:15; turn 11, 7:00 PM, is night.
+[The afternoon] Each turn is half an hour. Turn 1 is 2:00 PM. On turn 4 (3:30) a computer-run Tyler may start west. On turn 5 (4:00) a computer-run Burks may come up, and the Union may move two more units a turn. Historically Tyler's attack on the wall began about now. On turn 6 (4:30) a computer-run Sullivan may join. On turn 9 (6:00) Burks arrived historically and Garnett's line fell back. The sun sets about 6:15 and dusk ends about 6:40. Turn 11 (7:00) is night, and the game ends after it.
 
-[How to win] The dividing line is Union +55, the score if nothing changes hands. The stone wall (15) and Glass Farm (5) start neutral; Pritchard's Hill (20), Kernstown (15) and Winchester (30) are Union, Bartonsville (10) Confederate. Holding the wall's west hex, and the junction of the pike and the Cedar Creek Grade, gives the holder two more moves a turn.
+[How to win] The dividing line is Union +55, the score if nothing changes hands. The Stone Wall (15) and Glass Farm (5) start neutral. Pritchard's Hill (20), Kernstown (15) and Winchester (30) start Union, and Bartonsville (10) starts Confederate. Two hexes are command points (+2): Wall, the hex just west of the Stone Wall, and Grade Junction, where the Cedar Creek Grade meets the pike. The side holding one may move two more units each turn.
 
-[Combat] This board uses its own combat table, gentler than the default. Between 1:2 and 2:1, the odds most Kernstown attacks were made at, a bad roll repulses the attacker (AR), a middling one is a stand-off (C) and a good one drives the defender back (DR). A unit is destroyed outright only at 5:1 or better on the best rolls, or attacking at 1:3 on a 1. A unit that must retreat and has no open hex behind it (enemy units, their zone of control, a full stack) is lost, so most losses come from being surrounded, not from the die. The wall hexes are high ground (defence x2) and can be held, but a beaten defender falls back from them instead of dying in place.
+[Combat] This board uses its own combat table, gentler than the default. At odds from 1:2 to 2:1, a low roll repulses the attacker (AR), a middle roll has no effect (C) and a high roll drives the defender back (DR). A unit is destroyed outright only at 5:1 or better on the highest rolls, or when attacking at 1:3 and rolling a 1. A unit that must retreat with no open hex behind it is lost, so most losses come from being hemmed in, not from the die. The wall hexes are high ground (defence x2). A beaten defender falls back from them instead of being destroyed in place.
 
-[Order of battle] Union, Shields' division, Col. Nathan Kimball. Kimball's brigade: 14th Indiana (Lt. Col. Harrow), 84th Pennsylvania (Col. Murray, killed), 8th Ohio (Col. Carroll), 67th Ohio (Lt. Col. Voris). Tyler's brigade, Col. Erastus Tyler: 7th and 29th Ohio, 7th Indiana, 1st West Virginia (Col. Thoburn), 110th Pennsylvania. Sullivan's brigade, Col. Jeremiah Sullivan: 13th Indiana, 5th Ohio, 62nd Ohio, 39th Illinois (not engaged). Brodhead's cavalry: 1st Michigan, Ohio and Maryland companies. Batteries: Jenks (A, 1st West Virginia), Clark (E, 4th U.S.), Robinson (L, 1st Ohio), Davey (B, 1st West Virginia), Huntington (H, 1st Ohio).
-Confederate, Valley District, Maj. Gen. Thomas J. Jackson. Stonewall Brigade, Brig. Gen. Richard Garnett: 2nd (Col. Allen), 4th (Lt. Col. Ronald), 5th (Col. Harman), 27th (Col. Echols, wounded) and 33rd (Col. Cummings) Virginia, with McLaughlin's Rockbridge, Waters' West Augusta and Carpenter's Alleghany batteries. Burks' brigade, Col. Jesse Burks: 21st Virginia (Lt. Col. Patton), 42nd Virginia (Lt. Col. Langhorne), 1st Virginia Battalion (Irish), Marye's Hampden battery. Fulkerson's brigade, Col. Samuel Fulkerson: 23rd and 37th Virginia, Lanier's Danville battery. Ashby's 7th Virginia Cavalry and Chew's horse battery. Kimball and Jackson appear as headquarters counters (strength 1) with their portraits; they stand back unless a player moves them.
+[Order of battle] Union, Shields' division, Col. Nathan Kimball. Kimball's brigade: 14th Indiana (Lt. Col. Harrow), 84th Pennsylvania (Col. Murray, killed), 8th Ohio (Col. Carroll), 67th Ohio (Lt. Col. Voris). Tyler's brigade, Col. Erastus B. Tyler: 7th and 29th Ohio, 7th Indiana, 1st West Virginia (Col. Thoburn), 110th Pennsylvania. Sullivan's brigade, Col. Jeremiah C. Sullivan: 13th Indiana, 5th Ohio, 62nd Ohio, 39th Illinois (not engaged). Brodhead's cavalry: 1st Michigan, with Ohio and Maryland companies. Batteries: Jenks (A, West Virginia), Clark (E, 4th U.S.), Robinson (L, 1st Ohio), Keeper (B, West Virginia), Huntington (H, 1st Ohio).
+Confederate, Valley District, Maj. Gen. Thomas J. Jackson. Stonewall Brigade, Brig. Gen. Richard B. Garnett: 2nd (Col. Allen), 4th (Lt. Col. Ronald), 5th (Col. Harman), 27th (Col. Echols, wounded) and 33rd (Col. Cummings) Virginia, with McLaughlin's Rockbridge, Waters' West Augusta and Carpenter's Alleghany batteries. Burks' brigade, Col. Jesse S. Burks: 21st Virginia (Lt. Col. Patton), 42nd Virginia (Lt. Col. Langhorne), 1st Virginia Battalion (Irish), Marye's Hampden battery. Fulkerson's brigade, Col. Samuel V. Fulkerson: 23rd and 37th Virginia, Lanier's Danville battery. Ashby's 7th Virginia Cavalry and Chew's horse battery. Kimball and Jackson appear as headquarters counters (strength 1) with their portraits. The computer keeps them back; a human player may move them.
 
-[Counters] Commander on top, unit in large type, the commander's portrait where one exists, the NATO branch mark (X infantry, / cavalry, dot artillery; III regiments, I battery), combat strength bottom left, movement bottom right. Batteries carry a RANGE 3 plate: they fire three hexes. One strength point is about 300 men; a full battery is 2. The board is about 300 m a hex, from Sandy Ridge in the west to Opequon Creek, and from Bartonsville north to Winchester. Sources: the reports of Jackson, Shields and Kimball in the Official Records (Series I, Vol. 12, Part 1); Gary Ecelbarger, "We Are in for It!"; the American Battlefield Trust map of First Kernstown (2024)."""
+[Counters] The commander is on top and the unit in large type below, with the commander's portrait where one exists. The NATO mark shows the branch: X infantry, / cavalry, a dot for artillery; III is a regiment, I a battery. Combat strength is bottom left and movement bottom right. Batteries carry an R3 plate because they fire three hexes. One strength point is about 300 men, and a full battery is 2. Each hex is about 300 m. The board runs from Sandy Ridge in the west to Opequon Creek, and from Bartonsville north to Winchester. Sources: the reports of Jackson, Shields and Kimball in the Official Records (Series I, Vol. 12, Part 1); Gary Ecelbarger, "We Are in for It!" (1997); Peter Cozzens, Shenandoah 1862 (2008); the American Battlefield Trust map of First Kernstown (2024)."""
 
 
 def thresholds(units, vp_values):
