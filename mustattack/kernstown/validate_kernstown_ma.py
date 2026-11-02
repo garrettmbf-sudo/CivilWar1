@@ -12,9 +12,13 @@ Checks (exit 1 on any ERROR):
   * units: on board, on a non-impassable terrain, <= stacking_limit per hex, unique ids,
     boxes mirror the unit fields, standbyGroup indexes rules.standby_groups (1-based)
   * every templateId, imageRef and terrainId resolves
-  * VP / CP hexes: boxes mirror vp/pp/name/initialControl
+  * VP / CP hexes: boxes mirror vp/pp/name/initialControl (neutral VP: boxes[15] = 0, as
+    secondbullrun1862 / chancellorsville1863); named non-VP hexes: boxes[9] = name (antietam)
+  * meta.boardArt (v2): same geometry fields/values as antietam1862's, image decodes to the size the
+    grid implies, transparent outside the board, hash = SHA-1 of the PNG (our assumption)
+  * victory thresholds vs the formula that fits all six stock scenarios (inferred; warning only)
 """
-import json, os, sys
+import base64, hashlib, io, json, math, os, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DIRS_EVEN = [(1, 0), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1)]
@@ -68,7 +72,7 @@ def walk(v, path, out):
 
 def load(p):
     raw = open(p, "rb").read()
-    return raw, json.loads(raw.decode("utf-8"))
+    return raw, json.loads(raw.decode("utf-8-sig"))
 
 
 def _alt_dirs():
@@ -111,12 +115,17 @@ def check_stock_grid(stock):
 def main(path, refdir):
     raw, d = load(path)
     if raw.startswith(b"\xef\xbb\xbf"):
-        err("file has a UTF-8 BOM; no stock file does")
+        err("file has a UTF-8 BOM (the brief says no BOM)")
     if len(raw) > 20 * 1024 * 1024:
         err(f"file is {len(raw)/1e6:.1f} MB (> 20 MB)")
     stock = {}
-    for f in ("antietam1862", "gainesmill1862", "gettysburg1863", "user_kernstown1862"):
-        sraw, sd = load(os.path.join(refdir, f + ".json"))
+    for f in ("antietam1862", "gainesmill1862", "gettysburg1863", "user_kernstown1862",
+              "malvernhill1862", "sevenpines1862", "chancellorsville1863", "secondbullrun1862"):
+        fp = os.path.join(refdir, f + ".json")
+        if not os.path.exists(fp):
+            print(f"  note: stock {f} not in {refdir}")
+            continue
+        sraw, sd = load(fp)
         if sraw.startswith(b"\xef\xbb\xbf"):
             print(f"  note: stock {f} has a BOM")
         stock[f] = sd
@@ -214,11 +223,17 @@ def main(path, refdir):
         if h["isVPLocation"]:
             if b[9] != h["name"] or b[10] != h["vp"]["first"] or b[11] != h["vp"]["second"]:
                 err(f"VP hex {q},{r} boxes 9-11 do not mirror name/vp")
-            if b[15] != h["initialControl"] + 1:
-                err(f"VP hex {q},{r} boxes[15] != initialControl+1")
+            if b[15] != (0 if h["initialControl"] is None else h["initialControl"] + 1):
+                err(f"VP hex {q},{r} boxes[15] != initialControl+1 (0 if neutral)")
         elif h["pp"]["first"] or h["pp"]["second"]:
             if b[16] != f"+{h['pp']['first']}" or b[17] != f"+{h['pp']['second']}":
                 err(f"CP hex {q},{r} boxes 16/17 do not mirror pp")
+            if b[9] != h["name"]:
+                err(f"CP hex {q},{r} boxes[9] != name")
+            if h["initialControl"] is not None:
+                warn(f"CP hex {q},{r} has initialControl")
+        elif h["name"] and b[9] != h["name"]:
+            err(f"named hex {q},{r} boxes[9] != name")
     print(f"  {len(H)} hexes, {nsym} symmetric road/river/trail edge pairs (counted per side)")
 
     # ---- assets
@@ -267,7 +282,33 @@ def main(path, refdir):
     for h, n in stack.items():
         if n > lim:
             err(f"{n} units on hex {h} (stacking_limit {lim})")
+    # ---- boardArt
+    ba = d["meta"].get("boardArt")
+    if ba is not None:
+        sba = stock["antietam1862"]["meta"]["boardArt"]
+        for k in ("version", "style", "scale", "hexSize", "originX", "originY", "grid", "gridAlpha"):
+            if ba.get(k) != sba.get(k):
+                warn(f"boardArt.{k} = {ba.get(k)!r}, antietam has {sba.get(k)!r}")
+        from PIL import Image
+        Image.MAX_IMAGE_PIXELS = None
+        png = base64.b64decode(ba["image"].split(",", 1)[1])
+        im = Image.open(io.BytesIO(png))
+        R, bsc = ba["hexSize"], ba["scale"]
+        ew = round((math.sqrt(3) * R * (W + 0.5) - math.sqrt(3) * R / 2 - 2 * ba["originX"] - math.sqrt(3) * R / 2) * bsc)
+        eh = round((1.5 * R * (Hh - 1) + R - 2 * ba["originY"] - R) * bsc)
+        if abs(im.width - ew) > 2 or abs(im.height - eh) > 2:
+            err(f"boardArt image {im.size} != expected ~({ew}, {eh}) for {W}x{Hh} hexes")
+        a = im.convert("RGBA")
+        if a.getpixel((0, 0))[3] != 0:
+            warn("boardArt corner pixel is opaque (stock is transparent outside the board)")
+        if ba["hash"] != hashlib.sha1(png).hexdigest():
+            warn("boardArt.hash is not the SHA-1 of the image (meaning of stock hash unknown)")
+        print(f"  boardArt {im.size} {im.mode}, {len(png)/1e6:.2f} MB PNG")
+    # ---- thresholds formula (inferred from the six stock scenarios)
     vc = d["victoryCondition"]
+    op = round(0.2 * sum(u["combatStrength"] for u in sc["units"]) + 0.4 * sum(h["vp"]["first"] for h in hexes))
+    if (vc["tacticalThreshold"], vc["operationalThreshold"], vc["strategicThreshold"]) != (round(op / 8), op, 2 * op):
+        warn(f"thresholds {vc} differ from the stock-fitted formula ({round(op/8)}, {op}, {2*op})")
     if not vc["tacticalThreshold"] < vc["operationalThreshold"] < vc["strategicThreshold"]:
         err("victory thresholds not increasing")
     if sc["turnClock"] and sc["turnClock"][0]["turn"] != 1:

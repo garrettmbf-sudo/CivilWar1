@@ -202,12 +202,33 @@ def add_path(edges, chain):
 
 def build_features(feats):
     roads, rivers, trails, fences = (defaultdict(set) for _ in range(4))
+    chains = {"roads": [], "rivers": [], "trails": [], "labels": []}
+    def onboard(c):
+        return [h for h in c if G.inside(*h)]
     for k in ("valley_pike", "middle_road", "cedar_creek_grade"):
-        add_path(roads, simplify_chain(G.trace(feats["roads"][k]["waypoints"])))
+        c = simplify_chain(G.trace(feats["roads"][k]["waypoints"]))
+        add_path(roads, c)
+        chains["roads"].append((k, onboard(c)))
     for k in ("apple_valley_road", "stone_lane"):
-        add_path(trails, simplify_chain(G.trace(feats["roads"][k]["waypoints"])))
+        c = simplify_chain(G.trace(feats["roads"][k]["waypoints"]))
+        add_path(trails, c)
+        chains["trails"].append(onboard(c))
     for k in ("opequon_creek", "hoge_run", "abrams_creek", "buffalo_lick"):
-        add_path(rivers, simplify_chain(G.trace(feats["rivers"][k]["waypoints"])))
+        c = simplify_chain(G.trace(feats["rivers"][k]["waypoints"]))
+        add_path(rivers, c)
+        chains["rivers"].append(onboard(c))
+    rc = dict(chains["roads"])
+    rv = dict(zip(("opequon_creek", "hoge_run", "abrams_creek", "buffalo_lick"), chains["rivers"]))
+    chains["labels"] = [
+        ("Valley Turnpike", rc["valley_pike"], 0.30, 34, "road"),
+        ("Valley Turnpike", rc["valley_pike"], 0.80, 34, "road"),
+        ("Middle Road", rc["middle_road"], 0.55, 30, "road"),
+        ("Cedar Creek Grade", rc["cedar_creek_grade"], 0.45, 30, "road"),
+        ("Opequon Creek", rv["opequon_creek"], 0.45, 36, "water"),
+        ("Hoge Run", rv["hoge_run"], 0.70, 32, "water"),
+        ("Abrams Creek", rv["abrams_creek"], 0.55, 32, "water"),
+        ("Buffalo Lick", rv["buffalo_lick"], 0.50, 32, "water"),
+    ]
     # trails never duplicate a road on the same hexside
     for h in list(trails):
         trails[h] -= roads.get(h, set())
@@ -224,88 +245,113 @@ def build_features(feats):
         for e in (4, 5):
             if neighbor(*h, e) not in chain:
                 fences[h].add(e)
-    return roads, rivers, trails, fences
+    return roads, rivers, trails, fences, chains
 
 
 # ---------------------------------------------------------------- objectives
 # VP values are listed identically for both sides (as every stock file does).
-# initialControl: 0 = Union (first side), 1 = Confederate (second side).
+# initialControl: 0 = Union (first side), 1 = Confederate (second side), None = neutral
+# (secondbullrun1862 "Groveton" / chancellorsville1863 pattern: boxes[15] = 0).
+# Wall hexes are numbered west to east along the single wall row (see build_features):
+# W0 = Glass farm end ... W3 = east end on the ridge crest.
 VP_SITES = [
-    # name, lon, lat, vp, initialControl
-    ("Winchester", -78.16444, 39.18389, 30, 0),
-    ("Pritchard's Hill", -78.2025, 39.1548, 20, 0),
-    ("Kernstown", -78.1978, 39.1425, 15, 0),
-    ("Stone Wall", None, None, 15, 1),          # placed on the middle wall hex
-    ("Bartonsville", -78.2100, 39.1160, 10, 1),
+    # name, where, vp, initialControl
+    ("Winchester", (-78.16444, 39.18389), 30, 0),
+    ("Pritchard's Hill", (-78.2025, 39.1548), 20, 0),
+    ("Kernstown", (-78.1978, 39.1425), 15, 0),
+    ("Stone Wall", "W2", 15, None),        # v1: Confederate-held 15 on the middle hex
+    ("Glass Farm", "W0", 5, None),         # v2: west end of the wall, Fulkerson's flank (new)
+    ("Bartonsville", (-78.2100, 39.1160), 10, 1),
 ]
-# Command points (Gettysburg pattern: non-VP hex, pp both sides, initialControl None).
+# Command points.  The editor's own help (user screenshot): "CP = holding it changes how many
+# units a side may move per turn ... A plus CP (+3) raises your own cap."  Non-VP hexes only, as in
+# every stock file.  v1 had a "+2" on the Sandy Ridge crest behind the wall: the playtest AI parked
+# Garnett on it instead of the wall, so it moves onto the wall itself.
 CP_SITES = [
-    ("Sandy Ridge crest", None, None, 2),          # ridge crest just south of the wall (artillery line)
-    ("Pike & Cedar Creek Grade", None, None, 2),   # junction Tyler used to come onto the field
+    ("Stone Wall West", "W1", 2),
+    ("Pike & Cedar Creek Grade", "grade", 2),
+]
+# Named hexes without VP (Antietam "North Woods", Malvern "Willis Church" pattern: name + boxes[9]).
+# Places are the repo's own (data/features/kernstown_features.json places/fords) or the ABT map.
+NAMED_SITES = [
+    ("Sandy Ridge", (10, 21)),                       # crest just behind the wall (the v1 CP hex)
+    ("Stone Wall East", "W3"),
+    ("Opequon Church", (-78.1915, 39.1392)),
+    ("Pritchard Farm", (-78.2015, 39.1418)),
+    ("Milltown", (-78.175, 39.165)),
+    ("Hoge Run Ford", (-78.19977, 39.14140)),
+    ("Opequon Ford", (-78.172, 39.146)),
+    ("Middle Road", (-78.2330, 39.1350)),
+    ("Frederick County Courthouse", None),           # same hex as Winchester VP: skipped
 ]
 
 
 # ---------------------------------------------------------------- units
-# (side, leader, unit, kind, CS, MP, range, lon, lat, standbyGroup)
+# (side, leader, unit (counter label), kind, CS, MP, range, hex, standbyGroup)
 # side 0 = Union (first), 1 = Confederate (second).  kind: inf/cav/art.
+# Positions are explicit hexes (v2): the Confederate line is laid out against the wall row and the
+# guns against Pritchard's Hill at a 3-hex range, so they are given by hex, not lon/lat.
+# Strengths: one point per ~300 men (infantry/cavalry).  Batteries: CS 2, the stock value for a
+# full battery (antietam/gainesmill/sevenpines range-2 units); Chew's 3-gun horse battery CS 1 (as
+# Antietam's Pelham horse artillery).  Range 3 for field guns: stock range 2 at 500-700 m hexes is
+# 1.0-1.4 km; at 300 m hexes the same ground is 3 hexes (range 3 is itself stock: Malvern Hill
+# Hunt's reserve, Second Bull Run S.D. Lee).
 UNITS = [
     # --- Union: Shields' division (Kimball commanding on the field).  ~6,300 inf+cav+arty engaged.
-    (0, "Kimball", "14 IN / 84 PA", "inf", 3, 4, 1, -78.2010, 39.1545, 0),
-    (0, "Kimball", "8 OH / 67 OH", "inf", 3, 4, 1, -78.1975, 39.1500, 0),
-    (0, "Jenks", "A 1 WV Lt Arty", "art", 1, 3, 2, -78.2040, 39.1560, 0),
-    (0, "Clark", "E 4 US Arty", "art", 1, 3, 2, -78.2020, 39.1575, 0),
-    (0, "Robinson", "L 1 OH Lt Arty", "art", 1, 3, 2, -78.1995, 39.1535, 0),
-    (0, "Davey", "B 1 WV Lt Arty", "art", 1, 3, 2, -78.1925, 39.1470, 0),
-    (0, "Brodhead", "1 MI Cav", "cav", 1, 6, 1, -78.2290, 39.1640, 0),
-    (0, "Brodhead", "Ohio/Md/WV Cav", "cav", 1, 6, 1, -78.1850, 39.1420, 0),
-    (0, "Sullivan", "13 IN / 5 OH", "inf", 3, 4, 1, -78.1880, 39.1480, 2),
-    (0, "Sullivan", "62 OH", "inf", 2, 4, 1, -78.1840, 39.1520, 2),
-    (0, "Tyler", "7 OH / 29 OH", "inf", 3, 4, 1, -78.1870, 39.1640, 1),
-    (0, "Tyler", "7 IN / 1 WV", "inf", 3, 4, 1, -78.1835, 39.1675, 1),
-    (0, "Tyler", "110 PA", "inf", 2, 4, 1, -78.1805, 39.1710, 1),
-    (0, "Sullivan", "39 IL", "inf", 1, 4, 1, -78.1700, 39.1580, 3),
-    (0, "Huntington", "H 1 OH Lt Arty", "art", 1, 3, 2, -78.1755, 39.1760, 3),
+    (0, "Kimball", "14 IN/84 PA", "inf", 3, 4, 1, (12, 16), 0),
+    (0, "Kimball", "8 OH/67 OH", "inf", 3, 4, 1, (14, 16), 0),
+    (0, "Jenks", "A 1 WV Bty", "art", 2, 3, 3, (13, 17), 0),
+    (0, "Clark", "E 4 US Bty", "art", 2, 3, 3, (13, 17), 0),
+    (0, "Robinson", "L 1 OH Bty", "art", 2, 3, 3, (13, 16), 0),
+    (0, "Davey", "B 1 WV Bty", "art", 2, 3, 3, (17, 18), 0),
+    (0, "Brodhead", "1 MI Cav", "cav", 1, 6, 1, (7, 12), 0),
+    (0, "Brodhead", "OH/MD Cav", "cav", 1, 6, 1, (19, 21), 0),
+    (0, "Sullivan", "13 IN/5 OH", "inf", 3, 4, 1, (19, 18), 2),
+    (0, "Sullivan", "62 OH", "inf", 2, 4, 1, (20, 16), 2),
+    (0, "Tyler", "7 OH/29 OH", "inf", 3, 4, 1, (19, 12), 1),
+    (0, "Tyler", "7 IN/1 WV", "inf", 3, 4, 1, (20, 10), 1),
+    (0, "Tyler", "110 PA", "inf", 2, 4, 1, (21, 8), 1),
+    (0, "Sullivan", "39 IL", "inf", 1, 4, 1, (24, 14), 3),
+    (0, "Huntington", "H 1 OH Bty", "art", 2, 3, 3, (22, 6), 3),
     # --- Confederate: Jackson's Valley District.  2,742 inf engaged, 290 cav, 18 of 27 guns.
-    (1, "Ashby", "7 VA Cav", "cav", 1, 6, 1, -78.1880, 39.1340, 0),
-    (1, "Chew", "Horse Arty", "art", 1, 3, 2, -78.1920, 39.1310, 0),
-    (1, "Fulkerson", "23 / 37 VA", "inf", 2, 4, 1, -78.2150, 39.1300, 0),
-    (1, "McLaughlin", "Rockbridge Arty", "art", 1, 3, 2, -78.2190, 39.1330, 0),
-    (1, "Carpenter", "Alleghany Arty", "art", 1, 3, 2, -78.2120, 39.1340, 0),
-    (1, "Garnett", "2 / 4 / 27 VA", "inf", 2, 4, 1, -78.2110, 39.1250, 0),
-    (1, "Garnett", "5 / 33 VA", "inf", 2, 4, 1, -78.2070, 39.1220, 0),
-    (1, "Waters", "W. Augusta Arty", "art", 1, 3, 2, -78.2050, 39.1260, 0),
-    (1, "Burks", "21 VA / 1 VA Bn", "inf", 2, 4, 1, -78.2040, 39.1180, 0),
-    (1, "Burks", "42 VA", "inf", 1, 4, 1, -78.2080, 39.1150, 0),
-    (1, "Marye", "Hampden Arty", "art", 1, 3, 2, -78.2000, 39.1210, 0),
-    (1, "Lanier", "Danville Arty", "art", 1, 3, 2, -78.1980, 39.1170, 0),
+    (1, "Ashby", "7 VA Cav", "cav", 1, 6, 1, (20, 24), 5),
+    (1, "Chew", "Horse Bty", "art", 1, 3, 3, (20, 24), 5),
+    (1, "Fulkerson", "23/37 VA", "inf", 2, 4, 1, (9, 21), 0),
+    (1, "McLaughlin", "Rockbridge Bty", "art", 2, 3, 3, (12, 20), 0),
+    (1, "Carpenter", "Alleghany Bty", "art", 2, 3, 3, (12, 20), 0),
+    (1, "Garnett", "2/4/27 VA", "inf", 2, 4, 1, (10, 22), 0),
+    (1, "Garnett", "5/33 VA", "inf", 2, 4, 1, (11, 22), 0),
+    (1, "Waters", "W. Augusta Bty", "art", 2, 3, 3, (11, 21), 0),
+    (1, "Burks", "21 VA/1 VA Bn", "inf", 2, 4, 1, (13, 27), 4),
+    (1, "Burks", "42 VA", "inf", 1, 4, 1, (13, 28), 4),
+    (1, "Marye", "Hampden Bty", "art", 2, 3, 3, (14, 28), 4),
+    (1, "Lanier", "Danville Bty", "art", 2, 3, 3, (14, 29), 4),
 ]
 
-STANDBY = [  # standby_groups[n-1] for standbyGroup n (Antietam pattern, side 0 only)
+STANDBY = [  # standby_groups[n-1] for standbyGroup n; Antietam schema
     # 1: Tyler's brigade, halted on the pike north of the toll gate at 2 PM; Kimball sent it west
-    #    against Jackson's flank about 3:30-4 PM.
-    {"side": 0, "turn": 3, "chance": 40, "rise": 30, "guardHexes": 0, "guardCs": 0},
+    #    against Jackson's flank about 3:30-4 PM (v1: turn 3 / 40 / 30).
+    {"side": 0, "turn": 4, "chance": 50, "rise": 25, "guardHexes": 0, "guardCs": 0},
     # 2: Sullivan, watching Ashby east of the pike; his regiments went to Sandy Ridge only late.
-    {"side": 0, "turn": 5, "chance": 30, "rise": 25, "guardHexes": 0, "guardCs": 0},
-    # 3: 39 IL and Huntington's battery: never sent in (Antietam's V Corps pattern: turn 0, chance 0).
+    {"side": 0, "turn": 6, "chance": 30, "rise": 25, "guardHexes": 0, "guardCs": 0},
+    # 3: 39 IL and Huntington's battery, held in reserve and never sent in (Antietam's V Corps
+    #    pattern: turn 0, chance 0).
     {"side": 0, "turn": 0, "chance": 0, "rise": 0, "guardHexes": 0, "guardCs": 0},
+    # 4 (new): Burks' brigade with Marye's and Lanier's guns, Jackson's reserve near Bartonsville;
+    #    Jackson brought it up to the wall about 5 PM (Seven Pines / Second Bull Run use side-1 groups).
+    {"side": 1, "turn": 5, "chance": 40, "rise": 30, "guardHexes": 0, "guardCs": 0},
+    # 5 (new): Ashby and Chew screening east of the pike, as they did all afternoon against Sullivan;
+    #    held in place (turn 0 / chance 0, Malvern Hill's side-1 hold-group pattern) so the AI cannot
+    #    throw them forward alone into Kernstown as it did in playtest 1.
+    {"side": 1, "turn": 0, "chance": 0, "rise": 0, "guardHexes": 0, "guardCs": 0},
 ]
 
 
 def place_units(occupied_ok):
     placed, count = [], Counter()
     for u in UNITS:
-        side, leader, uname, kind, cs, mp, rng, lon, lat, sb = u
-        h = G.lonlat_to_hex(lon, lat)
-        if count[h] >= 2 or not occupied_ok(h, side):
-            # nearest legal hex
-            best = None
-            for rad in range(1, 4):
-                cands = [(q, r) for q in range(h[0] - rad, h[0] + rad + 1) for r in range(h[1] - rad, h[1] + rad + 1)
-                         if G.inside(q, r) and count[(q, r)] < 2 and occupied_ok((q, r), side)]
-                if cands:
-                    best = min(cands, key=lambda c: math.dist(G.center_xy(*c), G.center_xy(*h)))
-                    break
-            h = best
+        h = u[7]
+        assert G.inside(*h) and occupied_ok(h, u[0]) and count[h] < 2, (u, h)
         count[h] += 1
         placed.append((u, h))
     return placed
@@ -358,6 +404,23 @@ def pixel_data(im):
     return [["#%02x%02x%02x" % tuple(a[y, x]) for x in range(16)] for y in range(16)]
 
 
+def wall_tile(base, size=180):
+    """Crest pasture with a dry-stone wall along the north (NW + NE) hexsides, where the fences are."""
+    im = base.copy().convert("RGBA")
+    d = ImageDraw.Draw(im)
+    c = size / 2
+    rr = size / 2
+    pts = [(c + rr * math.cos(math.radians(60 * i - 30)), c + rr * math.sin(math.radians(60 * i - 30))) for i in (3, 4, 5)]
+    rng = np.random.default_rng(7)
+    for (x0, y0), (x1, y1) in zip(pts, pts[1:]):
+        for i in range(12):
+            t = (i + 0.5) / 12
+            x, y = x0 + (x1 - x0) * t, y0 + (y1 - y0) * t + 9
+            s_ = rng.uniform(6, 8)
+            d.ellipse([x - s_, y - s_ * 0.75, x + s_, y + s_ * 0.75], fill=(158, 152, 140, 255), outline=(45, 42, 38, 255), width=2)
+    return im
+
+
 def make_terrains(repo, stock):
     tx = os.path.join(repo, "data/assets/textures")
     spr = os.path.join(repo, "data/assets/sprites")
@@ -394,6 +457,7 @@ def make_terrains(repo, stock):
         rec("marsh", marsh, 3, 1),
         city,
         {**{k: v for k, v in rec("wasteland", village, 1, 1).items() if k != "renderedUrl"}, "renderedUrl": None},
+        rec("fortress", wall_tile(high), 1, 2, custom=7),   # gettysburg1863.json record values
     ]
     # wasteland key order in stock: id,type,pixelData,imageUrl,moveCost,defenseMultiplier,renderedUrl
     return terr
@@ -415,17 +479,52 @@ def data_img(s):
     return Image.open(io.BytesIO(base64.b64decode(s.split(",", 1)[1]))).convert("RGBA")
 
 
-def make_range_badge():
-    """Small plate in the stock emblem slot: NATO artillery box plus the range figure."""
-    W, H = 168, 68
+def make_range_badge(rng=3):
+    """Small plate in the stock emblem slot (img_emb_nato_A is 104x68): "R3" = fires 3 hexes."""
+    W, H = 136, 68
     im = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     d = ImageDraw.Draw(im)
-    d.rounded_rectangle([2, 2, W - 3, H - 3], 8, fill=(239, 236, 226, 255), outline=(40, 40, 40, 255), width=4)
-    d.rectangle([12, 14, 70, 54], outline=(30, 30, 30, 255), width=4)
-    d.ellipse([33, 26, 49, 42], fill=(30, 30, 30, 255))
-    f = font(50, 900)
-    d.text((118, 34), "R2", font=f, fill=(30, 30, 30, 255), anchor="mm")
+    d.rounded_rectangle([2, 2, W - 3, H - 3], 10, fill=(239, 236, 226, 255), outline=(30, 30, 30, 255), width=5)
+    d.text((W / 2, 33), "R%d" % rng, font=font(58, 900), fill=(20, 20, 20, 255), anchor="mm")
     return im
+
+
+# NATO-style branch marks (APP-6 / FM 1-02): infantry = box with an X, cavalry = box with one
+# diagonal, artillery = box with a filled dot; size mark above the box (III regiment(s), I battery).
+# The format's template shapes are only "image" and "text" (all 2,368 image and 4,448 text shapes in
+# the 8 stock files), so the marks are drawn into small images, like the stock img_emb_nato_A.
+NATO_W, NATO_H = 312, 250
+NATO_COLORS = {0: (244, 244, 240, 255), 1: (24, 24, 24, 255)}
+
+
+def make_nato(kind, side):
+    im = Image.new("RGBA", (NATO_W, NATO_H), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    col = NATO_COLORS[side]
+    x0, y0, x1, y1 = 16, 56, NATO_W - 16, NATO_H - 10
+    fill = (255, 255, 255, 40) if side == 0 else (255, 255, 255, 70)
+    d.rectangle([x0, y0, x1, y1], fill=fill, outline=col, width=12)
+    if kind in ("inf", "cav"):
+        d.line([(x0 + 6, y1 - 6), (x1 - 6, y0 + 6)], fill=col, width=12)
+    if kind == "inf":
+        d.line([(x0 + 6, y0 + 6), (x1 - 6, y1 - 6)], fill=col, width=12)
+    if kind == "art":
+        cx, cy, rr = (x0 + x1) / 2, (y0 + y1) / 2, 34
+        d.ellipse([cx - rr, cy - rr, cx + rr, cy + rr], fill=col)
+    ticks = 1 if kind == "art" else 3
+    for i in range(ticks):
+        x = NATO_W / 2 + (i - (ticks - 1) / 2) * 30
+        d.rectangle([x - 6, 6, x + 6, 46], fill=col)
+    return im
+
+
+NATO_KEYS = {(k, s): "img_nato_%s_%s" % (k, "us" if s == 0 else "cs") for k in ("inf", "cav", "art") for s in (0, 1)}
+
+
+def text_width_units(txt, fs, weight):
+    k = 256 / 30.0
+    f = font(fs * k, weight)
+    return ImageDraw.Draw(Image.new("RGBA", (4, 4))).textlength(txt, font=f) / k
 
 
 def render_counter(shapes, images, boxes):
@@ -441,18 +540,15 @@ def render_counter(shapes, images, boxes):
         else:
             txt = str(boxes[int(sh["link"][3:])])
             f = font(sh["fontSize"] * k, sh["fontWeight"])
-            # shrink long names to fit their half of the counter (the game may wrap or clip instead)
-            px = sh["fontSize"] * k
-            while ImageDraw.Draw(im).textlength(txt, font=f) > 0.46 * S and px > 12:
-                px -= 1
-                f = font(px, sh["fontWeight"])
             d = ImageDraw.Draw(im)
             d.text((S / 2 + sh["x"] * k, S / 2 + sh["y"] * k), txt, font=f, anchor="mm",
                    fill=sh["color"], stroke_width=max(1, round(sh["strokeWidth"] * k / 2)), stroke_fill=sh["strokeColor"])
     return b64png(im)
 
 
-def template_shapes(side, kind):
+def template_shapes(side, kind, leader, uname):
+    """v2 layout: commander (small, top), unit (large), NATO branch mark, CS bottom-left,
+    MP bottom-right, range plate for guns.  Same plates, font and colours as the stock ACW counters."""
     if side == 0:
         plate, col, scol, sw = "img_side_253a69_nonato", "#ffffff", "#000000", 0.6
     else:
@@ -460,13 +556,18 @@ def template_shapes(side, kind):
     def txt(link, z, x, y, fs, fw):
         return {"type": "text", "link": link, "z": z, "x": x, "y": y, "fontSize": fs, "color": col,
                 "fontFamily": "Playfair Display", "fontWeight": fw, "strokeWidth": sw, "strokeColor": scol}
+    fs_name = 4.6
+    while fs_name > 3.0 and text_width_units(uname, fs_name, 900) > 26.0:
+        fs_name = round(fs_name - 0.1, 1)
+    fs_lead = 3.0
+    while fs_lead > 2.4 and text_width_units(leader, fs_lead, 700) > 24.0:
+        fs_lead = round(fs_lead - 0.1, 1)
     shapes = [{"type": "image", "z": 0, "x": 0, "y": 0, "w": 30, "h": 30, "imageRef": plate},
-              txt("box3", 1, -8, -10, 3.0, 900), txt("box4", 2, 8, -10, 3.0, 700),
-              txt("box5", 3, -10.3, 8.9, 7.0, 900), txt("box6", 4, 10.3, 8.9, 7.0, 900)]
+              txt("box3", 1, 0, -11.2, fs_lead, 700), txt("box4", 2, 0, -7.0, fs_name, 900),
+              txt("box5", 3, -10.0, 9.4, 6.2, 900), txt("box6", 4, 10.0, 9.4, 6.2, 900)]
     if kind == "art":
-        shapes.append({"type": "image", "x": 0, "y": 9.14, "w": 7.4, "h": 3.0, "imageRef": "img_emb_range2"})
-    icon = {"inf": "img_kind_musket", "art": "img_kind_cannons", "cav": "img_kind_sabre"}[kind]
-    shapes.append({"type": "image", "x": 0, "y": -0.05, "w": 12.6, "h": 12.6, "imageRef": icon, "z": 5})
+        shapes.append({"type": "image", "x": 0, "y": 10.4, "w": 7.0, "h": 3.5, "imageRef": "img_emb_range3"})
+    shapes.append({"type": "image", "x": 0, "y": 1.6, "w": 12.0, "h": 9.6, "imageRef": NATO_KEYS[(kind, side)], "z": 5})
     return shapes
 
 
@@ -588,50 +689,69 @@ def labels_json(labels):
 
 
 # ---------------------------------------------------------------- description
-DESCRIPTION = """23 March 1862. Kernstown, Frederick County, Virginia, United States, four miles south of Winchester on the Valley Pike
+DESCRIPTION = """23 March 1862. Kernstown, Frederick County, Virginia, four miles south of Winchester on the Valley Turnpike.
 
 Ashby's scouts report that only a rear guard of four regiments is left near Winchester. They are wrong by about 6,000 men.
-Two o'clock on a cold Sunday afternoon. Jackson has driven his small army north in two days of hard marching to keep Banks from leaving the Valley. In fact James Shields' whole division is here; Shields was wounded the evening before, and Colonel Nathan Kimball commands on the field from Pritchard's Hill. Jackson will not wait for Monday. He sends Fulkerson, then Garnett's Stonewall Brigade, west onto Sandy Ridge to turn the Union right, and his guns go up the ridge to enfilade Pritchard's Hill.
+Two o'clock on a cold Sunday afternoon. Jackson has driven his small army north in two days of hard marching to keep Banks from leaving the Valley. In fact James Shields' whole division is here; Shields was wounded the evening before, and Colonel Nathan Kimball commands from Pritchard's Hill. Jackson will not wait for Monday. He sends Fulkerson, then Garnett's Stonewall Brigade, west onto Sandy Ridge to turn the Union right, and McLaughlin's, Carpenter's and Waters' guns up the ridge to duel with the Union batteries on Pritchard's Hill, three hexes away.
 
-The board runs from Sandy Ridge in the west to Opequon Creek, and from Bartonsville north to Winchester; each hex is about 300 m and each turn half an hour. The Confederates move first. Kimball's brigade and four batteries can move from the start. Tyler's brigade, just up from Winchester on the pike, is on standby from 3 PM; Sullivan's regiments east of the pike from 4 PM; the 39th Illinois and Huntington's battery were never committed and wake only if the enemy comes to them. Union command is slow at first and improves at 4 PM.
+The board runs from Sandy Ridge in the west to Opequon Creek, and from Bartonsville north to Winchester; each hex is about 300 m and each turn half an hour. The Confederates move first. Kimball's brigade and four batteries can move from the start. Tyler's brigade, halted on the pike north of the toll gate, is on standby from 3:30 PM; Sullivan's regiments east of the pike from 4:30 PM; the 39th Illinois and Huntington's battery stay in reserve unless the enemy comes to them. Jackson's own reserve, Burks' brigade with two batteries near Bartonsville, is on standby from 4 PM. Ashby's cavalry and Chew's horse battery screen east of the pike and hold their ground there, as they did all afternoon against Sullivan.
 
-The stone wall on the north crest of Sandy Ridge is the key. Whoever reaches it first holds a ridge line with a wall in front. The Union starts in possession of Winchester, Pritchard's Hill and Kernstown; the Confederates of the stone wall and of Bartonsville behind them. Jackson cannot simply sit on the ridge: the Union is far stronger and only has to take the wall and hold its own ground to win, as Kimball did when the Stonewall Brigade ran out of ammunition at dusk. Sunset is at 6:15; the 7 PM turn is night.
+The stone wall along the north crest of Sandy Ridge is the key. It is neutral at the start and worth 15 points, with Glass Farm at its west end worth 5; holding the wall's west hex also gives one side two more moves per turn. Whoever gets there first fights behind stone on high ground. Jackson cannot simply sit on the ridge: the Union is three times stronger and wins by taking the wall and keeping its own ground, as Kimball did when Garnett's men ran out of ammunition at dusk and fell back without orders. Holding the wall until dark is a fair result for Jackson. Units forced back with nowhere to go are lost, so keep a line of retreat open. Sunset is at 6:15; the 7 PM turn is night.
 
-Counters: name, combat strength (left) and movement (right). Batteries show "R2": they fire two hexes. Strengths are one point per ~300 men or ~5 guns, from the reports of Jackson, Shields and Kimball in the Official Records (Series I, Vol. 12, Part 1) and Ecelbarger's "We Are in for It!"."""
+Counters: commander on top, unit in large type, the NATO branch mark (X infantry, / cavalry, dot artillery; III regiments, I battery), combat strength bottom left, movement bottom right. Batteries carry a RANGE 3 plate: they fire three hexes. Strengths are one point per ~300 men, two per full battery, from the reports of Jackson, Shields and Kimball in the Official Records (Series I, Vol. 12, Part 1) and Ecelbarger's "We Are in for It!"."""
+
+
+def thresholds(units, vp_values):
+    """Fits all six stock scenarios exactly (inferred, not documented):
+    operational = 0.2 * sum(CS of all units) + 0.4 * sum(VP), tactical = op / 8, strategic = 2 * op."""
+    op = round(0.2 * sum(u["combatStrength"] for u in units) + 0.4 * sum(vp_values))
+    return round(op / 8), op, 2 * op
 
 
 # ---------------------------------------------------------------- assemble
-def build(repo, stock_path, out_path, preview=None):
+def build(repo, stock_path, out_path, painted=None, art=True, art_png=None):
     stock = json.load(open(stock_path))
     terrain, elev, tpi, feats = classify_terrain(repo)
-    roads, rivers, trails, fences = build_features(feats)
+    roads, rivers, trails, fences, chains = build_features(feats)
 
-    # objectives
+    # the stone wall: its hexes become the stock "fortress" terrain (gettysburg1863.json record:
+    # customId 7, moveCost 1, defenseMultiplier 2): a wall on the crest is cover, not an obstacle.
     wall_hexes = sorted(fences, key=lambda h: h[0])
-    vp = {}
-    for name, lon, lat, val, ctl in VP_SITES:
-        if name == "Stone Wall":
-            h = wall_hexes[len(wall_hexes) // 2]
-        else:
-            h = G.lonlat_to_hex(lon, lat)
-            if name == "Pritchard's Hill":  # snap to the knoll top in the DEM (within one hex)
-                h = max([h] + [neighbor(*h, e) for e in range(6)], key=lambda c: tpi[c[1], c[0]])
-        vp[h] = (name, val, ctl)
-    cp = {}
-    ridge = [(q, r) for (q, r), t in terrain.items() if t in ("mountain", "rough")]
-    for name, _, _, val in CP_SITES:
-        if name == "Sandy Ridge crest":
-            # crest of Sandy Ridge just south of the wall, where Jackson's guns stood
-            lon0, lat0 = -78.2115, 39.1455
-            cands = [h for h in ridge if h not in vp and h not in fences
-                     and math.dist(G.center_xy(*h), G.lonlat_to_xy(lon0, lat0)) < 700]
-            h = max(cands, key=lambda h: tpi[h[1], h[0]])
-        else:
-            pike_end = feats["roads"]["cedar_creek_grade"]["waypoints"][-1]
-            h = G.lonlat_to_hex(*pike_end)
+    for h in wall_hexes:
+        terrain[h] = "fortress"
+    W = {f"W{i}": h for i, h in enumerate(wall_hexes)}
+
+    def where(spec):
+        if isinstance(spec, str) and spec in W:
+            return W[spec]
+        if spec == "grade":
+            h = G.lonlat_to_hex(*feats["roads"]["cedar_creek_grade"]["waypoints"][-1])
             if h in vp:
                 h = next(n for n in (neighbor(*h, e) for e in range(6)) if n in roads and n not in vp)
+            return h
+        if all(isinstance(v, int) for v in spec):
+            return tuple(spec)
+        return G.lonlat_to_hex(*spec)
+
+    vp = {}
+    for name, spec, val, ctl in VP_SITES:
+        h = where(spec)
+        if name == "Pritchard's Hill":  # snap to the knoll top in the DEM (within one hex)
+            h = max([h] + [neighbor(*h, e) for e in range(6)], key=lambda c: tpi[c[1], c[0]])
+        vp[h] = (name, val, ctl)
+    cp = {}
+    for name, spec, val in CP_SITES:
+        h = where(spec)
+        assert h not in vp, name
         cp[h] = (name, val)
+    named = {}
+    for name, spec in NAMED_SITES:
+        if spec is None:
+            continue
+        h = where(spec)
+        if h in vp or h in cp or h in named or not G.inside(*h):
+            continue
+        named[h] = name
 
     hexes = []
     for r in range(ROWS):
@@ -645,10 +765,13 @@ def build(repo, stock_path, out_path, preview=None):
             ppv = cp[h][1] if h in cp else 0
             if isvp:
                 name = vp[h][0]
-                boxes[9], boxes[10], boxes[11], boxes[15] = name, vpv, vpv, ctl + 1
-            if h in cp:
+                boxes[9], boxes[10], boxes[11], boxes[15] = name, vpv, vpv, (0 if ctl is None else ctl + 1)
+            elif h in cp:
                 name = cp[h][0]
                 boxes[9], boxes[16], boxes[17] = name, "+%d" % ppv, "+%d" % ppv
+            elif h in named:
+                name = named[h]
+                boxes[9] = name
             rd, rv, tr, fe = (sorted(x.get(h, ())) for x in (roads, rivers, trails, fences))
             hexes.append({
                 "id": f"{q}-{r}", "q": q, "r": r, "terrainId": terrain[h],
@@ -661,21 +784,20 @@ def build(repo, stock_path, out_path, preview=None):
 
     # units & templates
     images_raw = {k: data_img(v) for k, v in stock["assets"]["images"].items()}
-    badge = make_range_badge()
-    images_raw["img_emb_range2"] = badge
-    used_imgs = ["img_side_253a69_nonato", "img_side_b5b0a1_nonato", "img_kind_musket", "img_kind_cannons",
-                 "img_kind_sabre", "img_emb_range2"]
+    images_raw["img_emb_range3"] = make_range_badge(3)
+    for (kind, side), key in NATO_KEYS.items():
+        images_raw[key] = make_nato(kind, side)
+    used_imgs = ["img_side_253a69_nonato", "img_side_b5b0a1_nonato", "img_emb_range3"] + sorted(NATO_KEYS.values())
     images = {k: (stock["assets"]["images"][k] if k in stock["assets"]["images"] else b64png(images_raw[k]))
               for k in used_imgs}
 
-    bad = {"city"} if False else set()
-    placed = place_units(lambda h, side: G.inside(*h) and terrain[h] not in bad)
+    placed = place_units(lambda h, side: G.inside(*h))
     units, templates = [], []
-    for i, ((side, leader, uname, kind, cs, mp, rng, lon, lat, sb), (q, r)) in enumerate(placed, 1):
+    for i, ((side, leader, uname, kind, cs, mp, rng, _h, sb), (q, r)) in enumerate(placed, 1):
         full = f"{leader} {uname}"
         boxes = [side, 0, i, leader, uname, cs, mp, rng] + [0] * 12
         tid = f"local_{i}"
-        shapes = template_shapes(side, kind)
+        shapes = template_shapes(side, kind, leader, uname)
         templates.append({"id": tid, "name": full, "isLocal": True,
                           "visuals": {"shapes": shapes, "renderedUrl": render_counter(shapes, images_raw, boxes)}})
         units.append({"id": i, "q": q, "r": r, "side": side, "combatStrength": cs, "movePoints": mp, "range": rng,
@@ -685,24 +807,36 @@ def build(repo, stock_path, out_path, preview=None):
 
     rmap, rlabels = region_map()
     bmap, blabels = battle_map(terrain, roads, rivers, list(vp))
-    desc = DESCRIPTION
     sides_en = ["Union (Shields' Division, Kimball)", "Confederate (Jackson's Valley District)"]
+    tac, op, strat = thresholds(units, [v[1] for v in vp.values()])
+
+    meta = {
+        "version": "2.0",
+        "exportedAt": "2026-11-02T00:00:00.000Z",
+        "description": {l: DESCRIPTION for l in LANGS},
+        "briefingImage": "",
+        "scaleMeters": 300, "scaleMinutes": 30, "scaleMen": 300,
+        "scenarioName": "Kernstown 1862 (CivilWar1)" if art else "Kernstown 1862 (CivilWar1, no art)",
+        "gameId": "mustattack",
+        "regionMap": {"image": b64png(rmap.convert("P", palette=Image.ADAPTIVE, colors=64)), "labels": labels_json(rlabels)},
+        "battleMap": {"image": b64png(bmap.convert("P", palette=Image.ADAPTIVE, colors=64)), "labels": labels_json(blabels)},
+    }
+    art_info = None
+    if art:
+        from board_art import make_board_art
+        im, png, bmeta, src = make_board_art(G, terrain, chains, fences, elev, painted)
+        meta["boardArt"] = {**bmeta, "image": "data:image/png;base64," + base64.b64encode(png).decode()}
+        if art_png:
+            open(art_png, "wb").write(png)
+        art_info = (src, im.size, len(png))
 
     scenario = {
-        "doctrine": {"blue": "def", "red": "off"},
-        "meta": {
-            "version": "2.0",
-            "exportedAt": "2026-11-01T00:00:00.000Z",
-            "description": {l: desc for l in LANGS},
-            "briefingImage": "",
-            "scaleMeters": 300, "scaleMinutes": 30, "scaleMen": 300,
-            "scenarioName": "Kernstown 1862 (CivilWar1)",
-            "gameId": "mustattack",
-            "regionMap": {"image": b64png(rmap.convert("P", palette=Image.ADAPTIVE, colors=64)), "labels": labels_json(rlabels)},
-            "battleMap": {"image": b64png(bmap.convert("P", palette=Image.ADAPTIVE, colors=64)), "labels": labels_json(blabels)},
-        },
+        # Antietam's pair (Union attacking a held line with fences: "line" vs "brk").  v1 used
+        # def/off; "off" sent the Confederates into 1:2 attacks in playtest 1.  Meanings inferred.
+        "doctrine": {"blue": "line", "red": "brk"},
+        "meta": meta,
         "scenario": {
-            "name": "Kernstown 1862 (CivilWar1)",
+            "name": meta["scenarioName"],
             "sideNames": ["Union", "Confederate"],
             "sideNamesByLang": {l: sides_en for l in LANGS},
             "sideColors": ["#253A69", "#B5B0A1"],
@@ -721,24 +855,37 @@ def build(repo, stock_path, out_path, preview=None):
             "map": {"width": COLS, "height": ROWS, "hexes": hexes},
             "units": units,
         },
-        "victoryCondition": {"winLine": 45, "tacticalThreshold": 10, "operationalThreshold": 72, "strategicThreshold": 144},
+        "victoryCondition": {"winLine": WIN_LINE, "tacticalThreshold": tac, "operationalThreshold": op,
+                             "strategicThreshold": strat},
         "assets": {"terrains": make_terrains(repo, stock), "images": images, "unitTemplates": templates},
     }
     with open(out_path, "w", encoding="utf-8", newline="\n") as f:
         json.dump(scenario, f, ensure_ascii=False, separators=(",", ":"))
-    if preview:
-        np.save(preview + ".elev.npy", elev)
-    return scenario
+    return scenario, art_info
 
+
+# Score at the start if nothing changes hands (Union VP held - Confederate VP held): 65 - 10 = 55.
+# winLine is author-set in every stock file near the historical result; Kimball's win was holding
+# his ground and taking the wall, so a Union side that keeps what it has and wins the wall scores
+# ~75 (tactical win) and a Jackson who holds wall + Glass Farm until dark scores ~35.
+WIN_LINE = 55
+
+DEFAULT_PAINTED = os.environ.get("KERNSTOWN_BASEMAP", "/workspace/CivilWar1-work/data/basemap_painted_full.png")
 
 if __name__ == "__main__":
+    here = os.path.dirname(os.path.abspath(__file__))
     ap = argparse.ArgumentParser()
-    ap.add_argument("--repo", default=os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..")))
-    ap.add_argument("--stock", default=os.path.join(os.path.dirname(os.path.abspath(__file__)), "ref", "antietam1862.json"),
+    ap.add_argument("--repo", default=os.path.abspath(os.path.join(here, "..", "..")))
+    ap.add_argument("--stock", default=os.path.join(here, "ref", "antietam1862.json"),
                     help="stock Antietam scenario exported from the game (not committed)")
-    ap.add_argument("--out", default=os.path.join(os.path.dirname(os.path.abspath(__file__)), "mKernstown1862_CW1.json"))
+    ap.add_argument("--basemap", default=DEFAULT_PAINTED,
+                    help="repo painted basemap (data/basemap_painted_full.png, gitignored; built by "
+                         "painted_sections/build_full_map.py). Missing -> plain parchment ground.")
+    ap.add_argument("--out", default=os.path.join(here, "mKernstown1862_CW1.json"))
+    ap.add_argument("--out-noart", default=os.path.join(here, "mKernstown1862_CW1_noart.json"))
+    ap.add_argument("--art-png", default=os.path.join(here, "board_art.png"))
     a = ap.parse_args()
-    os.makedirs(os.path.dirname(os.path.abspath(a.out)), exist_ok=True)
-    s = build(a.repo, a.stock, a.out)
-    t = Counter(h["terrainId"] for h in s["scenario"]["map"]["hexes"])
-    print("wrote", a.out, os.path.getsize(a.out), "bytes;", dict(t))
+    for out, art in ((a.out, True), (a.out_noart, False)):
+        s, info = build(a.repo, a.stock, out, a.basemap, art, a.art_png if art else None)
+        t = Counter(h["terrainId"] for h in s["scenario"]["map"]["hexes"])
+        print("wrote", out, os.path.getsize(out), "bytes;", dict(t), "art:", info, s["victoryCondition"])
