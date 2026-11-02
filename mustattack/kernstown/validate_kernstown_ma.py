@@ -18,9 +18,11 @@ Checks (exit 1 on any ERROR):
     grid implies, transparent outside the board, hash = SHA-1 of the PNG (our assumption)
   * victory thresholds vs the formula that fits all six stock scenarios (inferred; warning only)
 """
-import base64, hashlib, io, json, math, os, sys
+import base64, hashlib, io, itertools, json, math, os, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+# v3.2: stacks this close to the enemy at the start (cavalry MP 6 + 2) must pass the two-flank test.
+FLANK_REACH = 8
 DIRS_EVEN = [(1, 0), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1)]
 DIRS_ODD = [(1, 0), (1, 1), (0, 1), (-1, 0), (0, -1), (1, -1)]
 # dicts whose keys are data (ids / language codes), not schema
@@ -251,7 +253,7 @@ def main(path, refdir):
     rules = sc["rules"]
     lim = rules["stacking_limit"]
     groups = rules["standby_groups"]
-    stack, ids = {}, set()
+    stack, ids, sg_use = {}, set(), {}
     for u in sc["units"]:
         q, r = u["q"], u["r"]
         if u["id"] in ids:
@@ -271,17 +273,34 @@ def main(path, refdir):
         b = u["boxes"]
         if [b[0], b[2], b[5], b[6], b[7]] != [u["side"], u["id"], u["combatStrength"], u["movePoints"], u["range"]]:
             err(f"unit {u['id']} boxes do not mirror side/id/CS/MP/range")
+        # v3.2: standbyGroup n is the n-th standby_groups entry OF THE UNIT'S OWN SIDE (malvernhill1862
+        # lists [s0, s0, s1, s1, s1] and its side-1 units use 1-3; secondbullrun1862 lists [s1, s0] and
+        # both sides use 1).  v3/v3.1 checked the global index and missed that Confederate groups 4/5
+        # did not exist; the game loaded them as 0 (playtests 2 and 3).
         sg = u["standbyGroup"]
+        own = [g for g in groups if g["side"] == u["side"]]
         if sg:
-            if not 1 <= sg <= len(groups):
-                err(f"unit {u['id']} standbyGroup {sg} has no rules.standby_groups entry")
-            elif groups[sg - 1]["side"] != u["side"]:
-                err(f"unit {u['id']} standbyGroup {sg} belongs to the other side")
+            if not 1 <= sg <= len(own):
+                err(f"unit {u['id']} {u['name']}: standbyGroup {sg} but side {u['side']} has only {len(own)} standby_groups entries")
+            else:
+                g = own[sg - 1]
+                sg_use.setdefault((u["side"], sg), []).append(u["name"])
         if u["entryHex"] or u["entryTurn"]:
             warn(f"unit {u['id']} uses entryHex/entryTurn")
     for h, n in stack.items():
         if n > lim:
             err(f"{n} units on hex {h} (stacking_limit {lim})")
+    for side in (0, 1):
+        own = [g for g in groups if g["side"] == side]
+        for i, g in enumerate(own, 1):
+            who = sg_use.get((side, i), [])
+            if not who:
+                warn(f"side {side} standby group {i} has no units")
+            for k in ("guardHexes", "guardCs"):
+                if g.get(k, 0) != 0:
+                    warn(f"side {side} standby group {i}: {k} = {g[k]} (every stock value is 0; meaning unknown)")
+            kind = "hold" if g["turn"] == 0 and g["chance"] == 0 else f"turn {g['turn']} {g['chance']}%+{g['rise']}"
+            print(f"  standby side {side} group {i} ({kind}): {', '.join(who)}")
     # ---- boardArt
     ba = d["meta"].get("boardArt")
     if ba is not None:
@@ -338,7 +357,7 @@ def main(path, refdir):
     occ = {}
     for u in sc["units"]:
         occ.setdefault((u["q"], u["r"]), []).append(u)
-    rooms = []
+    rooms, flank_ok, pairs_out = [], [], []
     for hx, us in sorted(occ.items()):
         side = us[0]["side"]
         enemy = [k for k, v in occ.items() if v[0]["side"] != side]
@@ -356,8 +375,41 @@ def main(path, refdir):
         if len(room) < 2:
             err(f"stack at {hx} ({', '.join(u['name'] for u in us)}) has {len(room)} open rear hexes (< 2)")
         rooms.append(len(room))
+        # v3.2 two-flank test, for stacks within FLANK_REACH hexes of the enemy at the start: an enemy
+        # unit could stand on any ring hex that is on the board, passable, not friendly and not a rear
+        # hex.  For every pair of such hexes, at least one rear hex must stay outside both their ZOCs
+        # (and not be one of them), so two flankers cannot close the retreat by themselves.
+        rear = {nb(*hx, k) for k in range(6)}
+        rear = [n for n in rear if n in Hx and terr_by_id.get(Hx[n]["terrainId"], {}).get("moveCost", 1) < 99
+                and not (n in occ and (occ[n][0]["side"] != side or len(occ[n]) >= lim))
+                and min(hd(n, e) for e in enemy) > d0]
+        ring = [nb(*hx, k) for k in range(6)]
+        cand = [n for n in ring if n in Hx and terr_by_id.get(Hx[n]["terrainId"], {}).get("moveCost", 1) < 99
+                and n not in rear and not (n in occ and occ[n][0]["side"] == side)]
+        if d0 <= FLANK_REACH:
+            pairs = list(itertools.combinations(cand, 2)) or [(c, c) for c in cand]
+            for a, b2 in pairs:
+                z = {a, b2} | {nb(*a, k) for k in range(6)} | {nb(*b2, k) for k in range(6)}
+                if not [n for n in room if n not in z]:
+                    err(f"stack at {hx} ({', '.join(u['name'] for u in us)}): enemy units on {a} and {b2} "
+                        f"would close every rear hex")
+                    break
+            else:
+                flank_ok.append(hx)
+        # v3.2: every battery (range > 1) starts with exactly one non-battery unit, never two guns alone
+        guns = [u for u in us if u["range"] > 1]
+        if guns:
+            others = [u for u in us if u["range"] <= 1]
+            if len(guns) > 1:
+                err(f"stack at {hx}: {len(guns)} batteries together ({', '.join(u['name'] for u in guns)})")
+            elif not others:
+                err(f"battery {guns[0]['name']} at {hx} starts without a supporting unit")
+            else:
+                pairs_out.append(f"{guns[0]['name']} + {others[0]['name']}")
     print(f"  rear room: every stack has >= {min(rooms)} open rear hexes (on board, passable, not enemy ZOC, "
           f"stack space, strictly farther from the nearest enemy unit)")
+    print(f"  two-flank test: {len(flank_ok)} stacks within {FLANK_REACH} hexes of the enemy pass")
+    print(f"  batteries: " + "; ".join(pairs_out))
     # ---- thresholds formula (inferred from the six stock scenarios)
     vc = d["victoryCondition"]
     op = round(0.2 * sum(u["combatStrength"] for u in sc["units"]) + 0.4 * sum(h["vp"]["first"] for h in hexes))

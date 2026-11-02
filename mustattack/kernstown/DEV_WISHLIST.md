@@ -102,12 +102,21 @@ The field names are only suggestions.
 - **Want:** a CP hex that shows its value without needing a name.
 - **Why:** All stock CP hexes have names, so we gave ours a name too. That adds another label to a crowded row.
 
+**19. Document the standby-group fields (v3.2)**
+- **Want:** a line in the editor help on how `standbyGroup` numbers map to `standby_groups`, and what `guardHexes`, `guardCs`, `mainForcePct` and `enemyGroup` do.
+- **Why:** We read the stock files and found that numbering is per side (Malvern Hill, Second Bull Run). Our v3 used global numbers, and the game silently dropped the Confederate groups. Every stock `guardHexes`/`guardCs` is 0, so we cannot tell what they do.
+- **Smallest version:** a warning on load when a unit's group does not exist for its side.
+
+**20. Let a held unit fire, or say whether it does (v3.2)**
+- **Want:** a standby option "hold position but fire at targets in range".
+- **Why:** Batteries walked into the infantry fight and died. We now hold them in standby until turn 6, but we don't know whether held units fire.
+
 ## Workarounds we use today
 
 What we already do in the data:
 
 - **No step losses or rally.** We made the CRT gentler. AE appears in 1 cell and DE in 3, against 3 and 15 in the default table, and many AR/DR results became "C".
-- **Units destroyed when the retreat is blocked.** Our validator checks that every stack starts with at least 2 open hexes behind it, and we place units in depth.
+- **Units destroyed when the retreat is blocked.** Our validator checks that every stack starts with at least 2 open hexes behind it, that no two enemy flankers can close them all (v3.2), and that every battery starts stacked with infantry.
 - **Fortress hexes never retreat.** We made the stone wall `mountain` (x2 defence) and kept one-sided fences, as Antietam's Bloody Lane does.
 - **No leaders.** We added 1-CS HQ counters with portraits for Kimball and Jackson, held back by standby groups. Brigade counters show the commander's name and portrait.
 - **No unit tooltips.** The commander and unit are printed on the counter, and the colonels are in the description.

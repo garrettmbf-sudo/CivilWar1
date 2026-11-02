@@ -2,12 +2,12 @@
 
 `mKernstown1862_CW1.json` is a First Kernstown (23 March 1862) scenario for *Sekigahara 1600: Must Attack!*. It is in the same format the game's Wargame Maker exports. `build_kernstown_ma.py` generates it from this repo's Kernstown map data.
 
-**Status: v3.1, not tested in the game.** v1 and v2 loaded and ran in the game. In playtest 1 the user played the Union, and in playtest 2 the Confederates. v3 is rebuilt from playtest 2, and v3.1 is a polish pass on v3. Both files pass `validate_kernstown_ma.py`. Nobody has loaded v3 or v3.1 yet, so treat them as unverified until someone does.
+**Status: v3.2, not tested in the game.** v1, v2 and v3/v3.1 loaded and ran in the game (playtests 1, 2 and 3). v3.2 is rebuilt from playtest 3: it fixes the standby-group numbering, stacks every battery with infantry, softens even-odds combat and repaints the board. Both files pass `validate_kernstown_ma.py`. Nobody has loaded v3.2 yet, so treat it as unverified until someone does.
 
 | File | What it is |
 |---|---|
-| `mKernstown1862_CW1.json` | The scenario with painted board art (13.1 MB, UTF-8, no BOM) |
-| `mKernstown1862_CW1_noart.json` | The same scenario without `boardArt` (6.6 MB). Use it if the art fails to load or does not line up. Everything else matches the main file. |
+| `mKernstown1862_CW1.json` | The scenario with painted board art (13.4 MB, UTF-8, no BOM) |
+| `mKernstown1862_CW1_noart.json` | The same scenario without `boardArt` (6.5 MB). Use it if the art fails to load or does not line up. Everything else matches the main file. |
 | `DEV_WISHLIST.md` | What we would like the game to add, written for the developer |
 | `build_kernstown_ma.py` | Rebuilds both files from `data/` |
 | `board_art.py` | Paints `meta.boardArt` on the Must Attack grid |
@@ -28,11 +28,11 @@ Do not overwrite `user_kernstown1862.json`. It is the user's own file, and these
 
 ## What to test first
 
-1. **The combat table takes effect.** Log a few combats and compare each result with the table under "Combat and survival". The quickest check: at 1:1, a die roll of 3 or 4 should give C (no effect). The default table gives AR on a 3 and DR on a 4.
-2. **The wall.** When a unit on the wall (row 19, columns 8 to 11) takes a DR, it should fall back, not stay put or die.
-3. **Garnett and Ashby survive** into the late afternoon. Count the units lost to a retreat with no open hex.
-4. **The briefing.** The region and battle maps show with their portraits, and the description reads correctly.
-5. **The hex names** (Glass Farm, Wall, Stone Wall, and the others) do not run into each other.
+1. **Standby groups load for both sides.** Save on turn 1 and check that Confederate units carry `StandbyGroup` 1-3 and `StandbyActive` false (in playtests 2 and 3 they all loaded as 0). The Sandy Ridge and Pritchard's Hill guns should not move before turn 6 under the computer.
+2. **The combat table takes effect.** At 1:1 a die roll of 3, 4 or 5 should give C (no effect); only a 6 gives DR. Playtest 3 confirmed the v3 table is used.
+3. **Guns survive.** Count batteries lost by turn 6, and say whether held (standby) guns fired at all. That is the main unknown in v3.2.
+4. **Garnett and Ashby survive** into the late afternoon. Count the units lost to a retreat with no open hex.
+5. **The board art and hex names**: Glass Farm and Stone Wall on row 19 no longer run into each other.
 
 The full checklist is at the end of this file.
 
@@ -54,59 +54,71 @@ The full checklist is at the end of this file.
 | Pritchard's Hill (13,15) | 20 | Union |
 | Kernstown (16,20) | 15 | Union |
 | Stone Wall (10,19) | 15 | neutral |
-| Glass Farm (8,19) | 5 | neutral |
 | Bartonsville (12,32) | 10 | Confederate |
 
-- **Command points.** Wall (9,19) is +2 and Grade Junction (18,18), where the Cedar Creek Grade meets the pike, is +2. Both start neutral.
+- **Command points.** Glass Farm (8,19), the west end of the wall, is +2 and Grade Junction (18,18), where the Cedar Creek Grade meets the pike, is +2. Both start neutral. (v3.2: Glass Farm was a 5-VP hex and the CP was "Wall" at (9,19); three names in a row ran together.)
 - **winLine 55.** That is the score if nothing changes hands: Union 65 minus Confederate 10.
-  - Jackson holds the wall and Glass Farm until dark: about 35, a Confederate tactical result.
-  - Kimball takes the wall and keeps his own ground, as happened historically: about 75, a Union tactical win.
-- **Thresholds 6 / 49 / 98.** They come from a formula that fits all six stock scenarios exactly (inferred): operational = 0.2 x (total CS) + 0.4 x (total VP), which here is 0.2 x 55 + 0.4 x 95 = 49. Tactical is operational / 8, and strategic is 2 x operational.
+  - Jackson holds the wall until dark: about 40, a Confederate tactical result.
+  - Kimball takes the wall and keeps his own ground, as happened historically: about 70, a Union tactical win.
+- **Thresholds 6 / 47 / 94.** They come from a formula that fits all six stock scenarios exactly (inferred): operational = 0.2 x (total CS) + 0.4 x (total VP), which here is 0.2 x 55 + 0.4 x 90 = 47. Tactical is operational / 8, and strategic is 2 x operational.
 
 ### Order of battle
 
 One strength point is about 300 men. A full battery is CS 2 and Chew's horse battery CS 1. Guns have MP 3 and range 3, infantry MP 4, cavalry MP 6. HQ counters are CS 1, MP 4. `S#` is the standby group.
 
-**Union, Kimball (Shields' division), side 0:**
-- Kimball's HQ: Shields' Div. HQ (13,14) S3
-- Kimball: 14 IN/84 PA 3 (12,16), 8 OH/67 OH 3 (14,16)
-- Batteries: Jenks A 1 WV Bty and Clark E 4 US Bty (13,17), Robinson L 1 OH Bty (13,16), Keeper B 1 WV Bty (16,17)
-- Brodhead: 1 MI Cav 1 (6,12), OH/MD Cav 1 (19,21)
-- Sullivan: 13 IN/5 OH 3 (19,18) S2, 62 OH 2 (20,16) S2, 39 IL 1 (24,14) S3
+**Union, Kimball (Shields' division), side 0.** v3.2: every battery starts stacked with one non-artillery unit.
+- Pritchard's Hill: 14 IN/84 PA 3 + Jenks A 1 WV Bty (12,16); Kimball's HQ + Robinson L 1 OH Bty (13,16); 8 OH/67 OH 3 + Clark E 4 US Bty (13,17)
+- Sullivan: 62 OH 2 + Keeper B 1 WV Bty (18,14) S2/S4; 13 IN/5 OH 3 (18,20) S2; 39 IL 1 + Huntington H 1 OH Bty (22,6) S3
+- Brodhead: 1 MI Cav 1 (6,12), OH/MD Cav 1 (18,21)
 - Tyler: 7 OH/29 OH 3 (19,12), 7 IN/1 WV 3 (20,10), 110 PA 2 (21,8), all S1
-- Huntington H 1 OH Bty (22,6) S3
+- Union guns on and near Pritchard's Hill are S4; the HQ is S3.
 
 **Confederate, Jackson (Valley District), side 1:**
-- Jackson's HQ: Valley District HQ (12,24) S5
-- Ashby 7 VA Cav 1 and Chew Horse Bty 1 (20,24) S5
-- Fulkerson 23/37 VA 2 (9,21)
-- Garnett: 2/4/27 VA 2 (10,23), 5/33 VA 2 (11,22)
-- Waters W. Augusta (11,21), and McLaughlin Rockbridge with Carpenter Alleghany (12,20)
-- Burks: 21 VA/1 Bn 2 (13,27), 42 VA 1 (13,28), with Marye Hampden (14,28) and Lanier Danville (14,29), all S4
+- Jackson's HQ: Valley District HQ (11,26) S2
+- Ashby 7 VA Cav 1 + Chew Horse Bty 1 (20,24) S2
+- Sandy Ridge: Fulkerson 23/37 VA 2 + Carpenter Alleghany (9,21); Garnett 5/33 VA 2 + McLaughlin Rockbridge (12,20); Garnett 2/4/27 VA 2 + Waters W. Augusta (11,22). The guns are S3.
+- Burks: 21 VA/1 Bn 2 + Marye Hampden (13,28); 42 VA 1 + Lanier Danville (14,29); all S1
+
+The one battery not stacked with infantry is Robinson, which shares Kimball's HQ hex (the HQ is a CS-1 headquarters and escort). Chew is with Ashby's cavalry, as a horse battery.
 
 Confederate batteries are named for their batteries (Rockbridge, Hampden and so on). Union batteries are named by letter and regiment, which is how each side knew them. Every unit name is commander + " " + unit (`boxes[3]` + `boxes[4]`), as in every stock file, and `boxes[5..7]` repeat CS, MP and range. The validator checks this.
 
-| Group | Side | Units | Turn | Chance / rise |
-|---|---|---|---|---|
-| 1 | Union | Tyler | 4 (15:30) | 50 / 25 |
-| 2 | Union | Sullivan 13 IN/5 OH, 62 OH | 6 (16:30) | 30 / 25 |
-| 3 | Union | Kimball HQ, 39 IL, Huntington | never (hold) | 0 / 0 |
-| 4 | Confederate | Burks, Marye, Lanier | 5 (16:00) | 40 / 30 |
-| 5 | Confederate | Jackson HQ, Ashby, Chew | never (hold) | 0 / 0 |
+**Standby groups are numbered per side (v3.2 finding, high confidence).** A unit's `standbyGroup` n is the n-th entry in `rules.standby_groups` whose `side` is the unit's side, not the n-th entry overall. Evidence:
+- Malvern Hill lists [side 0, side 0, side 1, side 1, side 1]; its side-1 units use groups 1-3.
+- Second Bull Run lists [side 1, side 0]; units of both sides use group 1.
+- Seven Pines has one side-1 entry, used by side-1 units as group 1.
+- v3/v3.1 gave Confederate units groups 4 and 5. Side 1 had only two entries, and in the playtest 2 and 3 saves every Confederate unit loaded with `StandbyGroup` 0 and `StandbyActive` true. So Ashby, Jackson's HQ, Burks and the Sandy Ridge guns were free from turn 1, which is how Ashby rode into Kernstown and Rockbridge and Carpenter walked forward to (12,18) and died. The Union groups 1-3 loaded correctly (inactive, groups 1/2/3).
+- The validator now checks per-side numbering and prints each group's units.
 
-"Hold" (turn 0, chance 0) is inferred from the Antietam and Malvern Hill hold groups to mean "stay put unless threatened". Standby only governs the computer. A human player can move any unit.
+| Side | Group | Units | Turn | Chance / rise |
+|---|---|---|---|---|
+| Union | 1 | Tyler | 4 (15:30) | 50 / 25 |
+| Union | 2 | Sullivan 13 IN/5 OH, 62 OH | 6 (16:30) | 30 / 25 |
+| Union | 3 | Kimball HQ, 39 IL, Huntington | never (hold) | 0 / 0 |
+| Union | 4 | Jenks, Clark, Robinson, Keeper | 6 (16:30) | 30 / 25 |
+| Confederate | 1 | Burks, Marye, Lanier | 5 (16:00) | 40 / 30 |
+| Confederate | 2 | Jackson HQ, Ashby, Chew | never (hold) | 0 / 0 |
+| Confederate | 3 | Rockbridge, Carpenter, Waters | 6 (16:30) | 30 / 25 |
+
+"Hold" (turn 0, chance 0) is inferred from the Antietam and Malvern Hill hold groups. In playtest 3 the Union hold group stayed put through turn 3. Standby only governs the computer. A human player can move any unit.
+
+**`guardHexes` / `guardCs`.** Every stock group entry has them, always as the integer 0 (Malvern Hill also has `mainForcePct` and `enemyGroup`, also 0). No non-zero value has ever been seen, so what they do is unknown. They are single numbers, not hex lists, so "guard these gun hexes" cannot be written with them. They stay 0. Confidence in any meaning: none.
+
+**Unknown: do units on standby fire?** If held guns do not fire until their group wakes, the guns are silent until turn 6 or later under the computer. That trades early fire for survival. Playtest 3 lost two batteries on turn 2; we judged that worse. Report what you see.
 
 ## Combat and survival
 
 In playtest 2 the user lost Garnett's 5/33 VA again. The save shows an AR at 1:1 (die 2) with no open hex behind him. v3 changed three things to make that rarer.
 
-**1. A gentler combat table (`rules.crt`).** Rows are odds and columns are the die roll, 1 to 6. A high roll favours the attacker. Every value is one the stock tables use. The table never gets worse for the attacker as the odds or the roll go up.
+**1. A gentler combat table (`rules.crt`).** Rows are odds and columns are the die roll, 1 to 6. A high roll favours the attacker. Every value is one the stock tables use. The table never gets worse for the attacker as the odds or the roll go up. Playtest 3 confirmed it is used in the game: all six logged combats match it, not the default.
+
+v3.2 changes one cell: 1:1 on a 5 is now C, not DR. A DR at even odds drops from 2 in 6 to 1 in 6. At Kernstown most stacks fight with friends on their flanks, so a DR often meets a blocked retreat and loses the whole stack. To be honest about it: playtest 3's battery loss was a 1:1 roll of 6, which is still a DR, so this change would not have saved those guns. It halves how often that can happen.
 
 | Odds | 1 | 2 | 3 | 4 | 5 | 6 |
 |---|---|---|---|---|---|---|
 | 1:3 | AE | AR | AR | AR | AR | C |
 | 1:2 | AR | AR | AR | C | C | DR |
-| 1:1 | AR | AR | C | C | DR | DR |
+| 1:1 | AR | AR | C | C | C | DR |
 | 2:1 | AR | C | C | DR | DR | DR |
 | 3:1 | C | C | DR | DR | DR | DR |
 | 4:1 | C | DR | DR | DR | DR | DR |
@@ -140,6 +152,8 @@ AE appears in 1 cell (the default has 3) and DE in 3 cells (the default has 15).
 
 All 29 counters pass.
 
+**4. Batteries stacked, and the two-flank test (v3.2).** Every battery starts with one non-artillery unit, never two guns alone. For every stack within 8 hexes of the enemy at the start, the validator places imaginary enemy units on every pair of the stack's non-rear neighbour hexes, and fails the stack if those two could put every rear hex in ZOC. All 10 such stacks pass. Stacks stand side by side rather than one behind the other, so that no stack fills a neighbour's retreat hex.
+
 **Not changed:**
 - **Retreat settings.** A `retreat_distance` of 2 needs a longer clear path, so it would probably kill more units, not fewer. `zoc_exit_allowed` is about walking out of ZOC during movement, not about retreats. Units die when the only retreat hex is in enemy ZOC. The save's `ZocToZocAllowed` looks related, but scenario rules have no field for it. What `retreat_control` 0 means is not confirmed.
 - **`replacement` stays false.** Only Gettysburg sets it to true, and we don't know what it does. Saves carry `IsReplacement` and `EliminatedTurn`, which suggests eliminated units return (inferred). To test it, set it to true in the editor, get a unit eliminated, save, and look for `IsReplacement` units in the save.
@@ -148,7 +162,7 @@ All 29 counters pass.
 
 ## The people
 
-- **Commanders on the map.** Kimball and Jackson have 1-CS HQ counters with their portraits, held back in standby groups 3 and 5.
+- **Commanders on the map.** Kimball and Jackson have 1-CS HQ counters with their portraits, held back in each side's hold group (Union 3, Confederate 2).
 - **Portraits.** All of them are approved files in `historical_data/portrait_manifest.csv` on `origin/main` (3b9808b). The builder reads each one with `git show`, crops and frames it, and embeds it in the JSON as a template image. No portrait file was copied into this branch, renamed, overwritten or regenerated. Set `MA_PORTRAIT_REF` to read them from another ref.
 
 | Leader | File on origin/main | Blob | Used on |
@@ -179,7 +193,8 @@ All 29 counters pass.
 Each counter shows:
 - the commander on top, small
 - the unit in large type, fitted between 3.0 and 4.6
-- the commander's portrait, where one exists, beside a NATO mark (X infantry, / cavalry, dot artillery; III for a regiment, I for a battery)
+- the commander's portrait, where one exists, beside a NATO mark (X infantry, / cavalry, dot artillery; III for a regiment, I for a battery). v3.2: the NATO box is filled with the branch colour (infantry blue, cavalry yellow, artillery red), so the type reads at map zoom
+- HQ counters: the portrait in a gold frame (v3.2)
 - CS bottom left and MP bottom right
 - an "R3" plate on every battery
 
@@ -195,13 +210,14 @@ Union counters are blue with white text. Confederate counters are grey with near
 - **Roads** are the Valley Pike, the Middle Road and the Cedar Creek Grade. **Trails** are the Apple Valley Road and the stone lane. **Creeks** are Opequon Creek, Hoge Run, Abrams Creek and Buffalo Lick Run. All are symmetric centre-to-centre paths, as in the stock files.
 - **The stone wall** is the eastern ~1.1 km of the repo's Glass-farm wall: four hexes at (8..11, 19). Each is `mountain` with fences on its NW and NE edges, facing north toward Tyler, as Antietam's Bloody Lane does.
 - **Hex names** are drawn by the game:
-  - VP hexes: Winchester, Pritchard's Hill, Kernstown, Stone Wall, Glass Farm, Bartonsville
-  - CP hexes: Wall, Grade Junction
+  - VP hexes: Winchester, Pritchard's Hill, Kernstown, Stone Wall, Bartonsville
+  - CP hexes: Glass Farm, Grade Junction
   - other named hexes: Sandy Ridge, Marcauley Farm, Pritchard Farm, Mahaney House, Triplett House, Opequon Church, Opequon Ford, Milltown
 
   The three farmhouses are placed from the ABT 2024 map and may be up to 1 hex off. The board art does not repeat any hex name.
 - **Board art** (`meta.boardArt`, 5120 x 4959 PNG). The geometry is confirmed from Antietam's fence marks: `pixel = (world − origin) x scale`, world hex centre `(√3·45·(q + ½(r&1)), 67.5·r)`, `scale` 2, `hexSize` 45, origin `(−52.471, −58.5)`.
   - It shows the repo's painted basemap, washed toward parchment, with woods, ridge hachures, the wall stones, roads, creeks and buildings.
+  - v3.2: hillshade (lit from the north-west) and 5 m form lines from the 3DEP DEM, so Sandy Ridge and Pritchard's Hill read as relief; a buff tint and hachures still mark the game's high-ground hexes. A faint patchwork of fields, rail fences around the farms, shadowed tree crowns, a wide pale macadam Valley Pike, a heavier two-course stone wall with a shadow, and farmsteads (house, red bank barn, outbuilding, orchard) at Glass, Pritchard and Marcauley farms, houses at Mahaney and Triplett, and a church at Opequon. Palette 128 colours (was 96), with the small feature colours reserved.
   - It has italic road and creek names, a cartouche and a north arrow.
   - `hash` is our PNG's SHA-1. `style` "acw_b" and `version` 1 are copied from Antietam.
   - If the basemap (78 MB, gitignored) is missing, the builder paints plain parchment instead.
@@ -234,25 +250,26 @@ Union counters are blue with white text. Confederate counters are grey with near
 
 See `DEV_WISHLIST.md`.
 
-## Full in-game checklist (v3.1)
+## Full in-game checklist (v3.2)
 
 Tick these in the game and report anything that fails. Screenshots help.
 
 1. [ ] Both "Kernstown 1862 (CivilWar1)" and "Kernstown 1862 (CivilWar1, no art)" appear and load.
 2. [ ] **Board art** sits under the grid. Woods, ridges, the wall, roads and creeks fall on the right hexes and do not drift toward an edge.
-3. [ ] **Hex names** show once each and do not run into each other, especially Glass Farm, Wall and Stone Wall on row 19.
+3. [ ] **Hex names** show once each and do not run into each other, especially Glass Farm and Stone Wall on row 19.
 4. [ ] **Counters** can be read without hovering: commander, unit, portrait or NATO mark, CS, MP, and R3 on batteries.
-5. [ ] **CRT.** Combat results match the v3 table. There is no AE except at 1:3 on a 1, and no DE below 5:1.
+5. [ ] **CRT.** Combat results match the v3.2 table. At 1:1 only a 6 gives DR. There is no AE except at 1:3 on a 1, and no DE below 5:1.
 6. [ ] **Wall.** The wall hexes cost 2 MP and defend x2. A unit there that takes a DR falls back.
 7. [ ] **Survival.** Garnett and Ashby last into the late afternoon. Count the losses to a retreat with no open hex.
-8. [ ] **Artillery.** The Pritchard's Hill guns (13,17) and the Sandy Ridge guns (12,20) are in range of each other on turns 1–2, and someone fires.
+8. [ ] **Artillery.** The Pritchard's Hill guns (13,17) and the Sandy Ridge guns (12,20) are 3 hexes apart. Under the computer, do held guns fire before turn 6? Do any batteries die before turn 6?
 9. [ ] **The stand at the wall.** The Confederate AI holds the wall and Glass Farm rather than attacking at bad odds.
 10. [ ] **Standby.**
-    - Tyler wakes from turn 4, Sullivan from turn 6, and Burks with Marye and Lanier from turn 5.
+    - A turn-1 save shows Confederate units with StandbyGroup 1-3 (not 0).
+    - Tyler wakes from turn 4, Sullivan and both sides' guns from turn 6, and Burks with Marye and Lanier from turn 5.
     - 39 IL, Huntington, Ashby, Chew and both HQs move only if threatened.
 11. [ ] The Confederates move first. Union activation is 5, and 7 from turn 5. Confederate activation is 6.
-12. [ ] **VPs and CPs** show their values. The wall and Glass Farm start neutral.
-13. [ ] **Victory.** winLine is 55 and the thresholds are 6/49/98. Report the final score.
+12. [ ] **VPs and CPs** show their values. The Stone Wall VP and the Glass Farm CP start neutral.
+13. [ ] **Victory.** winLine is 55 and the thresholds are 6/47/94. Report the final score.
 14. [ ] **Turns.** Turn 1 is 3/23 14:00, turn 11 is night, and the game ends after turn 11.
 15. [ ] **Briefing.** The region and battle maps show with their portraits and labels, and the description is readable.
 
@@ -295,6 +312,17 @@ You need:
 - In the user's `user_kernstown1862.json`, the roads are one-sided, and Carroll's `entryHex` is `"10,0"`. That file was not modified.
 
 ## Change history
+
+**v3.2 (from playtest 3):**
+- Standby groups are numbered per side. The Confederate groups (v3.1 numbers 4 and 5) never loaded; they are now 1-3. New groups hold the guns on Pritchard's Hill (Union 4) and Sandy Ridge (Confederate 3) until turn 6 at the earliest. The validator checks per-side numbering.
+- Every battery starts stacked with one non-artillery unit. Stacks were moved by 1-3 hexes so that each keeps two rear hexes and passes a new two-flank test in the validator. Historical gun positions are kept: Rockbridge, Carpenter and Waters on Sandy Ridge, the Union guns on and beside Pritchard's Hill.
+- CRT: 1:1 on a 5 is C (was DR).
+- Glass Farm is a +2 CP instead of a 5-VP hex; the "Wall" CP is gone. Thresholds 6/47/94.
+- Board art: DEM hillshade and form lines, fields, rail fences, farmsteads, shadowed woods, a wider pike, a heavier wall.
+- Counters: branch-coloured NATO boxes, gold-framed HQ portraits.
+- Briefing: the afternoon, scoring and combat paragraphs updated.
+
+Playtest 3 notes: the save's `P1Type`/`P2Type` are 1/0, as in playtest 2 (where the user played the Confederates). So we are not sure which side the computer ran in playtest 3. The battery loss on turn 2 was at 1:1, die 6 (DR), with the retreat closed by units at (11,18) and (13,18), after the guns had moved forward to (12,18).
 
 **v3.1 (polish):**
 - Hex names:

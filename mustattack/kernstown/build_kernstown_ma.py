@@ -105,6 +105,7 @@ def classify_terrain(repo):
     cc = np.clip(np.array(cc), 0, dem.shape[1] - 1)
     Z = dem[rr, cc].reshape(X.shape).astype(float)
     Zs = ndimage.gaussian_filter(Z, 15)
+    DEM_FOR_ART["Z"], DEM_FOR_ART["step"] = ndimage.gaussian_filter(Z, 4), step   # v3.2: board-art hillshade
     TPI = Zs - ndimage.uniform_filter(Zs, 181)
 
     elev = np.zeros((ROWS, COLS))
@@ -260,7 +261,7 @@ VP_SITES = [
     ("Pritchard's Hill", (-78.2025, 39.1548), 20, 0),
     ("Kernstown", (-78.1978, 39.1425), 15, 0),
     ("Stone Wall", "W2", 15, None),        # v1: Confederate-held 15 on the middle hex
-    ("Glass Farm", "W0", 5, None),         # v2: west end of the wall, Fulkerson's flank (new)
+    # v3.2: Glass Farm (W0) is now the command point instead of a 5-VP site; see CP_SITES.
     ("Bartonsville", (-78.2100, 39.1160), 10, 1),
 ]
 # Command points.  The editor's own help (user screenshot): "CP = holding it changes how many
@@ -268,7 +269,10 @@ VP_SITES = [
 # every stock file.  v1 had a "+2" on the Sandy Ridge crest behind the wall: the playtest AI parked
 # Garnett on it instead of the wall, so it moves onto the wall itself.
 CP_SITES = [
-    ("Wall", "W1", 2),                  # v3.1: was "Stone Wall West"; short, so it does not run into Glass Farm / Stone Wall
+    # v3.2: the CP moves from "Wall" (W1) to Glass Farm (W0), the west end of the wall and
+    # Fulkerson's flank.  Row 19 then carries two names two hexes apart (Glass Farm, Stone Wall)
+    # instead of three in a row, and the farm still matters to both sides.
+    ("Glass Farm", "W0", 2),
     ("Grade Junction", "grade", 2),     # v3.1: was "Pike & Cedar Creek Grade" (too long for one hex)
 ]
 # Named hexes without VP (Antietam "North Woods", Malvern "Willis Church" pattern: name + boxes[9]).
@@ -303,58 +307,84 @@ NAMED_SITES = [
 # 1.0-1.4 km; at 300 m hexes the same ground is 3 hexes (range 3 is itself stock: Malvern Hill
 # Hunt's reserve, Second Bull Run S.D. Lee).
 UNITS = [
+    # v3.2 layout.  Every battery starts stacked with one infantry (or, for Chew, cavalry) unit, never
+    # two batteries alone together: playtest 3 lost Rockbridge and Carpenter, stacked alone, to one
+    # 1:1 DR with the retreat closed.  Stacks stand side by side, not one behind another, so that no
+    # stack blocks a neighbour's retreat; the validator checks that every stack near the enemy keeps
+    # two open rear hexes and that no two enemy units on its flanks can close all of them.
+    # The last column is the standby group NUMBERED PER SIDE (see STANDBY below).
     # --- Union: Shields' division (Kimball commanding on the field).  ~6,300 inf+cav+arty engaged.
     # v3: field commanders as their own counters, the stock pattern ("Lee Army N. Va." CS 2 MP 4 in
     # gainesmill1862, "Porter V Corps HQ" CS 1 in malvernhill1862).  CS 1: a headquarters and escort.
-    # Both are in hold groups (turn 0 / chance 0) so the AI keeps them back; a human moves them freely.
-    (0, "Kimball", "Shields' Div. HQ", "hq", 1, 4, 1, (13, 14), 3),
+    # Pritchard's Hill: Kimball's two big regiments each with a battery, the HQ with Robinson's guns,
+    # all on the knoll south of the VP hex (13,15).
+    (0, "Kimball", "Shields' Div. HQ", "hq", 1, 4, 1, (13, 16), 3),   # v3.2: was (13,14), alone
+    (0, "Robinson", "L 1 OH Bty", "art", 2, 3, 3, (13, 16), 4),
     (0, "Kimball", "14 IN/84 PA", "inf", 3, 4, 1, (12, 16), 0),
-    (0, "Kimball", "8 OH/67 OH", "inf", 3, 4, 1, (14, 16), 0),
-    (0, "Jenks", "A 1 WV Bty", "art", 2, 3, 3, (13, 17), 0),
-    (0, "Clark", "E 4 US Bty", "art", 2, 3, 3, (13, 17), 0),
-    (0, "Robinson", "L 1 OH Bty", "art", 2, 3, 3, (13, 16), 0),
-    (0, "Keeper", "B 1 WV Bty", "art", 2, 3, 3, (16, 17), 0),    # v3: was (17,18), 1 rear hex
-    (0, "Brodhead", "1 MI Cav", "cav", 1, 6, 1, (6, 12), 0),    # v3: was (7,12), 1 rear hex
-    (0, "Brodhead", "OH/MD Cav", "cav", 1, 6, 1, (19, 21), 0),
-    (0, "Sullivan", "13 IN/5 OH", "inf", 3, 4, 1, (19, 18), 2),
-    (0, "Sullivan", "62 OH", "inf", 2, 4, 1, (20, 16), 2),
+    (0, "Jenks", "A 1 WV Bty", "art", 2, 3, 3, (12, 16), 4),         # v3.2: was (13,17) with Clark
+    (0, "Kimball", "8 OH/67 OH", "inf", 3, 4, 1, (13, 17), 0),       # v3.2: was (14,16)
+    (0, "Clark", "E 4 US Bty", "art", 2, 3, 3, (13, 17), 4),
+    # Keeper's guns with the 62nd Ohio on the high ground north-east of the hill, covering the pike.
+    (0, "Sullivan", "62 OH", "inf", 2, 4, 1, (18, 14), 2),           # v3.2: was (20,16)
+    (0, "Keeper", "B 1 WV Bty", "art", 2, 3, 3, (18, 14), 4),        # v3.2: was (16,17), alone
+    (0, "Brodhead", "1 MI Cav", "cav", 1, 6, 1, (6, 12), 0),
+    (0, "Brodhead", "OH/MD Cav", "cav", 1, 6, 1, (18, 21), 0),       # v3.2: was (19,21)
+    (0, "Sullivan", "13 IN/5 OH", "inf", 3, 4, 1, (18, 20), 2),      # v3.2: was (19,18)
     (0, "Tyler", "7 OH/29 OH", "inf", 3, 4, 1, (19, 12), 1),
     (0, "Tyler", "7 IN/1 WV", "inf", 3, 4, 1, (20, 10), 1),
     (0, "Tyler", "110 PA", "inf", 2, 4, 1, (21, 8), 1),
-    (0, "Sullivan", "39 IL", "inf", 1, 4, 1, (24, 14), 3),
+    (0, "Sullivan", "39 IL", "inf", 1, 4, 1, (22, 6), 3),            # v3.2: was (24,14); with Huntington
     (0, "Huntington", "H 1 OH Bty", "art", 2, 3, 3, (22, 6), 3),
     # --- Confederate: Jackson's Valley District.  2,742 inf engaged, 290 cav, 18 of 27 guns.
-    (1, "Jackson", "Valley District HQ", "hq", 1, 4, 1, (12, 24), 5),
-    (1, "Ashby", "7 VA Cav", "cav", 1, 6, 1, (20, 24), 5),
-    (1, "Chew", "Horse Bty", "art", 1, 3, 3, (20, 24), 5),
+    (1, "Jackson", "Valley District HQ", "hq", 1, 4, 1, (11, 26), 2),  # v3.2: was (12,24)
+    (1, "Ashby", "7 VA Cav", "cav", 1, 6, 1, (20, 24), 2),
+    (1, "Chew", "Horse Bty", "art", 1, 3, 3, (20, 24), 2),
+    # Sandy Ridge: each of the three Stonewall Brigade / Fulkerson batteries with its own infantry.
     (1, "Fulkerson", "23/37 VA", "inf", 2, 4, 1, (9, 21), 0),
-    (1, "McLaughlin", "Rockbridge", "art", 2, 3, 3, (12, 20), 0),
-    (1, "Carpenter", "Alleghany", "art", 2, 3, 3, (12, 20), 0),
-    (1, "Garnett", "2/4/27 VA", "inf", 2, 4, 1, (10, 23), 0),   # v3: was (10,22), 1 rear hex
-    (1, "Garnett", "5/33 VA", "inf", 2, 4, 1, (11, 22), 0),
-    (1, "Waters", "W. Augusta", "art", 2, 3, 3, (11, 21), 0),
-    (1, "Burks", "21 VA/1 Bn", "inf", 2, 4, 1, (13, 27), 4),
-    (1, "Burks", "42 VA", "inf", 1, 4, 1, (13, 28), 4),
-    (1, "Marye", "Hampden", "art", 2, 3, 3, (14, 28), 4),
-    (1, "Lanier", "Danville", "art", 2, 3, 3, (14, 29), 4),
+    (1, "Carpenter", "Alleghany", "art", 2, 3, 3, (9, 21), 3),       # v3.2: was (12,20) with Rockbridge
+    (1, "Garnett", "5/33 VA", "inf", 2, 4, 1, (12, 20), 0),          # v3.2: was (11,22)
+    (1, "McLaughlin", "Rockbridge", "art", 2, 3, 3, (12, 20), 3),
+    (1, "Garnett", "2/4/27 VA", "inf", 2, 4, 1, (11, 22), 0),        # v3.2: was (10,23)
+    (1, "Waters", "W. Augusta", "art", 2, 3, 3, (11, 22), 3),        # v3.2: was (11,21), alone
+    (1, "Burks", "21 VA/1 Bn", "inf", 2, 4, 1, (13, 28), 1),        # v3.2: was (13,27)
+    (1, "Marye", "Hampden", "art", 2, 3, 3, (13, 28), 1),            # v3.2: was (14,28), alone
+    (1, "Burks", "42 VA", "inf", 1, 4, 1, (14, 29), 1),              # v3.2: was (13,28)
+    (1, "Lanier", "Danville", "art", 2, 3, 3, (14, 29), 1),
 ]
 
-STANDBY = [  # standby_groups[n-1] for standbyGroup n; Antietam schema
-    # 1: Tyler's brigade, halted on the pike north of the toll gate at 2 PM; Kimball sent it west
-    #    against Jackson's flank about 3:30-4 PM (v1: turn 3 / 40 / 30).
+# standby_groups.  v3.2 FINDING: a unit's standbyGroup n means the n-th entry OF ITS OWN SIDE, not
+# the n-th entry of the list.  Evidence: malvernhill1862 lists [s0, s0, s1, s1, s1] and its side-1
+# units use groups 1-3; secondbullrun1862 lists [s1, s0] and units of BOTH sides use group 1;
+# sevenpines1862 has one side-1 entry, used as group 1.  v3/v3.1 gave Confederate units groups 4 and
+# 5, which do not exist on side 1 (2 entries), and playtests 2 and 3 load every Confederate unit
+# with StandbyGroup 0 / StandbyActive true: the groups were dropped, and Ashby, Jackson, Burks and
+# the Sandy Ridge guns moved from turn 1.  The Union groups 1-3 loaded (SG 1/2/3, inactive).
+# guardHexes / guardCs: scalar integers, 0 in every stock entry; no non-zero value has been seen, so
+# their meaning is unknown (they are not hex lists).  Kept 0.  "Hold" = turn 0 / chance 0 (Antietam
+# V Corps, Malvern Hill's Union line); in playtest 3 the Union hold group stayed put through turn 3.
+# Unknown: whether a unit on standby fires or joins attacks before its group activates.
+STANDBY = [  # Antietam schema; listed per side in order: side 0 groups 1-4, then side 1 groups 1-3
+    # U1: Tyler's brigade, halted on the pike north of the toll gate at 2 PM; Kimball sent it west
+    #     against Jackson's flank about 3:30-4 PM (v1: turn 3 / 40 / 30).
     {"side": 0, "turn": 4, "chance": 50, "rise": 25, "guardHexes": 0, "guardCs": 0},
-    # 2: Sullivan, watching Ashby east of the pike; his regiments went to Sandy Ridge only late.
+    # U2: Sullivan, watching Ashby east of the pike; his regiments went to Sandy Ridge only late.
     {"side": 0, "turn": 6, "chance": 30, "rise": 25, "guardHexes": 0, "guardCs": 0},
-    # 3: 39 IL and Huntington's battery, held in reserve and never sent in (Antietam's V Corps
-    #    pattern: turn 0, chance 0).
+    # U3: Kimball's HQ, 39 IL and Huntington's battery, held back (Antietam's V Corps pattern).
     {"side": 0, "turn": 0, "chance": 0, "rise": 0, "guardHexes": 0, "guardCs": 0},
-    # 4 (new): Burks' brigade with Marye's and Lanier's guns, Jackson's reserve near Bartonsville;
-    #    Jackson brought it up to the wall about 5 PM (Seven Pines / Second Bull Run use side-1 groups).
+    # U4 (v3.2): the guns on Pritchard's Hill, which historically stayed there all afternoon.  Held
+    #     until turn 6 at the earliest so the AI does not walk them down into the infantry fight
+    #     (playtest 2: Robinson lost on an AR, playtest 3: Jenks and Keeper wandered off the hill).
+    {"side": 0, "turn": 6, "chance": 30, "rise": 25, "guardHexes": 0, "guardCs": 0},
+    # C1: Burks' brigade with Marye's and Lanier's guns, Jackson's reserve near Bartonsville;
+    #     Jackson brought it up to the wall about 5 PM.
     {"side": 1, "turn": 5, "chance": 40, "rise": 30, "guardHexes": 0, "guardCs": 0},
-    # 5 (new): Ashby and Chew screening east of the pike, as they did all afternoon against Sullivan;
-    #    held in place (turn 0 / chance 0, Malvern Hill's side-1 hold-group pattern) so the AI cannot
-    #    throw them forward alone into Kernstown as it did in playtest 1.
+    # C2: Ashby and Chew screening east of the pike, with Jackson's HQ: held (Malvern Hill's side-1
+    #     hold pattern) so the AI cannot throw them forward alone into Kernstown (playtests 1-3).
     {"side": 1, "turn": 0, "chance": 0, "rise": 0, "guardHexes": 0, "guardCs": 0},
+    # C3 (v3.2): the Sandy Ridge guns (Rockbridge, Carpenter, Waters), which fired from the ridge
+    #     all afternoon.  Held until turn 6 at the earliest; playtest 3 lost two of them on turn 2
+    #     after they moved forward to (12,18).
+    {"side": 1, "turn": 6, "chance": 30, "rise": 25, "guardHexes": 0, "guardCs": 0},
 ]
 
 
@@ -490,20 +520,35 @@ NATO_W, NATO_H = 312, 250
 NATO_COLORS = {0: (244, 244, 240, 255), 1: (24, 24, 24, 255)}
 
 
+BRANCH_FILL = {"inf": (122, 170, 222, 255), "cav": (236, 196, 72, 255), "art": (206, 70, 58, 255)}
+
+
+def make_hq_frame():
+    """v3.2: a gold frame behind an HQ counter's portrait, so headquarters read apart at a glance."""
+    im = Image.new("RGBA", (120, 140), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    d.rectangle([0, 0, 119, 139], fill=(201, 162, 39, 255), outline=(90, 66, 10, 255), width=4)
+    d.rectangle([9, 9, 110, 130], outline=(255, 232, 150, 255), width=2)
+    return im
+
+
 def make_nato(kind, side):
     im = Image.new("RGBA", (NATO_W, NATO_H), (0, 0, 0, 0))
     d = ImageDraw.Draw(im)
     col = NATO_COLORS[side]
     x0, y0, x1, y1 = 16, 56, NATO_W - 16, NATO_H - 10
-    fill = (255, 255, 255, 40) if side == 0 else (255, 255, 255, 70)
+    # v3.2: the box is filled with the traditional branch colour (infantry blue, cavalry yellow,
+    # artillery red) so the type reads at map zoom, where the X / slash / dot are only a few pixels.
+    fill = BRANCH_FILL[kind]
     d.rectangle([x0, y0, x1, y1], fill=fill, outline=col, width=12)
+    ink = (22, 22, 26, 255)   # marks inside the coloured box are dark on both sides
     if kind in ("inf", "cav"):
-        d.line([(x0 + 6, y1 - 6), (x1 - 6, y0 + 6)], fill=col, width=12)
+        d.line([(x0 + 6, y1 - 6), (x1 - 6, y0 + 6)], fill=ink, width=12)
     if kind == "inf":
-        d.line([(x0 + 6, y0 + 6), (x1 - 6, y1 - 6)], fill=col, width=12)
+        d.line([(x0 + 6, y0 + 6), (x1 - 6, y1 - 6)], fill=ink, width=12)
     if kind == "art":
         cx, cy, rr = (x0 + x1) / 2, (y0 + y1) / 2, 34
-        d.ellipse([cx - rr, cy - rr, cx + rr, cy + rr], fill=col)
+        d.ellipse([cx - rr, cy - rr, cx + rr, cy + rr], fill=ink)
     ticks = 1 if kind == "art" else 3
     for i in range(ticks):
         x = NATO_W / 2 + (i - (ticks - 1) / 2) * 30
@@ -604,7 +649,8 @@ def template_shapes(side, kind, leader, uname, portrait=None):
               txt("box4", 2, 0, -7.0 if kind != "hq" else -7.4, fs_name, 900 if kind != "hq" else 700),
               txt("box5", 3, -10.0, 9.4, 6.2, 900), txt("box6", 4, 10.0, 9.4, 6.2, 900)]
     if kind == "hq":
-        shapes.append({"type": "image", "x": 0, "y": 2.4, "w": 10.6, "h": 12.4, "imageRef": portrait, "z": 5})
+        shapes.append({"type": "image", "x": 0, "y": 2.4, "w": 12.6, "h": 14.4, "imageRef": "img_hq_frame", "z": 5})
+        shapes.append({"type": "image", "x": 0, "y": 2.4, "w": 10.6, "h": 12.4, "imageRef": portrait, "z": 6})
         return shapes
     if kind == "art":
         shapes.append({"type": "image", "x": 0, "y": 10.4, "w": 7.0, "h": 3.5, "imageRef": "img_emb_range3"})
@@ -811,11 +857,11 @@ Banks' army is leaving the Valley for the defence of Washington, and Jackson's o
 
 [If you command the Confederates: Jackson] Jackson attacked because he believed the enemy weak. Fulkerson's brigade, with Garnett's Stonewall Brigade behind it, swung west onto Sandy Ridge and reached the stone wall before Tyler did. From the ridge Jackson's aide, Sandie Pendleton, counted the Federals and put them at 10,000. Jackson answered: "Say nothing about it. We are in for it." Hold the wall and Glass Farm, and make Kimball pay for them. You will not win by pushing up the pike into the Union guns. Burks' brigade is your only reserve. Keep a way back open behind every regiment. Near 6 PM Garnett's men ran out of ammunition and he pulled them back without orders. Jackson had him arrested for it, but the brigade survived.
 
-[The afternoon] Each turn is half an hour. Turn 1 is 2:00 PM. On turn 4 (3:30) a computer-run Tyler may start west. On turn 5 (4:00) a computer-run Burks may come up, and the Union may move two more units a turn. Historically Tyler's attack on the wall began about now. On turn 6 (4:30) a computer-run Sullivan may join. On turn 9 (6:00) Burks arrived historically and Garnett's line fell back. The sun sets about 6:15 and dusk ends about 6:40. Turn 11 (7:00) is night, and the game ends after it.
+[The afternoon] Each turn is half an hour. Turn 1 is 2:00 PM. On turn 4 (3:30) a computer-run Tyler may start west. On turn 5 (4:00) a computer-run Burks may come up, and the Union may move two more units a turn. Historically Tyler's attack on the wall began about now. On turn 6 (4:30) a computer-run Sullivan may join, and computer-run batteries may leave the ridges they start on; until then the AI keeps its guns on Pritchard's Hill and Sandy Ridge. On turn 9 (6:00) Burks arrived historically and Garnett's line fell back. The sun sets about 6:15 and dusk ends about 6:40. Turn 11 (7:00) is night, and the game ends after it.
 
-[How to win] The dividing line is Union +55, the score if nothing changes hands. The Stone Wall (15) and Glass Farm (5) start neutral. Pritchard's Hill (20), Kernstown (15) and Winchester (30) start Union, and Bartonsville (10) starts Confederate. Two hexes are command points (+2): Wall, the hex just west of the Stone Wall, and Grade Junction, where the Cedar Creek Grade meets the pike. The side holding one may move two more units each turn.
+[How to win] The dividing line is Union +55, the score if nothing changes hands. The Stone Wall (15) starts neutral. Pritchard's Hill (20), Kernstown (15) and Winchester (30) start Union, and Bartonsville (10) starts Confederate. Two hexes are command points (+2): Glass Farm, at the west end of the stone wall, and Grade Junction, where the Cedar Creek Grade meets the pike. Both start neutral. The side holding one may move two more units each turn. A Union side that keeps what it has and takes the wall scores about 70; a Jackson who holds the wall until dark and keeps Bartonsville holds the Union to about 40.
 
-[Combat] This board uses its own combat table, gentler than the default. At odds from 1:2 to 2:1, a low roll repulses the attacker (AR), a middle roll has no effect (C) and a high roll drives the defender back (DR). A unit is destroyed outright only at 5:1 or better on the highest rolls, or when attacking at 1:3 and rolling a 1. A unit that must retreat with no open hex behind it is lost, so most losses come from being hemmed in, not from the die. The wall hexes are high ground (defence x2). A beaten defender falls back from them instead of being destroyed in place.
+[Combat] This board uses its own combat table, gentler than the default. At odds from 1:2 to 2:1, a low roll repulses the attacker (AR), a middle roll has no effect (C) and a high roll drives the defender back (DR); at even odds only a 6 does. Every battery starts stacked with infantry (Chew with Ashby's cavalry). A unit is destroyed outright only at 5:1 or better on the highest rolls, or when attacking at 1:3 and rolling a 1. A unit that must retreat with no open hex behind it is lost, so most losses come from being hemmed in, not from the die. The wall hexes are high ground (defence x2). A beaten defender falls back from them instead of being destroyed in place.
 
 [Order of battle] Union, Shields' division, Col. Nathan Kimball. Kimball's brigade: 14th Indiana (Lt. Col. Harrow), 84th Pennsylvania (Col. Murray, killed), 8th Ohio (Col. Carroll), 67th Ohio (Lt. Col. Voris). Tyler's brigade, Col. Erastus B. Tyler: 7th and 29th Ohio, 7th Indiana, 1st West Virginia (Col. Thoburn), 110th Pennsylvania. Sullivan's brigade, Col. Jeremiah C. Sullivan: 13th Indiana, 5th Ohio, 62nd Ohio, 39th Illinois (not engaged). Brodhead's cavalry: 1st Michigan, with Ohio and Maryland companies. Batteries: Jenks (A, West Virginia), Clark (E, 4th U.S.), Robinson (L, 1st Ohio), Keeper (B, West Virginia), Huntington (H, 1st Ohio).
 Confederate, Valley District, Maj. Gen. Thomas J. Jackson. Stonewall Brigade, Brig. Gen. Richard B. Garnett: 2nd (Col. Allen), 4th (Lt. Col. Ronald), 5th (Col. Harman), 27th (Col. Echols, wounded) and 33rd (Col. Cummings) Virginia, with McLaughlin's Rockbridge, Waters' West Augusta and Carpenter's Alleghany batteries. Burks' brigade, Col. Jesse S. Burks: 21st Virginia (Lt. Col. Patton), 42nd Virginia (Lt. Col. Langhorne), 1st Virginia Battalion (Irish), Marye's Hampden battery. Fulkerson's brigade, Col. Samuel V. Fulkerson: 23rd and 37th Virginia, Lanier's Danville battery. Ashby's 7th Virginia Cavalry and Chew's horse battery. Kimball and Jackson appear as headquarters counters (strength 1) with their portraits. The computer keeps them back; a human player may move them.
@@ -911,9 +957,10 @@ def build(repo, stock_path, out_path, painted=None, art=True, art_png=None):
     # units & templates
     images_raw = {k: data_img(v) for k, v in stock["assets"]["images"].items()}
     images_raw["img_emb_range3"] = make_range_badge(3)
+    images_raw["img_hq_frame"] = make_hq_frame()
     for (kind, side), key in NATO_KEYS.items():
         images_raw[key] = make_nato(kind, side)
-    used_imgs = ["img_side_253a69_nonato", "img_side_b5b0a1_nonato", "img_emb_range3"] + sorted(NATO_KEYS.values())
+    used_imgs = ["img_side_253a69_nonato", "img_side_b5b0a1_nonato", "img_emb_range3", "img_hq_frame"] + sorted(NATO_KEYS.values())
     PORTRAIT_LOG.clear()
     MAP_PORTRAIT_LOG.clear()
     leaders_used = {u[1] for u in UNITS}
@@ -965,7 +1012,13 @@ def build(repo, stock_path, out_path, painted=None, art=True, art_png=None):
     art_info = None
     if art:
         from board_art import make_board_art
-        im, png, bmeta, src = make_board_art(G, terrain, chains, fences, elev, painted)
+        # v3.2: farm/house/church sites get buildings (and orchards/fields) in the art; their names
+        # stay the game's own hex names, not repeated in the image.
+        site_kind = {"Glass Farm": "farm", "Pritchard Farm": "farm", "Marcauley Farm": "farm",
+                     "Mahaney House": "house", "Triplett House": "house", "Opequon Church": "church"}
+        sites = [(h, site_kind[n]) for h, n in list(named.items()) + [(h, v[0]) for h, v in cp.items()] if n in site_kind]
+        im, png, bmeta, src = make_board_art(G, terrain, chains, fences, elev, painted,
+                                             dem=DEM_FOR_ART or None, sites=sites)
         meta["boardArt"] = {**bmeta, "image": "data:image/png;base64," + base64.b64encode(png).decode()}
         if art_png:
             open(art_png, "wb").write(png)
@@ -1009,9 +1062,10 @@ def build(repo, stock_path, out_path, painted=None, art=True, art_png=None):
 # Score at the start if nothing changes hands (Union VP held - Confederate VP held): 65 - 10 = 55.
 # winLine is author-set in every stock file near the historical result; Kimball's win was holding
 # his ground and taking the wall, so a Union side that keeps what it has and wins the wall scores
-# ~75 (tactical win) and a Jackson who holds wall + Glass Farm until dark scores ~35.
+# ~70 (v3.2: 55 + Stone Wall 15) and a Jackson who holds the Stone Wall until dark scores ~40.
 WIN_LINE = 55
 WALL_TERRAIN = "mountain"
+DEM_FOR_ART = {}
 PORTRAIT_LOG = {}
 MAP_PORTRAIT_LOG = []
 
@@ -1022,13 +1076,17 @@ MAP_PORTRAIT_LOG = []
 # result equals stock_crt[odds_row][die - 1] with rows 1:3, 1:2, 1:1, 2:1, 3:1, 4:1, 5:1, 6:1 and
 # columns die 1..6 (37 of 37 combats outside a fortress hex; the 3 others are the fortress C cases).
 # So the stock table is also the built-in default, and a high die is good for the attacker.
+# v3.2: 1:1 die 5 is C instead of DR (DR at even odds 2/6 -> 1/6).  At Kernstown nearly every
+# stack fights with friends on its flanks, so a DR at 1:1 too often became a blocked retreat and a
+# whole stack lost; playtest 3 lost two batteries that way.  It stays monotonic (no row is better
+# for the attacker than the row above) and uses only stock result codes.
 # Default: 3 AE, 15 DE cells.  This table: 1 AE (1:3, die 1), 3 DE (5:1 die 6, 6:1 die 5-6);
 # at 1:2 to 2:1, the odds a Kernstown attack is fought at, a bad roll is a repulse (AR), a middling
 # one a stand-off (C) and a good one drives the defender back (DR), never an outright kill.
 CRT = [
     ["AE", "AR", "AR", "AR", "AR", "C"],    # 1:3
     ["AR", "AR", "AR", "C", "C", "DR"],     # 1:2
-    ["AR", "AR", "C", "C", "DR", "DR"],     # 1:1
+    ["AR", "AR", "C", "C", "C", "DR"],      # 1:1  v3.2: was AR AR C C DR DR
     ["AR", "C", "C", "DR", "DR", "DR"],     # 2:1
     ["C", "C", "DR", "DR", "DR", "DR"],     # 3:1
     ["C", "DR", "DR", "DR", "DR", "DR"],    # 4:1
