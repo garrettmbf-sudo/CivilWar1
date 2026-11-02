@@ -2,33 +2,150 @@
 
 `mKernstown1862_CW1.json` is a First Kernstown (23 March 1862) scenario for *Sekigahara 1600: Must Attack!*, in the format the in-game Wargame Maker exports. It was built from this repo's Kernstown map data, not drawn by hand.
 
-**Status: not tested in the game.** The file passes `validate_kernstown_ma.py`, which compares it with the stock scenarios, but nobody has loaded it in the game yet. Until someone does, treat it as unverified.
+**Status: v2, not tested in the game.** v1 loaded and ran in the game (first playtest, user as Union). v2 is rebuilt from that playtest. It passes `validate_kernstown_ma.py`, but nobody has loaded v2 yet, so treat it as unverified until someone does.
 
 | File | What it is |
 |---|---|
-| `mKernstown1862_CW1.json` | The scenario (5.2 MB, UTF-8, no BOM, compact JSON like the stock files) |
-| `build_kernstown_ma.py` | Rebuilds the scenario from `data/` (it is deterministic: the same inputs give the same bytes) |
+| `mKernstown1862_CW1.json` | The scenario with painted board art (11.8 MB, UTF-8, no BOM) |
+| `mKernstown1862_CW1_noart.json` | The same scenario with no `boardArt` (5.3 MB): the fallback if the art fails to load or misaligns |
+| `build_kernstown_ma.py` | Rebuilds both files from `data/` |
+| `board_art.py` | Paints `meta.boardArt` on the Must Attack grid |
 | `ma_grid.py` | The Must Attack hex grid: odd-r pointy-top, edges 0=E, 1=SE, 2=SW, 3=W, 4=NW, 5=NE |
-| `validate_kernstown_ma.py` | Checks the scenario against the stock scenarios |
-| `render_preview.py`, `preview.png` | Renders the board, roads, rivers, fences, VP/CP hexes and units |
+| `validate_kernstown_ma.py` | Checks a scenario against the stock scenarios |
+| `render_preview.py` | Draws `preview.png` (whole board), `preview_zoom.png` (Sandy Ridge to Kernstown) and `preview_counters.png` (all 27 counters). The previews are put together from the file; they are not game screenshots. |
+
+## What changed in v2 (from playtest 1)
+
+Playtest 1 report: the map was plain. Ashby was destroyed in Kernstown. Garnett's brigade was destroyed rather than falling back. No artillery did anything. The Confederates never made a stand at the stone wall. The counters needed hovering to identify.
+
+What the save (`playtest1_save.json`, turn 5) and the v1 file show:
+- Batteries were CS 1 and range 2 (about 600 m on a 300 m hex). They were nearly always out of range or attacking at 1:3.
+- The Confederate doctrine "off" sent Fulkerson into a 1:2 attack, which ended AE.
+- The v1 command point on the Sandy Ridge crest drew Garnett *behind* the wall rather than onto it.
+- Ashby was free to move and rode alone into Kernstown.
+- Units that took a DR with no open hex behind them were lost.
+
+| # | Item | v1 | v2 | Why |
+|---|---|---|---|---|
+| 1 | Doctrine | `blue: def, red: off` | `blue: line, red: brk` | Antietam's pair, where a Union attacker faces a held line with fences. "off" produced the reckless 1:2 attacks. The meaning of each word is inferred from the stock pairs and is not documented. |
+| 1 | Confederate start | Lon/lat points south of the ridge, with Garnett stacked behind Fulkerson | Explicit hexes in depth on Sandy Ridge: Fulkerson (9,21) woods, Garnett (10,22) ridge and (11,22) wooded ridge, Waters (11,21), McLaughlin + Carpenter (12,20) | Every unit starts on x2 ground, two hexes south of the wall, with open hexes behind it to the south and south-west to retreat into. A DR with nowhere to go is what killed Garnett. Historically he fell back from the wall at dusk; v2 gives the AI room to do the same. |
+| 2 | Ashby 7 VA Cav | CS 1-6, near the pike north of Bartonsville, free to move | CS 1-6, stacked with Chew at (20,24), east of the pike about 1 km south of Kernstown, with an open rear, **standby group 5 (held: turn 0, chance 0)** | Ashby had about 290 troopers on the field (one point per ~300 men, so CS stays 1). All afternoon he screened Sullivan east of the pike and did not attack the village. Holding the group stops the AI throwing him into Kernstown alone. "Held" is inferred from Antietam's V Corps and Malvern's side-1 hold groups (turn 0, chance 0). If the hold freezes him even when he is attacked, set group 5's `turn` to 6 and `chance` to 20. |
+| 2 | Chew | `Horse Arty` CS 1, range 2 | `Horse Bty` CS 1, range 3, stacked with Ashby, group 5 | Three guns, like Antietam's Pelham horse battery (CS 1). |
+| 3 | Stone wall hexes (8..11,19) | `plain`, fences on NW/NE | Stock `fortress` terrain (Gettysburg's record: `customId` 7, move 1, defence x2) with a new stone-wall tile; fences kept on NW/NE | It is cover on a crest, not an obstacle. Defence x2 is now the wall hex itself, not only the fence. |
+| 3 | Stone Wall VP (10,19) | 15, Confederate-held | 15, **neutral** (`initialControl` null, `boxes[15]` 0, the Second Bull Run "Groveton" pattern) | Neither side held it at 2 PM. The wall is now something to run for and hold. |
+| 3 | Glass Farm VP (8,19) | none | 5, neutral | Fulkerson's end of the wall. It gives the AI a reason to hold the whole wall, not one hex. |
+| 3 | CP Sandy Ridge crest | +2 on the crest behind the wall | removed; that hex is now named "Sandy Ridge" | It pulled Garnett off the wall in the playtest. |
+| 3 | CP Stone Wall West (9,19) | none | +2 | The command bonus now sits on the wall. No stock hex is both a VP and a CP, so it goes on the next wall hex. |
+| 3 | Burks' brigade, Marye, Lanier | Free to move from turn 1 | **Standby group 4**: side 1, turn 5 (16:00), chance 40, rise 30. Starts at (13,27), (13,28), (14,28), (14,29) | Jackson's reserve came up to the wall about 5 PM. Side-1 standby groups appear in Seven Pines and Second Bull Run. |
+| 4 | All field batteries | CS 1, range 2 | **CS 2, range 3** (MP 3) | A full battery is CS 2 in the stock ACW files. Stock range 2 on 500–700 m hexes is 1.0–1.4 km. On our 300 m hexes the same reach is 3 hexes, and range 3 itself is stock (Malvern Hill, Second Bull Run). |
+| 4 | Union guns | Lon/lat points around Pritchard's Hill | Jenks + Clark at (13,17), Robinson at (13,16) on Pritchard's Hill, Davey at (17,18) | Jenks and Clark start 3 hexes from McLaughlin + Carpenter at (12,20). The Pritchard's Hill versus Sandy Ridge duel is in range on turn 1. |
+| 1 | Tyler standby | turn 3, chance 40, rise 30 | turn 4, chance 50, rise 25 | Kimball sent Tyler in about 3:30–4 PM. This gives Jackson time to reach the wall first, as he did. |
+| 1 | Sullivan standby | turn 5 | turn 6 | Sullivan's regiments reached the ridge late. |
+| 5 | Facing / mirroring | none | **not supported; not added** | No stock unit, template or save has a facing, rotation or flip field. All 2,368 image shapes and 4,448 text shapes in the 8 stock files have only position, size and font fields. The new NATO marks are symmetric, so nothing points the wrong way. "Properly pointed" is handled through AI routing instead: doctrine, VP/CP placement and standby groups. |
+| 6 | Counters | Name (shrunk to fit), CS, MP, stock musket/sabre/cannon icon, "R2" badge | Commander on top (small); unit in large type (auto-fit, 3.0–4.6); a NATO mark (X infantry, / cavalry, dot artillery; III for regiments, I for a battery); CS bottom left; MP bottom right; an "R3" plate on guns. Union counters are blue with white text, Confederate grey with dark text (stock plates and colours). | Readable without hovering. Unit names are now `box3 + " " + box4` (commander + unit), the convention in every stock unit. |
+| 6 | Hex names | VP and CP hexes only | Also: Sandy Ridge (10,21), Stone Wall East (11,19), Opequon Church, Pritchard Farm, Hoge Run Ford, Opequon Ford, Milltown, Middle Road | `name` + `boxes[9]` on a non-VP hex, as Antietam does. The editor says the game draws hex names on the map, so they are **not** painted into the art. |
+| 7 | Board art | none | `meta.boardArt` (5120 x 4959 PNG, 96-colour palette, 4.9 MB) | See "Board art" below. |
+| 8 | Victory | winLine 45, thresholds 10/72/144 | winLine **55**, thresholds **6/49/98** | See "Victory and balance" below. |
+
+Unchanged: board, terrain classification, roads/rivers/trails, turns (11 x 30 min from 14:00, turn 11 night), Confederates move first, activation caps (Union 5, rising to 7 at turn 5; Confederate 6), infantry strengths (Union 20, Confederate 9), the 39 IL/Huntington reserve (group 3).
+
+### Not changed, and why
+
+- **Retreat rules.** `retreat_distance` 1, `retreat_control` 0 and `zoc_exit_allowed` false are the same in all eight stock files, so we have no evidence of what other values do. v2 attacks the cause instead: start positions with open rears and x2 ground.
+- **Custom CRT.** Gettysburg and Chancellorsville carry a `rules.crt` table (8 odds rows x 6 die rolls). Adding one could cut DE results further. We left it out because Antietam-schema files do not use it and its row order (which odds each row is) is inferred. It is an option if units still die too easily.
+- **`ai_contact_gate`** (Malvern only: `{"first":0,"second":1}`). It might make the Confederate AI wait for contact before moving. It could also freeze the AI, so we did not use it. It is an optional setting.
+
+## Board art
+
+- **Geometry (confirmed from stock).** Antietam's art has dotted fence marks drawn on exactly the fenced hexsides, which fixes the formula: `pixel = (world − origin) x scale`, with world hex centre `(√3·45·(q + ½(r&1)), 67.5·r)`, `scale` 2, `hexSize` 45, origin `(−52.471, −58.5)`. The image is transparent outside the board's hex outline, as in Antietam. The validator checks the image size against the grid.
+- **What is drawn.** The ground is this repo's own painted basemap (`data/basemap_painted_full.png`, v0.4.2, built by `painted_sections/build_full_map.py`), resampled onto the grid, softened and washed toward parchment so the counters read. Over it, and taken from the game terrain so the art matches the rules:
+  - woods (tree crowns) and ridges (buff tint with hachures)
+  - the stone wall as field stones on the fenced hexsides
+  - roads and creeks along the same hexes the game uses (the Pike drawn wider), and dashed trails
+  - farm buildings, Kernstown and Winchester blocks
+  - italic road and creek names (the game draws hex names itself)
+  - a title cartouche and a north arrow
+- **Assumptions:**
+  - `hash` is the SHA-1 of our PNG. Antietam's hash is also a 40-character SHA-1, but we don't know what it hashes.
+  - `style` "acw_b" and `version` 1 are copied from Antietam. "acw_b" may mean the game can also paint its own art (inferred).
+- **Missing basemap.** The painted basemap is gitignored (78 MB). If `--basemap` (or `KERNSTOWN_BASEMAP`) doesn't point at it, the builder uses plain parchment ground with the same overlays.
+
+## Victory and balance
+
+- **VPs (both sides the same value, as in all stock files):**
+
+  | Hex | VP | Start |
+  |---|---|---|
+  | Winchester | 30 | Union |
+  | Pritchard's Hill | 20 | Union |
+  | Kernstown | 15 | Union |
+  | Stone Wall (10,19) | 15 | neutral |
+  | Glass Farm (8,19) | 5 | neutral |
+  | Bartonsville | 10 | Confederate |
+
+- **CPs:** Stone Wall West (9,19) +2 and Pike & Cedar Creek Grade (18,18) +2. Both are neutral.
+- **Score.** Our assumption is that the score is VP held by the Union minus VP held by the Confederates, possibly plus losses; the playtest save at turn 5 still showed 0/0, so the score seems to be worked out at the end. At the start the score is 65 − 10 = **55** = `winLine`.
+  - **Jackson holds the wall and Glass Farm until dark:** about 35, a Confederate tactical result. This is the respectable result Jackson can hold out for.
+  - **Kimball takes the wall and keeps his own ground (the historical result):** about 75, a Union tactical win.
+  - **Jackson takes Pritchard's Hill or Kernstown:** the score drops toward an operational Confederate win.
+- **Thresholds** come from a formula that matches all six stock scenarios exactly: operational = 0.2 x (total CS, both sides) + 0.4 x (total VP), tactical = operational / 8, strategic = 2 x operational. Here that is 0.2 x 53 + 0.4 x 95 = 49, giving **6 / 49 / 98**. The formula is inferred; the validator warns if the file drifts from it.
+
+## Order of battle (v2)
+
+One strength point is about 300 men. A full battery is CS 2 and a horse battery CS 1. Guns are MP 3, range 3. Infantry is MP 4 and cavalry MP 6. `S#` is the standby group.
+
+**Union, Kimball (Shields' division), side 0:** Kimball 14 IN/84 PA 3 (12,16), 8 OH/67 OH 3 (14,16); Jenks A 1 WV Bty and Clark E 4 US Bty 2 r3 (13,17); Robinson L 1 OH Bty 2 r3 (13,16); Davey B 1 WV Bty 2 r3 (17,18); Brodhead 1 MI Cav 1 (7,12), OH/MD Cav 1 (19,21); Sullivan 13 IN/5 OH 3 (19,18) S2, 62 OH 2 (20,16) S2; Tyler 7 OH/29 OH 3 (19,12), 7 IN/1 WV 3 (20,10), 110 PA 2 (21,8), all S1; Sullivan 39 IL 1 (24,14) S3; Huntington H 1 OH Bty 2 r3 (22,6) S3.
+
+**Confederate, Jackson (Valley District), side 1:** Ashby 7 VA Cav 1 and Chew Horse Bty 1 r3 (20,24) S5; Fulkerson 23/37 VA 2 (9,21); Garnett 2/4/27 VA 2 (10,22), 5/33 VA 2 (11,22); Waters W. Augusta Bty 2 r3 (11,21); McLaughlin Rockbridge Bty and Carpenter Alleghany Bty 2 r3 (12,20); Burks 21 VA/1 VA Bn 2 (13,27), 42 VA 1 (13,28); Marye Hampden Bty 2 r3 (14,28); Lanier Danville Bty 2 r3 (14,29), all four S4.
+
+| Group | Side | Units | Turn | Chance / rise |
+|---|---|---|---|---|
+| 1 | Union | Tyler | 4 (15:30) | 50 / 25 |
+| 2 | Union | Sullivan 13 IN/5 OH, 62 OH | 6 (16:30) | 30 / 25 |
+| 3 | Union | 39 IL, Huntington | never (hold) | 0 / 0 |
+| 4 | Confederate | Burks, Marye, Lanier | 5 (16:00) | 40 / 30 |
+| 5 | Confederate | Ashby, Chew | never (hold) | 0 / 0 |
+
+## Confirmed from stock files vs inferred
+
+- **Confirmed (seen in the stock files):**
+  - every key and value type we write (checked by the validator against all eight stock files)
+  - the grid and boardArt geometry
+  - the `fortress` terrain record
+  - neutral VPs (`boxes[15]` 0)
+  - named non-VP hexes
+  - side-1 standby groups
+  - range 3
+  - battery CS 2
+  - template shapes limited to "image" and "text"
+  - the unit name being commander + unit
+  - the absence of any facing or rotation field
+- **Inferred (not documented):**
+  - what each doctrine word means
+  - standby turn 0 / chance 0 as "hold unless threatened"
+  - that a fence defends its owning hex
+  - the threshold formula and the scoring
+  - what `boardArt.hash` hashes
+  - what `ai_contact_gate` and `crt` row order do
 
 ## Install (path not verified)
 
-1. Copy `mKernstown1862_CW1.json` into the game's scenario folder. We have not confirmed where that folder is. Look next to the stock `antietam1862.json` and the other stock scenarios, or wherever the Wargame Maker saves its exports, and put the file in the same folder.
+1. Copy `mKernstown1862_CW1.json` (and, if wanted, `mKernstown1862_CW1_noart.json`) into the game's scenario folder. We have not confirmed where that folder is. Look next to the stock `antietam1862.json` and the other stock scenarios, or wherever the Wargame Maker saves its exports, and put the file in the same folder.
 2. Start the game. Open the scenario list or the Wargame Maker, then load **Kernstown 1862 (CivilWar1)**.
 3. If the game does not list the scenario, try importing it from the Wargame Maker. Then report what happened.
 
 ## Rebuild and validate
 
-The stock scenarios are game files, so they are not committed. Export or copy them into `mustattack/kernstown/ref/`: `antietam1862.json`, `gainesmill1862.json`, `gettysburg1863.json`, and your own `user_kernstown1862.json`. Then run:
+The stock scenarios are game files, so they are not committed. Copy them into `mustattack/kernstown/ref/`: `antietam1862.json`, `gainesmill1862.json`, `gettysburg1863.json`, your own `user_kernstown1862.json`, and if you have them `malvernhill1862.json`, `sevenpines1862.json`, `chancellorsville1863.json` and `secondbullrun1862.json`. Then run:
 
 ```
-python3 build_kernstown_ma.py            # needs numpy, scipy, rasterio, Pillow; reads data/ in this repo
-python3 validate_kernstown_ma.py         # exits 1 on any error
-python3 render_preview.py mKernstown1862_CW1.json preview.png
+python3 build_kernstown_ma.py --basemap ../../data/basemap_painted_full.png   # writes both scenario files and board_art.png
+python3 validate_kernstown_ma.py mKernstown1862_CW1.json
+python3 validate_kernstown_ma.py mKernstown1862_CW1_noart.json
+python3 render_preview.py mKernstown1862_CW1.json preview.png preview_zoom.png preview_counters.png
 ```
 
-The counter font is Playfair Display, the same font the stock templates name. Set `MA_COUNTER_FONT` to point at a local copy of it.
+The builder needs numpy, scipy, rasterio and Pillow. The counter font is Playfair Display, the same font the stock templates name; set `MA_COUNTER_FONT` to point at a local copy. The art fonts are IM Fell English SC and IM Fell French Canon.
 
 ## Board
 
@@ -41,108 +158,40 @@ The counter font is Playfair Display, the same font the stock templates name. Se
   - **Town** (`city`): Winchester. **Hamlet** (`wasteland` art, plain movement and defence): Kernstown and other farm clusters.
   - **Marsh**: only where the repo's Pritchard–Sandy Ridge meadow polygon lies on low ground. Most of that polygon lies on the ridge in the DEM, so only one hex is left as marsh.
 - Roads are the Valley Pike, the Middle Road and the Cedar Creek Grade. Trails are the Apple Valley Road and the stone lane. Rivers are Opequon Creek, Hoge Run, Abrams Creek and Buffalo Lick Run. Every road, river and trail is a symmetric centre-to-centre path, as in the stock files.
-- **The stone wall** is the eastern ~1.1 km of the repo's Glass-farm wall, running from the Glass farm to the ridge crest. On the board it is four hexes (8..11, 19). Each has a fence on its NW and NE edges, so it faces north toward Tyler. Fences are one-sided, the same pattern as Antietam's Bloody Lane.
+- **The stone wall** is the eastern ~1.1 km of the repo's Glass-farm wall, running from the Glass farm to the ridge crest. On the board it is four hexes (8..11, 19). Each is `fortress` terrain with a fence on its NW and NE edges, so it faces north toward Tyler. Fences are one-sided, the same pattern as Antietam's Bloody Lane.
 
-## Order of battle (situation at 2 PM)
-
-Each strength point is roughly 300 infantry, or one battery. Batteries are CS 1, MP 3, range 2, and show an "R2" badge. Cavalry are CS 1, MP 6.
-
-**Union, Kimball (Shields' division), side 0**
-
-| Unit | CS-MP | Start |
-|---|---|---|
-| Kimball 14 IN / 84 PA | 3-4 | Pritchard's Hill |
-| Kimball 8 OH / 67 OH | 3-4 | Pike north of Kernstown |
-| Jenks A 1 WV, Clark E 4 US, Robinson L 1 OH, Davey B 1 WV | 1-3 r2 each | Pritchard's Hill / Kernstown |
-| Brodhead 1 MI Cav; Ohio/Md/WV Cav | 1-6 each | Middle Road (west) and east of Kernstown |
-| Sullivan 13 IN / 5 OH; 62 OH | 3-4; 2-4 | East of the pike, **standby group 2** (from 16:00) |
-| Tyler 7 OH / 29 OH; 7 IN / 1 WV; 110 PA | 3-4; 3-4; 2-4 | Pike toward Winchester, **standby group 1** (from 15:00) |
-| Sullivan 39 IL; Huntington H 1 OH | 1-4; 1-3 r2 | Reserve, **standby group 3** (never committed; wakes only if threatened) |
-
-Union totals: 20 infantry CS, 6 batteries, 2 cavalry.
-
-**Confederate, Jackson (Valley District), side 1**
-
-| Unit | CS-MP | Start |
-|---|---|---|
-| Ashby 7 VA Cav | 1-6 | East of the pike near Bartonsville |
-| Chew horse artillery | 1-3 r2 | East of the pike |
-| Fulkerson 23 / 37 VA | 2-4 | South end of Sandy Ridge |
-| Garnett 2 / 4 / 27 VA; 5 / 33 VA | 2-4 each | Behind Fulkerson |
-| Burks 21 VA / 1 VA Bn; 42 VA | 2-4; 1-4 | Bartonsville |
-| McLaughlin Rockbridge, Carpenter Alleghany, Waters W. Augusta, Marye Hampden, Lanier Danville | 1-3 r2 each | With the infantry |
-
-Confederate totals: 9 infantry CS, 6 batteries, 1 cavalry. That matches about 2,700 infantry engaged against about 6,000.
-
-Corrections to `data/layers/kernstown_units.json`:
-- Carroll did not command a brigade at Kernstown, so 8 OH and 67 OH are under Kimball.
-- The battery commanders are the ones at Kernstown: McLaughlin, Marye, Lanier and Waters.
-- Pleasants' battery and the 48th VA are left out because they were not engaged.
-
-## Victory, activation and balance
-
-- **VP hexes** (the same value for both sides, as in all stock files):
-
-  | Hex | VP | Initial control |
-  |---|---|---|
-  | Winchester | 30 | Union |
-  | Pritchard's Hill | 20 | Union |
-  | Kernstown | 15 | Union |
-  | Stone Wall | 15 | Confederate |
-  | Bartonsville | 10 | Confederate |
-
-- **CP hexes**, using the Gettysburg pattern: Sandy Ridge crest +2 and Pike & Cedar Creek Grade +2.
-- **Starting score** from the Union (first side) view: 65 − 25 = **+40**.
-- **`winLine` 45; thresholds 10 / 72 / 144.**
-  - In the stock files, `winLine` sits near the historical result. Operational is about 0.8 × total VP and strategic about 2 × operational. We copied those ratios here (90 VP total).
-  - The Union has to *gain* to win. If Jackson sits on the wall and trades evenly, the score stays about +40, below the line: a narrow Confederate result.
-  - The historical outcome is Kimball taking the wall while holding his own ground. That gives about +70, a Union tactical win.
-  - If Jackson takes Pritchard's Hill or Kernstown, the score falls fast, toward a large Confederate win.
-  - Nothing is scripted. Both sides can reach every outcome.
-- **The Confederates move first** (`firstMove: "second"`, taken from the user's own Kernstown file).
-- **Activation caps:**
-  - Union 5, rising to 7 at turn 5 (16:00). This models Kimball's slow, fragmented command after Shields was wounded.
-  - Confederate 6.
-  - For scale: stock Antietam is 14/18 of 100 units, and the user's file is 6/7 of 15.
-- **Standby groups** (stock rules, same shape as Antietam's three groups):
-
-  | Group | Units | Earliest turn | Chance / rise per turn |
-  |---|---|---|---|
-  | 1 | Tyler | T3 (15:00) | 40 / +30 |
-  | 2 | Sullivan | T5 | 30 / +25 |
-  | 3 | 39 IL, Huntington | Never (turn 0, chance 0, like Antietam's V Corps) | – |
-
-- **Turns:** 11 turns, 14:00–19:00 on 23 March. Sunset is about 18:15, and turn 11 (19:00) is a night turn. Jackson retreated at about 19:30.
-- **No elite units.** Garnett's brigade is famous, but at Kernstown it ran out of ammunition and fell back, so an elite rating isn't justified.
-
-## In-game test checklist
+## In-game test checklist (v2)
 
 Please tick these in the game and report anything that fails. Screenshots help.
 
-1. [ ] The scenario appears in the list as "Kernstown 1862 (CivilWar1)", and the description shows in your language. English is used for every language slot.
-2. [ ] The region and battle schematic maps show, with labels.
-3. [ ] The board is 32 x 36. Winchester is in the north-east, Bartonsville in the south, and Sandy Ridge is the west-centre band of high ground.
-4. [ ] Terrain art and costs: pasture is plain, woods are forest, the hachured tiles are high ground (2 MP, x2 defence), and Kernstown uses the house tiles.
-5. [ ] Roads and rivers draw as continuous lines with no dangling stubs. The pike runs from Winchester through Kernstown to Bartonsville.
-6. [ ] The stone wall shows as a fence on the north edges of hexes 8..11 in row 19, and it gives defence against an attack from the north only.
-7. [ ] Counters: Union counters are blue and Confederate counters grey, and each shows its name, CS on the left and MP on the right. Batteries show "R2" and fire two hexes.
-8. [ ] There are 15 Union and 12 Confederate units, never more than 2 per hex. Tyler and Sullivan show as standby, and Tyler wakes from turn 3 onward.
-9. [ ] The Confederates move first. Union activation is 5, and 7 from turn 5.
-10. [ ] The VP hexes show their names and values, with the correct initial owner. The two CP hexes show "+2".
-11. [ ] The opening score is about +40 for the Union, and the victory screen uses winLine 45 and thresholds 10/72/144.
-12. [ ] Turn 1 is 3/23 14:00, turn 11 is night, and the game ends after turn 11.
-13. [ ] Playtest balance: report the final score of a few games for each side. If the Confederates win too easily, raise the Union activation cap or lower `winLine`.
+1. [ ] Both "Kernstown 1862 (CivilWar1)" and "Kernstown 1862 (CivilWar1, no art)" appear in the scenario list and load.
+2. [ ] **Board art.** The painted map shows under the grid. Woods, ridges, the stone wall, roads and creeks sit on the hexes with that terrain and do not drift toward any edge. If it is offset or missing, use the no-art file and report what you saw.
+3. [ ] Hex names (Sandy Ridge, Stone Wall, Glass Farm, Opequon Church, Hoge Run Ford and the others) are drawn by the game, once each, with no doubled labels.
+4. [ ] The wall hexes (8..11, row 19) show the stone-wall tile, cost 1 MP and defend x2. The fences on their north edges still show.
+5. [ ] **Counters.** You can read each counter without hovering: commander, unit, NATO mark, CS bottom left, MP bottom right, and "R3" on every battery. Union counters are blue, Confederate grey.
+6. [ ] **Artillery.** Batteries can fire 3 hexes. On turn 1–2 the Pritchard's Hill guns (13,17) and the Sandy Ridge guns (12,20) are in range of each other, and someone fires.
+7. [ ] **The stand at the wall.** The Confederate AI moves onto and holds the wall and Glass Farm rather than attacking at bad odds. It does not sit on the Sandy Ridge crest behind the wall.
+8. [ ] **Retreat.** Confederate units that take a DR fall back south or south-west instead of being eliminated. Count how many units are lost to DR with no retreat hex.
+9. [ ] **Ashby and Chew** stay east of the pike south of Kernstown unless they are attacked, and do not ride into Kernstown alone. If they never move even when attacked, report it.
+10. [ ] **Standby.** Tyler wakes from turn 4, Sullivan from turn 6, and Burks with Marye and Lanier from turn 5. 39 IL and Huntington wake only if threatened.
+11. [ ] The Confederates move first. Union activation is 5, and 7 from turn 5. Confederate activation is 6.
+12. [ ] The VP hexes show their values. Wall and Glass Farm are neutral at the start, and the two CPs show "+2".
+13. [ ] **Victory.** winLine is 55 and the thresholds are 6/49/98. Report the final score and result. The target is a Union win if Kimball takes the wall and a respectable Confederate result if Jackson holds it until dark.
+14. [ ] Turn 1 is 3/23 14:00, turn 11 is night, and the game ends after turn 11.
 
 ## Schema assumptions (where the stock files do not settle it)
 
 - **`firstMove: "second"`.** This value appears only in the user's own file. Antietam and Gaines use "first", and Gettysburg uses "skipToSecond".
 - **Fences.** We assume a fence defends the hex that owns it, against attacks across that edge. That is our reading of Bloody Lane.
-- **CP hexes.** We copied Gettysburg's `pp` ints and its `"+N"` strings in boxes 16/17 into an Antietam-schema file. The validator allows them because they appear in stock.
-- **Night turns and activation steps.** Only one stock file shows each: `night_turns` only in the user's file, and `activation_steps` entries only in Gaines Mill.
-- **Standby semantics.** These are inferred from the stock values, not from documentation.
-- **The "R2" badge** is a new image in place of the stock NATO-A emblem, at the same position. Range itself is in the unit field and in `boxes[7]`.
+- **CP hexes.** We use Gettysburg's `pp` ints and its `"+N"` strings in `boxes` 16/17, with `initialControl` null.
+- **Night turns and activation steps.** `night_turns` has stock examples only in the user's file. `activation_steps` entries appear in Gaines Mill, Chancellorsville and Second Bull Run.
+- **Standby semantics, doctrine words and the threshold formula** are inferred from the stock values, not from documentation (see "Confirmed vs inferred").
+- **New images:**
+  - the "R3" plate (`img_emb_range3`), placed in the stock NATO-A emblem slot
+  - six NATO marks (`img_nato_{inf,cav,art}_{us,cs}`)
+  - all are ordinary template "image" shapes; range itself is the unit field and `boxes[7]`
 - **Mountain terrain.** It keeps stock `customId` 4, but its move cost is changed from 4 to 2 to represent a gentle ridge.
-- **No board art.** We set no `boardArt`, since not every stock file has one.
+- **boardArt.** `hash` is our PNG's SHA-1, and `style` is copied from Antietam. See "Board art".
 
 ## Sources
 
