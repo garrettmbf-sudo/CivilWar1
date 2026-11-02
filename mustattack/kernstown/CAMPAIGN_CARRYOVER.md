@@ -36,4 +36,4 @@ The script prints each side's units as surviving, exited or eliminated, with the
 
 ## Playtest 5 (v3.5 save, turn 11)
 
-`python3 carryover.py /workspace/mustattack/ref/playtest5_save.json` (the save is not in the repo) gives Union 64 surviving and 2 eliminated (Brodhead OH/MD Cav, turn 10), out of 66. The Confederates have 34 surviving and 10 eliminated (Burks 21 VA/1 Bn 4 and Burks 42 VA 2 on turn 9 at (17,20), Marye Hampden 4 on turn 10 at (16,21)), out of 44. Nothing exited. That save predates v3.6, so it uses v3.5 strengths and names (Marye, Lanier, OH/MD Cav).
+`python3 carryover.py /workspace/mustattack/ref/playtest5_save.json` (the save is not in the repo) gives Union 64 surviving and 2 eliminated (Brodhead OH/MD Cav, turn 10), out of 66. The Confederates have 34 surviving and 10 eliminated (Burks 21 VA/1 Bn 4 and Burks 42 VA 2 on turn 9 at (17,20), Marye Hampden 4 on turn 10 at (16,21)), out of 44. Nothing exited. That save predates v3.6, so it uses v3.5 strengths and names (Marye, OH/MD Cav; its Lanier Danville is again the current name from v3.9, after v3.6-v3.8.1 called it Shumaker Danville).

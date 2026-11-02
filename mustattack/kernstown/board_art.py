@@ -346,6 +346,7 @@ def make_board_art(grid, terrain, chains, fences, elev, painted=None, seed=1862,
     kgrid = grid.s / (SQ3 * R)                     # metres per world unit
     rng = np.random.default_rng(seed)
     HK_LOG.update(objects=[], lines=None, streets=None, exit_zone=None)   # v3.8
+    z = None                                       # v3.9: the DEM on the 1/4 grid, for the hachures
     if painted and os.path.exists(painted):
         g = ground(painted, grid, W, H, ox, oy, kgrid)
         src = "painted"
@@ -388,6 +389,7 @@ def make_board_art(grid, terrain, chains, fences, elev, painted=None, seed=1862,
     al = up(alpha, W, H)[..., None]
     g = g * (1 - al) + fr * al
     edges_f = (lab[:, 1:] != lab[:, :-1])[:-1, :] | (lab[1:, :] != lab[:-1, :])[:, :-1]
+    g = v39_field_pool(g, lab, open_small, W, H, seed)   # v3.9: watercolour fields
 
     # v3.2 relief: hillshade and 5 m form lines from the DEM, strongest on the high ground
     hb = blob(high, ox, oy, W, H, 30)
@@ -422,6 +424,7 @@ def make_board_art(grid, terrain, chains, fences, elev, painted=None, seed=1862,
     g *= vig[..., None]
     g = g.clip(0, 255)
 
+    g = v39_washes(g, woods_b, cols, rows, ox, oy, W, H, seed)   # v3.9: woodlot wash, aged paper
     im = Image.fromarray(g.astype(np.uint8)).convert("RGBA")
     ov = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     d = ImageDraw.Draw(ov)
@@ -469,7 +472,10 @@ def make_board_art(grid, terrain, chains, fences, elev, painted=None, seed=1862,
             if n < 1e-3:
                 continue
             L = min(dist[y, x], rng.uniform(8, 14))
-            d.line([(x, y), (x + vx_ / n * L, y + vy_ / n * L)], fill=(128, 98, 66, 255), width=1)
+            # v3.9: not drawn (v39_hachures below); the loop is kept so the shared rng is unchanged
+
+    # v3.9: hachures from the DEM's fall lines, on the game's high ground only
+    v39_hachures(ov, d, z, high, woods_b, ox, oy, W, H, kgrid, chains, seed)
 
     # woods: v3.8 drawn tree by tree by hk_woods(), after the roads and creeks are known
     for q, r in by.get("marsh", []):
@@ -519,6 +525,7 @@ def make_board_art(grid, terrain, chains, fences, elev, painted=None, seed=1862,
     # v3.8 (engraved pass): meandering, tapering creeks; the mask of every drawn line; the woods
     # drawn tree by tree clear of it, with a clearing round each farmstead
     rpaths = hk_meander(rpaths, seed)
+    v39_water_wash(im, rpaths, W, H)               # v3.9: blue edge wash under the streams
     hk_streams(d, rpaths)
     hk_ctx = hk_lines(W, H, chains, path, rpaths)
     hk_woods(im, d, woods_b, hk_ctx, seed, clearings=site_px)
@@ -682,40 +689,13 @@ def make_board_art(grid, terrain, chains, fences, elev, painted=None, seed=1862,
         lines_.append(line)
     for line in lines_:
         p = chaikin(line, 2)
-        d.line([(x + 2, y + 3) for x, y in p], fill=(60, 52, 40, 70), width=7, joint="curve")
-        d.line(p, fill=(150, 146, 136, 255), width=6, joint="curve")
-        d.line(p, fill=(226, 224, 216, 255), width=3, joint="curve")
-        acc = 0.0
-        for a, b in zip(p, p[1:]):
-            L = math.dist(a, b)
-            t = (9 - acc % 9) if acc % 9 else 0
-            while t <= L:
-                x, y = a[0] + (b[0] - a[0]) * t / L, a[1] + (b[1] - a[1]) * t / L
-                d.ellipse([x - 1.5, y - 1.5, x + 1.5, y + 1.5], fill=(196, 192, 182, 255))
-                t += 9
-            acc += L
+        v39_wall(d, p, seed)                       # v3.9: coursed limestone
 
     # names of water and roads (hex place names are drawn by the game itself)
-    def label(txt, at, ang, size, col=(60, 45, 30, 255), font=F_ITAL):
-        f = ImageFont.truetype(font, size)
-        tw = int(d.textlength(txt, font=f)) + 20
-        t = Image.new("RGBA", (tw, size * 2), (0, 0, 0, 0))
-        td = ImageDraw.Draw(t)
-        td.text((tw / 2, size), txt, font=f, anchor="mm", fill=col, stroke_width=3, stroke_fill=(240, 232, 210, 255))
-        t = t.rotate(-math.degrees(ang), expand=True, resample=Image.BICUBIC)
-        ov.alpha_composite(t, (int(at[0] - t.width / 2), int(at[1] - t.height / 2)))
     for txt, chain, frac, off, kind in chains.get("labels", []):
         p = path(chain)
         i = max(1, min(len(p) - 2, int(len(p) * frac)))
-        (x0, y0), (x1, y1) = p[i - 1], p[i + 1]
-        ang = math.atan2(y1 - y0, x1 - x0)
-        if ang > math.pi / 2:
-            ang -= math.pi
-        elif ang < -math.pi / 2:
-            ang += math.pi
-        nx, ny = -math.sin(ang), math.cos(ang)
-        at = (p[i][0] + nx * off, p[i][1] + ny * off)
-        label(txt, at, ang, 40 if kind == "road" else 44, (50, 80, 110, 255) if kind == "water" else (70, 50, 32, 255))
+        v39_path_label(ov, p, i, off, txt, kind)   # v3.9: lettered along the line
 
     # v3.7: the Confederate exits.  A small period-style arrow pointing off the south edge beside the
     # road (east of it), one row in from the edge, with an italic legend to its right; neither touches the exit
@@ -742,6 +722,9 @@ def make_board_art(grid, terrain, chains, fences, elev, painted=None, seed=1862,
     # v3.6 (Hotchkiss P10/P11): a smaller cartouche, a plain 8-point rose just west of it
     cartouche(ov, 4280, 4560, px_per_m)
     compass_rose(ov, 3670, 4600, 120)
+    rb = v39_place_references(W, H)                # v3.9: References panel above the cartouche
+    if rb:
+        v39_references(ov, rb, seed)
 
     hk_neatline(ov, cols, rows, ox, oy, W, H)      # v3.8: engraved neatline
     im.alpha_composite(ov)
@@ -758,6 +741,7 @@ def make_board_art(grid, terrain, chains, fences, elev, painted=None, seed=1862,
              (150, 146, 136), (226, 224, 216), (196, 192, 182), (95, 70, 45), (128, 98, 66), (58, 40, 26),
              (70, 50, 32), (244, 236, 214), (80, 116, 146), (150, 186, 206), (50, 80, 110)]
     KEEP += [c for c in HK_KEEP if c not in KEEP]  # v3.8: engraved-pass inks
+    KEEP += [c for c in V39_KEEP if c not in KEEP]  # v3.9: hachure sepias, wall joints, counter key
     base_pal = rgb.quantize(colors=NCOL - len(KEEP), method=Image.Quantize.MEDIANCUT, dither=Image.Dither.NONE)
     flat = base_pal.getpalette()[:(NCOL - len(KEEP)) * 3] + [v for c in KEEP for v in c]
     pimg = Image.new("P", (1, 1))
@@ -1240,3 +1224,356 @@ def hk_clear_poly(poly, pad=3):
     m = Image.new("L", (x1 - x0, y1 - y0), 0)       # the houses front the streets: test the bare footprint
     ImageDraw.Draw(m).polygon([(x - x0, y - y0) for x, y in poly], fill=255)
     return not (np.asarray(m) > 0)[HK_LOG["streets"][y0:y1, x0:x1]].any()
+
+
+# ---------------------------------------------------------------------------------------------------
+# v3.9: the plate pass.  Hachured relief from the DEM on the game's high ground, watercolour washes
+# with pooled edges, an aged-paper tone, coursed limestone walls, lettering set along the streams and
+# roads, and a 'References' panel with a neutral key to the counters.  Every function below draws
+# only from the repo's own data (DEM, terrain, chains, fences, scenario assets); nothing is placed on
+# a road, lane, creek, street or exit hex.
+# ---------------------------------------------------------------------------------------------------
+V39_HACH = [(178, 152, 118), (156, 126, 94), (136, 106, 76)]   # light, mid, dark hachure sepia
+V39_WALL_JOINT = (168, 164, 154)
+V39_UNION, V39_CONFED, V39_HQ = (37, 58, 105), (181, 176, 161), (196, 156, 52)   # scenario assets img_side_253a69 / b5b0a1 / img_hq_frame
+V39_KEEP = [*V39_HACH, V39_WALL_JOINT, V39_UNION, V39_CONFED, V39_HQ]
+F_ITAL_V39 = F_ITAL
+
+
+def _small_mask(m, shape, small=4):
+    """A full-resolution mask sampled onto the 1/small grid the hillshade uses."""
+    s = np.asarray(m, np.float32)[small // 2::small, small // 2::small]
+    out = np.zeros(shape, np.float32)
+    h, w = min(shape[0], s.shape[0]), min(shape[1], s.shape[1])
+    out[:h, :w] = s[:h, :w]
+    return out
+
+
+def v39_hachures(ov, d, z, high, woods_b, ox, oy, W, H, kgrid, chains, seed, small=4):
+    """Hachures as Hotchkiss and the OR atlas draw slopes: short strokes running straight down the
+    fall line, set in tiers between 2 m form lines of the repo DEM, their weight and tone rising with
+    the measured slope (Lehmann's rule, gently: the steepest slope here is ~13 %).  Drawn only on the
+    hexes the game makes high ground, faded at their edge, so a plain hex never looks like a hill and
+    a gentle crest gets only a few pale strokes."""
+    import contourpy
+    if z is None or not high:
+        return 0
+    zs = ndimage.gaussian_filter(z, 1.5)
+    cell = small / SCALE * kgrid
+    gy, gx = np.gradient(zs, cell)
+    slope = np.hypot(gx, gy)
+    wgt = ndimage.gaussian_filter(_small_mask(hex_mask(high, ox, oy, W, H, 1.0) > 0.5, zs.shape, small), 5.0)
+    wgt = (wgt / max(1e-6, wgt.max())).clip(0, 1)
+    # the sepia slope wash Hotchkiss lays under his hachures: a soft brown, deeper on the steeper
+    # slopes of the high ground, none on the flat crest or on plain hexes
+    tt = ((ndimage.gaussian_filter(slope, 2.0) - 0.02) / 0.12).clip(0, 1) * wgt
+    a = up((tt * 0.20).astype(np.float32), W, H)
+    lay = np.zeros((H, W, 4), np.uint8)
+    lay[..., 0], lay[..., 1], lay[..., 2] = 140, 106, 70
+    lay[..., 3] = (a * 255).clip(0, 255).astype(np.uint8)
+    ov.alpha_composite(Image.fromarray(lay, "RGBA"))
+    wood = _small_mask(woods_b, zs.shape, small) > 0.5
+    exitz = hk_exit_zone(W, H, chains, ox, oy)
+    rng = np.random.default_rng(seed + 71)
+    h4, w4 = zs.shape
+    def cellat(x, y):
+        return min(h4 - 1, max(0, int(y / small))), min(w4 - 1, max(0, int(x / small)))
+    gen = contourpy.contour_generator(z=zs)
+    ci, n = 2.0, 0
+    for lev in np.arange(math.floor(zs.min() / ci) * ci + ci, zs.max(), ci):
+        for line in gen.lines(lev):
+            pts = [((x + 0.5) * small, (y + 0.5) * small) for x, y in line]
+            if len(pts) < 2:
+                continue
+            nxt = rng.uniform(0, 8)
+            acc = 0.0
+            for a, b in zip(pts, pts[1:]):
+                L = math.dist(a, b)
+                while nxt <= acc + L and L > 0:
+                    f = (nxt - acc) / L
+                    x, y = a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f
+                    iy, ix = cellat(x, y)
+                    t = min(1.0, max(0.0, (slope[iy, ix] - 0.03) / 0.12))
+                    nxt += rng.uniform(7.5, 10.5) - 2.0 * t
+                    w_ = wgt[iy, ix] * (0.4 if wood[iy, ix] else 1.0) * (0.25 + 0.6 * t)
+                    if t <= 0 or rng.random() > w_ or not (0 <= x < W and 0 <= y < H) or exitz[int(y), int(x)]:
+                        continue
+                    # run down the fall line until the next form line or 24 px
+                    tr, run = [(x, y)], 0.0
+                    cap = rng.uniform(9, 17)               # hand-drawn: no two strokes alike
+                    while run < cap:
+                        jy, jx = cellat(*tr[-1])
+                        g0, g1 = gx[jy, jx], gy[jy, jx]
+                        gn = math.hypot(g0, g1)
+                        if gn < 1e-4:
+                            break
+                        px_, py_ = tr[-1][0] - g0 / gn * 1.5, tr[-1][1] - g1 / gn * 1.5
+                        tr.append((px_, py_))
+                        run += 1.5
+                        ky, kx = cellat(px_, py_)
+                        if zs[ky, kx] < lev - ci or not (0 <= px_ < W and 0 <= py_ < H) or exitz[int(py_), int(px_)]:
+                            break
+                    if run < 4:
+                        continue
+                    col = V39_HACH[min(2, int(t * 3))]
+                    (ax_, ay_), (bx_, by_) = tr[0], tr[-1]
+                    j = rng.uniform(-0.12, 0.12)           # a slight waver off the fall line
+                    c_, s_ = math.cos(j), math.sin(j)
+                    bx_, by_ = ax_ + (bx_ - ax_) * c_ - (by_ - ay_) * s_, ay_ + (bx_ - ax_) * s_ + (by_ - ay_) * c_
+                    d.line([(ax_, ay_), (bx_, by_)], fill=col + (255,), width=1)
+                    n += 1
+                acc += L
+    return n
+
+
+def v39_field_pool(g, lab, open_small, W, H, seed):
+    """Watercolour fields: each field's tint pools slightly darker against its neighbour, as a wash
+    does where it dries against a boundary, with a faint granulation; open ground only."""
+    e = np.zeros(lab.shape, bool)
+    e[:, 1:] |= lab[:, 1:] != lab[:, :-1]
+    e[1:, :] |= lab[1:, :] != lab[:-1, :]
+    dist = ndimage.distance_transform_edt(~e)
+    rng = np.random.default_rng(seed + 83)
+    gran = ndimage.gaussian_filter(rng.random(lab.shape).astype(np.float32), 3)
+    gran = (gran - gran.mean()) / (gran.std() + 1e-6)
+    pool = (np.exp(-dist / 1.6) * 0.075 + gran * 0.008) * ndimage.gaussian_filter(np.asarray(open_small, np.float32), 2)
+    P = up(pool, W, H)[..., None]
+    return g * (1 - P) + np.array((118, 94, 64), np.float32) * P
+
+
+def v39_washes(g, woods_b, cols, rows, ox, oy, W, H, seed, small=4):
+    """The tint washes of a hand-coloured plate: the woodlot wash pools grey-brown at its edge,
+    the whole sheet takes a warm aged-paper tone, darkest just inside the board's edge, and a broad
+    soft mottling keeps the paper from reading as a flat fill."""
+    w4, h4 = W // small + 1, H // small + 1
+    wb = _small_mask(woods_b, (h4, w4), small) > 0.5
+    rim = np.exp(-ndimage.distance_transform_edt(wb) / 2.0) * wb
+    rim = up(ndimage.gaussian_filter(rim.astype(np.float32), 0.8), W, H)[..., None] * 0.16
+    g = g * (1 - rim) + np.array((112, 100, 82), np.float32) * rim
+    board = _small_mask(hex_mask([(q, r) for r in range(rows) for q in range(cols)], ox, oy, W, H, 1.0) > 0.5, (h4, w4), small) > 0.5
+    edge = np.exp(-ndimage.distance_transform_edt(board) / 22.0)
+    rng = np.random.default_rng(seed + 89)
+    mott = ndimage.gaussian_filter(rng.random((h4, w4)).astype(np.float32), 28)
+    mott = (mott - mott.mean()) / (mott.std() + 1e-6)
+    tone = up((edge * 0.13 + mott * 0.018).astype(np.float32), W, H)[..., None]
+    g = g * np.array((1.0, 0.985, 0.95), np.float32)            # aged, warmer paper
+    g = g * (1 - tone) + np.array((150, 116, 72), np.float32) * tone
+    return g.clip(0, 255)
+
+
+def v39_water_wash(im, rpaths, W, H):
+    """The blue edge wash a draughtsman laid along every stream, under the ink line."""
+    m = Image.new("L", (W, H), 0)
+    md = ImageDraw.Draw(m)
+    for k, p in rpaths.items():
+        md.line(p, fill=255, width=56 if k == "opequon_creek" else 30, joint="curve")
+    m = m.filter(ImageFilter.GaussianBlur(10))
+    a = (np.asarray(m, np.float32) * 0.30).astype(np.uint8)
+    lay = np.zeros((H, W, 4), np.uint8)
+    lay[..., 0], lay[..., 1], lay[..., 2], lay[..., 3] = 120, 156, 176, a
+    im.alpha_composite(Image.fromarray(lay, "RGBA"))
+
+
+def v39_wall(d, p, seed=0):
+    """A coursed limestone wall: the same thin light line (v3.6) with its stones picked out by
+    fine joints at irregular courses, instead of round dots."""
+    d.line([(x + 2, y + 3) for x, y in p], fill=(60, 52, 40, 70), width=7, joint="curve")
+    d.line(p, fill=(150, 146, 136, 255), width=6, joint="curve")
+    d.line(p, fill=(226, 224, 216, 255), width=3, joint="curve")
+    rng = np.random.default_rng(seed + 97)
+    q = _resample(p, 1.0)
+    nrm = _normals(q)
+    s = rng.uniform(5, 9)
+    for i, ((x, y), (nx, ny)) in enumerate(zip(q, nrm)):
+        if i < s:
+            continue
+        d.line([(x - nx * 1.6, y - ny * 1.6), (x + nx * 1.6, y + ny * 1.6)], fill=V39_WALL_JOINT + (255,), width=1)
+        s = i + rng.uniform(6, 11)
+
+
+def v39_path_label(ov, p, i, off, txt, kind):
+    """Lettering set along the line it names, letter by letter, as the plates letter their
+    streams (an italic in the water's blue) and roads (spaced roman small capitals in sepia)."""
+    q = _resample(p, 2.0)
+    if len(q) < 3:
+        return
+    j = min(range(len(q)), key=lambda k: math.dist(q[k], p[i]))
+    a, b = q[max(0, j - 3)], q[min(len(q) - 1, j + 3)]
+    if b[0] < a[0]:                                   # read left to right
+        q = q[::-1]
+        j = len(q) - 1 - j
+    nrm = _normals(q)
+    # the side v3.x put the label: below the line as read (the normal (-dy, dx) of a left-to-right line)
+    size_ = 46 if kind == "water" else 40
+    o = off + size_ * 0.36                            # v3.x centred the word at off; this is its baseline
+    sq = [(x + nx * o, y + ny * o) for (x, y), (nx, ny) in zip(q, nrm)]
+    k = 12
+    sq = [(sum(pt[0] for pt in sq[max(0, m - k):m + k + 1]) / len(sq[max(0, m - k):m + k + 1]),
+           sum(pt[1] for pt in sq[max(0, m - k):m + k + 1]) / len(sq[max(0, m - k):m + k + 1])) for m in range(len(sq))]
+    if kind == "water":
+        f, col, sp, txt_ = ImageFont.truetype(F_ITAL_V39, 46), (46, 76, 108, 255), 3.0, txt
+    else:
+        f, col, sp, txt_ = ImageFont.truetype(F_CAPS, 40), (70, 50, 32, 255), 9.0, txt
+    widths = [f.getlength(c) + sp for c in txt_]
+    total = sum(widths) - sp
+    cum = [0.0]
+    for u, v in zip(sq, sq[1:]):
+        cum.append(cum[-1] + math.dist(u, v))
+    s0 = cum[j] - total / 2
+    s0 = max(4, min(cum[-1] - total - 4, s0))
+    def at(s):
+        m = max(1, min(len(cum) - 1, next((m for m in range(1, len(cum)) if cum[m] >= s), len(cum) - 1)))
+        u, v = sq[m - 1], sq[m]
+        L = max(1e-6, cum[m] - cum[m - 1])
+        t = (s - cum[m - 1]) / L
+        return (u[0] + (v[0] - u[0]) * t, u[1] + (v[1] - u[1]) * t), math.atan2(v[1] - u[1], v[0] - u[0])
+    s = s0
+    size = f.size
+    for c, w in zip(txt_, widths):
+        (x, y), ang = at(s + (w - sp) / 2)
+        (x2, y2), ang2 = at(s + (w - sp) / 2 + 6)
+        ang = math.atan2(math.sin(ang) + math.sin(ang2), math.cos(ang) + math.cos(ang2))
+        if c != " ":
+            t = Image.new("RGBA", (size * 2, size * 2), (0, 0, 0, 0))
+            ImageDraw.Draw(t).text((size, size), c, font=f, anchor="ms", fill=col, stroke_width=2,
+                                   stroke_fill=(240, 232, 210, 200))
+            t = t.rotate(-math.degrees(ang), resample=Image.BICUBIC, center=(size, size))
+            ov.alpha_composite(t, (int(x - size), int(y - size)))
+        s += w
+
+
+def v39_references(ov, box, rng_seed=1862):
+    """A 'References' panel in the style of the Hotchkiss and OR atlas explanations, using the very
+    symbols drawn on this board, and a neutral key to the counters from the scenario's own counter
+    art (side colours img_side_253a69 / img_side_b5b0a1, the NATO arm symbols, the HQ frame).  It
+    shows no troop positions or movements."""
+    x0, y0, x1, y1 = box
+    n_obj = len(HK_LOG["objects"])                 # the key's sample symbols are not map objects
+    lay = Image.new("RGBA", ov.size, (0, 0, 0, 0))
+    d = ImageDraw.Draw(lay)
+    rng = np.random.default_rng(rng_seed + 101)
+    d.rectangle([x0 + 8, y0 + 10, x1 + 8, y1 + 10], fill=(40, 30, 20, 70))
+    d.rectangle([x0, y0, x1, y1], fill=PAPER, outline=INK, width=5)
+    d.rectangle([x0 + 12, y0 + 12, x1 - 12, y1 - 12], outline=INK, width=2)
+    fT, fL, fS = _font(F_CAPS, 46), _font(F_ITAL, 31), _font(F_CAPS, 30)
+    mx = (x0 + x1) / 2
+    d.text((mx, y0 + 52), "References", font=fT, anchor="mm", fill=INK)
+    d.line([(mx - 190, y0 + 84), (mx - 14, y0 + 84)], fill=INK, width=2)
+    d.line([(mx + 14, y0 + 84), (mx + 190, y0 + 84)], fill=INK, width=2)
+    d.polygon([(mx, y0 + 77), (mx + 9, y0 + 84), (mx, y0 + 91), (mx - 9, y0 + 84)], fill=INK)
+    rowh, top = 47, y0 + 122
+    cx = [x0 + 40, (x0 + x1) / 2 + 14]
+    def sym_at(col, row):
+        return cx[col], top + row * rowh
+    def text(col, row, s):
+        sx, sy = sym_at(col, row)
+        d.text((sx + 110, sy), s, font=fL, anchor="lm", fill=INK)
+    def seg(col, row):
+        sx, sy = sym_at(col, row)
+        return [(sx + k, sy + 3 * math.sin(k / 15)) for k in range(0, 91, 3)]
+    # column 1: ways and water
+    hk_pike(d, seg(0, 0)); text(0, 0, "Turnpike")
+    hk_road(d, seg(0, 1)); text(0, 1, "Road")
+    p = seg(0, 2)
+    for k in range(0, len(p) - 1):
+        if (k * 3) % 24 < 14:
+            d.line([p[k], p[k + 1]], fill=(95, 70, 45, 255), width=3)
+    text(0, 2, "Lane")
+    p = seg(0, 3)
+    d.line(p, fill=(80, 116, 146, 255), width=4, joint="curve"); text(0, 3, "Stream")
+    sx, sy = sym_at(0, 4)
+    d.ellipse([sx + 39, sy - 6, sx + 51, sy + 6], outline=(70, 105, 140, 255), width=2)
+    d.ellipse([sx + 43.5, sy - 1.5, sx + 46.5, sy + 1.5], fill=(70, 105, 140, 255)); text(0, 4, "Spring")
+    sx, sy = sym_at(0, 5)
+    for dx in (14, 44, 74):
+        x, y = sx + dx, sy + 6
+        d.line([(x - 9, y + 1), (x + 9, y + 1)], fill=HK_MEADOW_BASE + (255,), width=1)
+        d.line([(x - 5, y + 4), (x + 6, y + 4)], fill=HK_MEADOW_BASE + (255,), width=1)
+        for ddx in (-5, -2.5, 0, 2.5, 5):
+            d.line([(x + ddx * 0.4, y), (x + ddx, y - 8 * (1 - abs(ddx) / 14))], fill=HK_MEADOW + (255,), width=1)
+    text(0, 5, "Marsh")
+    v39_wall(d, seg(0, 6)); text(0, 6, "Stone wall")
+    # column 2: ground and buildings
+    p = _resample(seg(1, 0), 12)
+    d.line(_zigzag(p), fill=HK_FENCE + (255,), width=2); text(1, 0, "Worm fence")
+    sx, sy = sym_at(1, 1)
+    for dx, dy in ((14, -4), (38, 5), (62, -3), (84, 4)):
+        hk_tree(d, sx + dx, sy + dy, 7, rng)
+    text(1, 1, "Woods")
+    sx, sy = sym_at(1, 2)
+    for i in range(2):
+        for j in range(7):
+            x, y = sx + 10 + j * 12, sy - 6 + i * 12
+            d.ellipse([x - 3.2, y - 3.2, x + 3.2, y + 3.2], fill=(176, 172, 160, 255), outline=HK_TREE_DARK + (255,), width=1)
+    text(1, 2, "Orchard")
+    sx, sy = sym_at(1, 3)
+    for dx, col in ((24, (232, 224, 206)), (62, (150, 62, 44))):
+        c0 = sx + dx
+        hk_building(d, lambda pts, c0=c0: [(c0 + u, sy + v) for u, v in pts], 13, 8, 0.0, col)
+    text(1, 3, "Dwelling, barn")
+    sx, sy = sym_at(1, 4)
+    hk_building(d, lambda pts: [(sx + 45 + u, sy + 4 + v) for u, v in pts], 15, 10, 0.0, (232, 224, 206))
+    d.line([(sx + 37, sy - 2), (sx + 37, sy - 16)], fill=(50, 34, 24, 255), width=3)
+    d.line([(sx + 32, sy - 11), (sx + 42, sy - 11)], fill=(50, 34, 24, 255), width=3)
+    text(1, 4, "Church")
+    sx, sy = sym_at(1, 5)
+    d.ellipse([sx + 4, sy - 14, sx + 92, sy + 12], fill=(214, 192, 160, 255))       # the sepia slope wash
+    for k in range(17):
+        x = sx + 8 + k * 5
+        L = 6 + 12 * math.sin(math.pi * k / 16)
+        d.line([(x, sy - 12), (x, sy - 12 + L)], fill=V39_HACH[2 if 5 < k < 11 else 1] + (255,), width=1)
+    text(1, 5, "Slopes, high ground")
+    sx, sy = sym_at(1, 6)
+    d.rectangle([sx + 8, sy - 14, sx + 86, sy + 14], fill=(200, 176, 150, 255), outline=(70, 46, 34, 255), width=2)
+    for k in range(0, 106, 7):
+        xa, ya = sx + 8 + k, sy + 14
+        xb, yb = xa + 28, sy - 14
+        if xb > sx + 86:
+            yb = sy - 14 + (xb - (sx + 86)); xb = sx + 86
+        if xa > sx + 86:
+            continue
+        d.line([(xa, ya), (xb, yb)], fill=HK_HATCH + (255,), width=1)
+    text(1, 6, "Town")
+    # neutral key to the counters (the scenario's own counter art); no positions, no movements
+    ky = top + 7 * rowh + 6
+    d.line([(x0 + 30, ky), (x1 - 30, ky)], fill=INK, width=2)
+    d.text((mx, ky + 30), "Counters", font=fS, anchor="mm", fill=INK)
+    def chip(x, y, fillc, outline=INK, frame=None):
+        d.rectangle([x - 15, y - 15, x + 15, y + 15], fill=fillc + (255,), outline=outline, width=2)
+        if frame:
+            d.rectangle([x - 11, y - 11, x + 11, y + 11], outline=frame + (255,), width=3)
+    def nato(x, y, kind):
+        d.rectangle([x - 20, y - 13, x + 20, y + 13], fill=PAPER, outline=INK, width=2)
+        if kind == "inf":
+            d.line([(x - 20, y - 13), (x + 20, y + 13)], fill=INK, width=2)
+            d.line([(x - 20, y + 13), (x + 20, y - 13)], fill=INK, width=2)
+        elif kind == "cav":
+            d.line([(x - 20, y + 13), (x + 20, y - 13)], fill=INK, width=2)
+        else:
+            d.ellipse([x - 6, y - 6, x + 6, y + 6], fill=INK)
+    r1, r2 = ky + 74, ky + 124
+    items1 = [(lambda x, y: chip(x, y, V39_UNION), "Union"), (lambda x, y: chip(x, y, V39_CONFED), "Confederate"),
+              (lambda x, y: chip(x, y, V39_HQ, frame=(236, 214, 140)), "Headquarters")]
+    items2 = [(lambda x, y: nato(x, y, "inf"), "Infantry"), (lambda x, y: nato(x, y, "cav"), "Cavalry"),
+              (lambda x, y: nato(x, y, "art"), "Artillery")]
+    colx = [x0 + 60, x0 + 330, x0 + 610]
+    for row_y, items in ((r1, items1), (r2, items2)):
+        for (fn, label), x in zip(items, colx):
+            fn(x, row_y)
+            d.text((x + 34, row_y), label, font=fL, anchor="lm", fill=INK)
+    ov.alpha_composite(lay)
+    del HK_LOG["objects"][n_obj:]
+    hk_register("references panel", [(x0, y0), (x1, y0), (x1 + 8, y1 + 10), (x0, y1 + 10)])
+
+
+def v39_place_references(W, H, x0=3860, x1=4700, h=650, bottom=4200, top_limit=2900):
+    """Find the lowest spot above the cartouche, in its column, where the panel touches no road,
+    lane, creek or exit (the mask v3.8 built); fall back to no panel rather than cover a line."""
+    L = HK_LOG["lines"]
+    ez = HK_LOG.get("exit_zone")
+    for yb in range(bottom, top_limit, -10):
+        y0 = yb - h
+        win = L[max(0, y0 - 24):yb + 34, x0 - 24:x1 + 34]
+        if not win.any() and (ez is None or not ez[max(0, y0):yb, x0:x1].any()):
+            return (x0, y0, x1, yb)
+    return None

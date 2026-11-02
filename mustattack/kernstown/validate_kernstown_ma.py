@@ -605,6 +605,15 @@ def main(path, refdir):
         err("eliteUnit set on one side only")
     if el[0] and (abs(len(el[0]) - len(el[1])) > 1 or abs(share[0] - share[1]) > 0.10):
         err("elite units uneven between the sides (unit count differs by > 1 or CS share by > 10 points)")
+    # v3.9 counter style (opt-in): the elite frame and star sit on exactly the eliteUnit counters
+    if any(k.startswith("img_v39_") for k in d["assets"]["images"]):
+        refs = {t["id"]: {s.get("imageRef") for s in t["visuals"]["shapes"]} for t in d["assets"]["unitTemplates"]}
+        frame = {k for k, v in refs.items() if "img_v39_elite_frame" in v}
+        star = {k for k, v in refs.items() if "img_v39_star" in v}
+        elite_t = {u["templateId"] for u in sc["units"] if u["eliteUnit"]}
+        if not frame == star == elite_t:
+            err(f"v3.9 elite marks {sorted(frame)} / {sorted(star)} != eliteUnit counters {sorted(elite_t)}")
+        print(f"  v3.9 counters: elite frame + star on {len(frame)} counters, matching eliteUnit")
     if not vc["tacticalThreshold"] < vc["operationalThreshold"] < vc["strategicThreshold"]:
         err("victory thresholds not increasing")
     if sc["turnClock"] and sc["turnClock"][0]["turn"] != 1:

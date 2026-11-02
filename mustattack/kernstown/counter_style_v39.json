@@ -1,0 +1,53 @@
+{
+  "_doc": "v3.9 counter marks (opt-in: MA_COUNTER_STYLE=v39). Visual only: nothing here changes a unit's name, strength, side or any rule. Scope and sources: staff_notes/quartermaster_counters_v39.md (OR = OR Ser. I Vol. 12 Pt. 1). Band colours are game-design colours, not period markings (no corps badges in March 1862); the numeral or letter carries the group without colour. Keys are 'Leader|Unit' exactly as in the builder's UNITS table; the builder fails if a unit is missing here or an entry matches no unit. A file named by MA_COUNTER_OVERRIDES is merged on top (same shape), so a staff proposal can be tried without editing this one. 'plates.<side>.texture' may name a PNG (relative to this file) to replace the generated cloth texture.",
+  "plates": {
+    "0": {"name": "Union blue wool", "base": "#253a69", "texture": null},
+    "1": {"name": "Confederate grey jean cloth, butternut cast", "base": "#b5b0a1", "texture": null}
+  },
+  "formations": {
+    "us_kimball_1":    {"name": "Kimball, 1st Bde (OR p.346)", "band": "#B22234", "glyph": "1", "ink": "#ffffff"},
+    "us_sullivan_2":   {"name": "Sullivan, 2nd Bde (p.346)", "band": "#D4A017", "glyph": "2", "ink": "#111111"},
+    "us_tyler_3":      {"name": "Tyler, 3rd Bde (p.346)", "band": "#2E8B57", "glyph": "3", "ink": "#ffffff"},
+    "us_brodhead_cav": {"name": "Brodhead, cavalry", "band": "#E07B24", "glyph": "C", "ink": "#111111"},
+    "us_daum_arty":    {"name": "Daum, Artillery Brigade (p.359)", "band": "#C9CED6", "glyph": "A", "ink": "#111111"},
+    "cs_garnett_1":    {"name": "Garnett, First Bde (p.387)", "band": "#1F3A93", "glyph": "1", "ink": "#ffffff"},
+    "cs_fulkerson":    {"name": "Fulkerson's Bde (number not in the OR)", "band": "#7B1E3A", "glyph": "F", "ink": "#ffffff"},
+    "cs_burks_3":      {"name": "Burks, Third Bde (p.400)", "band": "#2F5D34", "glyph": "3", "ink": "#ffffff"},
+    "cs_ashby_cav":    {"name": "Ashby, cavalry (with Chew)", "band": "#8B4A1C", "glyph": "C", "ink": "#ffffff"}
+  },
+  "units": {
+    "Kimball|Shields' Div. HQ": {"formation": null, "rank": "us_col", "src": "pp.346, 359, 361; 1861 US Uniform Regs para. 95"},
+    "Robinson|L 1 OH Bty":      {"formation": "us_daum_arty", "src": "p.359"},
+    "Kimball|14 IN/84 PA":      {"formation": "us_kimball_1", "colours": true, "src": "p.367 (Harrow); p.346"},
+    "Jenks|A 1 WV Bty":         {"formation": "us_daum_arty", "guns": "PARROTT", "src": "p.359"},
+    "Kimball|8 OH/67 OH":       {"formation": "us_kimball_1", "src": "p.346"},
+    "Clark|E 4 US Bty":         {"formation": "us_daum_arty", "guns": "PARROTT", "src": "p.359"},
+    "Sullivan|62 OH":           {"formation": "us_sullivan_2", "src": "p.346"},
+    "Keeper|B 1 WV Bty":        {"formation": "us_daum_arty", "guns": "1 SECTION", "src": "p.359"},
+    "Brodhead|1 MI Cav":        {"formation": "us_brodhead_cav", "src": "pp.346, 355"},
+    "Brodhead|WV/OH/MD/PA Cav": {"formation": "us_brodhead_cav", "src": "pp.346, 355"},
+    "Sullivan|13 IN/5 OH":      {"formation": "us_sullivan_2", "colours": true, "src": "p.374 (Whitcamp); p.351 (Shriber)"},
+    "Tyler|7 OH/29 OH":         {"formation": "us_tyler_3", "colours": true, "src": "elite pp.360-361; colours p.376"},
+    "Tyler|7 IN/1 WV":          {"formation": "us_tyler_3", "colours": true, "src": "elite pp.360-361; colours p.376"},
+    "Tyler|110 PA":             {"formation": "us_tyler_3", "src": "p.346"},
+    "Sullivan|39 IL":           {"formation": "us_sullivan_2", "src": "p.346"},
+    "Huntington|H 1 OH Bty":    {"formation": "us_daum_arty", "src": "\"kept in the rear as a reserve\", p.358; type not stated"},
+    "Jackson|Valley District HQ": {"formation": null, "rank": "cs_maj_gen", "src": "p.380; signature p.384"},
+    "Ashby|7 VA Cav":           {"formation": "cs_ashby_cav", "src": "pp.385-386"},
+    "Chew|Horse Bty":           {"formation": "cs_ashby_cav", "guns": "3 GUNS", "src": "p.385 (\"battery of three guns\"), p.380"},
+    "Fulkerson|23/37 VA":       {"formation": "cs_fulkerson", "src": "elite pp.381-382"},
+    "Carpenter|Alleghany":      {"formation": "cs_garnett_1", "src": "pp.381, 399-400"},
+    "Garnett|5/33 VA":          {"formation": "cs_garnett_1", "colours": true, "src": "p.392 (Harman)"},
+    "McLaughlin|Rockbridge":    {"formation": "cs_garnett_1", "guns": "8 GUNS", "src": "pp.396-397"},
+    "Garnett|2/4/27 VA":        {"formation": "cs_garnett_1", "colours": true, "src": "elite p.381; colours p.388 (Allen)"},
+    "Waters|W. Augusta":        {"formation": "cs_garnett_1", "src": "pp.398-399"},
+    "Burks|21 VA/1 Bn":         {"formation": "cs_burks_3", "colours": true, "src": "p.406 (Bridgford)"},
+    "Pleasants|Hampden":        {"formation": "cs_burks_3", "src": "p.381, p.401"},
+    "Burks|42 VA":              {"formation": "cs_burks_3", "src": "pp.404-405"},
+    "Lanier|Danville":          {"formation": "cs_fulkerson", "src": "p.408 (\"the Danville Artillery, commanded by Lieut. A. C. Lanier\"); p.380"}
+  },
+  "ranks": {
+    "us_col":     {"text": "COL.", "strap": "eagle", "src": "1861 US Uniform Regs para. 95; Kimball signs as colonel, p.361"},
+    "cs_maj_gen": {"text": "MAJ. GEN.", "strap": null, "src": "signature p.384; insignia graphic dropped (CS regulation page not viewed)"}
+  }
+}

@@ -25,7 +25,7 @@ def img_of(url):
     return Image.open(io.BytesIO(base64.b64decode(url.split(",", 1)[1]))).convert("RGBA")
 
 
-def render(s, out, sc=0.6, crop=None, legend=True):
+def render(s, out, sc=0.6, crop=None, legend=True, standby=True):
     """sc = output px per world unit; crop = (q0, r0, q1, r1) inclusive hex window."""
     hexes = s["scenario"]["map"]["hexes"]
     W, H = s["scenario"]["map"]["width"], s["scenario"]["map"]["height"]
@@ -102,7 +102,7 @@ def render(s, out, sc=0.6, crop=None, legend=True):
         x, y = int(c[0] - cs / 2 + i * cs * 0.18), int(c[1] - cs / 2 - cs * 0.15 + i * cs * 0.18)
         img.alpha_composite(sh, (x + 2, y + 2))
         img.alpha_composite(ci, (x, y))
-        if u["standbyGroup"]:
+        if standby and u["standbyGroup"]:
             d.text((x + cs - 2, y + 2), "S%d" % u["standbyGroup"], font=ImageFont.truetype(FD, max(8, int(7 * sc))),
                    anchor="ra", fill=(200, 20, 20), stroke_width=1, stroke_fill=(255, 255, 255))
     if legend:
@@ -135,3 +135,5 @@ if __name__ == "__main__":
         print(render(s, sys.argv[3], 1.6, crop=(6, 13, 21, 25)))
     if len(sys.argv) > 4:
         print(counter_sheet(s, sys.argv[4]))
+    if len(sys.argv) > 5:   # v3.9: Kernstown, Pritchard's Hill and Sandy Ridge at the art's own 2 px per world
+        print(render(s, sys.argv[5], 2.0, crop=(7, 13, 19, 23), legend=False, standby=False))   # unit: counters at real in-game scale (60 px)

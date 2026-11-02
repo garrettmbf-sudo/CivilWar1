@@ -381,8 +381,9 @@ UNITS = [
     # Lieutenant Pleasants" on the field (Burks p.401).
     (1, "Pleasants", "Hampden", "art", 2, 3, 3, (13, 28), 1),        # v3.2: was (14,28), alone
     (1, "Burks", "42 VA", "inf", 1, 4, 1, (14, 29), 1),              # v3.2: was (13,28)
-    # v3.6 (Quartermaster #9): Jackson lists Fulkerson's brigade "and Shumaker's battery" (p.380).
-    (1, "Shumaker", "Danville", "art", 2, 3, 3, (14, 29), 1),
+    # v3.9 (Archivist ruling): Fulkerson names "the Danville Artillery, commanded by Lieut. A. C. Lanier"
+    # (p.408); Jackson's "Shumaker's battery" (p.380) is the captain's name.  Reverses the v3.6 rename.
+    (1, "Lanier", "Danville", "art", 2, 3, 3, (14, 29), 1),
 ]
 
 # v3.5 elite ("surprise") units, units[].eliteUnit.  Editor help (README field map): once per game,
@@ -463,7 +464,7 @@ STANDBY = [  # per side in order: side 0 groups 1-4, then side 1 groups 1-4.  CS
     # U4: the guns on Pritchard's Hill (Robinson, Jenks, Clark, Keeper), which stayed there all
     #     afternoon: held for good.  They fire while held; an adjacent enemy still wakes them.
     SG(0, 0, 0, 0),
-    # C1: Burks with Pleasants' (Marye's) and Shumaker's guns, Jackson's reserve near Bartonsville; Jackson fed it
+    # C1: Burks with Pleasants' (Marye's) and Lanier's (Danville) guns, Jackson's reserve near Bartonsville; Jackson fed it
     #     in as Tyler struck.  Turn 5 (40%, +30), at once when Tyler (U1) wakes, or main body 70%.
     SG(1, 5, 40, 30, main=70, enemy=1),
     # C2: Ashby and Chew east of the pike, held while Sullivan stands in front of them: containment
@@ -580,6 +581,11 @@ def make_terrains(repo, stock):
     return terr
 
 
+# v3.9: counter style.  "v39" (default from v3.9) is counter_style_v39.py / counter_style_v39.json;
+# MA_COUNTER_STYLE=v381 gives the v3.8.1 counters (stock plates), written to *_v381 output names
+# unless --out is given.  The committed v3.8.1 files stay in git at 69d1fb2.
+COUNTER_STYLE = os.environ.get("MA_COUNTER_STYLE", "v39")
+assert COUNTER_STYLE in ("v381", "v39"), "MA_COUNTER_STYLE must be v381 or v39"
 FONT = os.environ.get("MA_COUNTER_FONT", "/usr/share/fonts/truetype/sand-box/google/Playfair Display/PlayfairDisplay-VariableFont_wght.ttf")
 
 
@@ -962,7 +968,7 @@ Banks' army is leaving the Valley for the defence of Washington, and Jackson's o
 [Combat] This board uses its own combat table, gentler than the default. Attacks at poor odds usually stall: from 1:3 to 1:1 only a 1 repulses the attacker (at 1:3 a 2 as well), and every middle roll has no effect (C). At even odds a 6 drives the defender back (DR); from 2:1 a 4 or better does. Every battery starts stacked with another unit: infantry, Kimball's headquarters (Robinson) or Ashby's cavalry (Chew). A unit is destroyed by the die only at 5:1 or better on the highest rolls. Replacements are on: a unit of strength 3 or more destroyed that way falls back up to twice its movement and fights on at half strength. A unit that must retreat with no open hex behind it is lost for good, with no replacement, so keep a way back open. Sandy Ridge, Pritchard's Hill and the wall hexes are high ground (rough: defence x2, 2 MP), and a beaten unit can fall back onto them or off them. Elite units: Fulkerson's brigade and Garnett's 2nd/4th/27th Virginia for Jackson, and Tyler's 7th/29th Ohio and 7th Indiana/1st (West) Virginia for Kimball. Once per game, the first time one of a side's elite units attacks or is attacked, every elite unit of that side moves and attacks once more.
 
 [Order of battle] Union, Shields' division, Col. Nathan Kimball. Kimball's brigade: 14th Indiana (Lt. Col. Harrow), 84th Pennsylvania (Col. Murray, killed), 8th Ohio (Col. Carroll), 67th Ohio (Lt. Col. Voris). Tyler's brigade, Col. Erastus B. Tyler: 7th and 29th Ohio, 7th Indiana, 1st (West) Virginia (Col. Thoburn), 110th Pennsylvania. Sullivan's brigade, Col. Jeremiah C. Sullivan: 13th Indiana, 5th Ohio, 62nd Ohio, 39th Illinois (not in the final assault). Brodhead's cavalry: four companies of the 1st Michigan, and companies from Ohio, Maryland, Pennsylvania and the 1st (West) Virginia Cavalry. Batteries: Jenks (A, 1st (West) Virginia), Clark (E, 4th U.S.), Robinson (L, 1st Ohio), one section of B, 1st (West) Virginia (Keeper), Huntington (H, 1st Ohio, in reserve).
-Confederate, Valley District, Maj. Gen. Thomas J. Jackson. Stonewall Brigade, Brig. Gen. Richard B. Garnett: 2nd (Col. Allen), 4th (Lt. Col. Ronald), 5th (Col. Harman), 27th (Col. Echols, wounded) and 33rd (Col. Cummings) Virginia, with McLaughlin's Rockbridge, Waters' West Augusta and Carpenter's Alleghany batteries. Burks' brigade, Col. Jesse S. Burks: 21st Virginia (Lt. Col. Patton), 42nd Virginia (Lt. Col. Langhorne), 1st Virginia Battalion (Irish; Capt. Bridgford), Marye's (Hampden) battery under Lt. Pleasants; the 48th Virginia (Col. Campbell) was rear guard and not engaged. Fulkerson's brigade, Col. Samuel V. Fulkerson: 23rd (Lt. Col. Taliaferro) and 37th (Lt. Col. Carson) Virginia, and the Danville Artillery, which Jackson calls Shumaker's battery (Fulkerson names Lt. Lanier); it was not engaged. Ashby's 7th Virginia Cavalry and Chew's horse battery. Kimball and Jackson appear as headquarters counters (strength 2) with their portraits. The computer keeps them back; a human player may move them.
+Confederate, Valley District, Maj. Gen. Thomas J. Jackson. Stonewall Brigade, Brig. Gen. Richard B. Garnett: 2nd (Col. Allen), 4th (Lt. Col. Ronald), 5th (Col. Harman), 27th (Col. Echols, wounded) and 33rd (Col. Cummings) Virginia, with McLaughlin's Rockbridge, Waters' West Augusta and Carpenter's Alleghany batteries. Burks' brigade, Col. Jesse S. Burks: 21st Virginia (Lt. Col. Patton), 42nd Virginia (Lt. Col. Langhorne), 1st Virginia Battalion (Irish; Capt. Bridgford), Marye's (Hampden) battery under Lt. Pleasants; the 48th Virginia (Col. Campbell) was rear guard and not engaged. Fulkerson's brigade, Col. Samuel V. Fulkerson: 23rd (Lt. Col. Taliaferro) and 37th (Lt. Col. Carson) Virginia, and the Danville Artillery under Lt. A. C. Lanier (Fulkerson's report; Jackson calls it Shumaker's battery, after its captain); it was not engaged. Ashby's 7th Virginia Cavalry and Chew's horse battery. Kimball and Jackson appear as headquarters counters (strength 2) with their portraits. The computer keeps them back; a human player may move them.
 
 [Counters] The commander is on top and the unit in large type below, with the commander's portrait where one exists. The NATO mark shows the branch: X infantry, / cavalry, a dot for artillery; III is a regiment, I a battery. Combat strength is bottom left and movement bottom right. Batteries carry an R3 plate because they fire three hexes. One strength point is about 150 men, and a typical battery is 4. Each hex is about 300 m. The board runs from Sandy Ridge in the west to Opequon Creek, and from Bartonsville north to Winchester. Sources: the reports of Jackson (pp. 379-384), Shields (pp. 335-344), Kimball (pp. 360-361) and Daum (p. 359) in the Official Records, Series I, Vol. 12, Part 1; Gary Ecelbarger, "We Are in for It!" (1997); Peter Cozzens, Shenandoah 1862 (2008); National Park Service, "First Battle of Kernstown"; the American Battlefield Trust map of First Kernstown (2024)."""
 
@@ -1091,6 +1097,14 @@ def build(repo, stock_path, out_path, painted=None, art=True, art_png=None):
         used_imgs.append(key)
         PORTRAIT_LOG[leader] = {"officer": officer, "path": path, "ref": PORTRAIT_REF, "blob": sha,
                                 "imageRef": key, "size": images_raw[key].size, "units": []}
+    v39spec = None
+    if COUNTER_STYLE == "v39":   # v3.9 opt-in counter style (counter_style_v39.py / .json)
+        import counter_style_v39 as v39
+        v39spec = v39.load_spec(UNITS)
+        v39imgs = v39.make_images(v39spec, font)
+        images_raw.update(v39imgs)
+        used_imgs = [k for k in used_imgs if k not in ("img_side_253a69_nonato", "img_side_b5b0a1_nonato", "img_hq_frame")]
+        used_imgs += sorted(v39imgs)
     images = {k: (stock["assets"]["images"][k] if k in stock["assets"]["images"] else b64png(images_raw[k]))
               for k in used_imgs}
 
@@ -1104,7 +1118,11 @@ def build(repo, stock_path, out_path, painted=None, art=True, art_png=None):
         pk = portrait_key(leader) if leader in PORTRAIT_LOG else None
         if pk:
             PORTRAIT_LOG[leader]["units"].append(full)
-        shapes = template_shapes(side, kind, leader, uname, pk)
+        if v39spec is not None:
+            shapes = v39.template_shapes(side, kind, leader, uname, pk, (leader, uname) in ELITE, cs, mp,
+                                         v39spec, NATO_KEYS, text_width_units)
+        else:
+            shapes = template_shapes(side, kind, leader, uname, pk)
         templates.append({"id": tid, "name": full, "isLocal": True,
                           "visuals": {"shapes": shapes, "renderedUrl": render_counter(shapes, images_raw, boxes)}})
         units.append({"id": i, "q": q, "r": r, "side": side, "combatStrength": cs, "movePoints": mp, "range": rng,
@@ -1250,8 +1268,9 @@ if __name__ == "__main__":
     ap.add_argument("--basemap", default=DEFAULT_PAINTED,
                     help="repo painted basemap (data/basemap_painted_full.png, gitignored; built by "
                          "painted_sections/build_full_map.py). Missing -> plain parchment ground.")
-    ap.add_argument("--out", default=os.path.join(here, "mKernstown1862_CW1.json"))
-    ap.add_argument("--out-noart", default=os.path.join(here, "mKernstown1862_CW1_noart.json"))
+    sfx = "" if COUNTER_STYLE == "v39" else "_" + COUNTER_STYLE
+    ap.add_argument("--out", default=os.path.join(here, f"mKernstown1862_CW1{sfx}.json"))
+    ap.add_argument("--out-noart", default=os.path.join(here, f"mKernstown1862_CW1{sfx}_noart.json"))
     ap.add_argument("--art-png", default=os.path.join(here, "board_art.png"))
     a = ap.parse_args()
     for out, art in ((a.out, True), (a.out_noart, False)):
