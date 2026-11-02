@@ -31,7 +31,7 @@ The field names are only suggestions.
 
 **5. Step losses or remnant units**
 - **Want:** a unit can lose strength (for example 3 → 2 → 1) instead of only surviving or dying.
-- **Why:** A Civil War brigade that lost a fight usually lost a third of its men and stayed on the field. Without steps, even a gentle CRT gives "all or nothing".
+- **Why:** A Civil War brigade that lost a fight was usually weakened, not wiped out, and stayed on the field. Without steps, even a gentle CRT gives "all or nothing".
 - **Smallest version:** unit `"steps": [3, 2, 1]` (the CS for each step), plus a CRT result such as `"DL"` (defender loses a step). Or `replacement` could bring a unit back weaker.
 
 ## High value
