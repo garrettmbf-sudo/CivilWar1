@@ -2,11 +2,11 @@
 
 `mKernstown1862_CW1.json` is a First Kernstown (23 March 1862) scenario for *Sekigahara 1600: Must Attack!*. It is in the same format the game's Wargame Maker exports. `build_kernstown_ma.py` generates it from this repo's Kernstown map data.
 
-**Status: v3.5, not tested in the game.** v3.5 is a polish pass on v3.4: a reachable Union strategic victory, a Middle Road objective at the south end of Sandy Ridge, elite (surprise) brigades on both sides, a finished title cartouche, compass rose, scale bar and Winchester street plan on the board art, and briefing fixes. The CRT, retreat rules, AI doctrines, terrain types and standby groups are as in v3.4. v1 to v3.3 loaded and ran in the game (playtests 1-4). Playtest 4 (v3.3, all 11 turns) lost 11 units, 9 of them to a retreat with nowhere to go. Replaying the four saves showed the main cause: the engine never retreats a unit into a `mountain` hex, and our ridge was mountain. v3.4 writes the ridge as `rough` (same x2 defence and 2 MP), makes forced attacks at poor odds usually stall, and gives Jackson a Steady AI. Both files pass `validate_kernstown_ma.py`. Nothing in v3.4 or v3.5 has been played yet.
+**Status: v3.6, not tested in the game.** v3.6 folds in three staff reviews of v3.5 (`staff_notes/`): briefing corrections against the Official Records (archivist), counter strengths, names and elite picks from the OR (quartermaster), and a quieter, period-correct board art (Hotchkiss). v3.5 was a polish pass on v3.4: a reachable Union strategic victory, a Middle Road objective at the south end of Sandy Ridge, elite (surprise) brigades on both sides, a finished title cartouche, compass rose, scale bar and Winchester street plan on the board art, and briefing fixes. The CRT, retreat rules, AI doctrines, terrain types and standby groups are as in v3.4 (v3.6 changes none of them). v1 to v3.3 loaded and ran in the game (playtests 1-4). Playtest 4 (v3.3, all 11 turns) lost 11 units, 9 of them to a retreat with nowhere to go. Replaying the four saves showed the main cause: the engine never retreats a unit into a `mountain` hex, and our ridge was mountain. v3.4 writes the ridge as `rough` (same x2 defence and 2 MP), makes forced attacks at poor odds usually stall, and gives Jackson a Steady AI. Both files pass `validate_kernstown_ma.py`. Nothing in v3.4, v3.5 or v3.6 has been played yet.
 
 | File | What it is |
 |---|---|
-| `mKernstown1862_CW1.json` | The scenario with painted board art (13.1 MB, UTF-8, no BOM) |
+| `mKernstown1862_CW1.json` | The scenario with painted board art (12.9 MB, UTF-8, no BOM) |
 | `mKernstown1862_CW1_noart.json` | The same scenario without `boardArt` (6.5 MB). Use it if the art fails to load or does not line up. Everything else matches the main file. |
 | `DEV_WISHLIST.md` | What we would like the game to add, written for the developer |
 | `build_kernstown_ma.py` | Rebuilds both files from `data/` |
@@ -61,29 +61,29 @@ The full checklist is at the end of this file.
 - **Command points.** Glass Farm (8,19), the west end of the wall, is +2 and Grade Junction (18,18), where the Cedar Creek Grade meets the pike, is +2. Both start neutral. (v3.2: Glass Farm was a 5-VP hex and the CP was "Wall" at (9,19); three names in a row ran together.)
 - **Margin (editor help).** Objective points held minus the enemy's, plus strength destroyed minus strength lost. So losses now count one point per CS, and CS is doubled.
 - **Middle Road (v3.5).** A 10-VP hex where the Middle Road crosses the south end of Sandy Ridge (the ridge core ends at (4,27)). It is a game objective, not a historical claim: it gives the Union a rear target behind Jackson's left that is as far from Kimball's start as Kernstown is from Jackson's. Without it, the Union's in-reach objective swing was 35 VP against Jackson's 85; with it, 55 against 85.
-- **winLine 45** (v3.5; 55 before). That is the score if nothing changes hands: Union 65 minus Confederate 20. The builder asserts this, and the validator fails the file if winLine is not the status quo.
+- **winLine 45** (v3.5 and v3.6; 55 before). v3.6's strength changes do not move it: it counts objectives only. That is the score if nothing changes hands: Union 65 minus Confederate 20. The builder asserts this, and the validator fails the file if winLine is not the status quo.
   - Jackson holds the wall until dark: about 30, a Confederate tactical result.
   - Kimball takes the wall and keeps his own ground, as happened historically: about 60, a Union tactical win.
-- **Thresholds 5 / 40 / 79** (v3.5; 7 / 58 / 116 before). They are 5%, 40% and 80% of the scarcer side's room past the line, where room = every objective held + the whole enemy force destroyed + no losses, measured from winLine. Union room = 100 + 44 − 45 = 99; Confederate room = 100 + 66 + 45 = 211; min 99.
-  - Why not the editor's guidance (5/40/80% of objectives + average CS, which fit the stock files)? That total assumes a line near the middle. Ours is the status quo, which is far toward the Union, so the guidance strategic (116 in v3.4, 124 now) was beyond the Union's best possible margin (79 in v3.4). The validator warned about it; it now fails any unreachable level, and there is none.
-  - What each level needs, counting only plausible objectives (Winchester excluded for Jackson): Union strategic = the wall, Middle Road and Bartonsville + 24 CS net (54% of Jackson's force); Confederate strategic = Pritchard's Hill and Kernstown + 9 CS net (13% of Kimball's). Operational: Union wall + Middle Road + Bartonsville (+55), or wall + Middle Road (+35) and 5 CS net; Jackson wall + Kernstown (−45 against the line) with no CS needed.
+- **Thresholds 5 / 40 / 81** (v3.6; 5 / 40 / 79 in v3.5, 7 / 58 / 116 before). They are 5%, 40% and 80% of the scarcer side's room past the line, where room = every objective held + the whole enemy force destroyed + no losses, measured from winLine. Union room = 100 + 46 − 45 = 101; Confederate room = 100 + 67 + 45 = 212; min 101 (v3.6 strengths: Union 67 CS, Confederate 46).
+  - Why not the editor's guidance (5/40/80% of objectives + average CS, which fit the stock files)? That total assumes a line near the middle. Ours is the status quo, which is far toward the Union, so the guidance strategic (116 in v3.4, 125 now) was beyond the Union's best possible margin (79 in v3.4). The validator warned about it; it now fails any unreachable level, and there is none.
+  - What each level needs, counting only plausible objectives (Winchester excluded for Jackson): Union strategic = the wall, Middle Road and Bartonsville + 26 CS net (57% of Jackson's force); Confederate strategic = Pritchard's Hill and Kernstown + 11 CS net (16% of Kimball's). Operational: Union wall + Middle Road + Bartonsville (+55), or wall + Middle Road (+35) and 5 CS net; Jackson wall + Kernstown (−45 against the line) with no CS needed.
 
 ### Order of battle
 
-v3.3: every strength below is doubled in the file (`CS_SCALE = 2` in the builder), so one point is about 150 men (`scaleMen` 150). The figures below are the v3.2 values; multiply by 2. A full battery is CS 2 (4 in the file) and Chew's horse battery CS 1 (2). Guns have MP 3 and range 3, infantry MP 4, cavalry MP 6. HQ counters are CS 1 (2), MP 4. `S#` is the standby group.
+v3.3: every strength below is doubled in the file (`CS_SCALE = 2` in the builder), so one point is about 150 men (`scaleMen` 150). The figures below are the pre-scale values; multiply by 2. v3.6 allows halves (x.5), so the file values are whole numbers. A typical battery is CS 2 (4 in the file) and Chew's horse battery CS 1 (2). Guns have MP 3 and range 3, infantry MP 4, cavalry MP 6. HQ counters are CS 1 (2), MP 4. `S#` is the standby group.
 
 **Union, Kimball (Shields' division), side 0.** v3.2: every battery starts stacked with one non-artillery unit.
-- Pritchard's Hill: 14 IN/84 PA 3 + Jenks A 1 WV Bty (12,16); Kimball's HQ + Robinson L 1 OH Bty (13,16); 8 OH/67 OH 3 + Clark E 4 US Bty (13,17)
-- Sullivan: 62 OH 2 + Keeper B 1 WV Bty (18,14) S2/S4; 13 IN/5 OH 3 (18,20) S2; 39 IL 1 + Huntington H 1 OH Bty (22,6) S3
-- Brodhead: 1 MI Cav 1 (6,12), OH/MD Cav 1 (18,21)
+- Pritchard's Hill: 14 IN/84 PA 3 + Jenks A 1 WV Bty 2.5 (12,16); Kimball's HQ + Robinson L 1 OH Bty (13,16); 8 OH/67 OH 3 + Clark E 4 US Bty 2.5 (13,17). v3.6: Jenks and Clark had the Parrotts that did the day's execution (Daum, OR 12/1 p.359).
+- Sullivan: 62 OH 2 + Keeper B 1 WV Bty 1 (18,14) S2/S4 (v3.6: one section only, Daum p.359; Keeper as its commander is not in the OR, provisional); 13 IN/5 OH 3 (18,20) S2; 39 IL 1 + Huntington H 1 OH Bty (22,6) S3
+- Brodhead: 1 MI Cav 1 (6,12), WV/OH/MD/PA Cav 1.5 (18,21) (v3.6: was "OH/MD Cav" 1; the engaged non-Michigan companies included the PA squadron and six companies of the 1st (W.) Va Cav, OR p.355)
 - Tyler: 7 OH/29 OH 3 (19,12), 7 IN/1 WV 3 (20,10), 110 PA 2 (21,8), all S1
 - Union guns on and near Pritchard's Hill are S4; the HQ is S3.
 
 **Confederate, Jackson (Valley District), side 1:**
 - Jackson's HQ: Valley District HQ (11,26) S4
 - Ashby 7 VA Cav 1 + Chew Horse Bty 1 (20,24) S2
-- Sandy Ridge: Fulkerson 23/37 VA 2 + Carpenter Alleghany (9,21); Garnett 5/33 VA 2 + McLaughlin Rockbridge (12,20); Garnett 2/4/27 VA 2 + Waters W. Augusta (11,22). The guns are S3.
-- Burks: 21 VA/1 Bn 2 + Marye Hampden (13,28); 42 VA 1 + Lanier Danville (14,29); all S1
+- Sandy Ridge: Fulkerson 23/37 VA 2 + Carpenter Alleghany (9,21); Garnett 5/33 VA 2 + McLaughlin Rockbridge 3 (12,20); Garnett 2/4/27 VA 2.5 + Waters W. Augusta (11,22). The guns are S3. v3.6: Rockbridge had 8 pieces (pp.396-397); 2nd Va 320 + 4th Va 203 + part of the 27th (pp.389, 391).
+- Burks: 21 VA/1 Bn 1.5 + Pleasants Hampden (13,28); 42 VA 1 + Shumaker Danville (14,29); all S1. v3.6: 21st Va 270 + 1st Va Bn 187 (pp.403, 407); Marye's battery was under Lt. Pleasants on the field (Burks p.401); Jackson calls the Danville battery Shumaker's (p.380), while Fulkerson names Lt. Lanier (p.408), so both commanders are provisional and the briefing gives both.
 
 The one battery not stacked with infantry is Robinson, which shares Kimball's HQ hex (the HQ is a CS 1 headquarters and escort, CS 2 in the file). Chew is with Ashby's cavalry, as a horse battery.
 
@@ -104,14 +104,14 @@ v3.3 groups. Strengths are the doubled values in the file.
 | Union | 2 | Sullivan 13 IN/5 OH, 62 OH | 6 (16:30), 30 / 25 | Confederate group 2 (Ashby) wakes; main body 60% |
 | Union | 3 | Kimball HQ, 39 IL, Huntington | hold | main body 50% |
 | Union | 4 | Jenks, Clark, Robinson, Keeper | hold | none |
-| Confederate | 1 | Burks, Marye, Lanier | 5 (16:00), 40 / 30 | Union group 1 (Tyler) wakes; main body 70% |
+| Confederate | 1 | Burks, Pleasants (Hampden), Shumaker (Danville) | 5 (16:00), 40 / 30 | Union group 1 (Tyler) wakes; main body 70% |
 | Confederate | 2 | Ashby, Chew | hold | containment: 4 hexes, 6 CS |
 | Confederate | 3 | Rockbridge, Carpenter, Waters | hold | none |
 | Confederate | 4 | Jackson HQ | hold | main body 50% |
 
 How the triggers play:
 - **Tyler and Burks are linked both ways.** Historically Jackson fed Burks in as Tyler struck the wall.
-- **Ashby is held by containment.** He stays put while at least 6 Union CS stand within 4 hexes of him. At the start that is 13 IN/5 OH (6) and OH/MD Cav (2), 8 in all. If Sullivan's infantry leaves for the west, Ashby is free to press up the pike. Sullivan in turn wakes when Ashby does.
+- **Ashby is held by containment.** He stays put while at least 6 Union CS stand within 4 hexes of him. At the start that is 13 IN/5 OH (6) and WV/OH/MD/PA Cav (3), 9 in all; 13 IN/5 OH alone still meets the 6. If Sullivan's infantry leaves for the west, Ashby is free to press up the pike. Sullivan in turn wakes when Ashby does.
 - **Containment is used only for Ashby's group,** whose two units share a hex facing the enemy. For a rear group, the enemy strength in range is 0 from the start, so the rule would wake it at once. The validator checks that every containment group is satisfied at the start, counting both per unit and per group.
 - **The guns are held for good.** The editor says standby units still fire, defend, exert ZOC and retreat. An enemy moving next to a held unit, or attacking it, wakes its group.
 
@@ -210,7 +210,7 @@ All 29 counters pass.
 **Not changed:**
 - **Retreat settings.** A `retreat_distance` of 2 needs a longer clear path, so it would probably kill more units, not fewer. `zoc_exit_allowed` is about walking out of ZOC during movement, not about retreats. Units die when the only retreat hex is in enemy ZOC. The save's `ZocToZocAllowed` looks related, but scenario rules have no field for it. `retreat_control` 0 is "Owner chooses" (editor screenshot).
 - **`replacement` is true (v3.3).** Editor help: a unit of CS 3 or more destroyed by an AE or DE falls back up to twice its movement, away from the enemy, and fights on at half strength, rounded down. A unit lost because it has no retreat, or that cannot fall back even one hex, gets no replacement, and neither does a destroyed replacement. All strengths are doubled, so 21 of 29 units are CS 3 or more, and the odds of every attack are unchanged. To be honest about the limits: this board's table has only 4 AE/DE cells of 48, and most losses come from blocked retreats, which get no replacement. So replacements are insurance, not a cure.
-- **`eliteUnit` is on for three brigades a side (v3.5); `suddenDeathUnit` stays false.** Editor help: once per game, when an elite unit first attacks or is attacked, every elite unit of that side moves and attacks once more. Union: Tyler's three counters (7 OH/29 OH, 7 IN/1 WV, 110 PA), the brigade Kimball sent west, which attacked the stone wall about 4 PM; 16 of 66 CS (24%). Confederate: Fulkerson 23/37 VA, Garnett 5/33 VA and Garnett 2/4/27 VA, the brigades that swung onto Sandy Ridge and reached the wall before Tyler; 12 of 44 CS (27%). The HQs are left out: Kimball's sits on Pritchard's Hill beside the guns, where a Confederate probe could spend the Union round on turn 1, and Jackson's is safe in the rear, which would make his round free. The user's own file marks Garnett's Stonewall Brigade as elite, which this follows. The validator prints both lists and fails if one side has elites and the other none, or if the counts differ by more than 1 or the CS shares by more than 10 points.
+- **`eliteUnit` is on for two counters a side (v3.6; three in v3.5); `suddenDeathUnit` stays false.** Editor help: once per game, when an elite unit first attacks or is attacked, every elite unit of that side moves and attacks once more. Union: Tyler 7 OH/29 OH and Tyler 7 IN/1 WV; Kimball says Tyler "deserves the highest commendation" (OR 12/1 pp.360-361). Not 110 PA, which "broke and ran" on the extreme left (Copeland, pp.347-348). 12 of 67 CS (18%). Confederate: Fulkerson 23/37 VA, which held the wall and "merit special mention" (Jackson, pp.381-382), and Garnett 2/4/27 VA, whose 27th opened the infantry fight with the 21st (p.381). Not 5/33, since Garnett ordered the 5th back "before it met the enemy" (p.382). 9 of 46 CS (20%). The HQs are left out: Kimball's sits on Pritchard's Hill beside the guns, where a Confederate probe could spend the Union round on turn 1, and Jackson's is safe in the rear, which would make his round free. The user's own file marks Garnett's Stonewall Brigade as elite, which this follows. The validator prints both lists and fails if one side has elites and the other none, or if the counts differ by more than 1 or the CS shares by more than 10 points.
 - **`ai_contact_gate`** (used only by Malvern Hill) is left out, because it might freeze the AI.
 
 ## The people
@@ -273,6 +273,14 @@ Union counters are blue with white text. Confederate counters are grey with near
   - v3.2: hillshade (lit from the north-west) and 5 m form lines from the 3DEP DEM, so Sandy Ridge and Pritchard's Hill read as relief; a buff tint and hachures still mark the game's high-ground hexes. A faint patchwork of fields, rail fences around the farms, shadowed tree crowns, a wide pale macadam Valley Pike, a heavier two-course stone wall with a shadow, and farmsteads (house, red bank barn, outbuilding, orchard) at Glass, Pritchard and Marcauley farms, houses at Mahaney and Triplett, and a church at Opequon. Palette 128 colours (was 96), with the small feature colours reserved.
   - It has italic road and creek names.
   - v3.5: a period title cartouche in the empty south-east corner ("Map of the Battle of KERNSTOWN, Frederick County, Virginia, Sunday, 23 March 1862") with double ruled frame, rope border and corner rosettes, and two scale bars, yards and meters, 0-1,000 each. They are drawn at the board's scale: one hex centre to centre = 300 m = 155.9 px, so 1,000 m = 519.6 px and 1,000 yd = 475.1 px (measured on the PNG). A 16-point compass rose with a degree ring sits beside it. Both are east of the pike and south of Buffalo Lick Run, on hexes with no objective, name or starting unit. They replace v3.4's plain cartouche and triangle arrow.
+  - v3.6 (Hotchkiss review): a quieter, period-correct sheet.
+    - Relief: hillshade exaggeration 2.5 (was 4), shade gain 0.40, form lines lighter, high-ground tint 0.18 (was 0.30), hachures a sparser 1 px brown fringe.
+    - Woods: leafless March woodlots in grey-brown (sparser, smaller crowns with open glades) instead of summer olive; marsh as a wet meadow with fine tufts.
+    - Stone wall: a thin, smoothed light-limestone line (mortar edge, faint shadow, stone dots) joined along the fenced hexsides, instead of v3.2's heavy dark sawtooth. The validator now checks that the painted wall lies on every fenced hexside.
+    - Buildings and orchard trees are masked off roads (44 px), creeks (30 px) and trails (20 px), as Winchester's are; one that would touch them moves to a clear spot within 60 px of its hex centre or is left out. Kernstown's hamlet buildings are set square to the pike.
+    - Water and lanes: Opequon Creek at stream weight, the runs as one thin line, Buffalo Lick Run carried on to the Opequon; trails a fine opaque dash; a road or creek that ends on the board edge runs off it; the Valley Pike lightly smoothed.
+    - Labels: the duplicate "Middle Road" road label is gone (the game names the VP hex); Cedar Creek Grade's label moved west off the wall; label halos opaque; the region map reads "Jackson, near 40 miles in two days".
+    - Brown and ink colours kept; field patchwork in March tan and pale green; paper fully opaque. The cartouche is smaller (840 x 560) with the same title, and the compass is a plain 8-point rose. New colours are reserved in the 128-colour palette.
   - v3.5: Winchester is a street grid laid along the Valley Turnpike (its main street), with buildings on the block fronts and garden trees, kept off the pike and Abrams Creek. v3.4 drew rows of identical squares over the road and the creek.
   - `hash` is our PNG's SHA-1. `style` "acw_b" and `version` 1 are copied from Antietam.
   - If the basemap (78 MB, gitignored) is missing, the builder paints plain parchment instead.
@@ -364,7 +372,7 @@ From the user's editor screenshots and help text, matched to keys in the stock s
 
 See `DEV_WISHLIST.md`.
 
-## Full in-game checklist (v3.5)
+## Full in-game checklist (v3.6)
 
 Tick these in the game and report anything that fails. Screenshots help.
 
@@ -384,7 +392,7 @@ Tick these in the game and report anything that fails. Screenshots help.
     - The guns, 39 IL, Huntington and both HQs move only if an enemy comes next to them (or, for the HQs and 39 IL/Huntington, if their side's main body is badly reduced).
 11. [ ] The Confederates move first. Union activation is 5, and 7 from turn 5. Confederate activation is 6.
 12. [ ] **VPs and CPs** show their values. The Stone Wall VP and the Glass Farm CP start neutral.
-13. [ ] **Victory.** winLine is 45 and the thresholds are 5/40/79. Middle Road (4,25) shows 10 VP and starts Confederate. Report the final score and whether losses moved it.
+13. [ ] **Victory.** winLine is 45 and the thresholds are 5/40/81. Middle Road (4,25) shows 10 VP and starts Confederate. Report the final score and whether losses moved it.
 16. [ ] **Elite round.** The first time Tyler's or Garnett's/Fulkerson's brigades fight, that side's elite units get one more move and attack, once per game. Note whether the Steady AI's elite round pulls Garnett off the wall, what happens to elite units still on standby, and whether a cavalry raid goes for the Middle Road hex.
 14. [ ] **Turns.** Turn 1 is 3/23 14:00, turn 11 is night, and the game ends after turn 11.
 15. [ ] **Briefing.** The region and battle maps show with their portraits and labels, and the description is readable.
@@ -425,9 +433,19 @@ You need:
 
 - The repo's geography and the ABT map disagree in places: Middle Road, the position of Opequon Church (west of the pike on ABT, east of it in our data), and how far the wall runs. We follow the repo.
 - The 4th Ohio of Kimball's brigade has no counter of its own.
+- v3.6 history check (archivist), listed but not changed because they touch standby or balance: the 21st Virginia sits in Burks's late reserve (standby group 1) though it fought beside the 27th from the start; Burks's turn-5 arrival is an abstraction; Sullivan's group wakes on turn 6 though he was engaged from late morning; Robinson's battery is held on Pritchard's Hill though it moved forward historically. Consistent with the OR: turn 1 at 2 PM, Keeper's section on the left with Sullivan, Huntington in reserve, Jenks and Clark on Pritchard's Hill, the 48th Virginia absent (rear guard).
 - In the user's `user_kernstown1862.json`, the roads are one-sided, and Carroll's `entryHex` is `"10,0"`. That file was not modified.
 
 ## Change history
+
+**v3.6 (staff reviews, no playtest yet):**
+- **Briefing (archivist, all 8 language keys).** New epigraph from Jackson's report (OR 12/1 p.381). Opening rewritten on the OR: Jackson's orders to keep Banks in the Valley, Ashby's report and the "four regiments" intelligence, the march, Shields' division about twice Jackson's 3,000 infantry, Kimball in command, Jackson's only tactical defeat. Kimball's guns are ten rifled Parrotts (was "16 guns and 800 infantry"); Tyler goes in soon after 4 PM and the wall fight runs 5 to 6:30; Garnett's withdrawal and arrest as in the OR, with no unverified date; the afternoon note explains that the 21st Va was engaged from the start (the reserve is an abstraction) and that the 48th Va never fought. Order of battle: 1st (West) Virginia, the 39th Illinois "not in the final assault", the full cavalry, Keeper's one section, Huntington in reserve, Pleasants, Shumaker/Lanier, the 48th Va. Sources cite page ranges. Dropped as unverified: the Harpers Ferry detail, "above the elbow", the 1 April arrest date, the 3:55 PM wayside time.
+- **Counters (quartermaster).** CS (file values): Jenks 5, Clark 5, Keeper 2, Brodhead's cavalry 3 (renamed WV/OH/MD/PA Cav), Rockbridge 6, Garnett 2/4/27 5, Burks 21 VA/1 Bn 3. Names: Pleasants Hampden (was Marye), Shumaker Danville (was Lanier). Totals: Union 67 (was 66), Confederate 46 (was 44). Only those 10 counters were re-rendered; portraits are unchanged.
+- **Elite** is now two counters a side: Tyler 7 OH/29 OH and 7 IN/1 WV; Fulkerson 23/37 VA and Garnett 2/4/27 VA.
+- **Victory.** winLine 45 unchanged; thresholds 5/40/81 (room 101). The builder now fails if the briefing's numbers differ from the file's.
+- **Board art (Hotchkiss).** See "Board art" above.
+- **Validator.** Stone wall on every fenced hexside; Keeper's one-section battery added to the below-CS-3 list.
+- **Not changed:** CRT, retreat, doctrines, terrain types, standby groups, portraits, the cartouche title.
 
 **v3.5 (polish, no playtest yet):**
 - **Victory.** winLine 45 (status quo with the new Middle Road hex), thresholds 5/40/79 = 5/40/80% of the scarcer side's room (99). The Union strategic victory is now reachable (best +99 against 79; v3.4: best +79 against 116). Validator: winLine must be the status quo, and every level must be reachable by both sides (errors, not warnings).

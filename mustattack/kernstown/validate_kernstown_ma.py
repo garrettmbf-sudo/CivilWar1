@@ -33,8 +33,9 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 FLANK_REACH = 8
 # v3.3: units allowed below CS 3 (no replacement on AE/DE): HQs, the cavalry, Chew's 3-gun horse
 # battery and the two single regiments.  Everything else must be CS >= 3.
+# v3.6: Brodhead's WV/OH/MD/PA Cav is now 3; Keeper's B 1 WV is one section (Daum, OR 12/1 p.359), 2
 BELOW_3_OK = {"Kimball Shields' Div. HQ", "Jackson Valley District HQ", "Ashby 7 VA Cav", "Chew Horse Bty",
-              "Brodhead 1 MI Cav", "Brodhead OH/MD Cav", "Sullivan 39 IL", "Burks 42 VA"}
+              "Brodhead 1 MI Cav", "Keeper B 1 WV Bty", "Sullivan 39 IL", "Burks 42 VA"}
 DIRS_EVEN = [(1, 0), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1)]
 DIRS_ODD = [(1, 0), (1, 1), (0, 1), (-1, 0), (0, -1), (1, -1)]
 # dicts whose keys are data (ids / language codes), not schema
@@ -389,6 +390,31 @@ def main(path, refdir):
         if ba["hash"] != hashlib.sha1(png).hexdigest():
             warn("boardArt.hash is not the SHA-1 of the image (meaning of stock hash unknown)")
         print(f"  boardArt {im.size} {im.mode}, {len(png)/1e6:.2f} MB PNG")
+        # v3.6: the painted stone wall lies on every fenced hexside.  Sample t = 0.25/0.5/0.75 along
+        # each fence edge (pixel = (world - origin) * scale, world centre (sqrt3*R*(q + (r&1)/2),
+        # 1.5*R*r)); a wall colour (limestone 226,224,216 or mortar 150,146,136, +-14 per channel)
+        # must lie within 12 px of each sample.
+        import numpy as np
+        arr = np.asarray(a)[..., :3].astype(int)
+        WALL = [(226, 224, 216), (150, 146, 136)]
+        def wall_near(x, y, rad=12):
+            x0, y0 = int(x) - rad, int(y) - rad
+            sub = arr[max(0, y0):y0 + 2 * rad + 1, max(0, x0):x0 + 2 * rad + 1]
+            return any((np.abs(sub - np.array(c)).max(axis=2) <= 14).any() for c in WALL)
+        nfe = nmiss = 0
+        for (q, r), h in H.items():
+            for e in h["fences"]:
+                cx, cy = math.sqrt(3) * R * (q + 0.5 * (r & 1)), 1.5 * R * r
+                c0 = (cx + R * math.cos(math.radians(60 * e - 30)), cy + R * math.sin(math.radians(60 * e - 30)))
+                c1 = (cx + R * math.cos(math.radians(60 * e + 30)), cy + R * math.sin(math.radians(60 * e + 30)))
+                nfe += 1
+                for t in (0.25, 0.5, 0.75):
+                    wx, wy = c0[0] + (c1[0] - c0[0]) * t, c0[1] + (c1[1] - c0[1]) * t
+                    px, py = (wx - ba["originX"]) * bsc, (wy - ba["originY"]) * bsc
+                    if not wall_near(px, py):
+                        nmiss += 1
+                        err(f"boardArt: no stone wall drawn near fenced hexside {q},{r} edge {e} at t={t} (px {px:.0f},{py:.0f})")
+        print(f"  boardArt stone wall: {nfe} fenced hexsides x 3 samples, {nmiss} missing")
     # ---- v3: retreat rules use stock values only; crt shape/values/monotonic
     for k in ("retreat_control", "retreat_distance", "zoc_exit_allowed", "full_move_entry_allowed", "replacement"):
         seen = {json.dumps(st["scenario"]["rules"].get(k)) for nm, st in stock.items() if not nm.startswith("user_") if k in st["scenario"]["rules"]}

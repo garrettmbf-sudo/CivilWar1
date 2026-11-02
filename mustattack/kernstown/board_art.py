@@ -110,7 +110,7 @@ def ground(painted, grid, W, H, ox, oy, kgrid):
     g = np.asarray(im, np.float32)
     lum = g.mean(-1, keepdims=True)
     g = lum + (g - lum) * 0.75                     # a little less saturated
-    g = g * 0.5 + PARCH * 0.5 + 18                 # wash toward parchment, lighten
+    g = g * 0.5 + PARCH * 0.5 + 8                  # wash toward parchment (v3.6: +8, was +18, so the grey plates stand out)
     return g.clip(0, 255)
 
 
@@ -138,7 +138,7 @@ def hillshade(dem, grid, W, H, ox, oy, kgrid, small=4):
     z = ndimage.map_coordinates(Z, [ym / step, xm / step], order=1, mode="nearest")
     cell = small / SCALE * kgrid                      # metres per low-res pixel
     gy, gx = np.gradient(z, cell)
-    ex = 4.0                                          # vertical exaggeration: the ridges are 20-40 m
+    ex = 2.5                                          # vertical exaggeration (v3.6: 2.5, was 4): a gently rolling Valley
     nx, ny, nz = -gx * ex, -gy * ex, np.ones_like(z)
     n = np.sqrt(nx ** 2 + ny ** 2 + 1)
     lx, ly, lz = -0.5, -0.5, 0.707                    # light from the north-west, 45 degrees up
@@ -151,7 +151,7 @@ def up(a, W, H, order=1):
 
 
 INK = (58, 40, 26, 255)
-PAPER = (244, 236, 214, 240)
+PAPER = (244, 236, 214, 255)   # v3.6: opaque (Hotchkiss P10), no contours ghosting through
 
 
 def town(d, ov, city, chains, path, ox, oy, W, H, rng):
@@ -228,68 +228,72 @@ def _font(path, size):
 
 def cartouche(ov, cx, cy, px_per_m):
     """Period title block: double ruled frame with corner rosettes, title, place and date, and
-    two scale bars (yards above, metres below) drawn at the board's own scale."""
-    W_, H_ = 1000, 660
+    two scale bars (yards above, meters below) drawn at the board's own scale.
+    v3.6 (Hotchkiss P10): 840 x 560 (was 1000 x 660), every offset and font x 0.85."""
+    f = 0.85
+    W_, H_ = 840, 560
     lay = Image.new("RGBA", (W_ + 40, H_ + 40), (0, 0, 0, 0))
     d = ImageDraw.Draw(lay)
     x0, y0, x1, y1 = 20, 20, 20 + W_, 20 + H_
     d.rectangle([x0 + 8, y0 + 10, x1 + 8, y1 + 10], fill=(40, 30, 20, 70))          # cast shadow
-    d.rectangle([x0, y0, x1, y1], fill=PAPER, outline=INK, width=7)
-    d.rectangle([x0 + 16, y0 + 16, x1 - 16, y1 - 16], outline=INK, width=2)
+    d.rectangle([x0, y0, x1, y1], fill=PAPER, outline=INK, width=6)
+    d.rectangle([x0 + 14, y0 + 14, x1 - 14, y1 - 14], outline=INK, width=2)
     # a fine rope of short ticks between the rules
-    for t in range(0, 2 * (W_ + H_), 14):
+    for t in range(0, 2 * (W_ + H_), 12):
         if t < W_:
-            pts = [(x0 + t, y0 + 8), (x0 + t + 7, y0 + 8)], [(x0 + t, y1 - 8), (x0 + t + 7, y1 - 8)]
+            pts = [(x0 + t, y0 + 7), (x0 + t + 6, y0 + 7)], [(x0 + t, y1 - 7), (x0 + t + 6, y1 - 7)]
         elif t < W_ + H_:
             k = t - W_
-            pts = [(x0 + 8, y0 + k), (x0 + 8, y0 + k + 7)], [(x1 - 8, y0 + k), (x1 - 8, y0 + k + 7)]
+            pts = [(x0 + 7, y0 + k), (x0 + 7, y0 + k + 6)], [(x1 - 7, y0 + k), (x1 - 7, y0 + k + 6)]
         else:
             continue
         for p in pts:
             d.line(p, fill=(120, 92, 62, 255), width=3)
-    for x, y in ((x0 + 16, y0 + 16), (x1 - 16, y0 + 16), (x0 + 16, y1 - 16), (x1 - 16, y1 - 16)):
-        d.ellipse([x - 22, y - 22, x + 22, y + 22], fill=PAPER, outline=INK, width=3)
-        d.polygon([(x, y - 15), (x + 6, y), (x, y + 15), (x - 6, y)], fill=INK)
-        d.polygon([(x - 15, y), (x, y - 6), (x + 15, y), (x, y + 6)], fill=(120, 92, 62, 255))
+    for x, y in ((x0 + 14, y0 + 14), (x1 - 14, y0 + 14), (x0 + 14, y1 - 14), (x1 - 14, y1 - 14)):
+        d.ellipse([x - 19, y - 19, x + 19, y + 19], fill=PAPER, outline=INK, width=3)
+        d.polygon([(x, y - 13), (x + 5, y), (x, y + 13), (x - 5, y)], fill=INK)
+        d.polygon([(x - 13, y), (x, y - 5), (x + 13, y), (x, y + 5)], fill=(120, 92, 62, 255))
     mx = (x0 + x1) / 2
-    d.text((mx, y0 + 68), "Map of the Battle of", font=_font(F_ITAL, 46), anchor="mm", fill=INK)
-    d.text((mx, y0 + 160), "KERNSTOWN", font=_font(F_CAPS, 128), anchor="mm", fill=INK)
-    d.text((mx, y0 + 252), "Frederick County, Virginia", font=_font(F_ITAL, 50), anchor="mm", fill=INK)
-    d.text((mx, y0 + 312), "Sunday, 23 March 1862", font=_font(F_ITAL, 50), anchor="mm", fill=INK)
+    Y = lambda v: y0 + v * f
+    F = lambda path, size: _font(path, round(size * f))
+    d.text((mx, Y(68)), "Map of the Battle of", font=F(F_ITAL, 46), anchor="mm", fill=INK)
+    d.text((mx, Y(160)), "KERNSTOWN", font=F(F_CAPS, 128), anchor="mm", fill=INK)
+    d.text((mx, Y(252)), "Frederick County, Virginia", font=F(F_ITAL, 50), anchor="mm", fill=INK)
+    d.text((mx, Y(312)), "Sunday, 23 March 1862", font=F(F_ITAL, 50), anchor="mm", fill=INK)
     # flourish rule
-    ry = y0 + 362
-    d.line([(mx - 330, ry), (mx - 22, ry)], fill=INK, width=3)
-    d.line([(mx + 22, ry), (mx + 330, ry)], fill=INK, width=3)
-    d.polygon([(mx, ry - 12), (mx + 16, ry), (mx, ry + 12), (mx - 16, ry)], fill=INK)
+    ry = Y(362)
+    d.line([(mx - 280, ry), (mx - 20, ry)], fill=INK, width=3)
+    d.line([(mx + 20, ry), (mx + 280, ry)], fill=INK, width=3)
+    d.polygon([(mx, ry - 10), (mx + 14, ry), (mx, ry + 10), (mx - 14, ry)], fill=INK)
     for sx in (-1, 1):
-        d.ellipse([mx + sx * 340 - 6, ry - 6, mx + sx * 340 + 6, ry + 6], fill=INK)
-    # scale bars, 0-1,000 in alternately filled 200-unit cells
-    fl, fs = _font(F_CAPS, 34), _font(F_ITAL, 30)
+        d.ellipse([mx + sx * 290 - 5, ry - 5, mx + sx * 290 + 5, ry + 5], fill=INK)
+    # scale bars, 0-1,000 in alternately filled 200-unit cells; length from px_per_m, never hard-coded
+    fl, fs = F(F_CAPS, 34), F(F_ITAL, 30)
     def bar(y, unit_m, label, total=1000, step=200):
         Lpx = total * unit_m * px_per_m
         bx = mx - Lpx / 2
-        d.text((bx - 18, y + 9), label, font=fl, anchor="rm", fill=INK)
-        d.rectangle([bx, y, bx + Lpx, y + 18], outline=INK, width=2)
+        d.text((bx - 16, y + 8), label, font=fl, anchor="rm", fill=INK)
+        d.rectangle([bx, y, bx + Lpx, y + 16], outline=INK, width=2)
         n = total // step
         for k in range(n):
             a, b = bx + Lpx * k / n, bx + Lpx * (k + 1) / n
             if k % 2 == 0:
-                d.rectangle([a, y, b, y + 18], fill=INK)
-            d.line([(a, y - 6), (a, y + 24)], fill=INK, width=2)
-        d.line([(bx + Lpx, y - 6), (bx + Lpx, y + 24)], fill=INK, width=2)
+                d.rectangle([a, y, b, y + 16], fill=INK)
+            d.line([(a, y - 5), (a, y + 21)], fill=INK, width=2)
+        d.line([(bx + Lpx, y - 5), (bx + Lpx, y + 21)], fill=INK, width=2)
         for k in range(n + 1):
             v = k * step
-            d.text((bx + Lpx * k / n, y + 44), f"{v:,}", font=fs, anchor="mm", fill=INK)
-        return bx, Lpx
-    bar(y0 + 410, 0.9144, "Yards")
-    bar(y0 + 500, 1.0, "Meters")
-    d.text((mx, y0 + 612), "One hex, 300 meters (328 yards) from side to side; one turn, half an hour",
-           font=_font(F_ITAL, 31), anchor="mm", fill=INK)
+            d.text((bx + Lpx * k / n, y + 38), f"{v:,}", font=fs, anchor="mm", fill=INK)
+    bar(Y(410), 0.9144, "Yards")
+    bar(Y(500), 1.0, "Meters")
+    d.text((mx, Y(612)), "One hex, 300 meters (328 yards) from side to side; one turn, half an hour",
+           font=F(F_ITAL, 31), anchor="mm", fill=INK)
     ov.alpha_composite(lay, (int(cx - W_ / 2 - 20), int(cy - H_ / 2 - 20)))
 
 
 def compass_rose(ov, cx, cy, rr):
-    """A 16-point compass rose with a ring of degree ticks and a red north point."""
+    """An 8-point compass rose with a ring of degree ticks and a red north point (v3.6: the 16
+    intercardinal half-points are dropped, Hotchkiss P11)."""
     S = int(rr * 2 + 200)
     lay = Image.new("RGBA", (S, S), (0, 0, 0, 0))
     d = ImageDraw.Draw(lay)
@@ -310,20 +314,16 @@ def compass_rose(ov, cx, cy, rr):
         r = (c + half * math.sin(a + math.pi / 2), c - half * math.cos(a + math.pi / 2))
         d.polygon([(c, c), l, tip], fill=colours[0], outline=DARK)
         d.polygon([(c, c), r, tip], fill=colours[1], outline=DARK)
-    for deg in range(0, 360, 45):
-        if deg % 90:
-            point(deg + 22.5, rr * 0.48, rr * 0.06, (LIGHT, DARK))
-            point(deg - 22.5, rr * 0.48, rr * 0.06, (LIGHT, DARK))
     for deg in range(45, 360, 90):
         point(deg, rr * 0.66, rr * 0.10, (DARK, LIGHT))
     for deg in (90, 180, 270):
         point(deg, rr * 0.88, rr * 0.14, (LIGHT, DARK))
     point(0, rr * 0.88, rr * 0.14, (MID, DARK))
     d.ellipse([c - 12, c - 12, c + 12, c + 12], fill=LIGHT, outline=DARK, width=3)
-    f = _font(F_CAPS, 58)
+    f = _font(F_CAPS, 44)                          # v3.6: 44, was 58 (Hotchkiss P11)
     for txt, deg in (("N", 0), ("E", 90), ("S", 180), ("W", 270)):
         a = math.radians(deg)
-        rl = rr + 38
+        rl = rr + 30
         d.text((c + rl * math.sin(a), c - rl * math.cos(a)), txt, font=f, anchor="mm", fill=DARK,
                stroke_width=4, stroke_fill=(244, 236, 214, 230))
     ov.alpha_composite(lay, (int(cx - c), int(cy - c)))
@@ -364,13 +364,14 @@ def make_board_art(grid, terrain, chains, fences, elev, painted=None, seed=1862,
     tree = cKDTree(seeds)
     _, lab = tree.query(np.stack([xx.ravel(), yy.ravel()], -1))
     lab = lab.reshape(h4, w4)
-    tints = np.array([(196, 180, 120), (170, 140, 100), (178, 182, 128), (210, 196, 150), (186, 160, 112)], np.float32)
+    # v3.6 (Hotchkiss P5): March tan and pale green, so the grey Confederate plate separates by hue
+    tints = np.array([(206, 190, 138), (196, 176, 128), (190, 198, 146), (214, 202, 160), (182, 192, 140)], np.float32)
     pick = rng.integers(0, len(tints), len(seeds))
     field_rgb = tints[pick][lab]
     open_m = hex_mask(list(open_ground), ox, oy, W, H, 1.0)
     open_small = ndimage.zoom(open_m, 1 / small, order=1)[:h4, :w4]
     open_small = np.pad(open_small, ((0, max(0, h4 - open_small.shape[0])), (0, max(0, w4 - open_small.shape[1]))))
-    alpha = ndimage.gaussian_filter(open_small, 3) * 0.22
+    alpha = ndimage.gaussian_filter(open_small, 3) * 0.32
     fr = np.stack([up(field_rgb[..., c], W, H) for c in range(3)], -1)
     al = up(alpha, W, H)[..., None]
     g = g * (1 - al) + fr * al
@@ -382,7 +383,7 @@ def make_board_art(grid, terrain, chains, fences, elev, painted=None, seed=1862,
         z, sh = hillshade(dem, grid, W, H, ox, oy, kgrid, small)
         shade = up(sh, W, H)
         base = np.median(shade)
-        g *= (1 + 0.55 * (shade - base))[..., None]
+        g *= (1 + 0.40 * (shade - base))[..., None]          # v3.6: 0.40, was 0.55
         ci = 5.0
         lev = np.floor(z / ci)
         e = np.zeros_like(lev, bool)
@@ -391,16 +392,16 @@ def make_board_art(grid, terrain, chains, fences, elev, painted=None, seed=1862,
         idx = e & (np.mod(np.maximum(lev, np.roll(lev, 1, 0)), 4) == 0)
         cl = up(ndimage.gaussian_filter(e.astype(np.float32), 0.6), W, H)
         ci_ = up(ndimage.gaussian_filter(idx.astype(np.float32), 0.6), W, H)
-        paint(g, cl > 0.30, (128, 94, 60), 0.16)
+        paint(g, cl > 0.30, (128, 94, 60), 0.12)
         paint(g, ci_ > 0.30, (110, 76, 46), 0.22)
     # game high ground (defence x2): a warm buff tint so it reads as a rule, not only as relief
     soft = ndimage.gaussian_filter(hb.astype(np.float32), 10)
-    g = g * (1 - soft[..., None] * 0.30) + np.array((196, 160, 104), np.float32) * soft[..., None] * 0.30
+    g = g * (1 - soft[..., None] * 0.18) + np.array((204, 178, 128), np.float32) * soft[..., None] * 0.18   # v3.6: 0.18, was 0.30
     woods_b = blob(woods, ox, oy, W, H, 18)
-    paint(g, woods_b, (126, 132, 90), 0.34)
+    paint(g, woods_b, (150, 138, 114), 0.22)            # v3.6: leafless grey-brown woodlot wash
     paint(g, blob(by.get("city", []), ox, oy, W, H, 10), (200, 176, 150), 0.45)
     marsh_b = blob(by.get("marsh", []), ox, oy, W, H, 14)
-    paint(g, marsh_b, (150, 175, 170), 0.35)
+    paint(g, marsh_b, (176, 186, 150), 0.28)            # v3.6: a wet meadow, not a pond
     # paper grain and a faint darkening toward the board edge
     grain = ndimage.zoom(rng.random((H // 10 + 2, W // 10 + 2)).astype(np.float32), 10, order=1)[:H, :W]
     g += (grain[..., None] - 0.5) * 8
@@ -431,22 +432,22 @@ def make_board_art(grid, terrain, chains, fences, elev, painted=None, seed=1862,
         if not all(0 <= v < lim and open_m[int(min(v2, H - 1)), int(min(v1, W - 1))] > 0.5
                    for v, lim, v1, v2 in ((xa, W, xa, ya), (ya, H, xa, ya), (xb, W, xb, yb), (yb, H, xb, yb))):
             continue
-        n = max(2, int(L / 9))
+        n = max(2, int(L / 12))                   # v3.6: amplitude 2.5, step 12, opaque (Hotchkiss P12)
         ux, uy = (xb - xa) / L, (yb - ya) / L
-        pts = [(xa + (xb - xa) * k / n + (-uy) * (3.5 if k % 2 else -3.5), ya + (yb - ya) * k / n + ux * (3.5 if k % 2 else -3.5))
+        pts = [(xa + (xb - xa) * k / n + (-uy) * (2.5 if k % 2 else -2.5), ya + (yb - ya) * k / n + ux * (2.5 if k % 2 else -2.5))
                for k in range(n + 1)]
-        d.line(pts, fill=(98, 76, 52, 190), width=2)
+        d.line(pts, fill=(128, 98, 66, 255), width=2)
 
     # hachures on the game's high ground: short strokes running downslope from the crest
     if hb.any():
         dist = ndimage.distance_transform_edt(hb)
         sm = ndimage.gaussian_filter(dist, 5)
         gy, gx = np.gradient(sm)
-        band = np.argwhere((dist > 3) & (dist < 34))
+        band = np.argwhere((dist > 6) & (dist < 26))       # v3.6: a narrower, sparser fringe
         rng.shuffle(band)
-        taken = np.zeros((H // 12 + 1, W // 12 + 1), bool)
+        taken = np.zeros((H // 18 + 1, W // 18 + 1), bool)
         for y, x in band[: len(band) // 3]:
-            cy, cx = y // 12, x // 12
+            cy, cx = y // 18, x // 18
             if taken[cy, cx]:
                 continue
             taken[cy, cx] = True
@@ -454,45 +455,83 @@ def make_board_art(grid, terrain, chains, fences, elev, painted=None, seed=1862,
             n = math.hypot(vx_, vy_)
             if n < 1e-3:
                 continue
-            L = min(dist[y, x], rng.uniform(12, 22))
-            d.line([(x, y), (x + vx_ / n * L, y + vy_ / n * L)], fill=(112, 78, 44, 150), width=2)
+            L = min(dist[y, x], rng.uniform(8, 14))
+            d.line([(x, y), (x + vx_ / n * L, y + vy_ / n * L)], fill=(128, 98, 66, 255), width=1)
 
-    # woods: shadowed tree crowns (bare March woods: olive-brown, Hotchkiss style)
+    # woods: v3.6 leafless March woodlots, sparse grey-brown crowns with open glades (Hotchkiss P1)
     if woods_b.any():
         sh_l = Image.new("L", (W, H), 0)
         sd = ImageDraw.Draw(sh_l)
         crowns = []
-        for y, x in np.argwhere(woods_b[::24, ::24]) * 24:
-            x += rng.uniform(-10, 10)
-            y += rng.uniform(-10, 10)
+        for y, x in np.argwhere(woods_b[::30, ::30]) * 30:
+            if rng.random() < 0.25:
+                continue
+            x += rng.uniform(-12, 12)
+            y += rng.uniform(-12, 12)
             if not woods_b[min(int(y), H - 1), min(int(x), W - 1)]:
                 continue
-            rr = rng.uniform(8, 13)
+            rr = rng.uniform(6, 9)
             crowns.append((x, y, rr))
-            sd.ellipse([x - rr + 5, y - rr + 6, x + rr + 5, y + rr + 6], fill=150)
+            sd.ellipse([x - rr + 3, y - rr + 4, x + rr + 3, y + rr + 4], fill=110)
         sh_l = sh_l.filter(ImageFilter.GaussianBlur(3))
         shadow = Image.new("RGBA", (W, H), (46, 40, 24, 0))
         shadow.putalpha(sh_l.point(lambda v: v * 0.6))
         im.alpha_composite(shadow)
-        tones = [(98, 108, 64), (110, 116, 70), (90, 98, 58), (120, 112, 72)]
+        tones = [(128, 114, 92), (116, 104, 86), (138, 124, 100), (122, 112, 96)]
         for x, y, rr in crowns:
             c = tones[int(rng.integers(0, len(tones)))]
-            d.ellipse([x - rr, y - rr, x + rr, y + rr], fill=c + (235,), outline=(52, 56, 32, 230), width=2)
-            d.arc([x - rr * 0.6, y - rr * 0.7, x + rr * 0.3, y + rr * 0.2], 190, 290, fill=(168, 168, 116, 200), width=2)
+            d.ellipse([x - rr, y - rr, x + rr, y + rr], fill=c + (255,), outline=(84, 72, 58, 255), width=2)
+            d.arc([x - rr * 0.6, y - rr * 0.7, x + rr * 0.3, y + rr * 0.2], 190, 290, fill=(176, 164, 140, 255), width=2)
     for q, r in by.get("marsh", []):
         cx, cy = hex_px(q, r, ox, oy)
-        for _ in range(14):
+        for _ in range(8):
             x, y = cx + rng.uniform(-55, 55), cy + rng.uniform(-55, 55)
             for k in (-6, 0, 6):
-                d.line([(x + k, y), (x + k * 1.6, y - 9)], fill=(70, 110, 120, 200), width=2)
+                d.line([(x + k, y), (x + k * 1.6, y - 9)], fill=(92, 120, 104, 255), width=1)
+            d.line([(x - 8, y + 3), (x + 8, y + 3)], fill=(92, 120, 104, 255), width=1)
 
     # creeks and roads through the same hexes the game uses (smoothed hex-centre chains)
+    # v3.6 (Hotchkiss P6): a chain that ends on the board's edge row/column runs on one more hex so
+    # it leaves the board instead of stopping short (the final clip hides the overhang); the Valley
+    # Turnpike gets a light moving average (each centre moves at most 0.35 hex) and more smoothing.
+    pike_chain = dict(chains.get("roads", [])).get("valley_pike")
+    def on_edge(q, r):
+        return q in (0, cols - 1) or r in (0, rows - 1)
     def path(chain):
-        return chaikin([hex_px(q, r, ox, oy) for q, r in chain])
-    for chain in chains.get("rivers", []):
-        p = path(chain)
-        d.line(p, fill=(70, 105, 140, 255), width=11, joint="curve")
-        d.line(p, fill=(140, 180, 205, 255), width=5, joint="curve")
+        pts = [hex_px(q, r, ox, oy) for q, r in chain]
+        if len(pts) >= 2:
+            if on_edge(*chain[0]):
+                pts = [(2 * pts[0][0] - pts[1][0], 2 * pts[0][1] - pts[1][1])] + pts
+            if on_edge(*chain[-1]):
+                pts = pts + [(2 * pts[-1][0] - pts[-2][0], 2 * pts[-1][1] - pts[-2][1])]
+        if chain is pike_chain and len(pts) >= 3:
+            lim = 0.35 * SQ3 * R * SCALE
+            sm = [pts[0]]
+            for a, b, c in zip(pts, pts[1:], pts[2:]):
+                mx, my = (a[0] + b[0] + c[0]) / 3, (a[1] + b[1] + c[1]) / 3
+                dx, dy = mx - b[0], my - b[1]
+                k = min(1.0, lim / max(1e-6, math.hypot(dx, dy)))
+                sm.append((b[0] + dx * k, b[1] + dy * k))
+            pts = sm + [pts[-1]]
+            return chaikin(pts, 5)
+        return chaikin(pts)
+    # v3.6 (Hotchkiss P7): Opequon Creek at stream weight, the runs as a single thin line, and
+    # Buffalo Lick Run carried on to its confluence with the Opequon
+    river_names = ("opequon_creek", "hoge_run", "abrams_creek", "buffalo_lick")
+    rpaths = {k: path(c) for k, c in zip(river_names, chains.get("rivers", []))}
+    if "buffalo_lick" in rpaths and "opequon_creek" in rpaths:
+        bl, oq = rpaths["buffalo_lick"], rpaths["opequon_creek"]
+        for end in (0, -1):
+            near = min(oq, key=lambda p: math.dist(p, bl[end]))
+            if math.dist(near, bl[end]) < 90:
+                rpaths["buffalo_lick"] = ([near] + bl) if end == 0 else (bl + [near])
+                break
+    for k, p in rpaths.items():
+        if k == "opequon_creek":
+            d.line(p, fill=(70, 105, 140, 255), width=8, joint="curve")
+            d.line(p, fill=(150, 186, 206, 255), width=3, joint="curve")
+        else:
+            d.line(p, fill=(80, 116, 146, 255), width=5, joint="curve")
     rs = Image.new("L", (W, H), 0)
     rsd = ImageDraw.Draw(rs)
     for name, chain in chains.get("roads", []):
@@ -516,69 +555,156 @@ def make_board_art(grid, terrain, chains, fences, elev, painted=None, seed=1862,
         acc = 0.0
         for a, b in zip(p, p[1:]):
             L = math.dist(a, b)
-            if (acc // 18) % 2 == 0:
+            if acc % 24 < 14:                     # v3.6: 14 px dash, 10 px gap, 3 px, opaque (lanes)
                 segs.append((a, b))
             acc += L
         for a, b in segs:
-            d.line([a, b], fill=(95, 70, 45, 230), width=4)
+            d.line([a, b], fill=(95, 70, 45, 255), width=3)
 
-    # v3.2 farmsteads at the named farm / house / church hexes: house, barn, outbuilding, an orchard
-    def bldg(x, y, w, h, ang, col, roof=True):
+    # v3.6 (Hotchkiss V1): nothing stands on a road, creek or trail.  The same kind of avoid mask
+    # town() uses (roads 44 px, creeks 30 px, trails 20 px wide); a building whose footprint (with a
+    # few px of margin) touches it moves to the first clear spot on rings of 30/45/60 px around the
+    # hex centre, or is left out; an orchard tree that touches it is left out.
+    av = Image.new("L", (W, H), 0)
+    avd = ImageDraw.Draw(av)
+    for _, chain in chains.get("roads", []):
+        avd.line(path(chain), fill=255, width=44)
+    for p in rpaths.values():
+        avd.line(p, fill=255, width=30)
+    for chain in chains.get("trails", []):
+        avd.line(path(chain), fill=255, width=20)
+    avoid = np.asarray(av) > 0
+    taken_b = Image.new("L", (W, H), 0)
+    tbd = ImageDraw.Draw(taken_b)
+    def clear(pts):
+        tb = np.asarray(taken_b)
+        return all(0 <= x < W and 0 <= y < H and not avoid[int(y), int(x)] and not tb[int(y), int(x)] for x, y in pts)
+    def quad(x, y, w, h, ang, m=0):
+        c, s_ = math.cos(ang), math.sin(ang)
+        return [(x + c * dx - s_ * dy, y + s_ * dx + c * dy) for dx, dy in
+                ((-w - m, -h - m), (w + m, -h - m), (w + m, h + m), (-w - m, h + m), (0, 0), (-w - m, 0), (w + m, 0), (0, -h - m), (0, h + m))]
+    def bldg(x, y, w, h, ang, col, roof=True, home=None):
+        if not clear(quad(x, y, w, h, ang, 3)):
+            hx, hy = home if home else (x, y)
+            for rad in (30, 45, 60):
+                for k in range(8):
+                    a = k * math.pi / 4 + 0.3
+                    x2, y2 = hx + rad * math.cos(a), hy + rad * math.sin(a)
+                    if clear(quad(x2, y2, w, h, ang, 3)):
+                        x, y = x2, y2
+                        break
+                else:
+                    continue
+                break
+            else:
+                return False
         c, s_ = math.cos(ang), math.sin(ang)
         rot = lambda pts: [(x + c * dx - s_ * dy, y + s_ * dx + c * dy) for dx, dy in pts]
         d.polygon(rot([(-w + 4, -h + 5), (w + 4, -h + 5), (w + 4, h + 5), (-w + 4, h + 5)]), fill=(40, 30, 20, 90))
         d.polygon(rot([(-w, -h), (w, -h), (w, h), (-w, h)]), fill=col, outline=(46, 30, 22, 255))
         if roof:
             d.line(rot([(-w, 0), (w, 0)]), fill=(60, 40, 30, 220), width=2)
+        tbd.polygon(rot([(-w - 2, -h - 2), (w + 2, -h - 2), (w + 2, h + 2), (-w - 2, h + 2)]), fill=255)
+        return True
+    # v3.2 farmsteads at the named farm / house / church hexes: house, barn, outbuilding, an orchard
     for (q, r), kind in sites:
         cx, cy = hex_px(q, r, ox, oy)
         a0 = rng.uniform(-0.3, 0.3)
         if kind == "church":
-            bldg(cx - 6, cy + 8, 16, 11, a0, (226, 218, 200, 255))
-            d.line([(cx - 6, cy - 18), (cx - 6, cy - 4)], fill=(50, 34, 24, 255), width=3)
-            d.line([(cx - 12, cy - 13), (cx, cy - 13)], fill=(50, 34, 24, 255), width=3)
+            if bldg(cx - 6, cy + 8, 16, 11, a0, (226, 218, 200, 255), home=(cx, cy)):
+                d.line([(cx - 6, cy - 18), (cx - 6, cy - 4)], fill=(50, 34, 24, 255), width=3)
+                d.line([(cx - 12, cy - 13), (cx, cy - 13)], fill=(50, 34, 24, 255), width=3)
             continue
-        bldg(cx - 18, cy + 10, 13, 9, a0, (232, 224, 206, 255))            # house (whitewashed)
+        bldg(cx - 18, cy + 10, 13, 9, a0, (232, 224, 206, 255), home=(cx, cy))            # house (whitewashed)
         if kind == "farm":
-            bldg(cx + 20, cy + 6, 17, 10, a0 + 0.1, (150, 62, 44, 255))    # bank barn
-            bldg(cx + 2, cy + 34, 7, 5, a0, (170, 120, 90, 255), False)    # outbuilding
+            bldg(cx + 20, cy + 6, 17, 10, a0 + 0.1, (150, 62, 44, 255), home=(cx, cy))    # bank barn
+            bldg(cx + 2, cy + 34, 7, 5, a0, (170, 120, 90, 255), False, home=(cx, cy))    # outbuilding
             for i in range(3):                                            # orchard rows
                 for j in range(4):
                     x = cx - 44 + j * 13 + (i % 2) * 6
                     y = cy - 34 + i * 12
-                    d.ellipse([x - 4, y - 4, x + 4, y + 4], fill=(96, 112, 60, 230), outline=(56, 64, 34, 230))
+                    if clear([(x - 5, y - 5), (x + 5, y - 5), (x + 5, y + 5), (x - 5, y + 5), (x, y)]):
+                        d.ellipse([x - 4, y - 4, x + 4, y + 4], fill=(96, 112, 60, 255), outline=(56, 64, 34, 255))
         else:
-            bldg(cx + 14, cy + 18, 7, 5, a0, (170, 120, 90, 255), False)
+            bldg(cx + 14, cy + 18, 7, 5, a0, (170, 120, 90, 255), False, home=(cx, cy))
 
-    # buildings: hamlets / farms (wasteland) and Winchester (city)
+    # buildings: hamlets / farms (wasteland) and Winchester (city).  v3.6 (Hotchkiss P12): set square
+    # to the nearest road, within +-0.1 rad, so Kernstown reads as a roadside hamlet.
+    road_segs = [(a, b) for _, chain in chains.get("roads", []) for a, b in zip(path(chain), path(chain)[1:])]
+    def road_angle(x, y):
+        if not road_segs:
+            return 0.0
+        def dist(seg):
+            (ax, ay), (bx, by) = seg
+            L2 = (bx - ax) ** 2 + (by - ay) ** 2 or 1e-9
+            t = max(0, min(1, ((x - ax) * (bx - ax) + (y - ay) * (by - ay)) / L2))
+            return math.dist((x, y), (ax + t * (bx - ax), ay + t * (by - ay)))
+        (ax, ay), (bx, by) = min(road_segs, key=dist)
+        a = math.atan2(by - ay, bx - ax)
+        while a > math.pi / 2:
+            a -= math.pi
+        while a < -math.pi / 2:
+            a += math.pi
+        return a
     for q, r in by.get("wasteland", []):
         if (q, r) in site_hex:
             continue
         cx, cy = hex_px(q, r, ox, oy)
         for i in range(3):
-            bldg(cx + rng.uniform(-40, 40), cy + rng.uniform(-40, 30), rng.uniform(9, 13), rng.uniform(6, 9),
-                 rng.uniform(-0.4, 0.4), [(232, 224, 206, 255), (150, 62, 44, 255), (170, 120, 90, 255)][i])
+            x, y = cx + rng.uniform(-40, 40), cy + rng.uniform(-40, 30)
+            bldg(x, y, rng.uniform(9, 13), rng.uniform(6, 9), road_angle(x, y) + rng.uniform(-0.1, 0.1),
+                 [(232, 224, 206, 255), (150, 62, 44, 255), (170, 120, 90, 255)][i], home=(cx, cy))
     town(d, ov, by.get("city", []), chains, path, ox, oy, W, H, rng)
 
-    # stone wall on the fenced hexsides: a row of field stones (Antietam marks fences with dots)
-    # v3.2: heavier, two courses of stones on a dark footing, with a cast shadow
+    # stone wall on the fenced hexsides.  v3.6 (Hotchkiss P2): a thin, light limestone line instead of
+    # v3.2's heavy dark sawtooth.  The fenced hexsides are joined where they share a corner and
+    # smoothed (chaikin x2 keeps every point within ~12 px of a hexside), with a faint shadow, a mortar
+    # edge and stone dots.  The validator checks the line still lies on every fenced hexside.
+    segs = []
     for (q, r), es in fences.items():
         cx, cy = hex_px(q, r, ox, oy)
         for e in es:
-            (x0, y0), (x1, y1) = edge_pts(cx, cy, e)
-            d.line([(x0 + 4, y0 + 6), (x1 + 4, y1 + 6)], fill=(30, 26, 20, 120), width=16)
-            d.line([(x0, y0), (x1, y1)], fill=(54, 50, 44, 255), width=13)
-            n = 14
-            for course, off in ((0, -2.5), (1, 2.5)):
-                for i in range(n + 1):
-                    t = (i + 0.5 * course) / n
-                    if t > 1:
-                        continue
-                    x, y = x0 + (x1 - x0) * t, y0 + (y1 - y0) * t + off
-                    rr = rng.uniform(4.5, 6.5)
-                    tone = int(rng.integers(140, 178))
-                    d.ellipse([x - rr, y - rr * 0.75, x + rr, y + rr * 0.75], fill=(tone, tone - 4, tone - 14, 255),
-                              outline=(36, 34, 30, 255), width=2)
+            a, b = edge_pts(cx, cy, e)
+            segs.append((tuple(round(v, 1) for v in a), tuple(round(v, 1) for v in b)))
+    def key(p):
+        return (round(p[0]), round(p[1]))
+    lines_ = []
+    left = segs[:]
+    while left:
+        a, b = left.pop(0)
+        line = [a, b]
+        grown = True
+        while grown:
+            grown = False
+            for i, (c, e) in enumerate(left):
+                if key(c) == key(line[-1]):
+                    line.append(e)
+                elif key(e) == key(line[-1]):
+                    line.append(c)
+                elif key(e) == key(line[0]):
+                    line.insert(0, c)
+                elif key(c) == key(line[0]):
+                    line.insert(0, e)
+                else:
+                    continue
+                left.pop(i)
+                grown = True
+                break
+        lines_.append(line)
+    for line in lines_:
+        p = chaikin(line, 2)
+        d.line([(x + 2, y + 3) for x, y in p], fill=(60, 52, 40, 70), width=7, joint="curve")
+        d.line(p, fill=(150, 146, 136, 255), width=6, joint="curve")
+        d.line(p, fill=(226, 224, 216, 255), width=3, joint="curve")
+        acc = 0.0
+        for a, b in zip(p, p[1:]):
+            L = math.dist(a, b)
+            t = (9 - acc % 9) if acc % 9 else 0
+            while t <= L:
+                x, y = a[0] + (b[0] - a[0]) * t / L, a[1] + (b[1] - a[1]) * t / L
+                d.ellipse([x - 1.5, y - 1.5, x + 1.5, y + 1.5], fill=(196, 192, 182, 255))
+                t += 9
+            acc += L
 
     # names of water and roads (hex place names are drawn by the game itself)
     def label(txt, at, ang, size, col=(60, 45, 30, 255), font=F_ITAL):
@@ -586,7 +712,7 @@ def make_board_art(grid, terrain, chains, fences, elev, painted=None, seed=1862,
         tw = int(d.textlength(txt, font=f)) + 20
         t = Image.new("RGBA", (tw, size * 2), (0, 0, 0, 0))
         td = ImageDraw.Draw(t)
-        td.text((tw / 2, size), txt, font=f, anchor="mm", fill=col, stroke_width=3, stroke_fill=(240, 232, 210, 200))
+        td.text((tw / 2, size), txt, font=f, anchor="mm", fill=col, stroke_width=3, stroke_fill=(240, 232, 210, 255))
         t = t.rotate(-math.degrees(ang), expand=True, resample=Image.BICUBIC)
         ov.alpha_composite(t, (int(at[0] - t.width / 2), int(at[1] - t.height / 2)))
     for txt, chain, frac, off, kind in chains.get("labels", []):
@@ -605,8 +731,9 @@ def make_board_art(grid, terrain, chains, fences, elev, painted=None, seed=1862,
     # v3.5: title cartouche with scale bars, and a compass rose, in the empty south-east corner (east
     # of the pike, south of Buffalo Lick Run: no objective, name or start hex within 5 hexes)
     px_per_m = SQ3 * R * SCALE / grid.s           # hex centre to centre = grid.s metres (300)
-    cartouche(ov, 4100, 4545, px_per_m)
-    compass_rose(ov, 3310, 4520, 180)
+    # v3.6 (Hotchkiss P10/P11): a smaller cartouche, a plain 8-point rose just west of it
+    cartouche(ov, 4280, 4560, px_per_m)
+    compass_rose(ov, 3670, 4600, 120)
 
     im.alpha_composite(ov)
     # clip to the board's hex outline, transparent outside (stock style)
@@ -616,6 +743,11 @@ def make_board_art(grid, terrain, chains, fences, elev, painted=None, seed=1862,
     # is median cut for NCOL - len(KEEP) colours plus the drawing colours of the small features.
     KEEP = [(150, 62, 44), (232, 224, 206), (226, 218, 200), (226, 220, 204), (170, 120, 90), (46, 30, 22),
             (96, 112, 60), (140, 180, 205), (70, 105, 140), (222, 198, 150), (54, 50, 44), (160, 156, 146)]
+    # v3.6 (Hotchkiss P1-P3, P7): woods, wall, trail/hachure brown, ink, label and paper colours,
+    # creeks, so the quantiser does not pull them to olive
+    KEEP += [(128, 114, 92), (116, 104, 86), (138, 124, 100), (122, 112, 96), (84, 72, 58),
+             (150, 146, 136), (226, 224, 216), (196, 192, 182), (95, 70, 45), (128, 98, 66), (58, 40, 26),
+             (70, 50, 32), (244, 236, 214), (80, 116, 146), (150, 186, 206), (50, 80, 110)]
     base_pal = rgb.quantize(colors=NCOL - len(KEEP), method=Image.Quantize.MEDIANCUT, dither=Image.Dither.NONE)
     flat = base_pal.getpalette()[:(NCOL - len(KEEP)) * 3] + [v for c in KEEP for v in c]
     pimg = Image.new("P", (1, 1))

@@ -1,6 +1,6 @@
 # Wishlist from a Civil War scenario maker
 
-Hello, and thank you for *Must Attack!* and the Wargame Maker. We made a First Kernstown (1862) scenario with the Wargame Maker export format and have played it four times (v3.5 is not yet played). The engine works well for this. The editor's help text now answers many of our earlier questions: replacements, the retreat and ZOC options, the standby fields (containment, main body %, opposing group), the fact that held units still fire, the list of AI personalities, elite and sudden-death units, and the activation cap. Thank you. This list keeps only what is still open.
+Hello, and thank you for *Must Attack!* and the Wargame Maker. We made a First Kernstown (1862) scenario with the Wargame Maker export format and have played it four times (v3.5 and v3.6 are not yet played). The engine works well for this. The editor's help text now answers many of our earlier questions: replacements, the retreat and ZOC options, the standby fields (containment, main body %, opposing group), the fact that held units still fire, the list of AI personalities, elite and sudden-death units, and the activation cap. Thank you. This list keeps only what is still open.
 
 Each item has three parts:
 - **Want:** what we would like
@@ -118,7 +118,7 @@ The field names are only suggestions.
 
 **20. Elite (surprise) units: the exact rules**
 - **Want:** a few help lines on the elite round: does it fire when an elite unit is attacked during the enemy's elite round; can an elite unit still on standby take part (or does the round wake it); does the AI plan its elite move, or just move those units as in a normal phase; and is the round spent if the first elite combat is a ranged artillery shot?
-- **Why:** v3.5 marks three brigades a side elite (Tyler's for the Union, Fulkerson's and Garnett's for Jackson). Tyler's brigade starts on standby. If a standby elite unit is skipped, the Union round may be wasted; if it is woken, the reserve timing breaks. We also cannot tell whether the Steady AI will use its round to leave the stone wall.
+- **Why:** v3.6 marks two counters a side elite (two of Tyler's for the Union; Fulkerson's and Garnett's 2nd/4th/27th for Jackson). Tyler's brigade starts on standby. If a standby elite unit is skipped, the Union round may be wasted; if it is woken, the reserve timing breaks. We also cannot tell whether the Steady AI will use its round to leave the stone wall.
 - **Smallest version:** document the current behaviour, or add `standby_groups[n].eliteWakes: true|false`.
 
 **21. Victory thresholds when the line is not in the middle**
@@ -138,7 +138,7 @@ What we already do in the data:
 - **No step losses or rally.** Replacements are on and every strength is doubled. The CRT is gentler: no AE, DE in 3 cells, and at 1:3 to 1:1 most rolls are "C", because the must-attack rule forces units in contact to attack at poor odds every turn.
 - **Units destroyed when the retreat is blocked.** Our validator checks that every stack starts with at least 2 open hexes behind it, that no two enemy flankers can close them all (v3.2), and that every battery starts stacked with infantry.
 - **Fortress hexes never retreat, and nothing retreats into mountain.** We made the stone wall and ridges `rough` (x2 defence) and kept one-sided fences, as Antietam's Bloody Lane does.
-- **Surprise used for initiative.** v3.5 marks Tyler's brigade and Fulkerson's and Garnett's elite, about a quarter of each side's strength, and leaves the HQs out so that neither side can spend or keep its round for free.
+- **Surprise used for initiative.** v3.6 marks two of Tyler's counters and Fulkerson's and Garnett's 2nd/4th/27th elite, about a fifth of each side's strength, and leaves the HQs out so that neither side can spend or keep its round for free.
 - **No leaders.** We added HQ counters with portraits for Kimball and Jackson, held back by standby groups. Brigade counters show the commander's name and portrait.
 - **No unit tooltips.** The commander and unit are printed on the counter, and the colonels are in the description.
 - **No events or turn labels.** The description has an "afternoon" timeline, and standby groups wake units at historical times.
