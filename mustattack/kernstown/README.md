@@ -459,6 +459,8 @@ You need:
 
 ## Change history
 
+**v3.8 (art only, no playtest yet):** Major Hotchkiss's engraved-detail pass on the board art (`board_art.py`, notes in `staff_notes/hotchkiss_art/`): tree-by-tree leafless woods, worm fences, shaded buildings with chimneys, Opequon Church cross and churchyard, ruled orchards, hatched Winchester blocks, meandering tapered creeks, cased roads and a stippled Pike, a wet-meadow sign, two springs, and an engraved neatline that breaks at the v3.7 exits (arrows kept). Only `meta.boardArt` changed; every other key in both JSONs is identical to v3.7 (the no-art file is byte-identical). Board art PNG 4,951,784 bytes (+2.1%), still 128 colours.
+
 **v3.7 (playtest 5 follow-up, no playtest yet):**
 - **Withdrawal.** Confederate exit hexes at (11-13,35) on the Valley Turnpike and (0-2,35) on the Middle Road; `exit_points_per_cs` {"first": 0, "second": 1}, `exit_sudden_death_cs` 0/0, `exitPoints` 0, as Second Bull Run. Small "To Newtown & Strasburg" and "South by the Middle Road" arrows on the board art, clear of the exit row. A [Withdrawal] briefing paragraph (all 8 language keys). winLine 45 and thresholds 5/40/81 unchanged. See "Withdrawal (v3.7)".
 - **Cohesion.** Sullivan 39 IL moved from standby group 3 to group 2 with the rest of its brigade. The validator now fails a brigade split across groups, and checks the exit settings.

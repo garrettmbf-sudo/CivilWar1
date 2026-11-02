@@ -189,10 +189,20 @@ def town(d, ov, city, chains, path, ox, oy, W, H, rng):
     lay = np.zeros((H, W, 4), np.uint8)
     lay[smask] = (218, 204, 172, 235)
     ov.alpha_composite(Image.fromarray(lay, "RGBA"))
+    HK_LOG["streets"] = smask                      # v3.8: for the overlap check
     def ok(x, y):
         xi, yi = int(x), int(y)
         return 0 <= xi < W and 0 <= yi < H and cm[yi, xi] and not avoid[yi, xi]
     cols = [(176, 112, 88, 255)] * 5 + [(232, 224, 206, 255)] * 3 + [(192, 182, 162, 255)] * 2
+    # v3.8: hatch the built-up blocks (inset 6 px from the street), clear of streets, pike and creek
+    blocks = []
+    for i in range(-14, 14):
+        for j in range(-14, 14):
+            u0, u1 = (i + 0.5) * BU + S / 2 + 6, (i + 1.5) * BU - S / 2 - 6
+            v0, v1 = (j + 0.5) * BV + S / 2 + 6, (j + 1.5) * BV - S / 2 - 6
+            if ok(*P((u0 + u1) / 2, (v0 + v1) / 2)):
+                blocks.append([P(u0, v0), P(u1, v0), P(u1, v1), P(u0, v1)])
+    hk_town_hatch(ov, blocks, cm & ~avoid & ~smask, W, H)
     for i in range(-14, 14):
         for j in range(-14, 14):
             u0, u1 = (i + 0.5) * BU + S / 2 + 2, (i + 1.5) * BU - S / 2 - 2
@@ -209,9 +219,10 @@ def town(d, ov, city, chains, path, ox, oy, W, H, rng):
                     if w >= 10 and rng.random() > 0.14:
                         dep = rng.uniform(22, 30)
                         quad = [P(u, vv), P(u + w, vv), P(u + w, vv + dv * dep), P(u, vv + dv * dep)]
-                        if all(ok(x, y) for x, y in quad):
+                        if all(ok(x, y) for x, y in quad) and hk_clear_poly(quad):   # v3.8: whole footprint
                             d.polygon([(x + 3, y + 4) for x, y in quad], fill=(40, 30, 20, 80))
                             d.polygon(quad, fill=cols[int(rng.integers(0, len(cols)))], outline=(70, 46, 34, 255))
+                            hk_register("town house", quad)          # v3.8
                             a, b = P(u + 2, vv + dv * dep / 2), P(u + w - 2, vv + dv * dep / 2)
                             d.line([a, b], fill=(96, 62, 46, 200), width=2)
                     u += w + rng.uniform(1, 7)
@@ -334,6 +345,7 @@ def make_board_art(grid, terrain, chains, fences, elev, painted=None, seed=1862,
     ox, oy, W, H = geometry(cols, rows)
     kgrid = grid.s / (SQ3 * R)                     # metres per world unit
     rng = np.random.default_rng(seed)
+    HK_LOG.update(objects=[], lines=None, streets=None, exit_zone=None)   # v3.8
     if painted and os.path.exists(painted):
         g = ground(painted, grid, W, H, ox, oy, kgrid)
         src = "painted"
@@ -418,6 +430,7 @@ def make_board_art(grid, terrain, chains, fences, elev, painted=None, seed=1862,
     # the heavy stone wall that the game treats as a fence
     from scipy.spatial import Voronoi
     vor = Voronoi(seeds * small)
+    hk_fences = []                                 # v3.8: drawn by hk_fence_runs() after the buildings
     site_px = [hex_px(*sh, ox, oy) for sh in site_hex]
     for (i, j), rv in zip(vor.ridge_points, vor.ridge_vertices):
         if -1 in rv:
@@ -436,7 +449,7 @@ def make_board_art(grid, terrain, chains, fences, elev, painted=None, seed=1862,
         ux, uy = (xb - xa) / L, (yb - ya) / L
         pts = [(xa + (xb - xa) * k / n + (-uy) * (2.5 if k % 2 else -2.5), ya + (yb - ya) * k / n + ux * (2.5 if k % 2 else -2.5))
                for k in range(n + 1)]
-        d.line(pts, fill=(128, 98, 66, 255), width=2)
+        hk_fences.append(pts)
 
     # hachures on the game's high ground: short strokes running downslope from the crest
     if hb.any():
@@ -458,30 +471,7 @@ def make_board_art(grid, terrain, chains, fences, elev, painted=None, seed=1862,
             L = min(dist[y, x], rng.uniform(8, 14))
             d.line([(x, y), (x + vx_ / n * L, y + vy_ / n * L)], fill=(128, 98, 66, 255), width=1)
 
-    # woods: v3.6 leafless March woodlots, sparse grey-brown crowns with open glades (Hotchkiss P1)
-    if woods_b.any():
-        sh_l = Image.new("L", (W, H), 0)
-        sd = ImageDraw.Draw(sh_l)
-        crowns = []
-        for y, x in np.argwhere(woods_b[::30, ::30]) * 30:
-            if rng.random() < 0.25:
-                continue
-            x += rng.uniform(-12, 12)
-            y += rng.uniform(-12, 12)
-            if not woods_b[min(int(y), H - 1), min(int(x), W - 1)]:
-                continue
-            rr = rng.uniform(6, 9)
-            crowns.append((x, y, rr))
-            sd.ellipse([x - rr + 3, y - rr + 4, x + rr + 3, y + rr + 4], fill=110)
-        sh_l = sh_l.filter(ImageFilter.GaussianBlur(3))
-        shadow = Image.new("RGBA", (W, H), (46, 40, 24, 0))
-        shadow.putalpha(sh_l.point(lambda v: v * 0.6))
-        im.alpha_composite(shadow)
-        tones = [(128, 114, 92), (116, 104, 86), (138, 124, 100), (122, 112, 96)]
-        for x, y, rr in crowns:
-            c = tones[int(rng.integers(0, len(tones)))]
-            d.ellipse([x - rr, y - rr, x + rr, y + rr], fill=c + (255,), outline=(84, 72, 58, 255), width=2)
-            d.arc([x - rr * 0.6, y - rr * 0.7, x + rr * 0.3, y + rr * 0.2], 190, 290, fill=(176, 164, 140, 255), width=2)
+    # woods: v3.8 drawn tree by tree by hk_woods(), after the roads and creeks are known
     for q, r in by.get("marsh", []):
         cx, cy = hex_px(q, r, ox, oy)
         for _ in range(8):
@@ -526,12 +516,12 @@ def make_board_art(grid, terrain, chains, fences, elev, painted=None, seed=1862,
             if math.dist(near, bl[end]) < 90:
                 rpaths["buffalo_lick"] = ([near] + bl) if end == 0 else (bl + [near])
                 break
-    for k, p in rpaths.items():
-        if k == "opequon_creek":
-            d.line(p, fill=(70, 105, 140, 255), width=8, joint="curve")
-            d.line(p, fill=(150, 186, 206, 255), width=3, joint="curve")
-        else:
-            d.line(p, fill=(80, 116, 146, 255), width=5, joint="curve")
+    # v3.8 (engraved pass): meandering, tapering creeks; the mask of every drawn line; the woods
+    # drawn tree by tree clear of it, with a clearing round each farmstead
+    rpaths = hk_meander(rpaths, seed)
+    hk_streams(d, rpaths)
+    hk_ctx = hk_lines(W, H, chains, path, rpaths)
+    hk_woods(im, d, woods_b, hk_ctx, seed, clearings=site_px)
     rs = Image.new("L", (W, H), 0)
     rsd = ImageDraw.Draw(rs)
     for name, chain in chains.get("roads", []):
@@ -543,12 +533,9 @@ def make_board_art(grid, terrain, chains, fences, elev, painted=None, seed=1862,
     for name, chain in chains.get("roads", []):
         p = path(chain)
         if name == "valley_pike":   # the macadamised Valley Turnpike: wide, pale stone surface
-            d.line(p, fill=(58, 46, 34, 255), width=19, joint="curve")
-            d.line(p, fill=(226, 220, 204, 255), width=12, joint="curve")
-            d.line(p, fill=(196, 188, 170, 255), width=2, joint="curve")
+            hk_pike(d, p)                          # v3.8: double-line macadam
         else:
-            d.line(p, fill=(80, 58, 36, 255), width=12, joint="curve")
-            d.line(p, fill=(222, 198, 150, 255), width=6, joint="curve")
+            hk_road(d, p)
     for chain in chains.get("trails", []):
         p = path(chain)
         segs = []
@@ -600,31 +587,24 @@ def make_board_art(grid, terrain, chains, fences, elev, painted=None, seed=1862,
                 return False
         c, s_ = math.cos(ang), math.sin(ang)
         rot = lambda pts: [(x + c * dx - s_ * dy, y + s_ * dx + c * dy) for dx, dy in pts]
-        d.polygon(rot([(-w + 4, -h + 5), (w + 4, -h + 5), (w + 4, h + 5), (-w + 4, h + 5)]), fill=(40, 30, 20, 90))
-        d.polygon(rot([(-w, -h), (w, -h), (w, h), (-w, h)]), fill=col, outline=(46, 30, 22, 255))
-        if roof:
-            d.line(rot([(-w, 0), (w, 0)]), fill=(60, 40, 30, 220), width=2)
+        hk_building(d, rot, w, h, ang, col, roof)    # v3.8: shaded roof, chimney
         tbd.polygon(rot([(-w - 2, -h - 2), (w + 2, -h - 2), (w + 2, h + 2), (-w - 2, h + 2)]), fill=255)
-        return True
+        return (x, y)
     # v3.2 farmsteads at the named farm / house / church hexes: house, barn, outbuilding, an orchard
     for (q, r), kind in sites:
         cx, cy = hex_px(q, r, ox, oy)
         a0 = rng.uniform(-0.3, 0.3)
         if kind == "church":
-            if bldg(cx - 6, cy + 8, 16, 11, a0, (226, 218, 200, 255), home=(cx, cy)):
-                d.line([(cx - 6, cy - 18), (cx - 6, cy - 4)], fill=(50, 34, 24, 255), width=3)
-                d.line([(cx - 12, cy - 13), (cx, cy - 13)], fill=(50, 34, 24, 255), width=3)
+            at = bldg(cx - 6, cy + 8, 16, 11, a0, (226, 218, 200, 255), home=(cx, cy))
+            if at:                                 # v3.8: cross and dotted churchyard, where it stands
+                hk_church(d, at[0], at[1], 16, 11, a0, lambda pts: clear(pts) and hk_ctx is not None
+                          and all(not hk_ctx["grown"][int(y), int(x)] for x, y in pts))
             continue
         bldg(cx - 18, cy + 10, 13, 9, a0, (232, 224, 206, 255), home=(cx, cy))            # house (whitewashed)
         if kind == "farm":
             bldg(cx + 20, cy + 6, 17, 10, a0 + 0.1, (150, 62, 44, 255), home=(cx, cy))    # bank barn
             bldg(cx + 2, cy + 34, 7, 5, a0, (170, 120, 90, 255), False, home=(cx, cy))    # outbuilding
-            for i in range(3):                                            # orchard rows
-                for j in range(4):
-                    x = cx - 44 + j * 13 + (i % 2) * 6
-                    y = cy - 34 + i * 12
-                    if clear([(x - 5, y - 5), (x + 5, y - 5), (x + 5, y + 5), (x - 5, y + 5), (x, y)]):
-                        d.ellipse([x - 4, y - 4, x + 4, y + 4], fill=(96, 112, 60, 255), outline=(56, 64, 34, 255))
+            hk_orchard(d, cx, cy, a0, lambda pts: clear(pts) and all(not hk_ctx["grown"][int(y), int(x)] for x, y in pts))  # v3.8
         else:
             bldg(cx + 14, cy + 18, 7, 5, a0, (170, 120, 90, 255), False, home=(cx, cy))
 
@@ -655,6 +635,14 @@ def make_board_art(grid, terrain, chains, fences, elev, painted=None, seed=1862,
             bldg(x, y, rng.uniform(9, 13), rng.uniform(6, 9), road_angle(x, y) + rng.uniform(-0.1, 0.1),
                  [(232, 224, 206, 255), (150, 62, 44, 255), (170, 120, 90, 255)][i], home=(cx, cy))
     town(d, ov, by.get("city", []), chains, path, ox, oy, W, H, rng)
+    # v3.8: worm fences (field edges, and along the roads and lanes near the farms), meadow tufts
+    # and springs, all clear of every line and building
+    tb = np.asarray(taken_b) > 0
+    for pts in hk_fences:
+        hk_fence_runs(d, pts, hk_ctx, tb, step=12, min_len=3)
+    hk_lane_fences(d, chains, path, hk_ctx, tb, open_m, woods_b, site_px)
+    hk_meadow(d, grid, ox, oy, hk_ctx, tb, woods_b, seed, keep_off=site_px)
+    hk_springs(d, grid, ox, oy, hk_ctx, tb)
 
     # stone wall on the fenced hexsides.  v3.6 (Hotchkiss P2): a thin, light limestone line instead of
     # v3.2's heavy dark sawtooth.  The fenced hexsides are joined where they share a corner and
@@ -754,6 +742,7 @@ def make_board_art(grid, terrain, chains, fences, elev, painted=None, seed=1862,
     cartouche(ov, 4280, 4560, px_per_m)
     compass_rose(ov, 3670, 4600, 120)
 
+    hk_neatline(ov, cols, rows, ox, oy, W, H)      # v3.8: engraved neatline
     im.alpha_composite(ov)
     # clip to the board's hex outline, transparent outside (stock style)
     board = hex_mask([(q, r) for r in range(rows) for q in range(cols)], ox, oy, W, H, 1.0) > 0.5
@@ -767,6 +756,7 @@ def make_board_art(grid, terrain, chains, fences, elev, painted=None, seed=1862,
     KEEP += [(128, 114, 92), (116, 104, 86), (138, 124, 100), (122, 112, 96), (84, 72, 58),
              (150, 146, 136), (226, 224, 216), (196, 192, 182), (95, 70, 45), (128, 98, 66), (58, 40, 26),
              (70, 50, 32), (244, 236, 214), (80, 116, 146), (150, 186, 206), (50, 80, 110)]
+    KEEP += [c for c in HK_KEEP if c not in KEEP]  # v3.8: engraved-pass inks
     base_pal = rgb.quantize(colors=NCOL - len(KEEP), method=Image.Quantize.MEDIANCUT, dither=Image.Dither.NONE)
     flat = base_pal.getpalette()[:(NCOL - len(KEEP)) * 3] + [v for c in KEEP for v in c]
     pimg = Image.new("P", (1, 1))
@@ -784,3 +774,463 @@ def make_board_art(grid, terrain, chains, fences, elev, painted=None, seed=1862,
     meta = {"version": 1, "style": "acw_b", "scale": SCALE, "hexSize": R, "originX": round(ox, 3), "originY": round(oy, 3),
             "grid": "#282828", "gridAlpha": 0.2, "hash": hashlib.sha1(png).hexdigest()}
     return out, png, meta, src
+
+
+# ================================================================ v3.8 engraved detail pass (Hotchkiss)
+# Everything below is called from make_board_art() through short hooks marked "v3.8".  The look is
+# Jed. Hotchkiss's manuscript map of the battle (LOC g3884w.cwh00090, "H90", in the repo at
+# data/historic_maps/hotchkiss_h90_hi.png) and the Official Records atlas: fine ink line work, double-
+# line roads, zigzag worm fences along the roads, small shaded buildings, a church with a cross in a
+# dotted churchyard, orchards in rows, leafless trees drawn one by one, and meadow tufts.
+# Only features in the repo's data are drawn: the pritchard_sandy_meadow polygon and the two springs
+# are from data/features/kernstown_features.json (copied here with their source, as the build does
+# not pass that file in).  No mill, toll gate, milestone or rail is drawn (see the staff note).
+# HK_LOG records every object drawn, and the lines it must stay off, for the 0-overlap check.
+
+HK_INK = (72, 56, 40)
+HK_TREE = [(188, 176, 150), (176, 164, 138), (196, 184, 158)]       # pale leafless crowns
+HK_TREE_DARK, HK_TREE_LIT, HK_STIPPLE = (92, 80, 64), (150, 136, 112), (110, 98, 80)
+HK_MEADOW, HK_MEADOW_BASE = (78, 92, 66), (96, 124, 140)
+HK_FENCE = (128, 98, 66)
+HK_HATCH = (166, 140, 112)
+HK_KEEP = [*HK_TREE, HK_TREE_DARK, HK_TREE_LIT, HK_STIPPLE, HK_MEADOW, HK_MEADOW_BASE, HK_HATCH, HK_INK,
+           (118, 48, 36), (196, 186, 166), (140, 96, 72), (184, 176, 158), (196, 188, 170), (90, 70, 50),
+           (176, 172, 160)]
+# data/features/kernstown_features.json: springs[], marshes.pritchard_sandy_meadow.polygon (lon, lat)
+HK_SPRINGS = [("Spring near Hoge", -78.212, 39.144), ("Spring E of Pike", -78.19, 39.146)]
+HK_MEADOW_POLY = [(-78.218, 39.1505), (-78.2135, 39.1528), (-78.2085, 39.1545), (-78.205, 39.1548),
+                  (-78.2035, 39.1525), (-78.2055, 39.1498), (-78.21, 39.1482), (-78.2145, 39.1485),
+                  (-78.2175, 39.1495)]
+HK_LOG = {"objects": [], "lines": None, "streets": None, "exit_zone": None}
+
+
+def hk_register(kind, pts, width=0):
+    """Record a drawn object: a polygon (width 0) or a polyline of the given width."""
+    HK_LOG["objects"].append((kind, [(float(x), float(y)) for x, y in pts], width))
+
+
+def hk_lonlat_px(grid, ox, oy, lon, lat):
+    xm, ym = grid.lonlat_to_xy(lon, lat)
+    k = grid.s / (SQ3 * R)
+    return ((xm - grid.s / 2) / k - ox) * SCALE, ((ym - grid.s / 2) / k - oy) * SCALE
+
+
+def _resample(p, step):
+    out = [p[0]]
+    acc = 0.0
+    for a, b in zip(p, p[1:]):
+        L = math.dist(a, b)
+        t = step - acc
+        while t <= L:
+            out.append((a[0] + (b[0] - a[0]) * t / L, a[1] + (b[1] - a[1]) * t / L))
+            t += step
+        acc = (acc + L) % step
+    if math.dist(out[-1], p[-1]) > 1:
+        out.append(p[-1])
+    return out
+
+
+def _normals(p):
+    n = []
+    for i in range(len(p)):
+        a, b = p[max(0, i - 1)], p[min(len(p) - 1, i + 1)]
+        dx, dy = b[0] - a[0], b[1] - a[1]
+        L = math.hypot(dx, dy) or 1.0
+        n.append((-dy / L, dx / L))
+    return n
+
+
+def hk_meander(rpaths, seed=1862):
+    """Creeks that wiggle: two summed sines across the line (<= 5 px), fading out at both ends so the
+    confluences and board-edge exits stay where they were."""
+    rng = np.random.default_rng(seed + 38)
+    out = {}
+    for k, p in rpaths.items():
+        q = _resample(p, 5)
+        n = _normals(q)
+        f1, f2 = rng.uniform(0, 6.3, 2)
+        amp = 2.4 if k == "opequon_creek" else 3.2
+        tot = 5.0 * (len(q) - 1)
+        res = []
+        for i, ((x, y), (nx, ny)) in enumerate(zip(q, n)):
+            s = 5.0 * i
+            fade = min(1.0, s / 60, (tot - s) / 60)
+            o = fade * (amp * math.sin(2 * math.pi * s / 74 + f1) + 0.6 * amp * math.sin(2 * math.pi * s / 29 + f2))
+            res.append((x + nx * o, y + ny * o))
+        out[k] = res
+    return out
+
+
+def hk_streams(d, rpaths):
+    """Creeks taper from source to mouth.  The mouth of a run is the end nearer the Opequon; the
+    Opequon flows north.  The Opequon gets a fine water line either side (OR atlas style)."""
+    oq = rpaths.get("opequon_creek", [])
+    def mouth_last(k, p):
+        if k == "opequon_creek" or not oq:
+            return p[-1][1] < p[0][1]
+        da = min(math.dist(p[0], o) for o in oq[::4])
+        db = min(math.dist(p[-1], o) for o in oq[::4])
+        return db < da
+    def taper(p, w0, w1, col):
+        cum = [0.0]
+        for a, b in zip(p, p[1:]):
+            cum.append(cum[-1] + math.dist(a, b))
+        L = cum[-1] or 1.0
+        for i, (a, b) in enumerate(zip(p, p[1:])):
+            w = w0 + (w1 - w0) * (cum[i] / L) ** 0.8
+            d.line([a, b], fill=col, width=max(1, round(w)))
+            if w >= 2.5:
+                r_ = w / 2 - 0.3
+                d.ellipse([b[0] - r_, b[1] - r_, b[0] + r_, b[1] + r_], fill=col)
+    for k, p in rpaths.items():
+        p = p if mouth_last(k, p) else p[::-1]
+        if k == "opequon_creek":
+            for side in (-1, 1):
+                n = _normals(p)
+                lp = [(x + nx * side * 9, y + ny * side * 9) for (x, y), (nx, ny) in zip(p, n)]
+                d.line(lp, fill=(150, 186, 206, 255), width=1)
+            taper(p, 5.5, 9.0, (70, 105, 140, 255))
+            taper(p, 1.5, 3.5, (150, 186, 206, 255))
+        else:
+            taper(p, 1.6, 5.2, (80, 116, 146, 255))
+
+
+def hk_lines(W, H, chains, path, rpaths):
+    """Mask of every drawn road, lane and creek at its drawn width (the strict check), and a copy
+    grown by a few px (what new objects keep off)."""
+    m = Image.new("L", (W, H), 0)
+    md = ImageDraw.Draw(m)
+    for name, chain in chains.get("roads", []):
+        md.line(path(chain), fill=255, width=19 if name == "valley_pike" else 12, joint="curve")
+    for chain in chains.get("trails", []):
+        md.line(path(chain), fill=255, width=4)
+    for k, p in rpaths.items():
+        md.line(p, fill=255, width=28 if k == "opequon_creek" else 6, joint="curve")   # Opequon incl. its water lines
+    strict = np.asarray(m) > 0
+    HK_LOG["lines"] = strict
+    grown = ndimage.binary_dilation(strict, iterations=5)
+    grown |= hk_exit_zone(W, H, chains)
+    return {"strict": strict, "grown": grown, "W": W, "H": H}
+
+
+def hk_exit_zone(W, H, chains, ox=None, oy=None):
+    """The v3.7 exit hexes, and the arrow and legend v3.7 draws one row in, kept free of every
+    object this pass adds."""
+    if ox is None:
+        ox, oy = -SQ3 * R / 2 - PAD, -R - PAD
+    m = Image.new("L", (W, H), 0)
+    md = ImageDraw.Draw(m)
+    f = ImageFont.truetype(F_ITAL, 30)
+    for txt, (q, r) in chains.get("exits", []):
+        for dq in (-1, 0, 1):
+            md.polygon(corners(*hex_px(q + dq, r, ox, oy), 1.02), fill=255)
+        rx, ry = hex_px(q + 1, r - 1, ox, oy)
+        ax = rx + 70
+        tw = md.textlength(txt, font=f)
+        tx = min(ax + 18, W - 30 - tw)
+        if tx < ax + 18:
+            tx = ax - 18 - tw
+        md.rectangle([min(ax - 24, tx - 12), ry - 50, max(ax + 24, tx + tw + 12), ry + 56], fill=255)
+    z = np.asarray(m) > 0
+    HK_LOG["exit_zone"] = z
+    return z
+
+
+def _free(ctx, pts, taken=None):
+    g, W, H = ctx["grown"], ctx["W"], ctx["H"]
+    for x, y in pts:
+        xi, yi = int(x), int(y)
+        if not (0 <= xi < W and 0 <= yi < H) or g[yi, xi] or (taken is not None and taken[yi, xi]):
+            return False
+    return True
+
+
+def hk_tree(d, x, y, rr, rng):
+    """One leafless tree: a pale crown with a scalloped outline, dark on the shaded south-east side
+    and light on the lit north-west side, three stipple dots of twig, and a trunk tick."""
+    pts = []
+    ph = rng.uniform(0, 6.3)
+    for i in range(19):
+        t = 2 * math.pi * i / 18
+        rad = rr * (1 + 0.13 * math.sin(6 * t + ph))
+        pts.append((x + rad * math.cos(t), y + rad * math.sin(t)))
+    d.polygon(pts, fill=HK_TREE[int(rng.integers(0, len(HK_TREE)))] + (255,))
+    for (a, b) in zip(pts, pts[1:]):
+        mxp, myp = (a[0] + b[0]) / 2 - x, (a[1] + b[1]) / 2 - y
+        shaded = mxp + myp > -rr * 0.3                  # facing away from a north-west light
+        d.line([a, b], fill=(HK_TREE_DARK if shaded else HK_TREE_LIT) + (255,), width=2 if shaded else 1)
+    for _ in range(3):
+        sx, sy = x + rng.uniform(-rr * 0.5, rr * 0.5), y + rng.uniform(-rr * 0.5, rr * 0.5)
+        d.point([(sx, sy), (sx + 1, sy)], fill=HK_STIPPLE + (255,))
+    d.line([(x + 1, y + rr * 0.95), (x + 1, y + rr * 0.95 + 3)], fill=HK_TREE_DARK + (255,), width=1)
+
+
+def hk_woods(im, d, woods_b, ctx, seed, clearings=()):
+    """Woodlots as individual leafless trees (H90 draws its woods tree by tree), on a jittered
+    22 px lattice with glades, kept off every road, lane and creek, with a clearing round each farm."""
+    if not woods_b.any():
+        return
+    rng = np.random.default_rng(seed + 11)
+    H, W = woods_b.shape
+    crowns = []
+    for y, x in np.argwhere(woods_b[::22, ::22]) * 22:
+        if rng.random() < 0.18:
+            continue
+        x, y = x + rng.uniform(-8, 8), y + rng.uniform(-8, 8)
+        rr = rng.uniform(5.0, 8.0)
+        if not woods_b[min(int(y), H - 1), min(int(x), W - 1)]:
+            continue
+        if any(math.dist((x, y), c) < 75 for c in clearings):
+            continue
+        ring = [(x + (rr + 3) * math.cos(a), y + (rr + 4) * math.sin(a)) for a in np.linspace(0, 2 * math.pi, 9)] + [(x, y)]
+        if not _free(ctx, ring):
+            continue
+        crowns.append((x, y, rr))
+    sh = Image.new("L", (W, H), 0)
+    sd = ImageDraw.Draw(sh)
+    for x, y, rr in crowns:
+        sd.ellipse([x - rr + 3, y - rr + 4, x + rr + 3, y + rr + 4], fill=90)
+    sh = sh.filter(ImageFilter.GaussianBlur(2.5))
+    shadow = Image.new("RGBA", (W, H), (46, 40, 24, 0))
+    shadow.putalpha(sh)
+    im.alpha_composite(shadow)
+    crowns.sort(key=lambda c: c[1])                    # back to front
+    for x, y, rr in crowns:
+        hk_tree(d, x, y, rr, rng)
+        hk_register("tree", [(x - rr, y - rr), (x + rr, y - rr), (x + rr, y + rr + 3), (x - rr, y + rr + 3)])
+
+
+def _zigzag(run, amp=2.5):
+    n = _normals(run)
+    return [(x + nx * (amp if i % 2 else -amp), y + ny * (amp if i % 2 else -amp)) for i, ((x, y), (nx, ny)) in enumerate(zip(run, n))]
+
+
+def hk_fence_runs(d, pts, ctx, taken, step=10, min_len=4):
+    """Draw a worm fence along pts, only where it is clear of every line and building."""
+    q = _resample(pts, step) if len(pts) >= 2 else pts
+    run = []
+    def flush():
+        if len(run) >= min_len:
+            z = _zigzag(run)
+            d.line(z, fill=HK_FENCE + (255,), width=1)
+            d.line([(x, y + 1) for x, y in z], fill=HK_FENCE + (110,), width=1)   # a hair of shadow
+            hk_register("fence", z, 2)
+        run.clear()
+    for p in q:
+        if _free(ctx, [p, (p[0] + 4, p[1] + 4), (p[0] - 4, p[1] - 4), (p[0] + 4, p[1] - 4), (p[0] - 4, p[1] + 4)], taken):
+            run.append(p)
+        else:
+            flush()
+    flush()
+
+
+def hk_lane_fences(d, chains, path, ctx, taken, open_m, woods_b, site_px, off=30):
+    """Worm fences along both sides of the roads and lanes near the farms, as H90 draws them."""
+    lines = [path(c) for _, c in chains.get("roads", [])] + [path(c) for c in chains.get("trails", [])]
+    H, W = woods_b.shape
+    for p in lines:
+        q = _resample(p, 10)
+        n = _normals(q)
+        for side in (-1, 1):
+            run = []
+            for (x, y), (nx, ny) in zip(q, n):
+                fx, fy = x + nx * side * off, y + ny * side * off
+                ok = (0 <= fx < W and 0 <= fy < H and open_m[int(fy), int(fx)] > 0.5 and not woods_b[int(fy), int(fx)]
+                      and site_px and min(math.dist((fx, fy), s) for s in site_px) < 330)
+                if ok:
+                    run.append((fx, fy))
+                elif run:
+                    hk_fence_runs(d, run, ctx, taken)
+                    run = []
+            if run:
+                hk_fence_runs(d, run, ctx, taken)
+
+
+def hk_meadow(d, grid, ox, oy, ctx, taken, woods_b, seed, keep_off=()):
+    """Tufts of rough grass in the wet meadow between Sandy Ridge and Pritchard's Hill
+    (kernstown_features.json marshes.pritchard_sandy_meadow)."""
+    poly = [hk_lonlat_px(grid, ox, oy, lon, lat) for lon, lat in HK_MEADOW_POLY]
+    H, W = woods_b.shape
+    m = Image.new("L", (W, H), 0)
+    ImageDraw.Draw(m).polygon(poly, fill=255)
+    m = np.asarray(m) > 0
+    rng = np.random.default_rng(seed + 23)
+    ys, xs = np.where(m[::30, ::34])
+    for y, x in zip(ys * 30, xs * 34):
+        x += 17 * ((y // 30) % 2)                  # staggered rows, as engraved marsh signs are set
+        if rng.random() < 0.22:                    # open water-meadow between the clumps
+            continue
+        x, y = x + rng.uniform(-12, 12), y + rng.uniform(-9, 9)
+        xi, yi = int(x), int(y)
+        if not (0 <= xi < W and 0 <= yi < H) or not m[yi, xi] or woods_b[yi, xi]:
+            continue
+        if any(math.dist((x, y), k) < 70 for k in keep_off):
+            continue
+        box = [(x - 10, y - 11), (x + 10, y - 11), (x + 10, y + 5), (x - 10, y + 5)]
+        if not _free(ctx, box, taken):
+            continue
+        # the period marsh sign: a tuft over short ruled water lines
+        d.line([(x - 9, y + 1), (x + 9, y + 1)], fill=HK_MEADOW_BASE + (255,), width=1)
+        d.line([(x - 5, y + 4), (x + 6, y + 4)], fill=HK_MEADOW_BASE + (255,), width=1)
+        L = rng.uniform(6, 9)
+        for dx in (-5, -2.5, 0, 2.5, 5):
+            d.line([(x + dx * 0.4, y), (x + dx, y - L * (1 - abs(dx) / 14))], fill=HK_MEADOW + (255,), width=1)
+        hk_register("meadow tuft", box)
+
+
+def hk_springs(d, grid, ox, oy, ctx, taken):
+    """The two springs in kernstown_features.json: a small ring with a dot, the period sign.  If the
+    data point falls on a line it moves to the nearest clear spot within 40 px."""
+    for name, lon, lat in HK_SPRINGS:
+        x0, y0 = hk_lonlat_px(grid, ox, oy, lon, lat)
+        for rad in (0, 12, 24, 40):
+            for k in range(8 if rad else 1):
+                x, y = x0 + rad * math.cos(k * math.pi / 4), y0 + rad * math.sin(k * math.pi / 4)
+                box = [(x - 8, y - 8), (x + 8, y - 8), (x + 8, y + 8), (x - 8, y + 8), (x, y)]
+                if _free(ctx, box, taken):
+                    d.ellipse([x - 6, y - 6, x + 6, y + 6], outline=(70, 105, 140, 255), width=2)
+                    d.ellipse([x - 1.5, y - 1.5, x + 1.5, y + 1.5], fill=(70, 105, 140, 255))
+                    hk_register("spring", box[:4])
+                    break
+            else:
+                continue
+            break
+
+
+def hk_pike(d, p):
+    """The macadamised Valley Turnpike as a double-line road: two fine ink edges, a pale metalled
+    surface and a light stipple of broken stone."""
+    d.line(p, fill=(58, 46, 34, 255), width=19, joint="curve")
+    d.line(p, fill=(226, 220, 204, 255), width=15, joint="curve")
+    q = _resample(p, 11)
+    n = _normals(q)
+    for i, ((x, y), (nx, ny)) in enumerate(zip(q, n)):
+        o = (2.5 if i % 2 else -2.5) + (1.5 if i % 3 == 0 else 0)
+        d.point([(x + nx * o, y + ny * o)], fill=(184, 176, 158, 255))
+
+
+def hk_road(d, p):
+    """A common road: double fine edges, pale earth between."""
+    d.line(p, fill=(80, 58, 36, 255), width=12, joint="curve")
+    d.line(p, fill=(222, 198, 150, 255), width=8, joint="curve")
+
+
+def _shade(col, k=0.78):
+    return tuple(int(c * k) for c in col[:3]) + (255,)
+
+
+def hk_building(d, rot, w, h, ang, col, roof=True):
+    """A small building drawn as H90/OR atlas do: cast shadow, wall outline, a ridged roof with the
+    half away from the north-west light shaded, and (for a house) a chimney at one gable."""
+    d.polygon(rot([(-w + 4, -h + 5), (w + 4, -h + 5), (w + 4, h + 5), (-w + 4, h + 5)]), fill=(40, 30, 20, 90))
+    long_x = w >= h
+    if long_x:
+        a_half, b_half = [(-w, -h), (w, -h), (w, 0), (-w, 0)], [(-w, 0), (w, 0), (w, h), (-w, h)]
+        nrm = (-math.sin(ang), math.cos(ang))          # outward normal of the +y half
+    else:
+        a_half, b_half = [(-w, -h), (0, -h), (0, h), (-w, h)], [(0, -h), (w, -h), (w, h), (0, h)]
+        nrm = (math.cos(ang), math.sin(ang))
+    b_lit = (nrm[0] + nrm[1]) < 0                       # faces the north-west light
+    col = tuple(col[:3]) + (255,)
+    d.polygon(rot(a_half), fill=col if b_lit is False else _shade(col))
+    d.polygon(rot(b_half), fill=col if b_lit else _shade(col))
+    if roof:
+        d.line(rot([(-w, 0), (w, 0)] if long_x else [(0, -h), (0, h)]), fill=(60, 40, 30, 255), width=1)
+        if long_x:   # hipped ends
+            for sx in (-1, 1):
+                d.line(rot([(sx * w, -h), (sx * (w - min(h, w / 3)), 0), (sx * w, h)]), fill=(60, 40, 30, 255), width=1)
+    d.polygon(rot([(-w, -h), (w, -h), (w, h), (-w, h)]), outline=(46, 30, 22, 255))
+    if roof and col[:3] == (232, 224, 206) and long_x:
+        cx_, cy_ = rot([(-w + 3, 0)])[0]
+        d.rectangle([cx_ - 2, cy_ - 2, cx_ + 2, cy_ + 2], fill=(90, 70, 50, 255))
+    hk_register("building", rot([(-w, -h), (w, -h), (w, h), (-w, h)]))
+
+
+def hk_church(d, x, y, w, h, ang, clear):
+    """Opequon Church: an upright cross over the gable, and the dotted churchyard enclosure H90
+    draws round the church by Kernstown (only the dots that are clear of every line)."""
+    c, s_ = math.cos(ang), math.sin(ang)
+    rot = lambda pts: [(x + c * dx - s_ * dy, y + s_ * dx + c * dy) for dx, dy in pts]
+    gx, gy = rot([(-w * 0.55, 0)])[0]
+    d.line([(gx, gy - 6), (gx, gy - 20)], fill=(50, 34, 24, 255), width=3)
+    d.line([(gx - 5, gy - 15), (gx + 5, gy - 15)], fill=(50, 34, 24, 255), width=3)
+    hk_register("cross", [(gx - 6, gy - 21), (gx + 6, gy - 21), (gx + 6, gy - 5), (gx - 6, gy - 5)])
+    yard = rot([(-w - 16, -h - 14), (w + 16, -h - 14), (w + 16, h + 14), (-w - 16, h + 14), (-w - 16, -h - 14)])
+    for a, b in zip(yard, yard[1:]):
+        L = math.dist(a, b)
+        for k in range(int(L // 8) + 1):
+            px_, py_ = a[0] + (b[0] - a[0]) * k * 8 / L, a[1] + (b[1] - a[1]) * k * 8 / L
+            box = [(px_ - 2, py_ - 2), (px_ + 2, py_ - 2), (px_ + 2, py_ + 2), (px_ - 2, py_ + 2)]
+            if clear(box):
+                d.ellipse([px_ - 1.6, py_ - 1.6, px_ + 1.6, py_ + 1.6], fill=(90, 70, 50, 255))
+                hk_register("churchyard dot", box)
+
+
+def hk_orchard(d, hx, hy, ang, clear):
+    """An orchard in neat rows: 4 rows of 5 small trees, square to the farmstead, north-west of the
+    house; a tree that is not clear of roads, creeks, lanes and buildings is left out."""
+    c, s_ = math.cos(ang), math.sin(ang)
+    for i in range(4):
+        for j in range(5):
+            dx, dy = -66 + j * 11, -50 + i * 11
+            x, y = hx + c * dx - s_ * dy, hy + s_ * dx + c * dy
+            box = [(x - 4, y - 4), (x + 4, y - 4), (x + 4, y + 4), (x - 4, y + 4), (x, y)]
+            if clear(box):
+                d.ellipse([x - 3.2, y - 3.2, x + 3.2, y + 3.2], fill=(176, 172, 160, 255), outline=HK_TREE_DARK + (255,), width=1)
+                d.point([(x, y)], fill=HK_TREE_DARK + (255,))
+                hk_register("orchard tree", box[:4])
+
+
+def hk_town_hatch(ov, blocks, keep, W, H):
+    """Winchester's built-up blocks hatched at 45 degrees, as the OR atlas fills a town."""
+    if not blocks:
+        return
+    bm = Image.new("L", (W, H), 0)
+    bd = ImageDraw.Draw(bm)
+    for quad in blocks:
+        bd.polygon(quad, fill=255)
+    yy, xx = np.ogrid[0:H, 0:W]
+    hatch = ((xx + yy) % 7) == 0
+    m = (np.asarray(bm) > 0) & hatch & keep
+    lay = np.zeros((H, W, 4), np.uint8)
+    lay[m] = HK_HATCH + (255,)
+    ov.alpha_composite(Image.fromarray(lay, "RGBA"))
+
+
+def hk_neatline(ov, cols, rows, ox, oy, W, H):
+    """A fine engraved neatline just inside the board's hex outline: a 3 px rule and a hairline 6 px
+    inside it."""
+    b = hex_mask([(q, r) for r in range(rows) for q in range(cols)], ox, oy, W, H, 1.0) > 0.5
+    e2 = ndimage.binary_erosion(b, iterations=2)
+    e5 = ndimage.binary_erosion(e2, iterations=3)
+    e11 = ndimage.binary_erosion(e5, iterations=6)
+    e12 = ndimage.binary_erosion(e11, iterations=1)
+    lay = np.zeros((H, W, 4), np.uint8)
+    gap = HK_LOG.get("exit_zone")
+    gap = np.zeros((H, W), bool) if gap is None else gap
+    lay[e2 & ~e5 & ~gap] = INK
+    lay[e11 & ~e12 & ~gap] = INK
+    ov.alpha_composite(Image.fromarray(lay, "RGBA"))
+
+
+def hk_clear_poly(poly, pad=3):
+    """True when a footprint, grown by pad px, touches no road, lane, creek or street at drawn width."""
+    L = HK_LOG["lines"]
+    if L is None:
+        return True
+    H, W = L.shape
+    xs, ys = [p[0] for p in poly], [p[1] for p in poly]
+    x0, y0 = max(int(min(xs)) - pad - 1, 0), max(int(min(ys)) - pad - 1, 0)
+    x1, y1 = min(int(max(xs)) + pad + 2, W), min(int(max(ys)) + pad + 2, H)
+    if x1 <= x0 or y1 <= y0:
+        return True
+    m = Image.new("L", (x1 - x0, y1 - y0), 0)
+    ImageDraw.Draw(m).polygon([(x - x0, y - y0) for x, y in poly], fill=255, outline=255, width=1 + 2 * pad)
+    grown = np.asarray(m) > 0
+    if grown[L[y0:y1, x0:x1]].any():
+        return False
+    if HK_LOG["streets"] is None:
+        return True
+    m = Image.new("L", (x1 - x0, y1 - y0), 0)       # the houses front the streets: test the bare footprint
+    ImageDraw.Draw(m).polygon([(x - x0, y - y0) for x, y in poly], fill=255)
+    return not (np.asarray(m) > 0)[HK_LOG["streets"][y0:y1, x0:x1]].any()
