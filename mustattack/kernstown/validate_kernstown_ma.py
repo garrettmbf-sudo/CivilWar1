@@ -304,6 +304,60 @@ def main(path, refdir):
         if ba["hash"] != hashlib.sha1(png).hexdigest():
             warn("boardArt.hash is not the SHA-1 of the image (meaning of stock hash unknown)")
         print(f"  boardArt {im.size} {im.mode}, {len(png)/1e6:.2f} MB PNG")
+    # ---- v3: retreat rules use stock values only; crt shape/values/monotonic
+    for k in ("retreat_control", "retreat_distance", "zoc_exit_allowed", "full_move_entry_allowed", "replacement"):
+        seen = {json.dumps(st["scenario"]["rules"].get(k)) for nm, st in stock.items() if not nm.startswith("user_") if k in st["scenario"]["rules"]}
+        if json.dumps(rules.get(k)) not in seen:
+            err(f"rules.{k} = {rules.get(k)!r} is not a value any stock file uses ({sorted(seen)})")
+    if "crt" in rules:
+        crt = rules["crt"]
+        stock_vals = {v for nm, st in stock.items() if not nm.startswith("user_") for row in st["scenario"]["rules"].get("crt", []) for v in row}
+        rank = {"AE": 0, "AR": 1, "C": 2, "DR": 3, "DE": 4}
+        if len(crt) != 8 or any(len(r) != 6 for r in crt):
+            err("crt is not 8 rows x 6 columns (stock shape)")
+        elif any(v not in stock_vals for r in crt for v in r):
+            err(f"crt has values outside the stock set {sorted(stock_vals)}")
+        else:
+            for i in range(8):
+                for j in range(6):
+                    if j and rank[crt[i][j]] < rank[crt[i][j - 1]]:
+                        err(f"crt row {i}: die {j + 1} worse for the attacker than die {j}")
+                    if i and rank[crt[i][j]] < rank[crt[i - 1][j]]:
+                        err(f"crt die {j + 1}: odds row {i} worse for the attacker than row {i - 1}")
+            flat = [v for r in crt for v in r]
+            print(f"  crt: AE {flat.count('AE')}, AR {flat.count('AR')}, C {flat.count('C')}, DR {flat.count('DR')}, DE {flat.count('DE')}")
+    # ---- v3: every starting stack has >= 2 open hexes to fall back into
+    terr_by_id = {t["id"]: t for t in d["assets"]["terrains"]}
+    Hx = {(h["q"], h["r"]): h for h in hexes}
+    def cube(q, r):
+        x = q - (r - (r & 1)) // 2
+        return x, -x - r, r
+    def hd(a, b):
+        A, B = cube(*a), cube(*b)
+        return max(abs(A[i] - B[i]) for i in range(3))
+    occ = {}
+    for u in sc["units"]:
+        occ.setdefault((u["q"], u["r"]), []).append(u)
+    rooms = []
+    for hx, us in sorted(occ.items()):
+        side = us[0]["side"]
+        enemy = [k for k, v in occ.items() if v[0]["side"] != side]
+        ezoc = {nb(*e, k) for e in enemy for k in range(6)}
+        d0 = min(hd(hx, e) for e in enemy)
+        room = []
+        for k in range(6):
+            n = nb(*hx, k)
+            if n not in Hx or terr_by_id.get(Hx[n]["terrainId"], {}).get("moveCost", 1) >= 99:
+                continue
+            if n in ezoc or (n in occ and (occ[n][0]["side"] != side or len(occ[n]) >= lim)):
+                continue
+            if min(hd(n, e) for e in enemy) > d0:   # strictly farther from every enemy unit
+                room.append(n)
+        if len(room) < 2:
+            err(f"stack at {hx} ({', '.join(u['name'] for u in us)}) has {len(room)} open rear hexes (< 2)")
+        rooms.append(len(room))
+    print(f"  rear room: every stack has >= {min(rooms)} open rear hexes (on board, passable, not enemy ZOC, "
+          f"stack space, strictly farther from the nearest enemy unit)")
     # ---- thresholds formula (inferred from the six stock scenarios)
     vc = d["victoryCondition"]
     op = round(0.2 * sum(u["combatStrength"] for u in sc["units"]) + 0.4 * sum(h["vp"]["first"] for h in hexes))

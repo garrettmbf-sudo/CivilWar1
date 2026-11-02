@@ -283,6 +283,12 @@ NAMED_SITES = [
     ("Opequon Ford", (-78.172, 39.146)),
     ("Middle Road", (-78.2330, 39.1350)),
     ("Frederick County Courthouse", None),           # same hex as Winchester VP: skipped
+    # v3: farmhouses marked as 19th-century structures on the American Battlefield Trust map
+    # (First Kernstown, Sept. 2024 edition, data/historic_maps/First-Kernstown-ABT-2024.pdf).  Placed
+    # by their offset on that map from Glass, Pritchard and Kernstown, so +/- 1 hex.
+    ("Marcauley Farm", (12, 21)),
+    ("Mahaney House", (15, 22)),
+    ("Triplett House", (17, 22)),
 ]
 
 
@@ -298,13 +304,17 @@ NAMED_SITES = [
 # Hunt's reserve, Second Bull Run S.D. Lee).
 UNITS = [
     # --- Union: Shields' division (Kimball commanding on the field).  ~6,300 inf+cav+arty engaged.
+    # v3: field commanders as their own counters, the stock pattern ("Lee Army N. Va." CS 2 MP 4 in
+    # gainesmill1862, "Porter V Corps HQ" CS 1 in malvernhill1862).  CS 1: a headquarters and escort.
+    # Both are in hold groups (turn 0 / chance 0) so the AI keeps them back; a human moves them freely.
+    (0, "Kimball", "Shields' Div. HQ", "hq", 1, 4, 1, (13, 14), 3),
     (0, "Kimball", "14 IN/84 PA", "inf", 3, 4, 1, (12, 16), 0),
     (0, "Kimball", "8 OH/67 OH", "inf", 3, 4, 1, (14, 16), 0),
     (0, "Jenks", "A 1 WV Bty", "art", 2, 3, 3, (13, 17), 0),
     (0, "Clark", "E 4 US Bty", "art", 2, 3, 3, (13, 17), 0),
     (0, "Robinson", "L 1 OH Bty", "art", 2, 3, 3, (13, 16), 0),
-    (0, "Davey", "B 1 WV Bty", "art", 2, 3, 3, (17, 18), 0),
-    (0, "Brodhead", "1 MI Cav", "cav", 1, 6, 1, (7, 12), 0),
+    (0, "Davey", "B 1 WV Bty", "art", 2, 3, 3, (16, 17), 0),    # v3: was (17,18), 1 rear hex
+    (0, "Brodhead", "1 MI Cav", "cav", 1, 6, 1, (6, 12), 0),    # v3: was (7,12), 1 rear hex
     (0, "Brodhead", "OH/MD Cav", "cav", 1, 6, 1, (19, 21), 0),
     (0, "Sullivan", "13 IN/5 OH", "inf", 3, 4, 1, (19, 18), 2),
     (0, "Sullivan", "62 OH", "inf", 2, 4, 1, (20, 16), 2),
@@ -314,12 +324,13 @@ UNITS = [
     (0, "Sullivan", "39 IL", "inf", 1, 4, 1, (24, 14), 3),
     (0, "Huntington", "H 1 OH Bty", "art", 2, 3, 3, (22, 6), 3),
     # --- Confederate: Jackson's Valley District.  2,742 inf engaged, 290 cav, 18 of 27 guns.
+    (1, "Jackson", "Valley District HQ", "hq", 1, 4, 1, (12, 24), 5),
     (1, "Ashby", "7 VA Cav", "cav", 1, 6, 1, (20, 24), 5),
     (1, "Chew", "Horse Bty", "art", 1, 3, 3, (20, 24), 5),
     (1, "Fulkerson", "23/37 VA", "inf", 2, 4, 1, (9, 21), 0),
     (1, "McLaughlin", "Rockbridge Bty", "art", 2, 3, 3, (12, 20), 0),
     (1, "Carpenter", "Alleghany Bty", "art", 2, 3, 3, (12, 20), 0),
-    (1, "Garnett", "2/4/27 VA", "inf", 2, 4, 1, (10, 22), 0),
+    (1, "Garnett", "2/4/27 VA", "inf", 2, 4, 1, (10, 23), 0),   # v3: was (10,22), 1 rear hex
     (1, "Garnett", "5/33 VA", "inf", 2, 4, 1, (11, 22), 0),
     (1, "Waters", "W. Augusta Bty", "art", 2, 3, 3, (11, 21), 0),
     (1, "Burks", "21 VA/1 VA Bn", "inf", 2, 4, 1, (13, 27), 4),
@@ -404,23 +415,6 @@ def pixel_data(im):
     return [["#%02x%02x%02x" % tuple(a[y, x]) for x in range(16)] for y in range(16)]
 
 
-def wall_tile(base, size=180):
-    """Crest pasture with a dry-stone wall along the north (NW + NE) hexsides, where the fences are."""
-    im = base.copy().convert("RGBA")
-    d = ImageDraw.Draw(im)
-    c = size / 2
-    rr = size / 2
-    pts = [(c + rr * math.cos(math.radians(60 * i - 30)), c + rr * math.sin(math.radians(60 * i - 30))) for i in (3, 4, 5)]
-    rng = np.random.default_rng(7)
-    for (x0, y0), (x1, y1) in zip(pts, pts[1:]):
-        for i in range(12):
-            t = (i + 0.5) / 12
-            x, y = x0 + (x1 - x0) * t, y0 + (y1 - y0) * t + 9
-            s_ = rng.uniform(6, 8)
-            d.ellipse([x - s_, y - s_ * 0.75, x + s_, y + s_ * 0.75], fill=(158, 152, 140, 255), outline=(45, 42, 38, 255), width=2)
-    return im
-
-
 def make_terrains(repo, stock):
     tx = os.path.join(repo, "data/assets/textures")
     spr = os.path.join(repo, "data/assets/sprites")
@@ -457,7 +451,6 @@ def make_terrains(repo, stock):
         rec("marsh", marsh, 3, 1),
         city,
         {**{k: v for k, v in rec("wasteland", village, 1, 1).items() if k != "renderedUrl"}, "renderedUrl": None},
-        rec("fortress", wall_tile(high), 1, 2, custom=7),   # gettysburg1863.json record values
     ]
     # wasteland key order in stock: id,type,pixelData,imageUrl,moveCost,defenseMultiplier,renderedUrl
     return terr
@@ -546,9 +539,53 @@ def render_counter(shapes, images, boxes):
     return b64png(im)
 
 
-def template_shapes(side, kind, leader, uname):
+# ---------------------------------------------------------------- portraits (v3)
+# Approved portraits from the repo's historical_data/portrait_manifest.csv (status PRESENT,
+# audit_status approved_existing), read straight out of git (`git show <ref>:<path>`) so no portrait
+# file is copied, renamed, overwritten or regenerated in the work tree.  Only a downscaled,
+# head-and-shoulders crop is embedded in the scenario as a counter image layer.
+PORTRAIT_REF = os.environ.get("MA_PORTRAIT_REF", "origin/main")
+PORTRAITS = {  # counter leader (box3) -> (manifest officer, repo path on PORTRAIT_REF)
+    "Jackson": ("Thomas J. Jackson", "mdl_CSA_TJJackson.png"),
+    "Garnett": ("Richard B. Garnett", "mdl_CSA_RGarnett.png"),
+    "Ashby": ("Turner Ashby", "mdl_CSA_TAshby.png"),
+    "Kimball": ("Nathan Kimball", "reference/mdl_USA_NKimball.png"),
+    "Tyler": ("Erastus B. Tyler", "reference/mdl_USA_EBTyler.png"),
+    "Sullivan": ("Jeremiah C. Sullivan", "reference/mdl_USA_JCSullivan.png"),
+}
+# used only on the briefing maps (Shields was wounded on the 22nd and is not on the field)
+MAP_PORTRAITS = {"Shields": ("James Shields", "reference/mdl_USA_JShields.png")}
+
+
+def git_blob(repo, path, ref=PORTRAIT_REF):
+    import subprocess
+    raw = subprocess.run(["git", "-C", repo, "show", f"{ref}:{path}"], check=True, capture_output=True).stdout
+    sha = subprocess.run(["git", "-C", repo, "rev-parse", f"{ref}:{path}"], check=True, capture_output=True,
+                         text=True).stdout.strip()
+    return Image.open(io.BytesIO(raw)).convert("RGBA"), sha
+
+
+def portrait_crop(im, w=100, frame_col=(30, 26, 22, 255)):
+    """Head and shoulders (top 200 of the 170x280 manifest portraits), framed, downscaled."""
+    W0, H0 = im.size
+    c = im.crop((0, 0, W0, min(H0, round(W0 * 200 / 170))))
+    bg = Image.new("RGBA", c.size, (214, 204, 182, 255))
+    bg.alpha_composite(c)
+    h = round(w * bg.height / bg.width)
+    out = bg.resize((w, h), Image.LANCZOS)
+    ImageDraw.Draw(out).rectangle([0, 0, w - 1, h - 1], outline=frame_col, width=3)
+    return out
+
+
+def portrait_key(leader):
+    return "img_portrait_" + leader.lower()
+
+
+def template_shapes(side, kind, leader, uname, portrait=None):
     """v2 layout: commander (small, top), unit (large), NATO branch mark, CS bottom-left,
-    MP bottom-right, range plate for guns.  Same plates, font and colours as the stock ACW counters."""
+    MP bottom-right, range plate for guns.  Same plates, font and colours as the stock ACW counters.
+    v3: HQ counters carry the commander's portrait in place of the branch mark; brigade counters of a
+    commander with an approved portrait carry it small, left of a narrower branch mark."""
     if side == 0:
         plate, col, scol, sw = "img_side_253a69_nonato", "#ffffff", "#000000", 0.6
     else:
@@ -556,18 +593,26 @@ def template_shapes(side, kind, leader, uname):
     def txt(link, z, x, y, fs, fw):
         return {"type": "text", "link": link, "z": z, "x": x, "y": y, "fontSize": fs, "color": col,
                 "fontFamily": "Playfair Display", "fontWeight": fw, "strokeWidth": sw, "strokeColor": scol}
-    fs_name = 4.6
+    fs_name = 4.6 if kind != "hq" else 3.6
     while fs_name > 3.0 and text_width_units(uname, fs_name, 900) > 26.0:
         fs_name = round(fs_name - 0.1, 1)
-    fs_lead = 3.0
+    fs_lead = 3.0 if kind != "hq" else 4.4
     while fs_lead > 2.4 and text_width_units(leader, fs_lead, 700) > 24.0:
         fs_lead = round(fs_lead - 0.1, 1)
     shapes = [{"type": "image", "z": 0, "x": 0, "y": 0, "w": 30, "h": 30, "imageRef": plate},
-              txt("box3", 1, 0, -11.2, fs_lead, 700), txt("box4", 2, 0, -7.0, fs_name, 900),
+              txt("box3", 1, 0, -11.2, fs_lead, 700 if kind != "hq" else 900),
+              txt("box4", 2, 0, -7.0 if kind != "hq" else -7.4, fs_name, 900 if kind != "hq" else 700),
               txt("box5", 3, -10.0, 9.4, 6.2, 900), txt("box6", 4, 10.0, 9.4, 6.2, 900)]
+    if kind == "hq":
+        shapes.append({"type": "image", "x": 0, "y": 2.4, "w": 10.6, "h": 12.4, "imageRef": portrait, "z": 5})
+        return shapes
     if kind == "art":
         shapes.append({"type": "image", "x": 0, "y": 10.4, "w": 7.0, "h": 3.5, "imageRef": "img_emb_range3"})
-    shapes.append({"type": "image", "x": 0, "y": 1.6, "w": 12.0, "h": 9.6, "imageRef": NATO_KEYS[(kind, side)], "z": 5})
+    if portrait:
+        shapes.append({"type": "image", "x": -8.4, "y": 1.6, "w": 7.8, "h": 9.2, "imageRef": portrait, "z": 6})
+        shapes.append({"type": "image", "x": 4.0, "y": 1.6, "w": 11.0, "h": 8.8, "imageRef": NATO_KEYS[(kind, side)], "z": 5})
+    else:
+        shapes.append({"type": "image", "x": 0, "y": 1.6, "w": 12.0, "h": 9.6, "imageRef": NATO_KEYS[(kind, side)], "z": 5})
     return shapes
 
 
@@ -582,7 +627,57 @@ def frame(d, W, H):
     d.polygon([(944, 34), (956, 34), (950, 22)], fill=(70, 55, 40))
 
 
-def region_map():
+FELL = "/usr/share/fonts/truetype/sand-box/google/IM Fell English SC/IMFellEnglishSC-Regular.ttf"
+
+
+def fell(px):
+    try:
+        return ImageFont.truetype(FELL, px)
+    except OSError:
+        return font(px, 700)
+
+
+def period_finish(im, seed=7):
+    """v3: aged paper, a faint grain and a darker rim, like the engraved maps of the period."""
+    W, H = im.size
+    rng = np.random.default_rng(seed)
+    a = np.asarray(im.convert("RGB")).astype(np.float32)
+    a += rng.normal(0, 5.0, (H, W, 1))
+    yy, xx = np.mgrid[0:H, 0:W]
+    rim = np.clip((np.hypot((xx - W / 2) / (W / 2), (yy - H / 2) / (H / 2)) - 0.75) / 0.6, 0, 1)
+    a *= (1 - 0.22 * rim)[..., None]
+    a[..., 2] *= 0.97
+    return Image.fromarray(np.clip(a, 0, 255).astype(np.uint8))
+
+
+def medallion(im, repo, spec, xy, caption, sub, w=96):
+    """Portrait copy (downscaled from the repo's approved file, read from git) with a caption."""
+    officer, path = spec
+    src, sha = git_blob(repo, path)
+    p = portrait_crop(src, w, frame_col=(70, 55, 40, 255)).convert("RGB")
+    d = ImageDraw.Draw(im)
+    bw = max(p.width, d.textlength(caption, font=fell(17)), d.textlength(sub, font=fell(13))) + 16
+    x0, y = xy                       # xy = top-left of the caption box
+    x = round(x0 + (bw - p.width) / 2)
+    d.rectangle([x0, y - 6, x0 + bw, y + p.height + 44], fill=(240, 231, 208), outline=(90, 75, 55), width=2)
+    im.paste(p, (x, y))
+    d.text((x0 + bw / 2, y + p.height + 13), caption, font=fell(17), fill=(50, 38, 26), anchor="mm")
+    d.text((x0 + bw / 2, y + p.height + 31), sub, font=fell(13), fill=(80, 64, 46), anchor="mm")
+    MAP_PORTRAIT_LOG.append({"officer": officer, "path": path, "ref": PORTRAIT_REF, "blob": sha, "where": caption})
+
+
+def cartouche(d, x, y, lines):
+    w = max(d.textlength(t, font=fell(fs)) for t, fs in lines) + 36
+    h = sum(fs + 8 for _, fs in lines) + 18
+    d.rectangle([x, y, x + w, y + h], fill=(240, 231, 208), outline=(90, 75, 55), width=3)
+    d.rectangle([x + 5, y + 5, x + w - 5, y + h - 5], outline=(90, 75, 55), width=1)
+    yy = y + 12
+    for t, fs in lines:
+        d.text((x + w / 2, yy + fs / 2), t, font=fell(fs), fill=(50, 38, 26), anchor="mm")
+        yy += fs + 8
+
+
+def region_map(repo=None):
     W, H = 1000, 640
     im = Image.new("RGB", (W, H), PAPER)
     d = ImageDraw.Draw(im)
@@ -611,7 +706,13 @@ def region_map():
     d.line([ll(-78.12, 39.20), ll(-77.80, 39.20)], fill=(95, 120, 175), width=5)
     x, y = ll(-77.80, 39.20)
     d.polygon([(x, y - 9), (x, y + 9), (x + 16, y)], fill=(95, 120, 175))
+    im = period_finish(im, 11)
+    d = ImageDraw.Draw(im)
     frame(d, W, H)
+    cartouche(d, 24, 22, [("The Lower Valley", 26), ("Virginia, March 1862", 16)])
+    if repo:
+        medallion(im, repo, PORTRAITS["Jackson"], (22, 200), "Maj. Gen. T. J. Jackson", "Valley District")
+        medallion(im, repo, MAP_PORTRAITS["Shields"], (600, 436), "Brig. Gen. J. Shields", "wounded 22 March")
     def fr(lon, lat):
         x, y = ll(lon, lat)
         return round(x / W, 4), round(y / H, 4)
@@ -630,7 +731,7 @@ def region_map():
     return im, labels
 
 
-def battle_map(terrain, roads, rivers, vp_hexes):
+def battle_map(terrain, roads, rivers, vp_hexes, repo=None, wall=()):
     W, H = 1000, 640
     im = Image.new("RGB", (W, H), PAPER)
     d = ImageDraw.Draw(im)
@@ -661,12 +762,25 @@ def battle_map(terrain, roads, rivers, vp_hexes):
         d.polygon([(x1 + 12 * math.cos(a), y1 + 12 * math.sin(a)),
                    (x1 + 10 * math.cos(a + 2.4), y1 + 10 * math.sin(a + 2.4)),
                    (x1 + 10 * math.cos(a - 2.4), y1 + 10 * math.sin(a - 2.4))], fill=col)
+    if wall:  # the stone wall, drawn heavy along the north side of its hexes
+        pts = [P(*h) for h in wall]
+        off = HEX_M * sc * 0.45
+        pts = [(x, y - off) for x, y in pts]
+        d.line(pts, fill=(60, 48, 38), width=7)
+        for x, y in pts:
+            d.line([(x - 4, y - 5), (x + 4, y + 5)], fill=(240, 231, 208), width=2)
     arrow([(-78.205, 39.122), (-78.222, 39.135), (-78.222, 39.146)], (175, 85, 75))      # Jackson to the ridge
     arrow([(-78.186, 39.165), (-78.205, 39.160), (-78.219, 39.152)], (95, 120, 175))      # Tyler to the wall
     for h in vp_hexes:
         x, y = P(*h)
         d.rectangle([x - 6, y - 6, x + 6, y + 6], fill=(250, 246, 235), outline=(70, 55, 40), width=2)
+    im = period_finish(im, 13)
+    d = ImageDraw.Draw(im)
     frame(d, W, H)
+    cartouche(d, 20, 22, [("Kernstown", 26), ("23 March 1862", 16)])
+    if repo:
+        medallion(im, repo, PORTRAITS["Kimball"], (812, 140), "Col. N. Kimball", "commanding on the field")
+        medallion(im, repo, PORTRAITS["Garnett"], (24, 400), "Brig. Gen. R. B. Garnett", "Stonewall Brigade")
     def fr(lon, lat):
         x, y = P(*G.lonlat_to_hex(lon, lat))
         return round(x / W, 4), round(y / H, 4)
@@ -689,16 +803,24 @@ def labels_json(labels):
 
 
 # ---------------------------------------------------------------- description
-DESCRIPTION = """23 March 1862. Kernstown, Frederick County, Virginia, four miles south of Winchester on the Valley Turnpike.
+DESCRIPTION = """23 March 1862, a cold Sunday afternoon. Kernstown, Frederick County, Virginia, four miles south of Winchester on the Valley Turnpike.
 
-Ashby's scouts report that only a rear guard of four regiments is left near Winchester. They are wrong by about 6,000 men.
-Two o'clock on a cold Sunday afternoon. Jackson has driven his small army north in two days of hard marching to keep Banks from leaving the Valley. In fact James Shields' whole division is here; Shields was wounded the evening before, and Colonel Nathan Kimball commands from Pritchard's Hill. Jackson will not wait for Monday. He sends Fulkerson, then Garnett's Stonewall Brigade, west onto Sandy Ridge to turn the Union right, and McLaughlin's, Carpenter's and Waters' guns up the ridge to duel with the Union batteries on Pritchard's Hill, three hexes away.
+Turner Ashby's troopers have watched Winchester all week. On Saturday evening they skirmished with what they took to be a rear guard, and Ashby sent word to Jackson: four regiments left, the rest of Banks' army gone east. Jackson has marched his 3,000 infantry thirty-six miles in two days to keep those troops in the Valley. Ashby is wrong by about 6,000 men. James Shields' whole division is still here. Shields himself was struck by a shell fragment in that Saturday skirmish, his arm broken, and lies in Winchester; Colonel Nathan Kimball, an Indiana doctor, fights the battle for him from Pritchard's Hill.
 
-The board runs from Sandy Ridge in the west to Opequon Creek, and from Bartonsville north to Winchester; each hex is about 300 m and each turn half an hour. The Confederates move first. Kimball's brigade and four batteries can move from the start. Tyler's brigade, halted on the pike north of the toll gate, is on standby from 3:30 PM; Sullivan's regiments east of the pike from 4:30 PM; the 39th Illinois and Huntington's battery stay in reserve unless the enemy comes to them. Jackson's own reserve, Burks' brigade with two batteries near Bartonsville, is on standby from 4 PM. Ashby's cavalry and Chew's horse battery screen east of the pike and hold their ground there, as they did all afternoon against Sullivan.
+[If you command the Union: Kimball] You hold the high ground and you have the numbers: your own brigade and four batteries are up, Tyler's brigade is halted on the pike behind you, and Sullivan's regiments watch Ashby east of the road. Jackson has seen only part of your force. When his guns appear on Sandy Ridge he is trying to turn your right. Send Tyler west along the ridge to the stone wall, as Kimball did about 4 PM, and feed in what you can spare. Do not strip the pike: Winchester and Pritchard's Hill are worth more than the wall.
 
-The stone wall along the north crest of Sandy Ridge is the key. It is neutral at the start and worth 15 points, with Glass Farm at its west end worth 5; holding the wall's west hex also gives one side two more moves per turn. Whoever gets there first fights behind stone on high ground. Jackson cannot simply sit on the ridge: the Union is three times stronger and wins by taking the wall and keeping its own ground, as Kimball did when Garnett's men ran out of ammunition at dusk and fell back without orders. Holding the wall until dark is a fair result for Jackson. Units forced back with nowhere to go are lost, so keep a line of retreat open. Sunset is at 6:15; the 7 PM turn is night.
+[If you command the Confederates: Jackson] You attack because you believe the enemy is weak, and by the time you learn otherwise you are committed. Fulkerson's small brigade leads onto Sandy Ridge, Garnett's Stonewall Brigade follows, and your guns on the ridge duel with Pritchard's Hill. The stone wall along the north crest is the place to stand. You cannot win by pushing straight up the pike into the Union guns; you score by holding the wall and Glass Farm and costing Kimball men. Burks' brigade is your only reserve. Keep a line of retreat open behind every regiment: when Garnett's men ran out of ammunition at dusk he pulled them back without orders, and Jackson never forgave him, but the brigade lived to fight again.
 
-Counters: commander on top, unit in large type, the NATO branch mark (X infantry, / cavalry, dot artillery; III regiments, I battery), combat strength bottom left, movement bottom right. Batteries carry a RANGE 3 plate: they fire three hexes. Strengths are one point per ~300 men, two per full battery, from the reports of Jackson, Shields and Kimball in the Official Records (Series I, Vol. 12, Part 1) and Ecelbarger's "We Are in for It!"."""
+[The afternoon] Each turn is half an hour. Turn 1, 2:00 PM: Fulkerson and the guns on Sandy Ridge. Turn 4, 3:30 PM: a computer-run Tyler may start west. Turn 5, 4:00 PM: historically the Stonewall Brigade reached the wall about now; a computer-run Burks may come up, and the Union gains two moves a turn. Turn 6, 4:30 PM: a computer-run Sullivan may join. Turn 9, 6:00 PM: historically Garnett's line gave way about now. Sunset is at 6:15; turn 11, 7:00 PM, is night.
+
+[How to win] The dividing line is Union +55, the score if nothing changes hands. The stone wall (15) and Glass Farm (5) start neutral; Pritchard's Hill (20), Kernstown (15) and Winchester (30) are Union, Bartonsville (10) Confederate. Holding the wall's west hex, and the junction of the pike and the Cedar Creek Grade, gives the holder two more moves a turn.
+
+[Combat] This board uses its own combat table, gentler than the default. Between 1:2 and 2:1, the odds most Kernstown attacks were made at, a bad roll repulses the attacker (AR), a middling one is a stand-off (C) and a good one drives the defender back (DR). A unit is destroyed outright only at 5:1 or better on the best rolls, or attacking at 1:3 on a 1. A unit that must retreat and has no open hex behind it (enemy units, their zone of control, a full stack) is lost, so most losses come from being surrounded, not from the die. The wall hexes are high ground (defence x2) and can be held, but a beaten defender falls back from them instead of dying in place.
+
+[Order of battle] Union, Shields' division, Col. Nathan Kimball. Kimball's brigade: 14th Indiana (Lt. Col. Harrow), 84th Pennsylvania (Col. Murray, killed), 8th Ohio (Col. Carroll), 67th Ohio (Lt. Col. Voris). Tyler's brigade, Col. Erastus Tyler: 7th and 29th Ohio, 7th Indiana, 1st West Virginia (Col. Thoburn), 110th Pennsylvania. Sullivan's brigade, Col. Jeremiah Sullivan: 13th Indiana, 5th Ohio, 62nd Ohio, 39th Illinois (not engaged). Brodhead's cavalry: 1st Michigan, Ohio and Maryland companies. Batteries: Jenks (A, 1st West Virginia), Clark (E, 4th U.S.), Robinson (L, 1st Ohio), Davey (B, 1st West Virginia), Huntington (H, 1st Ohio).
+Confederate, Valley District, Maj. Gen. Thomas J. Jackson. Stonewall Brigade, Brig. Gen. Richard Garnett: 2nd (Col. Allen), 4th (Lt. Col. Ronald), 5th (Col. Harman), 27th (Col. Echols, wounded) and 33rd (Col. Cummings) Virginia, with McLaughlin's Rockbridge, Waters' West Augusta and Carpenter's Alleghany batteries. Burks' brigade, Col. Jesse Burks: 21st Virginia (Lt. Col. Patton), 42nd Virginia (Lt. Col. Langhorne), 1st Virginia Battalion (Irish), Marye's Hampden battery. Fulkerson's brigade, Col. Samuel Fulkerson: 23rd and 37th Virginia, Lanier's Danville battery. Ashby's 7th Virginia Cavalry and Chew's horse battery. Kimball and Jackson appear as headquarters counters (strength 1) with their portraits; they stand back unless a player moves them.
+
+[Counters] Commander on top, unit in large type, the commander's portrait where one exists, the NATO branch mark (X infantry, / cavalry, dot artillery; III regiments, I battery), combat strength bottom left, movement bottom right. Batteries carry a RANGE 3 plate: they fire three hexes. One strength point is about 300 men; a full battery is 2. The board is about 300 m a hex, from Sandy Ridge in the west to Opequon Creek, and from Bartonsville north to Winchester. Sources: the reports of Jackson, Shields and Kimball in the Official Records (Series I, Vol. 12, Part 1); Gary Ecelbarger, "We Are in for It!"; the American Battlefield Trust map of First Kernstown (2024)."""
 
 
 def thresholds(units, vp_values):
@@ -714,11 +836,15 @@ def build(repo, stock_path, out_path, painted=None, art=True, art_png=None):
     terrain, elev, tpi, feats = classify_terrain(repo)
     roads, rivers, trails, fences, chains = build_features(feats)
 
-    # the stone wall: its hexes become the stock "fortress" terrain (gettysburg1863.json record:
-    # customId 7, moveCost 1, defenseMultiplier 2): a wall on the crest is cover, not an obstacle.
+    # the stone wall.  v2 made its hexes the stock "fortress" terrain; playtest 2 showed that a unit in
+    # a fortress hex never retreats: all three logged results that differ from the CRT are DR or AR
+    # turned into C for the unit standing in the wall hex (11,19).  So the only way out of the wall
+    # was elimination (DE), the opposite of what happened at Kernstown, where Garnett fell back.
+    # v3: the wall hexes are the ridge's own "mountain" terrain (defence x2, as fortress), keeping the
+    # fences on their NW/NE edges, so DR/AR push units back off the wall instead of killing them.
     wall_hexes = sorted(fences, key=lambda h: h[0])
     for h in wall_hexes:
-        terrain[h] = "fortress"
+        terrain[h] = WALL_TERRAIN
     W = {f"W{i}": h for i, h in enumerate(wall_hexes)}
 
     def where(spec):
@@ -788,6 +914,18 @@ def build(repo, stock_path, out_path, painted=None, art=True, art_png=None):
     for (kind, side), key in NATO_KEYS.items():
         images_raw[key] = make_nato(kind, side)
     used_imgs = ["img_side_253a69_nonato", "img_side_b5b0a1_nonato", "img_emb_range3"] + sorted(NATO_KEYS.values())
+    PORTRAIT_LOG.clear()
+    MAP_PORTRAIT_LOG.clear()
+    leaders_used = {u[1] for u in UNITS}
+    for leader, (officer, path) in sorted(PORTRAITS.items()):
+        if leader not in leaders_used:
+            continue
+        src, sha = git_blob(repo, path)
+        key = portrait_key(leader)
+        images_raw[key] = portrait_crop(src)
+        used_imgs.append(key)
+        PORTRAIT_LOG[leader] = {"officer": officer, "path": path, "ref": PORTRAIT_REF, "blob": sha,
+                                "imageRef": key, "size": images_raw[key].size, "units": []}
     images = {k: (stock["assets"]["images"][k] if k in stock["assets"]["images"] else b64png(images_raw[k]))
               for k in used_imgs}
 
@@ -797,7 +935,10 @@ def build(repo, stock_path, out_path, painted=None, art=True, art_png=None):
         full = f"{leader} {uname}"
         boxes = [side, 0, i, leader, uname, cs, mp, rng] + [0] * 12
         tid = f"local_{i}"
-        shapes = template_shapes(side, kind, leader, uname)
+        pk = portrait_key(leader) if leader in PORTRAIT_LOG else None
+        if pk:
+            PORTRAIT_LOG[leader]["units"].append(full)
+        shapes = template_shapes(side, kind, leader, uname, pk)
         templates.append({"id": tid, "name": full, "isLocal": True,
                           "visuals": {"shapes": shapes, "renderedUrl": render_counter(shapes, images_raw, boxes)}})
         units.append({"id": i, "q": q, "r": r, "side": side, "combatStrength": cs, "movePoints": mp, "range": rng,
@@ -805,8 +946,8 @@ def build(repo, stock_path, out_path, painted=None, art=True, art_png=None):
                       "betrayalChance": 0, "betrayalRise": 0, "suddenDeathUnit": False, "standbyGroup": sb,
                       "eliteUnit": False, "exitPoints": 0, "boxes": boxes, "templateId": tid})
 
-    rmap, rlabels = region_map()
-    bmap, blabels = battle_map(terrain, roads, rivers, list(vp))
+    rmap, rlabels = region_map(repo)
+    bmap, blabels = battle_map(terrain, roads, rivers, list(vp), repo, wall_hexes)
     sides_en = ["Union (Shields' Division, Kimball)", "Confederate (Jackson's Valley District)"]
     tac, op, strat = thresholds(units, [v[1] for v in vp.values()])
 
@@ -851,6 +992,7 @@ def build(repo, stock_path, out_path, painted=None, art=True, art_png=None):
                 "replacement": False,
                 "night_turns": [11],
                 "standby_groups": STANDBY,
+                "crt": CRT,
             },
             "map": {"width": COLS, "height": ROWS, "hexes": hexes},
             "units": units,
@@ -869,6 +1011,30 @@ def build(repo, stock_path, out_path, painted=None, art=True, art_png=None):
 # his ground and taking the wall, so a Union side that keeps what it has and wins the wall scores
 # ~75 (tactical win) and a Jackson who holds wall + Glass Farm until dark scores ~35.
 WIN_LINE = 55
+WALL_TERRAIN = "mountain"
+PORTRAIT_LOG = {}
+MAP_PORTRAIT_LOG = []
+
+# ---------------------------------------------------------------- combat results table (v3)
+# rules.crt: 8 rows x 6 columns, the shape of the only two stock tables (gettysburg1863 and
+# chancellorsville1863, identical).  Orientation, from the four saves we have (40 logged combats,
+# playtest 1 and 2, Gaines' Mill, Waterloo; none of those scenarios has its own crt): every logged
+# result equals stock_crt[odds_row][die - 1] with rows 1:3, 1:2, 1:1, 2:1, 3:1, 4:1, 5:1, 6:1 and
+# columns die 1..6 (37 of 37 combats outside a fortress hex; the 3 others are the fortress C cases).
+# So the stock table is also the built-in default, and a high die is good for the attacker.
+# Default: 3 AE, 15 DE cells.  This table: 1 AE (1:3, die 1), 3 DE (5:1 die 6, 6:1 die 5-6);
+# at 1:2 to 2:1, the odds a Kernstown attack is fought at, a bad roll is a repulse (AR), a middling
+# one a stand-off (C) and a good one drives the defender back (DR), never an outright kill.
+CRT = [
+    ["AE", "AR", "AR", "AR", "AR", "C"],    # 1:3
+    ["AR", "AR", "AR", "C", "C", "DR"],     # 1:2
+    ["AR", "AR", "C", "C", "DR", "DR"],     # 1:1
+    ["AR", "C", "C", "DR", "DR", "DR"],     # 2:1
+    ["C", "C", "DR", "DR", "DR", "DR"],     # 3:1
+    ["C", "DR", "DR", "DR", "DR", "DR"],    # 4:1
+    ["DR", "DR", "DR", "DR", "DR", "DE"],   # 5:1
+    ["DR", "DR", "DR", "DR", "DE", "DE"],   # 6:1
+]
 
 DEFAULT_PAINTED = os.environ.get("KERNSTOWN_BASEMAP", "/workspace/CivilWar1-work/data/basemap_painted_full.png")
 

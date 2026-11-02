@@ -2,17 +2,120 @@
 
 `mKernstown1862_CW1.json` is a First Kernstown (23 March 1862) scenario for *Sekigahara 1600: Must Attack!*, in the format the in-game Wargame Maker exports. It was built from this repo's Kernstown map data, not drawn by hand.
 
-**Status: v2, not tested in the game.** v1 loaded and ran in the game (first playtest, user as Union). v2 is rebuilt from that playtest. It passes `validate_kernstown_ma.py`, but nobody has loaded v2 yet, so treat it as unverified until someone does.
+**Status: v3, not tested in the game.** v1 and v2 loaded and ran in the game: playtest 1 had the user as the Union, playtest 2 as the Confederates. v3 is rebuilt from playtest 2. It passes `validate_kernstown_ma.py`, but nobody has loaded v3 yet, so treat it as unverified until someone does.
 
 | File | What it is |
 |---|---|
-| `mKernstown1862_CW1.json` | The scenario with painted board art (11.8 MB, UTF-8, no BOM) |
-| `mKernstown1862_CW1_noart.json` | The same scenario with no `boardArt` (5.3 MB): the fallback if the art fails to load or misaligns |
+| `mKernstown1862_CW1.json` | The scenario with painted board art (13.1 MB, UTF-8, no BOM) |
+| `mKernstown1862_CW1_noart.json` | The same scenario with no `boardArt` (6.6 MB): the fallback if the art fails to load or misaligns |
 | `build_kernstown_ma.py` | Rebuilds both files from `data/` |
 | `board_art.py` | Paints `meta.boardArt` on the Must Attack grid |
 | `ma_grid.py` | The Must Attack hex grid: odd-r pointy-top, edges 0=E, 1=SE, 2=SW, 3=W, 4=NW, 5=NE |
 | `validate_kernstown_ma.py` | Checks a scenario against the stock scenarios |
-| `render_preview.py` | Draws `preview.png` (whole board), `preview_zoom.png` (Sandy Ridge to Kernstown) and `preview_counters.png` (all 27 counters). The previews are put together from the file; they are not game screenshots. |
+| `render_preview.py` | Draws `preview.png` (whole board), `preview_zoom.png` (Sandy Ridge to Kernstown) and `preview_counters.png` (all 29 counters). The previews are put together from the file; they are not game screenshots. |
+
+## What changed in v3 (from playtest 2)
+
+Playtest 2 had the user as the Confederates. Garnett's 5/33 VA was destroyed again. The save shows the cause: an AR at 1:1 (die 2) with no open hex behind him. The report also asked for the game to feel more personal. v3 has two parts: survival, and people.
+
+### Part A: survival
+
+| # | Item | v2 | v3 | Why |
+|---|---|---|---|---|
+| A1 | `rules.crt` | not set (built-in table, same as Gettysburg / Chancellorsville) | Custom softer table (below) | Elimination now needs much better odds. AE drops from 3 cells to 1 (1:3, die 1 only). DE drops from 15 cells to 3 (5:1 die 6, 6:1 die 5-6). Many AR / DR cells become C (no effect). Every value is one the stock tables use. The table is monotonic: a higher die or better odds is never worse for the attacker. |
+| A2 | Stone wall hexes (8..11,19) | `fortress` terrain | `mountain` terrain (x2 defence, 2 MP); fences on NW/NE kept | In playtest 2 all three fortress combats came out as C where the table says AR or DR (see the evidence below). So a unit in a fortress never retreats, and its only bad result is DE. That turned the wall into a death trap, the opposite of what happened historically, when Garnett fell back from it. Mountain gives the same x2 and lets the unit be pushed back. |
+| A3 | Start hexes | Some stacks had one or no open hex behind them | Brodhead 1 MI Cav (7,12)→(6,12), Davey B 1 WV Bty (17,18)→(16,17), Garnett 2/4/27 VA (10,22)→(10,23) | The validator now fails any stack with fewer than 2 neighbours that are on the board, passable, outside enemy ZOC, have stack room, and are strictly farther from the nearest enemy. All 29 counters pass. |
+| A4 | `retreat_control` 0, `retreat_distance` 1, `zoc_exit_allowed` false, `full_move_entry_allowed` false | same | **unchanged** | These are the only values in any stock file or save, so nothing else can be shown to work. `retreat_distance` 2 needs a longer clear path, so under the ZOC-blocked retreat rule it would probably kill more units, not fewer. `zoc_exit_allowed` controls walking out of ZOC during movement, not retreating. Retreats die by entering ZOC (the save's `ZocToZocAllowed`), and scenario rules have no field for that. Turning `zoc_exit_allowed` on would also let units walk away from contact and would change how the AI fights. What 0 means for `retreat_control` (owner chooses?) is not confirmed. |
+| A5 | `replacement` | false | **unchanged** | Only Gettysburg sets it to true, and what it does is not known. Saves carry `IsReplacement` and `EliminatedTurn`, which suggests that eliminated units come back (inferred). **Test for the user:** set it to true in the editor, get a unit eliminated, save, and look for units with `IsReplacement` in the save. |
+
+The v3 CRT (rows are odds, columns are die 1-6, and a high die favours the attacker):
+
+| Odds | 1 | 2 | 3 | 4 | 5 | 6 |
+|---|---|---|---|---|---|---|
+| 1:3 | AE | AR | AR | AR | AR | C |
+| 1:2 | AR | AR | AR | C | C | DR |
+| 1:1 | AR | AR | C | C | DR | DR |
+| 2:1 | AR | C | C | DR | DR | DR |
+| 3:1 | C | C | DR | DR | DR | DR |
+| 4:1 | C | DR | DR | DR | DR | DR |
+| 5:1 | DR | DR | DR | DR | DR | DE |
+| 6:1 | DR | DR | DR | DR | DE | DE |
+
+**How the table's orientation was established.** The orientation was checked against 40 combats logged in playtest 1 (13), playtest 2 (21), Gaines' Mill (4) and Waterloo (2). None of those four scenarios has its own `crt`. Each cell below shows the Gettysburg/Chancellorsville stock table value, then "←" and every logged result (P1, P2, GM = Gaines' Mill, WL = Waterloo). All 37 combats outside a fortress hex match the stock table exactly. So `crt[odds row][die-1]` is the layout, and the stock table is also the built-in default. The three mismatches (`*`) all involve the fortress hex (11,19) in playtest 2: twice the attacker stood in it (an AR became C), and once the defender held it (a DR became C).
+
+| Odds | die 1 | die 2 | die 3 | die 4 | die 5 | die 6 |
+|---|---|---|---|---|---|---|
+| 1:3 | AE | AE | AR | AR ← AR P2 | AR | DR ← DR P1 |
+| 1:2 | AE ← AE P1, AE P2 | AR ← AR P1, C P2* | AR ← C P2* | AR ← AR P1, AR P2, AR P2 | DR ← DR P1, DR P2 | DR ← DR P1, DR P2 |
+| 1:1 | AR ← AR P1, AR P2, AR WL | AR ← AR P1, AR P2, AR P2, AR WL | AR | DR ← DR P2 | DR ← DR P1, DR P2, DR P2, DR GM | DR ← DR P1, C P2* |
+| 2:1 | AR | C ← C P2 | DR ← DR GM | DR ← DR P2 | DR | DE ← DE P1, DE P2, DE GM |
+| 3:1 | C | DR | DR | DR | DR | DE ← DE GM |
+| 4:1 | DR | DR | DR ← DR P2 | DR | DE | DE |
+| 5:1 | DR | DR | DR | DE | DE | DE ← DE P2 |
+| 6:1 | DR ← DR P1 | DR | DE | DE ← DE P1 | DE | DE |
+
+### Part B: making it personal
+
+- **Commanders on the map.** Two new 1-CS HQ counters carry portraits:
+  - Kimball, "Shields' Div. HQ", at (13,14)
+  - Jackson, "Valley District HQ", at (12,24)
+
+  Both sit in hold standby groups (3 and 5), so the AI keeps them back. Neither is `suddenDeathUnit`. Stock never sets it to true, and on Jackson it would end the game the moment he fell.
+- **Portraits.** Six brigade or army commanders have portrait counters, using the approved files in `historical_data/portrait_manifest.csv` on `origin/main` (3b9808b). The builder reads each one read-only with `git show`. Nothing was copied into this branch, renamed, overwritten or regenerated. Each one is cropped and framed, then embedded in the JSON as a template image.
+
+| Leader | File on origin/main | Blob | Used on |
+|---|---|---|---|
+| T. J. Jackson | `mdl_CSA_TJJackson.png` | fb3e728 | Valley District HQ counter; region map |
+| R. B. Garnett | `mdl_CSA_RGarnett.png` | 78f7290 | 2/4/27 VA, 5/33 VA; battle map |
+| T. Ashby | `mdl_CSA_TAshby.png` | 012659f | 7 VA Cav |
+| N. Kimball | `reference/mdl_USA_NKimball.png` | 0aa272d | Div. HQ, 14 IN/84 PA, 8 OH/67 OH; battle map |
+| E. B. Tyler | `reference/mdl_USA_EBTyler.png` | 2117a48 | 7 OH/29 OH, 7 IN/1 WV, 110 PA |
+| J. C. Sullivan | `reference/mdl_USA_JCSullivan.png` | b79ea1f | 13 IN/5 OH, 62 OH, 39 IL |
+| J. Shields | `reference/mdl_USA_JShields.png` | ca9784a | region map only (he was wounded on the 22nd) |
+
+  Burks, Fulkerson and Brodhead have no portrait yet; the manifest lists them as MISSING. Batteries keep the NATO mark.
+- **Briefing maps.** `regionMap` ("The Lower Valley, March 1862") and `battleMap` ("Kernstown, 23 March 1862") are new period-style engraved maps with a cartouche, medallions and the stone-wall line. The region map shows Jackson and Shields; the battle map shows Kimball on the east and Garnett on the west.
+- **Briefing text.** The description now has:
+  - an opening on Ashby's faulty "four regiments" report
+  - a section headed *If you command the Union* and one headed *If you command the Confederates*
+  - *The afternoon*: a turn-by-turn timeline
+  - *How to win*
+  - *Combat*: the softer table and the wall
+  - an order of battle with the colonels
+  - counter sources
+
+  The format has a single description for each language, so both sides read the same text. It is copied into every language slot.
+- **More named places**, placed by reference to the ABT 2024 map (±1 hex): Marcauley Farm (12,21), Mahaney House (15,22), Triplett House (17,22).
+- **Not used, and why:**
+  - `eliteUnit` (Stonewall Brigade): stock never sets it to true, and the save fields `EliteUnit` / `EliteTriggered` suggest a one-shot trigger we can't describe. It can be tried as an editor toggle.
+  - `briefingImage`: always `""` in stock, so its format is unknown.
+  - Turn-clock labels: entries take only `turn`, `date` and `time`.
+  - Tooltip and box fields: stock tooltips are the name only, and boxes 8-19 are always 0. Colonels and strengths go in the description instead.
+
+### What the format can't do (for the developer)
+
+- scripted events or messages on a turn
+- leader casualties or wounding
+- morale or ammunition
+- step losses or remnant units (what `replacement` does is unclear)
+- tooltip text for each unit
+- turn names or labels
+- a separate briefing (or briefing image) for each side
+- rally
+- facing
+- control of the ZOC-to-ZOC (retreat-into-ZOC) rule from the scenario
+- control over how fortress terrain retreats
+- standby holds that bind a human player
+
+## In-game test checklist (v3)
+
+1. [ ] Both files load. The Kimball and Jackson HQ counters and the portrait counters draw correctly.
+2. [ ] **CRT.** Eliminations are rare: no AE except at 1:3 on a 1, and no DE below 5:1. Log a few combats and compare them with the table above.
+3. [ ] **Wall.** A unit on the wall (now mountain) that takes a DR moves back instead of being frozen in place or eliminated.
+4. [ ] **Garnett and Ashby survive** at least until late afternoon in a Confederate game. Count how many units are lost to a retreat with no open hex.
+5. [ ] The HQs stay back under AI control.
+6. [ ] The region and battle briefing maps show, with their portraits.
+7. [ ] The new place names show once each.
 
 ## What changed in v2 (from playtest 1)
 
@@ -158,9 +261,9 @@ The builder needs numpy, scipy, rasterio and Pillow. The counter font is Playfai
   - **Town** (`city`): Winchester. **Hamlet** (`wasteland` art, plain movement and defence): Kernstown and other farm clusters.
   - **Marsh**: only where the repo's Pritchard–Sandy Ridge meadow polygon lies on low ground. Most of that polygon lies on the ridge in the DEM, so only one hex is left as marsh.
 - Roads are the Valley Pike, the Middle Road and the Cedar Creek Grade. Trails are the Apple Valley Road and the stone lane. Rivers are Opequon Creek, Hoge Run, Abrams Creek and Buffalo Lick Run. Every road, river and trail is a symmetric centre-to-centre path, as in the stock files.
-- **The stone wall** is the eastern ~1.1 km of the repo's Glass-farm wall, running from the Glass farm to the ridge crest. On the board it is four hexes (8..11, 19). Each is `fortress` terrain with a fence on its NW and NE edges, so it faces north toward Tyler. Fences are one-sided, the same pattern as Antietam's Bloody Lane.
+- **The stone wall** is the eastern ~1.1 km of the repo's Glass-farm wall, running from the Glass farm to the ridge crest. On the board it is four hexes (8..11, 19). In v3 each is `mountain` terrain (v2 used `fortress`; see v3 A2) with a fence on its NW and NE edges, so it faces north toward Tyler. Fences are one-sided, the same pattern as Antietam's Bloody Lane.
 
-## In-game test checklist (v2)
+## In-game test checklist (v2, still applies except item 4)
 
 Please tick these in the game and report anything that fails. Screenshots help.
 
