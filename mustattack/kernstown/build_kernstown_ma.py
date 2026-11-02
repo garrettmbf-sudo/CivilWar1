@@ -500,8 +500,12 @@ def make_terrains(repo, stock):
     terr = [
         rec("plain", pasture, 1, 1),
         rec("forest", wood, 3, 1),
-        rec("mountain", high, 2, 2, custom=4),     # open ridge / hill crest: gentle, so cost 2 not 4
-        rec("rough", rough, 3, 2),                 # wooded ridge
+        # v3.4: ridge and wall hexes are written as stock "rough" (cost 2, defence x2), not "mountain".
+        # Replaying playtests 2-4: 0 of 33 retreats ever ended in a mountain hex, and 9 units were
+        # destroyed by a retreat whose only open hexes (no enemy, no enemy ZOC) were mountain;
+        # rough took retreats in playtests 3 and 4.  Internally "mountain" still means open ridge
+        # (for the art); JSON_TERRAIN maps it.  The few wooded-ridge hexes share the record.
+        rec("rough", high, 2, 2),                  # ridge / hill crest (and wooded ridge)
         rec("marsh", marsh, 3, 1),
         city,
         {**{k: v for k, v in rec("wasteland", village, 1, 1).items() if k != "renderedUrl"}, "renderedUrl": None},
@@ -885,7 +889,7 @@ Banks' army is leaving the Valley for the defence of Washington, and Jackson's o
 
 [How to win] The score is the Union's objective points minus the Confederates', plus the strength the Union destroys minus the strength it loses. The dividing line is Union +55, the score if nothing changes hands. The Stone Wall (15) starts neutral. Pritchard's Hill (20), Kernstown (15) and Winchester (30) start Union, and Bartonsville (10) starts Confederate. Two hexes are command points (+2): Glass Farm, at the west end of the stone wall, and Grade Junction, where the Cedar Creek Grade meets the pike. Both start neutral. The side holding one may move two more units each turn. A Union side that keeps what it has and takes the wall scores about 70, and a Jackson who holds the wall until dark and keeps Bartonsville holds the Union to about 40, before losses. Losses count: every strength point destroyed moves the score one point. A margin of 7 either way is a tactical victory, 58 an operational one and 116 a strategic one.
 
-[Combat] This board uses its own combat table, gentler than the default. At odds from 1:2 to 2:1, a low roll repulses the attacker (AR), a middle roll has no effect (C) and a high roll drives the defender back (DR); at even odds only a 6 does. Every battery starts stacked with infantry (Chew with Ashby's cavalry). A unit is destroyed by the die only at 5:1 or better on the highest rolls, or when attacking at 1:3 and rolling a 1. Replacements are on: a unit of strength 3 or more destroyed that way falls back up to twice its movement and fights on at half strength. A unit that must retreat with no open hex behind it is lost for good, with no replacement, so keep a way back open. The wall hexes are high ground (defence x2). A beaten defender falls back from them instead of being destroyed in place.
+[Combat] This board uses its own combat table, gentler than the default. Attacks at poor odds usually stall: from 1:3 to 1:1 only a 1 repulses the attacker (at 1:3 a 2 as well), and every middle roll has no effect (C). At even odds a 6 drives the defender back (DR); from 2:1 a 4 or better does. Every battery starts stacked with infantry (Chew with Ashby's cavalry). A unit is destroyed by the die only at 5:1 or better on the highest rolls. Replacements are on: a unit of strength 3 or more destroyed that way falls back up to twice its movement and fights on at half strength. A unit that must retreat with no open hex behind it is lost for good, with no replacement, so keep a way back open. Sandy Ridge, Pritchard's Hill and the wall hexes are high ground (rough: defence x2, 2 MP), and a beaten unit can fall back onto them or off them.
 
 [Order of battle] Union, Shields' division, Col. Nathan Kimball. Kimball's brigade: 14th Indiana (Lt. Col. Harrow), 84th Pennsylvania (Col. Murray, killed), 8th Ohio (Col. Carroll), 67th Ohio (Lt. Col. Voris). Tyler's brigade, Col. Erastus B. Tyler: 7th and 29th Ohio, 7th Indiana, 1st West Virginia (Col. Thoburn), 110th Pennsylvania. Sullivan's brigade, Col. Jeremiah C. Sullivan: 13th Indiana, 5th Ohio, 62nd Ohio, 39th Illinois (not engaged). Brodhead's cavalry: 1st Michigan, with Ohio and Maryland companies. Batteries: Jenks (A, West Virginia), Clark (E, 4th U.S.), Robinson (L, 1st Ohio), Keeper (B, West Virginia), Huntington (H, 1st Ohio).
 Confederate, Valley District, Maj. Gen. Thomas J. Jackson. Stonewall Brigade, Brig. Gen. Richard B. Garnett: 2nd (Col. Allen), 4th (Lt. Col. Ronald), 5th (Col. Harman), 27th (Col. Echols, wounded) and 33rd (Col. Cummings) Virginia, with McLaughlin's Rockbridge, Waters' West Augusta and Carpenter's Alleghany batteries. Burks' brigade, Col. Jesse S. Burks: 21st Virginia (Lt. Col. Patton), 42nd Virginia (Lt. Col. Langhorne), 1st Virginia Battalion (Irish), Marye's Hampden battery. Fulkerson's brigade, Col. Samuel V. Fulkerson: 23rd and 37th Virginia, Lanier's Danville battery. Ashby's 7th Virginia Cavalry and Chew's horse battery. Kimball and Jackson appear as headquarters counters (strength 2) with their portraits. The computer keeps them back; a human player may move them.
@@ -972,7 +976,7 @@ def build(repo, stock_path, out_path, painted=None, art=True, art_png=None):
                 boxes[9] = name
             rd, rv, tr, fe = (sorted(x.get(h, ())) for x in (roads, rivers, trails, fences))
             hexes.append({
-                "id": f"{q}-{r}", "q": q, "r": r, "terrainId": terrain[h],
+                "id": f"{q}-{r}", "q": q, "r": r, "terrainId": JSON_TERRAIN.get(terrain[h], terrain[h]),
                 "hasRiver": bool(rv), "hasRoad": bool(rd), "rivers": rv, "roads": rd, "trails": tr,
                 "majorRivers": [], "fences": fe, "isVPLocation": isvp,
                 "vp": {"first": vpv, "second": vpv}, "pp": {"first": ppv, "second": ppv},
@@ -1052,16 +1056,14 @@ def build(repo, stock_path, out_path, painted=None, art=True, art_png=None):
         art_info = (src, im.size, len(png))
 
     scenario = {
-        # v3.3: Union "def" (editor: Cautious), Confederate "off" (Aggressive).  Kimball stood on
-        # Pritchard's Hill and struck back only when Jackson's flank attack developed (the standby
-        # triggers above release Tyler and Sullivan); Jackson attacked a force he thought small.
-        # Holding the wall comes from the board: the Stone Wall VP, the Glass Farm CP, the wall's x2
-        # defence, the guns held on Sandy Ridge and Burks held in reserve.  v1 used the same pair and
-        # playtest 1 saw 1:2 Confederate attacks; v3.3's CRT, x2 strengths and replacements make
-        # those repulses rather than losses.  Word -> button: off/def by name (also used by
-        # gettysburg1863 / sevenpines1862 / the user's own file); v2-v3.2 used line/brk, which
-        # playtests 2 and 3 saved as indices 10/9, the last two buttons after Auto is skipped.
-        "doctrine": {"blue": "def", "red": "off"},
+        # v3.4: Union "def" (Cautious), Confederate "std" (Steady).  Playtest 4 (def/off): the
+        # Aggressive Jackson AI pushed Garnett 5/33 alone onto the ridge in front of the wall on turn 1
+        # and lost it on turn 2.  Historically Jackson's line held the stone wall and struck only at
+        # what came at it.  "std" is the stock word for that: gettysburg1863 gives it to the Union
+        # (Meade holding Cemetery Ridge and counterattacking locally) against Lee's "off".  "line" is
+        # Antietam's attacking Union, so it is the weaker fit.  Kimball stays Cautious: the log shows
+        # his forward moves were contact-driven, and Tyler/Sullivan arrive through the standby triggers.
+        "doctrine": {"blue": "def", "red": "std"},
         "meta": meta,
         "scenario": {
             "name": meta["scenarioName"],
@@ -1100,6 +1102,9 @@ def build(repo, stock_path, out_path, painted=None, art=True, art_png=None):
 # ~70 (v3.2: 55 + Stone Wall 15) and a Jackson who holds the Stone Wall until dark scores ~40.
 WIN_LINE = 55
 WALL_TERRAIN = "mountain"
+# internal terrain -> JSON terrainId.  v3.4: the engine never retreats a unit into "mountain" (see the
+# terrain records), so the ridge is written as "rough", which has the same defence and took retreats.
+JSON_TERRAIN = {"mountain": "rough"}
 DEM_FOR_ART = {}
 PORTRAIT_LOG = {}
 MAP_PORTRAIT_LOG = []
@@ -1115,13 +1120,21 @@ MAP_PORTRAIT_LOG = []
 # stack fights with friends on its flanks, so a DR at 1:1 too often became a blocked retreat and a
 # whole stack lost; playtest 3 lost two batteries that way.  It stays monotonic (no row is better
 # for the attacker than the row above) and uses only stock result codes.
-# Default: 3 AE, 15 DE cells.  This table: 1 AE (1:3, die 1), 3 DE (5:1 die 6, 6:1 die 5-6);
+# v3.4 (playtest 4: 11 units lost, 9 of them to a retreat with nowhere to go, 7 of those in attacks
+# the must-attack rule forced at 1:3 to 1:1): at 1:3-1:1 only a 1 repulses the attacker (a 2 too at
+# 1:3), every middle roll is a stand-off, and a forced attack at bad odds usually just stalls.
+#   1:3 die 1 AE -> AR: a beaten 1:3 attack falls back instead of vanishing (no extra kills).
+#   1:3 die 3-5, 1:2 die 2-3, 1:1 die 2: AR -> C.
+#   1:2 die 6 DR -> C: a 1:2 attack no longer dislodges; it keeps 1:2 strictly below 1:1.
+#   1:1 die 6 and 2:1 die 4-6 stay DR, so the wall can still be taken at 1:1 and above.
+# Rows stay monotonic for the attacker, stock codes only.  Now no AE at all, 3 DE (5:1 and 6:1).
+# Earlier: Default: 3 AE, 15 DE cells.  v3-v3.3 table: 1 AE (1:3, die 1), 3 DE (5:1 die 6, 6:1 die 5-6);
 # at 1:2 to 2:1, the odds a Kernstown attack is fought at, a bad roll is a repulse (AR), a middling
 # one a stand-off (C) and a good one drives the defender back (DR), never an outright kill.
 CRT = [
-    ["AE", "AR", "AR", "AR", "AR", "C"],    # 1:3
-    ["AR", "AR", "AR", "C", "C", "DR"],     # 1:2
-    ["AR", "AR", "C", "C", "C", "DR"],      # 1:1  v3.2: was AR AR C C DR DR
+    ["AR", "AR", "C", "C", "C", "C"],       # 1:3  v3.4: was AE AR AR AR AR C
+    ["AR", "C", "C", "C", "C", "C"],        # 1:2  v3.4: was AR AR AR C C DR
+    ["AR", "C", "C", "C", "C", "DR"],       # 1:1  v3.4: was AR AR C C C DR
     ["AR", "C", "C", "DR", "DR", "DR"],     # 2:1
     ["C", "C", "DR", "DR", "DR", "DR"],     # 3:1
     ["C", "DR", "DR", "DR", "DR", "DR"],    # 4:1

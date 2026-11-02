@@ -2,7 +2,7 @@
 
 `mKernstown1862_CW1.json` is a First Kernstown (23 March 1862) scenario for *Sekigahara 1600: Must Attack!*. It is in the same format the game's Wargame Maker exports. `build_kernstown_ma.py` generates it from this repo's Kernstown map data.
 
-**Status: v3.3, not tested in the game.** v1, v2 and v3/v3.1 loaded and ran in the game (playtests 1, 2 and 3). v3.3 uses what the editor's own help text says (the user's screenshots, 2 Nov 2026): replacements on, every strength doubled, standby groups with real triggers, and a Cautious Union against an Aggressive Jackson. Both files pass `validate_kernstown_ma.py`. Nobody has loaded v3.3 yet, so treat it as unverified until someone does.
+**Status: v3.4, not tested in the game.** v1 to v3.3 loaded and ran in the game (playtests 1-4). Playtest 4 (v3.3, all 11 turns) lost 11 units, 9 of them to a retreat with nowhere to go. Replaying the four saves showed the main cause: the engine never retreats a unit into a `mountain` hex, and our ridge was mountain. v3.4 writes the ridge as `rough` (same x2 defence and 2 MP), makes forced attacks at poor odds usually stall, and gives Jackson a Steady AI. Both files pass `validate_kernstown_ma.py`. Nothing in v3.4 has been played yet.
 
 | File | What it is |
 |---|---|
@@ -28,11 +28,11 @@ Do not overwrite `user_kernstown1862.json`. It is the user's own file, and these
 
 ## What to test first
 
-1. **Standby triggers.** Save on turn 1 and check that Confederate units carry `StandbyGroup` 1-4 and `StandbyActive` false. Then watch: does Burks come on in the same turn Tyler does (and the other way round)? Does Ashby stay put while Sullivan's 13 IN/5 OH stands within 4 hexes, and move once it leaves? The guns on both ridges should fire but never move unless an enemy comes next to them.
-2. **Replacements.** When a unit of strength 3 or more is destroyed by an AE or DE, a half-strength unit should appear up to twice its movement away (`IsReplacement` true in a save). With this board's gentle table that only happens at 1:3 on a 1, 5:1 on a 6 or 6:1 on a 5-6, so it will be rare.
-3. **Strengths.** Counters show doubled strengths (brigades 4-6, batteries 4), and the odds of each attack should look the same as in v3.2.
-4. **Garnett and Ashby survive** into the late afternoon. Count the units lost to a retreat with no open hex.
-5. **The board art and hex names**: Glass Farm and Stone Wall on row 19 no longer run into each other.
+1. **Retreats onto the ridge.** Sandy Ridge, Pritchard's Hill and the wall are now `rough`. A unit beaten next to the ridge should fall back onto it instead of being destroyed. Count the units lost to a retreat with no open hex; playtest 4 lost 9.
+2. **Poor-odds attacks stall.** At 1:3 to 1:1 most rolls should give C. Only a 1 (at 1:3, a 1 or 2) repulses the attacker, and 1:1 on a 6 still drives the defender back.
+3. **Jackson's AI (Steady).** Does it hold the wall and Glass Farm instead of pushing a lone brigade north onto the ridge, as the Aggressive AI did with Garnett 5/33 on turn 1 of playtest 4?
+4. **Standby triggers.** Save on turn 1 and check that Confederate units carry `StandbyGroup` 1-4 and `StandbyActive` false. Then watch: does Burks come on in the same turn Tyler does (and the other way round)? Does Ashby stay put while Sullivan's 13 IN/5 OH stands within 4 hexes, and move once it leaves? The guns on both ridges should fire but never move unless an enemy comes next to them.
+5. **Replacements.** Playtest 4 confirmed them: Marye's battery, destroyed by an AE, came back as "Replacements ①" at CS 2, six hexes back, with Marye's counter art. With v3.4's table only a DE at 5:1 or 6:1 can make one, so they will be rare.
 
 The full checklist is at the end of this file.
 
@@ -43,7 +43,7 @@ The full checklist is at the end of this file.
   - Turn 10 (18:30) falls in twilight. Turn 11 (19:00) is a night turn (`night_turns: [11]`), and the game ends after it.
   - We computed the light for Winchester on 23 March 1862 (NOAA formula, local mean time): sunset 18:14, civil dusk 18:41. The briefing rounds these to 6:15 and 6:40.
 - **Activation.** Union 5, rising to 7 from turn 5; Confederate 6.
-- **AI personality.** `doctrine: {blue: "def", red: "off"}`: Cautious Union, Aggressive Confederates (v3.3; see "Editor fields and JSON keys" for the word-to-button mapping). Kimball stood on Pritchard's Hill and struck back only when Jackson's flank attack developed; the standby triggers release Tyler and Sullivan for that. Jackson attacked a force he believed small. The board makes him hold the wall: the Stone Wall VP, the Glass Farm CP, the wall's x2 defence, the Sandy Ridge guns held in place, and Burks held in reserve. v1 used the same pair, and playtest 1 saw Confederate attacks at 1:2. With v3.3's table, doubled strengths and replacements, those attacks should end in repulses, not losses.
+- **AI personality.** `doctrine: {blue: "def", red: "std"}`: Cautious Union, Steady Confederates (v3.4). In playtest 4 the Aggressive (`off`) Jackson pushed Garnett 5/33 alone onto the ridge north of the wall on turn 1, and lost it on turn 2. Historically Jackson's line held the stone wall and struck at what came at it. `std` is the stock word for that: Gettysburg gives it to Meade's Union, holding Cemetery Ridge and counterattacking locally, against Lee's `off`. `line` belongs to Antietam's attacking Union, so it fits less well. Kimball stays Cautious: his units went forward because they were in contact, and Tyler and Sullivan come on through the standby triggers.
 - **Replacements** on (`rules.replacement: true`, as Gettysburg).
 - **Retreat rules.** `retreat_control` 0, `retreat_distance` 1, `zoc_exit_allowed` false and `full_move_entry_allowed` false. These are the only values any stock file uses. `stacking_limit` is 2.
 
@@ -131,22 +131,44 @@ How the triggers play:
 
 In playtest 2 the user lost Garnett's 5/33 VA again. The save shows an AR at 1:1 (die 2) with no open hex behind him. v3 changed three things to make that rarer.
 
-**1. A gentler combat table (`rules.crt`).** Rows are odds and columns are the die roll, 1 to 6. A high roll favours the attacker. Every value is one the stock tables use. The table never gets worse for the attacker as the odds or the roll go up. Playtest 3 confirmed it is used in the game: all six logged combats match it, not the default.
+**1. A gentler combat table (`rules.crt`).** Rows are odds and columns are the die roll, 1 to 6. A high roll favours the attacker. Every value is one the stock tables use. The table never gets worse for the attacker as the odds or the roll go up. Playtests 3 and 4 confirmed it is used in the game: every logged combat matches it.
 
-v3.2 changes one cell: 1:1 on a 5 is now C, not DR. A DR at even odds drops from 2 in 6 to 1 in 6. At Kernstown most stacks fight with friends on their flanks, so a DR often meets a blocked retreat and loses the whole stack. To be honest about it: playtest 3's battery loss was a 1:1 roll of 6, which is still a DR, so this change would not have saved those guns. It halves how often that can happen.
+v3.4 table. Playtest 4 showed that under the must-attack rule, units in contact attack at 1:3 to 1:1 every turn, and a repulse with nowhere to go destroys them. So at those odds a middle roll is now a stand-off.
 
 | Odds | 1 | 2 | 3 | 4 | 5 | 6 |
 |---|---|---|---|---|---|---|
-| 1:3 | AE | AR | AR | AR | AR | C |
-| 1:2 | AR | AR | AR | C | C | DR |
-| 1:1 | AR | AR | C | C | C | DR |
+| 1:3 | AR | AR | C | C | C | C |
+| 1:2 | AR | C | C | C | C | C |
+| 1:1 | AR | C | C | C | C | DR |
 | 2:1 | AR | C | C | DR | DR | DR |
 | 3:1 | C | C | DR | DR | DR | DR |
 | 4:1 | C | DR | DR | DR | DR | DR |
 | 5:1 | DR | DR | DR | DR | DR | DE |
 | 6:1 | DR | DR | DR | DR | DE | DE |
 
-AE appears in 1 cell (the default has 3) and DE in 3 cells (the default has 15).
+Changes from v3.3, cell by cell:
+- **1:3 on a 1: AE became AR.** A beaten 1:3 attack falls back instead of vanishing. This adds no kills.
+- **1:3 on a 3, 4 or 5: AR became C.** A forced 1:3 attack usually stalls. A 1 or 2 still repulses it.
+- **1:2 on a 2 or 3: AR became C.** Only a 1 repulses.
+- **1:2 on a 6: DR became C.** A 1:2 attack no longer dislodges anyone, and 1:2 stays below 1:1.
+- **1:1 on a 2: AR became C.** Only a 1 repulses.
+- **Unchanged:** 1:1 on a 6 and 2:1 on a 4-6 stay DR, so the wall can still be taken at even odds and above. 2:1 and up are as before.
+
+Chance of each outcome per column (100,000 simulated rolls per column; they match the exact sixths):
+
+| Odds | v3.3: C / retreat / eliminated | v3.4: C / retreat / eliminated |
+|---|---|---|
+| 1:3 | 17% / 67% / 17% | 67% / 33% / 0% |
+| 1:2 | 33% / 67% / 0% | 83% / 17% / 0% |
+| 1:1 | 50% / 50% / 0% | 67% / 33% / 0% |
+| 2:1 | 33% / 67% / 0% | same |
+| 3:1 | 33% / 67% / 0% | same |
+| 4:1 | 17% / 83% / 0% | same |
+| 5:1 | 0% / 83% / 17% | same |
+| 6:1 | 0% / 67% / 33% | same |
+
+AE no longer appears; DE is in 3 cells (the default has 15).
+
 
 **How we know the table's orientation.** We checked it against 40 logged combats: playtest 1 (13), playtest 2 (21), Gaines' Mill (4) and Waterloo (2). None of these scenarios has its own `crt`. Each cell below gives the Gettysburg/Chancellorsville table value, then "←" and each logged result (P1, P2, GM = Gaines' Mill, WL = Waterloo).
 - All 37 combats outside a fortress hex match that table exactly. So the layout is `crt[odds row][die - 1]`, and the stock table is also the built-in default.
@@ -163,7 +185,15 @@ AE appears in 1 cell (the default has 3) and DE in 3 cells (the default has 15).
 | 5:1 | DR | DR | DR | DE | DE | DE ← DE P2 |
 | 6:1 | DR ← DR P1 | DR | DE | DE ← DE P1 | DE | DE |
 
-**2. The wall is `mountain`, not `fortress`.** Those three fortress combats suggest that a unit in a fortress never retreats, so its only bad result is DE (inferred). That made the wall a death trap. Historically Garnett fell back from it. Mountain keeps the x2 defence and lets a beaten unit retreat. The fences on the wall's north edges stay.
+**2. The wall and the ridges are `rough` (v3.4), not `fortress` (v2) or `mountain` (v3-v3.3).**
+- **Fortress.** Three fortress combats in playtest 2 suggest that a unit in a fortress never retreats, so its only bad result is DE (inferred).
+- **Mountain.** We replayed every move in playtests 2, 3 and 4 against the board each was played on. Of 33 retreats, none ended in a mountain hex: they went to plain, forest, marsh, rough or wasteland. Nine units were destroyed by a retreat when the only hexes they could have entered (no enemy, no enemy ZOC, stack space) were mountain:
+  - playtest 2: Garnett 5/33, Robinson's battery, 1 MI Cav;
+  - playtest 4: Garnett 5/33, 14 IN/84 PA, Fulkerson, Garnett 2/4/27, 1 MI Cav, 7 OH/29 OH.
+
+  Units could retreat off mountain, and they moved onto it normally. So the engine evidently will not retreat a unit into mountain (inferred, strongly). The stock mountain costs 4 MP; ours cost 2. Movement cost is not the reason, because forest and rough (3 MP) took retreats.
+- **Rough.** It has the same x2 defence, and Antietam uses it for its ridges. Our record keeps cost 2. Rough took retreats in playtests 3 and 4. The builder still calls these hexes "mountain" internally, for the board art, and writes them as `rough` (`JSON_TERRAIN`). The validator now fails any `mountain` or `fortress` hex and leaves them out of the rear-room test.
+- The fences on the wall's north edges stay.
 
 **3. Room to retreat.** The validator fails any stack with fewer than 2 neighbouring hexes that are all of these:
 - on the board and passable
@@ -224,12 +254,12 @@ Union counters are blue with white text. Confederate counters are grey with near
 ## Board and board art
 
 - **Terrain** comes from the HoS layer (`data/layers/kernstown_game.json`), the painted forest fraction and the 3DEP DEM, sampled at 37 points per hex.
-  - **High ground** is `mountain` (2 MP, x2), or `rough` (3 MP, x2) where it is wooded. A hex is high ground if its topographic position on the DEM is at least 6 m or the HoS layer tags it `hill`. The modern quarry is dropped.
+  - **High ground** is `rough` (2 MP, x2) in the file (v3.4; it was `mountain` before, which units cannot retreat into). A hex is high ground if its topographic position on the DEM is at least 6 m or the HoS layer tags it `hill`. The modern quarry is dropped.
   - **Woods** (`forest`, 3 MP, x1) where 40% or more of the hex is wooded, plus one added polygon north of the stone wall (ABT and Hotchkiss maps).
   - **Town** (`city`) is Winchester. **Hamlets** (`wasteland` art, plain movement and defence) are Kernstown and the farm clusters.
   - **Marsh** is one hex.
 - **Roads** are the Valley Pike, the Middle Road and the Cedar Creek Grade. **Trails** are the Apple Valley Road and the stone lane. **Creeks** are Opequon Creek, Hoge Run, Abrams Creek and Buffalo Lick Run. All are symmetric centre-to-centre paths, as in the stock files.
-- **The stone wall** is the eastern ~1.1 km of the repo's Glass-farm wall: four hexes at (8..11, 19). Each is `mountain` with fences on its NW and NE edges, facing north toward Tyler, as Antietam's Bloody Lane does.
+- **The stone wall** is the eastern ~1.1 km of the repo's Glass-farm wall: four hexes at (8..11, 19). Each is high ground (`rough` in the file from v3.4) with fences on its NW and NE edges, facing north toward Tyler, as Antietam's Bloody Lane does.
 - **Hex names** are drawn by the game:
   - VP hexes: Winchester, Pritchard's Hill, Kernstown, Stone Wall, Bartonsville
   - CP hexes: Glass Farm, Grade Junction
@@ -242,6 +272,16 @@ Union counters are blue with white text. Confederate counters are grey with near
   - It has italic road and creek names, a cartouche and a north arrow.
   - `hash` is our PNG's SHA-1. `style` "acw_b" and `version` 1 are copied from Antietam.
   - If the basemap (78 MB, gitignored) is missing, the builder paints plain parchment instead.
+
+## Retreat settings, checked in v3.4
+
+Every stock scenario and every save we have uses the same values: `retreat_control` 0 (Owner chooses), `retreat_distance` 1, `zoc_exit_allowed` false. No combat has ever been logged under any other value. So none was changed. Each is left as a test:
+- **Exit from ZOC (`zoc_exit_allowed`).** This is a movement rule in the editor. Saves carry a separate `ZocToZocAllowed` with no scenario key, which may be the retreat rule. Of playtest 4's 11 losses, 3 were truly blocked by enemy ZOC (Lanier; Jackson's HQ and 21 VA/1 Bn). Only those could be helped, and only if it also governs retreats. Test: set it to Allowed in the editor, then check whether a unit retreats from one enemy-ZOC hex into another.
+- **Automatic retreat control.** The owner, or the AI acting for it, already picked an open hex in all 33 logged retreats. Every loss had no legal hex, so a different chooser cannot help. Not worth testing for losses.
+- **Retreat distance 2.** A unit would have to clear two hexes. Every blocked loss failed at the first hex, so this can only add losses. Not recommended.
+- **Ridge terrain.** This was the main lever: see "Combat and survival" item 2.
+
+**Replacement names.** Playtest 4's one replacement was named "Replacements ①", not "Marye Hampden". It kept Marye's counter art (`TemplateId` local_27), CS 2 (half of 4), MP 3 and range 3, and appeared 6 hexes back (twice MP 3). No scenario key sets the name; it is in the wishlist. Lanier, CS 4 and destroyed by an AE a turn earlier, got no replacement. Every hex around Lanier was enemy-held or in enemy ZOC, which fits the editor's rule that a unit that cannot fall back even one hex gets none.
 
 ## Editor fields and JSON keys (v3.3)
 
@@ -280,7 +320,7 @@ From the user's editor screenshots and help text, matched to keys in the stock s
 - `dyn` is probably Auto; it could also be Maneuver.
 - No word has been seen for Incompetent, Delay or Maneuver, so we don't use them.
 - Saves store a number. Playtests 2 and 3 (`line` / `brk`) saved 10 / 9, which fits the editor's button order with Auto skipped: Berserk 0, Aggressive 1, Cautious 2, Ultra-Cautious 3, Steady 4, Incompetent 5, Delay 6, Seize 7, Maneuver 8, Breakthrough 9, Line 10.
-- Playtest 1 (`def` / `off`) saved 1 / 2. That fits only if P1 and P2 were swapped, or if the user changed the personalities at start-up. So the numbers are medium confidence; the words are high.
+- Playtests 1 and 4 (`def` / `off`) both saved 1 / 2, and all four playtests have `P1StartsFirst` false. That fits only if P1 and P2 were swapped, or if the user changed the personalities at start-up. Gaines' Mill (`sei` / `ultra`) saved 2 / 1, which fits neither. So the numbers are medium confidence; the words are high.
 
 **Default combat table.** The editor's default (screenshot) matches the Gettysburg/Chancellorsville table in 46 of 48 cells. It differs at 3:1 on a 5 and 4:1 on a 4, where the editor shows DE and Gettysburg has DR. The editor says a table left at the default is not written to the file, and Gettysburg and Chancellorsville do write one, which fits their table not being the default. Our own table is unaffected. The v3 note "the stock table is also the built-in default" is corrected here: the default is one cell harsher in each of those two rows.
 
@@ -320,7 +360,7 @@ From the user's editor screenshots and help text, matched to keys in the stock s
 
 See `DEV_WISHLIST.md`.
 
-## Full in-game checklist (v3.3)
+## Full in-game checklist (v3.4)
 
 Tick these in the game and report anything that fails. Screenshots help.
 
@@ -328,11 +368,11 @@ Tick these in the game and report anything that fails. Screenshots help.
 2. [ ] **Board art** sits under the grid. Woods, ridges, the wall, roads and creeks fall on the right hexes and do not drift toward an edge.
 3. [ ] **Hex names** show once each and do not run into each other, especially Glass Farm and Stone Wall on row 19.
 4. [ ] **Counters** can be read without hovering: commander, unit, portrait or NATO mark, CS (doubled: brigades 4-6), MP, and R3 on batteries.
-5. [ ] **CRT.** Combat results match the v3.2 table. At 1:1 only a 6 gives DR. There is no AE except at 1:3 on a 1, and no DE below 5:1.
-6. [ ] **Wall.** The wall hexes cost 2 MP and defend x2. A unit there that takes a DR falls back.
+5. [ ] **CRT.** Combat results match the v3.4 table. From 1:3 to 1:1 most rolls are C. At 1:1 only a 6 gives DR. There is no AE, and no DE below 5:1.
+6. [ ] **Wall and ridges.** The wall and ridge hexes are rough (2 MP, x2). A unit there that takes a DR falls back, and a unit next to the ridge can retreat onto it.
 7. [ ] **Survival.** Garnett and Ashby last into the late afternoon. Count the losses to a retreat with no open hex, and any replacements that appear after an AE or DE.
 8. [ ] **Artillery.** The Pritchard's Hill guns (13,17) and the Sandy Ridge guns (12,20) are 3 hexes apart. Held guns should fire but not move.
-9. [ ] **The stand at the wall.** The Confederate AI holds the wall and Glass Farm rather than attacking at bad odds.
+9. [ ] **The stand at the wall.** The Steady Confederate AI holds the wall and Glass Farm rather than pushing single brigades north.
 10. [ ] **Standby.**
     - A turn-1 save shows Confederate units with StandbyGroup 1-4 (not 0).
     - Tyler wakes from turn 4 or when Burks does; Burks from turn 5 or when Tyler does; Sullivan from turn 6 or when Ashby does.
@@ -383,6 +423,13 @@ You need:
 - In the user's `user_kernstown1862.json`, the roads are one-sided, and Carroll's `entryHex` is `"10,0"`. That file was not modified.
 
 ## Change history
+
+**v3.4 (from playtest 4, 11 turns, 11 units lost):**
+- **Ridge terrain.** Sandy Ridge, Pritchard's Hill and the wall are `rough` instead of `mountain`. The replayed saves show the engine never retreats a unit into mountain, which caused 6 of playtest 4's 11 losses.
+- **CRT.** At 1:3 to 1:1 a middle roll is a stand-off, and AE is gone. Replaying playtest 4's 11 losses with the same die rolls, this table alone avoids 5, and with the terrain change 8. The remaining 3 (Lanier, Jackson's HQ, 21 VA/1 Bn) were truly surrounded by enemy ZOC.
+- **AI.** Confederates Steady (`std`) instead of Aggressive (`off`); the Union stays Cautious.
+- **Retreat settings unchanged** (see "Retreat settings, checked in v3.4").
+- **Validator:** fails mountain and fortress hexes, prints the outcome odds per CRT column, and requires at least 4 stand-offs of 6 at 1:3 to 1:1, no AE above a 1, and a DR at 1:1.
 
 **v3.3 (from the editor's help text):**
 - Replacements on. Every strength is doubled (`CS_SCALE` 2, `scaleMen` 150), so brigades are 4-6 and get a half-strength second life on an AE or DE. Odds are unchanged.

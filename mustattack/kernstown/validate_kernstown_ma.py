@@ -21,8 +21,12 @@ Checks (exit 1 on any ERROR):
   * v3.3: standby trigger fields are sane (<= 5 groups a side, containment groups really are
     contained at the start, enemyGroup names an existing opposing group); with replacements on,
     every unit not on the BELOW_3_OK list has CS >= 3; doctrine words are stock words
+  * v3.4: no hex uses terrain the engine never retreats into ("mountain"; "fortress" never retreats),
+    and the rear-room test ignores such hexes; crt prints C / retreat / eliminated odds per column,
+    1:3-1:1 have >= 4 stand-offs of 6, no AE above a 1, and 1:1 keeps a DR
 """
 import base64, hashlib, io, itertools, json, math, os, sys
+from collections import Counter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 # v3.2: stacks this close to the enemy at the start (cavalry MP 6 + 2) must pass the two-flank test.
@@ -42,6 +46,9 @@ errors, warns = [], []
 
 def err(m):
     errors.append(m)
+
+
+NO_RETREAT_TERRAIN = {"mountain", "fortress"}
 
 
 def warn(m):
@@ -404,8 +411,26 @@ def main(path, refdir):
                         err(f"crt die {j + 1}: odds row {i} worse for the attacker than row {i - 1}")
             flat = [v for r in crt for v in r]
             print(f"  crt: AE {flat.count('AE')}, AR {flat.count('AR')}, C {flat.count('C')}, DR {flat.count('DR')}, DE {flat.count('DE')}")
-    # ---- v3: every starting stack has >= 2 open hexes to fall back into
+            # v3.4: per-column outcome odds; a forced attack at 1:3-1:1 should usually stall
+            names = ["1:3", "1:2", "1:1", "2:1", "3:1", "4:1", "5:1", "6:1"]
+            for i, r in enumerate(crt):
+                p = {k: r.count(k) / 6 for k in ("C", "AR", "DR", "AE", "DE")}
+                print(f"    {names[i]}: C {p['C']:.0%}  retreat {p['AR'] + p['DR']:.0%} (AR {p['AR']:.0%}, DR {p['DR']:.0%})"
+                      f"  eliminated {p['AE'] + p['DE']:.0%}")
+                if i <= 2 and r.count("C") < 4:
+                    err(f"crt {names[i]}: only {r.count('C')}/6 stand-offs; a forced attack at poor odds should usually stall")
+                if i <= 2 and "AE" in r[1:]:
+                    err(f"crt {names[i]}: AE on a roll above 1")
+            if "DR" not in crt[2]:
+                err("crt: no DR at 1:1, so a held wall could never be taken at even odds")
+    # ---- v3.4: the engine never retreats a unit into "mountain".  Replaying playtests 2-4, 0 of 33
+    # retreats ended in a mountain hex, and 9 units died whose only open retreat hexes were mountain.
+    # (A unit in a "fortress" hex never retreats at all; playtest 2.)  Neither may appear on this board.
     terr_by_id = {t["id"]: t for t in d["assets"]["terrains"]}
+    bad = Counter(h["terrainId"] for h in hexes if h["terrainId"] in NO_RETREAT_TERRAIN)
+    if bad:
+        err(f"hexes use terrain that blocks retreats: {dict(bad)}")
+    # ---- v3: every starting stack has >= 2 open hexes to fall back into
     Hx = {(h["q"], h["r"]): h for h in hexes}
     def cube(q, r):
         x = q - (r - (r & 1)) // 2
@@ -425,7 +450,8 @@ def main(path, refdir):
         room = []
         for k in range(6):
             n = nb(*hx, k)
-            if n not in Hx or terr_by_id.get(Hx[n]["terrainId"], {}).get("moveCost", 1) >= 99:
+            if n not in Hx or terr_by_id.get(Hx[n]["terrainId"], {}).get("moveCost", 1) >= 99 \
+                    or Hx[n]["terrainId"] in NO_RETREAT_TERRAIN:
                 continue
             if n in ezoc or (n in occ and (occ[n][0]["side"] != side or len(occ[n]) >= lim)):
                 continue
@@ -440,6 +466,7 @@ def main(path, refdir):
         # (and not be one of them), so two flankers cannot close the retreat by themselves.
         rear = {nb(*hx, k) for k in range(6)}
         rear = [n for n in rear if n in Hx and terr_by_id.get(Hx[n]["terrainId"], {}).get("moveCost", 1) < 99
+                and Hx[n]["terrainId"] not in NO_RETREAT_TERRAIN
                 and not (n in occ and (occ[n][0]["side"] != side or len(occ[n]) >= lim))
                 and min(hd(n, e) for e in enemy) > d0]
         ring = [nb(*hx, k) for k in range(6)]

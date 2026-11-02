@@ -13,7 +13,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from ma_grid import neighbor
 
 Image.MAX_IMAGE_PIXELS = None
-COL = {"plain": (206, 210, 160), "forest": (96, 128, 72), "mountain": (200, 172, 118), "rough": (120, 118, 74),
+COL = {"plain": (206, 210, 160), "forest": (96, 128, 72), "mountain": (200, 172, 118), "rough": (200, 172, 118),
        "marsh": (150, 175, 165), "city": (170, 150, 140), "wasteland": (180, 130, 100), "fortress": (150, 140, 128)}
 FB = "/usr/share/fonts/truetype/sand-box/google/IM Fell English SC/IMFellEnglishSC-Regular.ttf"
 FD = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
