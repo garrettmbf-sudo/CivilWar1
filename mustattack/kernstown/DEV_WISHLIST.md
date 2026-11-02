@@ -1,6 +1,6 @@
 # Wishlist from a Civil War scenario maker
 
-Hello, and thank you for *Must Attack!* and the Wargame Maker. We made a First Kernstown (1862) scenario with the Wargame Maker export format and have played it four times. The engine works well for this. The editor's help text now answers many of our earlier questions: replacements, the retreat and ZOC options, the standby fields (containment, main body %, opposing group), the fact that held units still fire, the list of AI personalities, elite and sudden-death units, and the activation cap. Thank you. This list keeps only what is still open.
+Hello, and thank you for *Must Attack!* and the Wargame Maker. We made a First Kernstown (1862) scenario with the Wargame Maker export format and have played it four times (v3.5 is not yet played). The engine works well for this. The editor's help text now answers many of our earlier questions: replacements, the retreat and ZOC options, the standby fields (containment, main body %, opposing group), the fact that held units still fire, the list of AI personalities, elite and sudden-death units, and the activation cap. Thank you. This list keeps only what is still open.
 
 Each item has three parts:
 - **Want:** what we would like
@@ -114,6 +114,23 @@ The field names are only suggestions.
 - **Why:** Replacements give a brigade one second life at half strength, which helps a lot. A replacement that is destroyed is gone, and AR/DR never cost strength, so a long fight still wears nothing down.
 - **Smallest version:** a CRT result `"DL"` (defender loses half, stays in place).
 
+## Questions from v3.5 (only the engine can answer these)
+
+**20. Elite (surprise) units: the exact rules**
+- **Want:** a few help lines on the elite round: does it fire when an elite unit is attacked during the enemy's elite round; can an elite unit still on standby take part (or does the round wake it); does the AI plan its elite move, or just move those units as in a normal phase; and is the round spent if the first elite combat is a ranged artillery shot?
+- **Why:** v3.5 marks three brigades a side elite (Tyler's for the Union, Fulkerson's and Garnett's for Jackson). Tyler's brigade starts on standby. If a standby elite unit is skipped, the Union round may be wasted; if it is woken, the reserve timing breaks. We also cannot tell whether the Steady AI will use its round to leave the stone wall.
+- **Smallest version:** document the current behaviour, or add `standby_groups[n].eliteWakes: true|false`.
+
+**21. Victory thresholds when the line is not in the middle**
+- **Want:** say what the 5/40/80% threshold guidance assumes, or let the editor show each side's best possible margin.
+- **Why:** Our winLine is the status quo (the Union starts holding most objectives), so the guidance's strategic level (5/40/80% of objectives + average CS) was out of the Union's reach. We now use 5/40/80% of the smaller side's best possible margin past the line, which we worked out ourselves. A line in the editor ("Union best +99, Confederate best +211") would let makers see this at once.
+- **Smallest version:** show the two best margins next to the threshold fields, and warn when a threshold is above one of them. Or allow separate thresholds per side: `victoryCondition.thresholdsBySide: {"first": [...], "second": [...]}`.
+
+**22. Board-art layers the game can hide**
+- **Want:** an option for decorations on the board art (title cartouche, compass, scale bar) that the game draws above or beside the board, or a flag that marks a rectangle of the art as "no hexes".
+- **Why:** v3.5 puts a period title block with yard and meter scale bars in an empty corner of the art, on hexes nothing uses. Units can still move there and be hidden under it in a player's eye.
+- **Smallest version:** `meta.boardArt.decorations: [{"image": "data:...", "anchor": "se"}]`, drawn outside the hex grid.
+
 ## Workarounds we use today
 
 What we already do in the data:
@@ -121,6 +138,7 @@ What we already do in the data:
 - **No step losses or rally.** Replacements are on and every strength is doubled. The CRT is gentler: no AE, DE in 3 cells, and at 1:3 to 1:1 most rolls are "C", because the must-attack rule forces units in contact to attack at poor odds every turn.
 - **Units destroyed when the retreat is blocked.** Our validator checks that every stack starts with at least 2 open hexes behind it, that no two enemy flankers can close them all (v3.2), and that every battery starts stacked with infantry.
 - **Fortress hexes never retreat, and nothing retreats into mountain.** We made the stone wall and ridges `rough` (x2 defence) and kept one-sided fences, as Antietam's Bloody Lane does.
+- **Surprise used for initiative.** v3.5 marks Tyler's brigade and Fulkerson's and Garnett's elite, about a quarter of each side's strength, and leaves the HQs out so that neither side can spend or keep its round for free.
 - **No leaders.** We added HQ counters with portraits for Kimball and Jackson, held back by standby groups. Brigade counters show the commander's name and portrait.
 - **No unit tooltips.** The commander and unit are printed on the counter, and the colonels are in the description.
 - **No events or turn labels.** The description has an "afternoon" timeline, and standby groups wake units at historical times.

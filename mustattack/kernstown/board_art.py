@@ -150,6 +150,185 @@ def up(a, W, H, order=1):
     return np.asarray(Image.fromarray(a.astype(np.float32), "F").resize((W, H), Image.BILINEAR if order else Image.NEAREST))
 
 
+INK = (58, 40, 26, 255)
+PAPER = (244, 236, 214, 240)
+
+
+def town(d, ov, city, chains, path, ox, oy, W, H, rng):
+    """v3.5: Winchester as a street grid laid on the line of the Valley Turnpike (its main street),
+    blocks built up along their street fronts with yards behind, instead of v3.2's repeated squares
+    that sat on top of the pike and the creek.  Nothing is drawn on a road or creek."""
+    if not city:
+        return
+    cm = blob(city, ox, oy, W, H, 10)
+    av = Image.new("L", (W, H), 0)
+    ad = ImageDraw.Draw(av)
+    for _, chain in chains.get("roads", []):
+        ad.line(path(chain), fill=255, width=44)
+    for chain in chains.get("rivers", []):
+        ad.line(path(chain), fill=255, width=30)
+    avoid = np.asarray(av) > 0
+    pike = dict(chains.get("roads", [])).get("valley_pike", [])
+    pk = [p for p in path(pike) if 0 <= p[0] < W and 0 <= p[1] < H and cm[int(p[1]), int(p[0])]]
+    if len(pk) < 2:
+        return
+    ang = math.atan2(pk[-1][1] - pk[0][1], pk[-1][0] - pk[0][0])
+    ux, uy, vx, vy = math.cos(ang), math.sin(ang), -math.sin(ang), math.cos(ang)
+    o = pk[len(pk) // 2]
+    BU, BV, S = 132, 120, 22                      # block length along the pike, across it, street width
+    ext = int(max(W, H))
+    def P(u, v):
+        return (o[0] + u * ux + v * vx, o[1] + u * uy + v * vy)
+    # streets: pale, clipped to the town and kept off the pike and creek
+    st = Image.new("L", (W, H), 0)
+    sd = ImageDraw.Draw(st)
+    for k in range(-14, 15):
+        sd.line([P(-ext, (k + 0.5) * BV), P(ext, (k + 0.5) * BV)], fill=255, width=S)
+        sd.line([P((k + 0.5) * BU, -ext), P((k + 0.5) * BU, ext)], fill=255, width=S)
+    smask = (np.asarray(st) > 0) & ndimage.binary_dilation(cm, iterations=6) & ~avoid
+    lay = np.zeros((H, W, 4), np.uint8)
+    lay[smask] = (218, 204, 172, 235)
+    ov.alpha_composite(Image.fromarray(lay, "RGBA"))
+    def ok(x, y):
+        xi, yi = int(x), int(y)
+        return 0 <= xi < W and 0 <= yi < H and cm[yi, xi] and not avoid[yi, xi]
+    cols = [(176, 112, 88, 255)] * 5 + [(232, 224, 206, 255)] * 3 + [(192, 182, 162, 255)] * 2
+    for i in range(-14, 14):
+        for j in range(-14, 14):
+            u0, u1 = (i + 0.5) * BU + S / 2 + 2, (i + 1.5) * BU - S / 2 - 2
+            v0, v1 = (j + 0.5) * BV + S / 2 + 2, (j + 1.5) * BV - S / 2 - 2
+            if not ok(*P((u0 + u1) / 2, (v0 + v1) / 2)) and not ok(*P(u0 + 20, v0 + 14)) and not ok(*P(u1 - 20, v1 - 14)):
+                continue
+            # houses along both long street fronts, a gap now and then for a yard or lane
+            for side, vv, dv in ((0, v0, 1), (1, v1, -1)):
+                u = u0
+                while u < u1 - 10:
+                    w = rng.uniform(16, 30)
+                    if u + w > u1:
+                        w = u1 - u
+                    if w >= 10 and rng.random() > 0.14:
+                        dep = rng.uniform(22, 30)
+                        quad = [P(u, vv), P(u + w, vv), P(u + w, vv + dv * dep), P(u, vv + dv * dep)]
+                        if all(ok(x, y) for x, y in quad):
+                            d.polygon([(x + 3, y + 4) for x, y in quad], fill=(40, 30, 20, 80))
+                            d.polygon(quad, fill=cols[int(rng.integers(0, len(cols)))], outline=(70, 46, 34, 255))
+                            a, b = P(u + 2, vv + dv * dep / 2), P(u + w - 2, vv + dv * dep / 2)
+                            d.line([a, b], fill=(96, 62, 46, 200), width=2)
+                    u += w + rng.uniform(1, 7)
+            # a garden tree or two in the yard between the rows
+            for _ in range(int(rng.integers(0, 3))):
+                x, y = P(rng.uniform(u0 + 15, u1 - 15), rng.uniform(v0 + 34, v1 - 34))
+                if ok(x, y):
+                    d.ellipse([x - 7, y - 7, x + 7, y + 7], fill=(104, 116, 66, 230), outline=(56, 64, 34, 230))
+
+
+def _font(path, size):
+    return ImageFont.truetype(path, size)
+
+
+def cartouche(ov, cx, cy, px_per_m):
+    """Period title block: double ruled frame with corner rosettes, title, place and date, and
+    two scale bars (yards above, metres below) drawn at the board's own scale."""
+    W_, H_ = 1000, 660
+    lay = Image.new("RGBA", (W_ + 40, H_ + 40), (0, 0, 0, 0))
+    d = ImageDraw.Draw(lay)
+    x0, y0, x1, y1 = 20, 20, 20 + W_, 20 + H_
+    d.rectangle([x0 + 8, y0 + 10, x1 + 8, y1 + 10], fill=(40, 30, 20, 70))          # cast shadow
+    d.rectangle([x0, y0, x1, y1], fill=PAPER, outline=INK, width=7)
+    d.rectangle([x0 + 16, y0 + 16, x1 - 16, y1 - 16], outline=INK, width=2)
+    # a fine rope of short ticks between the rules
+    for t in range(0, 2 * (W_ + H_), 14):
+        if t < W_:
+            pts = [(x0 + t, y0 + 8), (x0 + t + 7, y0 + 8)], [(x0 + t, y1 - 8), (x0 + t + 7, y1 - 8)]
+        elif t < W_ + H_:
+            k = t - W_
+            pts = [(x0 + 8, y0 + k), (x0 + 8, y0 + k + 7)], [(x1 - 8, y0 + k), (x1 - 8, y0 + k + 7)]
+        else:
+            continue
+        for p in pts:
+            d.line(p, fill=(120, 92, 62, 255), width=3)
+    for x, y in ((x0 + 16, y0 + 16), (x1 - 16, y0 + 16), (x0 + 16, y1 - 16), (x1 - 16, y1 - 16)):
+        d.ellipse([x - 22, y - 22, x + 22, y + 22], fill=PAPER, outline=INK, width=3)
+        d.polygon([(x, y - 15), (x + 6, y), (x, y + 15), (x - 6, y)], fill=INK)
+        d.polygon([(x - 15, y), (x, y - 6), (x + 15, y), (x, y + 6)], fill=(120, 92, 62, 255))
+    mx = (x0 + x1) / 2
+    d.text((mx, y0 + 68), "Map of the Battle of", font=_font(F_ITAL, 46), anchor="mm", fill=INK)
+    d.text((mx, y0 + 160), "KERNSTOWN", font=_font(F_CAPS, 128), anchor="mm", fill=INK)
+    d.text((mx, y0 + 252), "Frederick County, Virginia", font=_font(F_ITAL, 50), anchor="mm", fill=INK)
+    d.text((mx, y0 + 312), "Sunday, 23 March 1862", font=_font(F_ITAL, 50), anchor="mm", fill=INK)
+    # flourish rule
+    ry = y0 + 362
+    d.line([(mx - 330, ry), (mx - 22, ry)], fill=INK, width=3)
+    d.line([(mx + 22, ry), (mx + 330, ry)], fill=INK, width=3)
+    d.polygon([(mx, ry - 12), (mx + 16, ry), (mx, ry + 12), (mx - 16, ry)], fill=INK)
+    for sx in (-1, 1):
+        d.ellipse([mx + sx * 340 - 6, ry - 6, mx + sx * 340 + 6, ry + 6], fill=INK)
+    # scale bars, 0-1,000 in alternately filled 200-unit cells
+    fl, fs = _font(F_CAPS, 34), _font(F_ITAL, 30)
+    def bar(y, unit_m, label, total=1000, step=200):
+        Lpx = total * unit_m * px_per_m
+        bx = mx - Lpx / 2
+        d.text((bx - 18, y + 9), label, font=fl, anchor="rm", fill=INK)
+        d.rectangle([bx, y, bx + Lpx, y + 18], outline=INK, width=2)
+        n = total // step
+        for k in range(n):
+            a, b = bx + Lpx * k / n, bx + Lpx * (k + 1) / n
+            if k % 2 == 0:
+                d.rectangle([a, y, b, y + 18], fill=INK)
+            d.line([(a, y - 6), (a, y + 24)], fill=INK, width=2)
+        d.line([(bx + Lpx, y - 6), (bx + Lpx, y + 24)], fill=INK, width=2)
+        for k in range(n + 1):
+            v = k * step
+            d.text((bx + Lpx * k / n, y + 44), f"{v:,}", font=fs, anchor="mm", fill=INK)
+        return bx, Lpx
+    bar(y0 + 410, 0.9144, "Yards")
+    bar(y0 + 500, 1.0, "Meters")
+    d.text((mx, y0 + 612), "One hex, 300 meters (328 yards) from side to side; one turn, half an hour",
+           font=_font(F_ITAL, 31), anchor="mm", fill=INK)
+    ov.alpha_composite(lay, (int(cx - W_ / 2 - 20), int(cy - H_ / 2 - 20)))
+
+
+def compass_rose(ov, cx, cy, rr):
+    """A 16-point compass rose with a ring of degree ticks and a red north point."""
+    S = int(rr * 2 + 200)
+    lay = Image.new("RGBA", (S, S), (0, 0, 0, 0))
+    d = ImageDraw.Draw(lay)
+    c = S / 2
+    LIGHT, DARK, MID = (246, 238, 216, 255), INK, (150, 64, 46, 255)
+    d.ellipse([c - rr - 6 + 6, c - rr - 6 + 8, c + rr + 6 + 6, c + rr + 6 + 8], fill=(40, 30, 20, 50))
+    d.ellipse([c - rr - 6, c - rr - 6, c + rr + 6, c + rr + 6], fill=(244, 236, 214, 255), outline=DARK, width=4)
+    d.ellipse([c - rr + 18, c - rr + 18, c + rr - 18, c + rr - 18], outline=DARK, width=2)
+    for k in range(72):
+        a = math.radians(k * 5)
+        r0 = rr - (14 if k % 2 else 4)
+        d.line([(c + r0 * math.sin(a), c - r0 * math.cos(a)), (c + (rr + 2) * math.sin(a), c - (rr + 2) * math.cos(a))],
+               fill=DARK, width=2 if k % 2 else 3)
+    def point(deg, length, half, colours):
+        a = math.radians(deg)
+        tip = (c + length * math.sin(a), c - length * math.cos(a))
+        l = (c + half * math.sin(a - math.pi / 2), c - half * math.cos(a - math.pi / 2))
+        r = (c + half * math.sin(a + math.pi / 2), c - half * math.cos(a + math.pi / 2))
+        d.polygon([(c, c), l, tip], fill=colours[0], outline=DARK)
+        d.polygon([(c, c), r, tip], fill=colours[1], outline=DARK)
+    for deg in range(0, 360, 45):
+        if deg % 90:
+            point(deg + 22.5, rr * 0.48, rr * 0.06, (LIGHT, DARK))
+            point(deg - 22.5, rr * 0.48, rr * 0.06, (LIGHT, DARK))
+    for deg in range(45, 360, 90):
+        point(deg, rr * 0.66, rr * 0.10, (DARK, LIGHT))
+    for deg in (90, 180, 270):
+        point(deg, rr * 0.88, rr * 0.14, (LIGHT, DARK))
+    point(0, rr * 0.88, rr * 0.14, (MID, DARK))
+    d.ellipse([c - 12, c - 12, c + 12, c + 12], fill=LIGHT, outline=DARK, width=3)
+    f = _font(F_CAPS, 58)
+    for txt, deg in (("N", 0), ("E", 90), ("S", 180), ("W", 270)):
+        a = math.radians(deg)
+        rl = rr + 38
+        d.text((c + rl * math.sin(a), c - rl * math.cos(a)), txt, font=f, anchor="mm", fill=DARK,
+               stroke_width=4, stroke_fill=(244, 236, 214, 230))
+    ov.alpha_composite(lay, (int(cx - c), int(cy - c)))
+
+
 def make_board_art(grid, terrain, chains, fences, elev, painted=None, seed=1862, dem=None, sites=()):
     cols, rows = grid.cols, grid.rows
     ox, oy, W, H = geometry(cols, rows)
@@ -379,13 +558,7 @@ def make_board_art(grid, terrain, chains, fences, elev, painted=None, seed=1862,
         for i in range(3):
             bldg(cx + rng.uniform(-40, 40), cy + rng.uniform(-40, 30), rng.uniform(9, 13), rng.uniform(6, 9),
                  rng.uniform(-0.4, 0.4), [(232, 224, 206, 255), (150, 62, 44, 255), (170, 120, 90, 255)][i])
-    for q, r in by.get("city", []):
-        cx, cy = hex_px(q, r, ox, oy)
-        for gx_ in (-28, 28):
-            for gy_ in (-30, 26):
-                x, y = cx + gx_ + rng.uniform(-4, 4), cy + gy_ + rng.uniform(-4, 4)
-                d.rectangle([x - 24, y - 22, x + 24, y + 22], fill=(178, 120, 96, 235), outline=(100, 62, 48, 255), width=2)
-                d.line([(x - 24, y), (x + 24, y)], fill=(120, 76, 58, 200), width=2)
+    town(d, ov, by.get("city", []), chains, path, ox, oy, W, H, rng)
 
     # stone wall on the fenced hexsides: a row of field stones (Antietam marks fences with dots)
     # v3.2: heavier, two courses of stones on a dark footing, with a cast shadow
@@ -429,16 +602,11 @@ def make_board_art(grid, terrain, chains, fences, elev, painted=None, seed=1862,
         at = (p[i][0] + nx * off, p[i][1] + ny * off)
         label(txt, at, ang, 40 if kind == "road" else 44, (50, 80, 110, 255) if kind == "water" else (70, 50, 32, 255))
 
-    # cartouche, south-east corner
-    cq, cr = cols - 4, rows - 2
-    cx, cy = hex_px(cq, cr, ox, oy)
-    f1, f2 = ImageFont.truetype(F_CAPS, 64), ImageFont.truetype(F_ITAL, 38)
-    d.rounded_rectangle([cx - 300, cy - 90, cx + 300, cy + 90], 14, fill=(242, 234, 212, 215), outline=(80, 60, 40, 255), width=4)
-    d.text((cx, cy - 26), "Kernstown", font=f1, anchor="mm", fill=(60, 42, 28, 255))
-    d.text((cx, cy + 40), "Frederick County, Va., 23 March 1862", font=f2, anchor="mm", fill=(60, 42, 28, 255))
-    ax, ay = cx - 360, cy
-    d.polygon([(ax, ay - 70), (ax - 18, ay), (ax + 18, ay)], fill=(60, 42, 28, 255))
-    d.text((ax, ay + 30), "N", font=f2, anchor="mm", fill=(60, 42, 28, 255))
+    # v3.5: title cartouche with scale bars, and a compass rose, in the empty south-east corner (east
+    # of the pike, south of Buffalo Lick Run: no objective, name or start hex within 5 hexes)
+    px_per_m = SQ3 * R * SCALE / grid.s           # hex centre to centre = grid.s metres (300)
+    cartouche(ov, 4100, 4545, px_per_m)
+    compass_rose(ov, 3310, 4520, 180)
 
     im.alpha_composite(ov)
     # clip to the board's hex outline, transparent outside (stock style)

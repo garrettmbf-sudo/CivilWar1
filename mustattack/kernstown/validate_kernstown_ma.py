@@ -16,8 +16,8 @@ Checks (exit 1 on any ERROR):
     secondbullrun1862 / chancellorsville1863); named non-VP hexes: boxes[9] = name (antietam)
   * meta.boardArt (v2): same geometry fields/values as antietam1862's, image decodes to the size the
     grid implies, transparent outside the board, hash = SHA-1 of the PNG (our assumption)
-  * victory thresholds vs the editor's guidance (5/40/80% of objective values + average side CS),
-    and whether each side can reach each threshold (v3.3)
+  * victory thresholds (v3.5): winLine is the status quo, thresholds are 5/40/80% of the scarcer
+    side's room past the line, and each side can reach each threshold; elite units even per side
   * v3.3: standby trigger fields are sane (<= 5 groups a side, containment groups really are
     contained at the start, enemyGroup names an existing opposing group); with replacements on,
     every unit not on the BELOW_3_OK list has CS >= 3; doctrine words are stock words
@@ -496,23 +496,42 @@ def main(path, refdir):
           f"stack space, strictly farther from the nearest enemy unit)")
     print(f"  two-flank test: {len(flank_ok)} stacks within {FLANK_REACH} hexes of the enemy pass")
     print(f"  batteries: " + "; ".join(pairs_out))
-    # ---- thresholds: editor guidance (v3.3), same as the formula that fit the stock files
+    # ---- thresholds: status-quo winLine, 5/40/80% of the scarcer side's room (v3.5)
     vc = d["victoryCondition"]
     vps = sum(h["vp"]["first"] for h in hexes)
     cs = [sum(u["combatStrength"] for u in sc["units"] if u["side"] == k) for k in (0, 1)]
     total = vps + sum(cs) / 2
-    want = (round(0.05 * total), round(0.4 * total), round(0.8 * total))
+    guide = (round(0.05 * total), round(0.4 * total), round(0.8 * total))
     got = (vc["tacticalThreshold"], vc["operationalThreshold"], vc["strategicThreshold"])
-    if got != want:
-        warn(f"thresholds {got} differ from the editor guidance 5/40/80% of {total:g} = {want}")
+    # v3.5: winLine must be the status quo (Union-held VP minus Confederate-held VP at the start)
+    held = [sum(h["vp"]["first"] for h in hexes if h["isVPLocation"] and h["initialControl"] == k) for k in (0, 1)]
+    if vc["winLine"] != held[0] - held[1]:
+        err(f"winLine {vc['winLine']} is not the status quo {held[0]} - {held[1]} = {held[0] - held[1]}")
     # best case for each side relative to winLine: every objective held, the enemy destroyed, no losses
     best = {0: vps + cs[1] - vc["winLine"], 1: vps + cs[0] + vc["winLine"]}
+    # v3.5: 5/40/80% of the scarcer side's room past the line (the editor's guidance total assumes a
+    # line near the middle; ours is the status quo, so the guidance strategic was out of the Union's reach)
+    room = min(best.values())
+    want = (round(0.05 * room), round(0.4 * room), round(0.8 * room))
+    if got != want:
+        err(f"thresholds {got} differ from 5/40/80% of the scarcer side's room {room} = {want}")
     for k, nm in ((0, "tactical"), (1, "operational"), (2, "strategic")):
         cant = [str(sd) for sd in (0, 1) if best[sd] < got[k]]
         if cant:
-            (err if k < 2 else warn)(f"side {'/'.join(cant)} cannot reach a {nm} victory ({got[k]}; best possible {[best[int(c)] for c in cant]})")
-    print(f"  victory: total contested {total:g} (VP {vps} + avg CS {sum(cs)/2:g}; CS U {cs[0]} / C {cs[1]}), "
-          f"thresholds {got}, best margin past the line U {best[0]} / C {best[1]}")
+            err(f"side {'/'.join(cant)} cannot reach a {nm} victory ({got[k]}; best possible {[best[int(c)] for c in cant]})")
+    print(f"  victory: winLine {vc['winLine']} (status quo U {held[0]} - C {held[1]}), thresholds {got} = 5/40/80% of "
+          f"room {room}; best margin past the line U {best[0]} / C {best[1]}; editor-guidance total {total:g} "
+          f"(VP {vps} + avg CS {sum(cs)/2:g}) would give {guide}")
+    # v3.5: elite (surprise) units, one round per side: report and keep the two sides even
+    el = {k: [u for u in sc["units"] if u["side"] == k and u["eliteUnit"]] for k in (0, 1)}
+    share = {k: sum(u["combatStrength"] for u in el[k]) / cs[k] for k in (0, 1)}
+    for k in (0, 1):
+        print(f"  elite side {k}: {len(el[k])} units, CS {sum(u['combatStrength'] for u in el[k])} "
+              f"({100 * share[k]:.0f}% of {cs[k]}): " + ", ".join(u["name"] for u in el[k]))
+    if bool(el[0]) != bool(el[1]):
+        err("eliteUnit set on one side only")
+    if el[0] and (abs(len(el[0]) - len(el[1])) > 1 or abs(share[0] - share[1]) > 0.10):
+        err("elite units uneven between the sides (unit count differs by > 1 or CS share by > 10 points)")
     if not vc["tacticalThreshold"] < vc["operationalThreshold"] < vc["strategicThreshold"]:
         err("victory thresholds not increasing")
     if sc["turnClock"] and sc["turnClock"][0]["turn"] != 1:

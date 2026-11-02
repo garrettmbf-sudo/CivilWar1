@@ -263,6 +263,12 @@ VP_SITES = [
     ("Stone Wall", "W2", 15, None),        # v1: Confederate-held 15 on the middle hex
     # v3.2: Glass Farm (W0) is now the command point instead of a 5-VP site; see CP_SITES.
     ("Bartonsville", (-78.2100, 39.1160), 10, 1),
+    # v3.5: the Middle Road where it crosses the south end of Sandy Ridge (ridge core ends at (4,27),
+    # data/features ridge_cores.sandy_ridge), behind Jackson's left.  It gives the Union a flank
+    # objective of its own, as Kernstown is for Ashby on the other flank: v3.4 left the Union only
+    # the wall (15) and Bartonsville (10, on the pike behind Jackson's whole army) to gain, so it
+    # could not reach the strategic threshold.  A game objective, not a historical claim.
+    ("Middle Road", (4, 25), 10, 1),
 ]
 # Command points.  The editor's own help (user screenshot): "CP = holding it changes how many
 # units a side may move per turn ... A plus CP (+3) raises your own cap."  Non-VP hexes only, as in
@@ -356,6 +362,22 @@ UNITS = [
     (1, "Burks", "42 VA", "inf", 1, 4, 1, (14, 29), 1),              # v3.2: was (13,28)
     (1, "Lanier", "Danville", "art", 2, 3, 3, (14, 29), 1),
 ]
+
+# v3.5 elite ("surprise") units, units[].eliteUnit.  Editor help (README field map): once per game,
+# when an elite unit first attacks or is attacked, every elite unit of that side moves and attacks
+# once more.  Saves carry SurpriseArmedBlue/Red, SurpriseSpentBlue/Red, InSurpriseRound and per-unit
+# EliteUnit/EliteTriggered, which fits a one-shot round per side.  No stock scenario sets it; the
+# user's own file marks Garnett's Stonewall Brigade.  Picks, from the briefing's own history:
+#   Confederate: Fulkerson's brigade and Garnett's Stonewall Brigade (both counters), the stroke onto
+#     Sandy Ridge that reached the stone wall before Tyler did.  3 units, CS 12 of 44 (27%).
+#   Union: Tyler's brigade, which Kimball sent west and which attacked the wall about 4 PM.
+#     3 units, CS 16 of 66 (24%).
+# Even by unit count and by share of each side.  The HQs are left out on purpose: Kimball's HQ stands
+# on Pritchard's Hill within reach of the Sandy Ridge guns, so it could be attacked early and spend
+# the Union round before Tyler is released, while Jackson's sits safe at the rear.  That would
+# favour Jackson, so neither HQ is elite.
+ELITE = {("Tyler", "7 OH/29 OH"), ("Tyler", "7 IN/1 WV"), ("Tyler", "110 PA"),
+         ("Fulkerson", "23/37 VA"), ("Garnett", "5/33 VA"), ("Garnett", "2/4/27 VA")}
 
 # standby_groups.  v3.2 FINDING: a unit's standbyGroup n means the n-th entry OF ITS OWN SIDE, not
 # the n-th entry of the list.  Evidence: malvernhill1862 lists [s0, s0, s1, s1, s1] and its side-1
@@ -887,23 +909,35 @@ Banks' army is leaving the Valley for the defence of Washington, and Jackson's o
 
 [The afternoon] Each turn is half an hour. Turn 1 is 2:00 PM. When the computer runs a side, some of its units wait in reserve. A waiting unit does not move, but it fights, fires and holds its ground, and it comes on at once if an enemy unit moves next to it or attacks it. On turn 4 (3:30) Tyler may start west. He comes sooner if Jackson commits Burks, or if Kimball's front loses 30% of its strength. On turn 5 (4:00) Burks may come up, and he comes at once when Tyler moves. The Union may move two more units a turn from turn 5. Historically Tyler's attack on the wall began about now. On turn 6 (4:30) Sullivan may join; he comes sooner if Ashby moves. Ashby waits as long as Sullivan's infantry stands in front of him, and is free once it leaves. The guns on Pritchard's Hill and Sandy Ridge stay where they are and fire from there. On turn 9 (6:00) Burks arrived historically and Garnett's line fell back. The sun sets about 6:15 and dusk ends about 6:40. Turn 11 (7:00) is night, and the game ends after it.
 
-[How to win] The score is the Union's objective points minus the Confederates', plus the strength the Union destroys minus the strength it loses. The dividing line is Union +55, the score if nothing changes hands. The Stone Wall (15) starts neutral. Pritchard's Hill (20), Kernstown (15) and Winchester (30) start Union, and Bartonsville (10) starts Confederate. Two hexes are command points (+2): Glass Farm, at the west end of the stone wall, and Grade Junction, where the Cedar Creek Grade meets the pike. Both start neutral. The side holding one may move two more units each turn. A Union side that keeps what it has and takes the wall scores about 70, and a Jackson who holds the wall until dark and keeps Bartonsville holds the Union to about 40, before losses. Losses count: every strength point destroyed moves the score one point. A margin of 7 either way is a tactical victory, 58 an operational one and 116 a strategic one.
+[How to win] The score is the Union's objective points minus the Confederates', plus the strength the Union destroys minus the strength it loses. The dividing line is Union +45, the score if nothing changes hands. The Stone Wall (15) starts neutral. Pritchard's Hill (20), Kernstown (15) and Winchester (30) start Union. Bartonsville (10), on the pike, and the Middle Road (10), where it crosses the south end of Sandy Ridge behind Jackson's left, start Confederate. Two hexes are command points (+2): Glass Farm, at the west end of the stone wall, and Grade Junction, where the Cedar Creek Grade meets the pike. Both start neutral. The side holding one may move two more units each turn. Losses count: every strength point destroyed moves the score one point. A margin of 5 either way is a tactical victory, 40 an operational one and 79 a strategic one. Before losses: a Union side that keeps what it has and takes the wall scores about 60, a tactical win, and a Jackson who holds the wall until dark holds the Union to about 30, a tactical win for him. Kimball turns that into an operational win by also taking the Middle Road and Bartonsville; Jackson does it by taking Kernstown as well as holding the wall.
 
-[Combat] This board uses its own combat table, gentler than the default. Attacks at poor odds usually stall: from 1:3 to 1:1 only a 1 repulses the attacker (at 1:3 a 2 as well), and every middle roll has no effect (C). At even odds a 6 drives the defender back (DR); from 2:1 a 4 or better does. Every battery starts stacked with infantry (Chew with Ashby's cavalry). A unit is destroyed by the die only at 5:1 or better on the highest rolls. Replacements are on: a unit of strength 3 or more destroyed that way falls back up to twice its movement and fights on at half strength. A unit that must retreat with no open hex behind it is lost for good, with no replacement, so keep a way back open. Sandy Ridge, Pritchard's Hill and the wall hexes are high ground (rough: defence x2, 2 MP), and a beaten unit can fall back onto them or off them.
+[Combat] This board uses its own combat table, gentler than the default. Attacks at poor odds usually stall: from 1:3 to 1:1 only a 1 repulses the attacker (at 1:3 a 2 as well), and every middle roll has no effect (C). At even odds a 6 drives the defender back (DR); from 2:1 a 4 or better does. Every battery starts stacked with another unit: infantry, Kimball's headquarters (Robinson) or Ashby's cavalry (Chew). A unit is destroyed by the die only at 5:1 or better on the highest rolls. Replacements are on: a unit of strength 3 or more destroyed that way falls back up to twice its movement and fights on at half strength. A unit that must retreat with no open hex behind it is lost for good, with no replacement, so keep a way back open. Sandy Ridge, Pritchard's Hill and the wall hexes are high ground (rough: defence x2, 2 MP), and a beaten unit can fall back onto them or off them. Elite units: Fulkerson's brigade and Garnett's Stonewall Brigade (both counters) for Jackson, and Tyler's brigade (all three counters) for Kimball. Once per game, the first time one of a side's elite units attacks or is attacked, every elite unit of that side moves and attacks once more.
 
-[Order of battle] Union, Shields' division, Col. Nathan Kimball. Kimball's brigade: 14th Indiana (Lt. Col. Harrow), 84th Pennsylvania (Col. Murray, killed), 8th Ohio (Col. Carroll), 67th Ohio (Lt. Col. Voris). Tyler's brigade, Col. Erastus B. Tyler: 7th and 29th Ohio, 7th Indiana, 1st West Virginia (Col. Thoburn), 110th Pennsylvania. Sullivan's brigade, Col. Jeremiah C. Sullivan: 13th Indiana, 5th Ohio, 62nd Ohio, 39th Illinois (not engaged). Brodhead's cavalry: 1st Michigan, with Ohio and Maryland companies. Batteries: Jenks (A, West Virginia), Clark (E, 4th U.S.), Robinson (L, 1st Ohio), Keeper (B, West Virginia), Huntington (H, 1st Ohio).
+[Order of battle] Union, Shields' division, Col. Nathan Kimball. Kimball's brigade: 14th Indiana (Lt. Col. Harrow), 84th Pennsylvania (Col. Murray, killed), 8th Ohio (Col. Carroll), 67th Ohio (Lt. Col. Voris). Tyler's brigade, Col. Erastus B. Tyler: 7th and 29th Ohio, 7th Indiana, 1st West Virginia (Col. Thoburn), 110th Pennsylvania. Sullivan's brigade, Col. Jeremiah C. Sullivan: 13th Indiana, 5th Ohio, 62nd Ohio, 39th Illinois (not engaged). Brodhead's cavalry: 1st Michigan, with Ohio and Maryland companies. Batteries: Jenks (A, 1st West Virginia), Clark (E, 4th U.S.), Robinson (L, 1st Ohio), Keeper (B, 1st West Virginia), Huntington (H, 1st Ohio).
 Confederate, Valley District, Maj. Gen. Thomas J. Jackson. Stonewall Brigade, Brig. Gen. Richard B. Garnett: 2nd (Col. Allen), 4th (Lt. Col. Ronald), 5th (Col. Harman), 27th (Col. Echols, wounded) and 33rd (Col. Cummings) Virginia, with McLaughlin's Rockbridge, Waters' West Augusta and Carpenter's Alleghany batteries. Burks' brigade, Col. Jesse S. Burks: 21st Virginia (Lt. Col. Patton), 42nd Virginia (Lt. Col. Langhorne), 1st Virginia Battalion (Irish), Marye's Hampden battery. Fulkerson's brigade, Col. Samuel V. Fulkerson: 23rd and 37th Virginia, Lanier's Danville battery. Ashby's 7th Virginia Cavalry and Chew's horse battery. Kimball and Jackson appear as headquarters counters (strength 2) with their portraits. The computer keeps them back; a human player may move them.
 
 [Counters] The commander is on top and the unit in large type below, with the commander's portrait where one exists. The NATO mark shows the branch: X infantry, / cavalry, a dot for artillery; III is a regiment, I a battery. Combat strength is bottom left and movement bottom right. Batteries carry an R3 plate because they fire three hexes. One strength point is about 150 men, and a full battery is 4. Each hex is about 300 m. The board runs from Sandy Ridge in the west to Opequon Creek, and from Bartonsville north to Winchester. Sources: the reports of Jackson, Shields and Kimball in the Official Records (Series I, Vol. 12, Part 1); Gary Ecelbarger, "We Are in for It!" (1997); Peter Cozzens, Shenandoah 1862 (2008); the American Battlefield Trust map of First Kernstown (2024)."""
 
 
-def thresholds(units, vp_values):
-    """Editor guidance (v3.3): total contested = sum of objective values + the average of both sides'
-    CS; thresholds 5% / 40% / 80% of it.  It is the same formula that fit all six stock scenarios
-    (0.4 * (VP + CS/2) = 0.4 * VP + 0.2 * CS).  The margin is objective points held minus the
-    enemy's, plus damage dealt minus damage taken."""
-    total = sum(vp_values) + sum(u["combatStrength"] for u in units) / 2
-    return round(0.05 * total), round(0.4 * total), round(0.8 * total)
+def best_margins(units, vp_sites, win_line):
+    """Each side's best possible margin past the line: every objective held, the whole enemy force
+    destroyed, nothing lost.  The margin is objective points held minus the enemy's, plus damage
+    dealt minus damage taken (editor help)."""
+    vps = sum(v for _, v, _ in vp_sites)
+    cs = [sum(u["combatStrength"] for u in units if u["side"] == k) for k in (0, 1)]
+    return vps + cs[1] - win_line, vps + cs[0] + win_line
+
+
+def thresholds(units, vp_sites, win_line):
+    """v3.5.  The editor's guidance is 5% / 40% / 80% of the total contested, which it puts at the
+    objective values + the average of both sides' CS (the formula fits all six stock scenarios).
+    That assumes the line sits near the middle.  Ours sits at the status quo, Union +45, so the
+    room past the line is lopsided (Union 99, Confederate 211), and v3.3/v3.4's 116 (80% of 145)
+    was out of the Union's reach (best 79).  So the 5/40/80% is taken of the room the scarcer side
+    actually has: then every level is reachable by both sides, and strategic still means taking
+    80% of everything that side could possibly gain."""
+    room = min(best_margins(units, vp_sites, win_line))
+    return round(0.05 * room), round(0.4 * room), round(0.8 * room)
 
 
 # ---------------------------------------------------------------- assemble
@@ -1022,12 +1056,13 @@ def build(repo, stock_path, out_path, painted=None, art=True, art_png=None):
         units.append({"id": i, "q": q, "r": r, "side": side, "combatStrength": cs, "movePoints": mp, "range": rng,
                       "name": full, "boxId": 0, "entryHex": "", "entryTurn": 0, "betrayalTurn": 0,
                       "betrayalChance": 0, "betrayalRise": 0, "suddenDeathUnit": False, "standbyGroup": sb,
-                      "eliteUnit": False, "exitPoints": 0, "boxes": boxes, "templateId": tid})
+                      "eliteUnit": (leader, uname) in ELITE, "exitPoints": 0, "boxes": boxes, "templateId": tid})
 
     rmap, rlabels = region_map(repo)
     bmap, blabels = battle_map(terrain, roads, rivers, list(vp), repo, wall_hexes)
     sides_en = ["Union (Shields' Division, Kimball)", "Confederate (Jackson's Valley District)"]
-    tac, op, strat = thresholds(units, [v[1] for v in vp.values()])
+    assert WIN_LINE == sum(v for _, v, c in vp.values() if c == 0) - sum(v for _, v, c in vp.values() if c == 1)
+    tac, op, strat = thresholds(units, list(vp.values()), WIN_LINE)
 
     meta = {
         "version": "2.0",
@@ -1096,11 +1131,12 @@ def build(repo, stock_path, out_path, painted=None, art=True, art_png=None):
     return scenario, art_info
 
 
-# Score at the start if nothing changes hands (Union VP held - Confederate VP held): 65 - 10 = 55.
-# winLine is author-set in every stock file near the historical result; Kimball's win was holding
-# his ground and taking the wall, so a Union side that keeps what it has and wins the wall scores
-# ~70 (v3.2: 55 + Stone Wall 15) and a Jackson who holds the Stone Wall until dark scores ~40.
-WIN_LINE = 55
+# Score at the start if nothing changes hands (Union VP held - Confederate VP held): 65 - 20 = 45
+# (v3.5; 65 - 10 = 55 before the Middle Road objective).  winLine is author-set in every stock file
+# near the historical result; Kimball's win was holding his ground and taking the wall, so a Union
+# side that keeps what it has and wins the wall scores ~60 (45 + Stone Wall 15), a Union tactical
+# victory, and a Jackson who holds the Stone Wall until dark holds it to ~30, a Confederate one.
+WIN_LINE = 45
 WALL_TERRAIN = "mountain"
 # internal terrain -> JSON terrainId.  v3.4: the engine never retreats a unit into "mountain" (see the
 # terrain records), so the ridge is written as "rough", which has the same defence and took retreats.
