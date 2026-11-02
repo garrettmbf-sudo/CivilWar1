@@ -641,7 +641,8 @@ def make_board_art(grid, terrain, chains, fences, elev, painted=None, seed=1862,
     for pts in hk_fences:
         hk_fence_runs(d, pts, hk_ctx, tb, step=12, min_len=3)
     hk_lane_fences(d, chains, path, hk_ctx, tb, open_m, woods_b, site_px)
-    hk_meadow(d, grid, ox, oy, hk_ctx, tb, woods_b, seed, keep_off=site_px)
+    hk_meadow(d, grid, ox, oy, hk_ctx, tb, woods_b, seed, keep_off=site_px,
+              marsh=by.get("marsh", []))      # v3.8.1: tufts only on the game's marsh hexes
     hk_springs(d, grid, ox, oy, hk_ctx, tb)
 
     # stone wall on the fenced hexsides.  v3.6 (Hotchkiss P2): a thin, light limestone line instead of
@@ -798,6 +799,7 @@ HK_KEEP = [*HK_TREE, HK_TREE_DARK, HK_TREE_LIT, HK_STIPPLE, HK_MEADOW, HK_MEADOW
            (176, 172, 160)]
 # data/features/kernstown_features.json: springs[], marshes.pritchard_sandy_meadow.polygon (lon, lat)
 HK_SPRINGS = [("Spring near Hoge", -78.212, 39.144), ("Spring E of Pike", -78.19, 39.146)]
+# v3.8.1: no longer drawn (tufts go on the marsh hexes only); kept as the source record
 HK_MEADOW_POLY = [(-78.218, 39.1505), (-78.2135, 39.1528), (-78.2085, 39.1545), (-78.205, 39.1548),
                   (-78.2035, 39.1525), (-78.2055, 39.1498), (-78.21, 39.1482), (-78.2145, 39.1485),
                   (-78.2175, 39.1495)]
@@ -892,7 +894,12 @@ def hk_streams(d, rpaths):
             taper(p, 5.5, 9.0, (70, 105, 140, 255))
             taper(p, 1.5, 3.5, (150, 186, 206, 255))
         else:
-            taper(p, 1.6, 5.2, (80, 116, 146, 255))
+            # v3.8.1: Hoge Run at 1.6 px read as a faint grey thread west of the Pike at preview scale;
+            # it now tapers 4 -> 6 px (v3.7 drew it 5 px throughout), inside the 6 px line mask
+            if k == "hoge_run":
+                taper(p, 4.0, 6.0, (80, 116, 146, 255))
+            else:
+                taper(p, 1.6, 5.2, (80, 116, 146, 255))
 
 
 def hk_lines(W, H, chains, path, rpaths):
@@ -1046,14 +1053,13 @@ def hk_lane_fences(d, chains, path, ctx, taken, open_m, woods_b, site_px, off=30
                 hk_fence_runs(d, run, ctx, taken)
 
 
-def hk_meadow(d, grid, ox, oy, ctx, taken, woods_b, seed, keep_off=()):
+def hk_meadow(d, grid, ox, oy, ctx, taken, woods_b, seed, keep_off=(), marsh=()):
     """Tufts of rough grass in the wet meadow between Sandy Ridge and Pritchard's Hill
-    (kernstown_features.json marshes.pritchard_sandy_meadow)."""
-    poly = [hk_lonlat_px(grid, ox, oy, lon, lat) for lon, lat in HK_MEADOW_POLY]
+    (kernstown_features.json marshes.pritchard_sandy_meadow).  v3.8.1: drawn only inside the hexes
+    the scenario makes marsh (the meadow polygon also covers Pritchard's Hill's rough south slope,
+    and a marsh sign there would contradict the game's terrain); no marsh hex, no tufts."""
     H, W = woods_b.shape
-    m = Image.new("L", (W, H), 0)
-    ImageDraw.Draw(m).polygon(poly, fill=255)
-    m = np.asarray(m) > 0
+    m = hex_mask(list(marsh), ox, oy, W, H, 0.9) > 0.5
     rng = np.random.default_rng(seed + 23)
     ys, xs = np.where(m[::30, ::34])
     for y, x in zip(ys * 30, xs * 34):
