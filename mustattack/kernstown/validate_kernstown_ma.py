@@ -21,6 +21,8 @@ Checks (exit 1 on any ERROR):
   * v3.3: standby trigger fields are sane (<= 5 groups a side, containment groups really are
     contained at the start, enemyGroup names an existing opposing group); with replacements on,
     every unit not on the BELOW_3_OK list has CS >= 3; doctrine words are stock words
+  * v3.7: exits in secondbullrun1862's form (edge hexes, no VP/CP, per-CS points for that side,
+    sudden death 0, unit exitPoints 0); brigade counters share one standby group
   * v3.4: no hex uses terrain the engine never retreats into ("mountain"; "fortress" never retreats),
     and the rear-room test ignores such hexes; crt prints C / retreat / eliminated odds per column,
     1:3-1:1 have >= 4 stand-offs of 6, no AE above a 1, and 1:1 keeps a DR
@@ -364,6 +366,51 @@ def main(path, refdir):
             err(f"replacements on, but these units are below CS 3 and get no replacement: {bad}")
         ok = len(sc["units"]) - len(low)
         print(f"  replacements on: {ok} of {len(sc['units'])} units are CS >= 3; below 3 by design: {', '.join(low)}")
+    # v3.7: withdrawal exits, in secondbullrun1862's format.  exit_points_per_cs and
+    # exit_sudden_death_cs are {first, second} dicts; exit hexes lie on the board edge, are passable,
+    # carry no VP/CP; every unit keeps exitPoints 0 (as every stock file); sudden death on exits is 0
+    # (its meaning is undocumented); a side with exit hexes has exit points and vice versa.
+    sbr = stock.get("secondbullrun1862", {}).get("scenario", {}).get("rules", {})
+    for k in ("exit_points_per_cs", "exit_sudden_death_cs"):
+        if k in rules:
+            v = rules[k]
+            if not (isinstance(v, dict) and set(v) == {"first", "second"}) or not isinstance(sbr.get(k), dict):
+                err(f"rules.{k} = {v!r} is not in secondbullrun1862's {{first, second}} form")
+    if any(rules.get("exit_sudden_death_cs", {}).values()):
+        err("rules.exit_sudden_death_cs is not 0: its meaning is undocumented (DEV_WISHLIST)")
+    exits = {k: [] for k in ("first", "second")}
+    for (q, r), h in H.items():
+        for k, on in h.get("exitHex", {}).items():
+            if on:
+                exits[k].append((q, r))
+                if not (q in (0, W - 1) or r in (0, Hh - 1)):
+                    err(f"exit hex {q},{r} ({k}) is not on the board edge")
+                if h["isVPLocation"] or any(h["pp"].values()):
+                    err(f"exit hex {q},{r} carries VP or CP")
+                if terr[h["terrainId"]].get("moveCost", 1) >= 99:
+                    err(f"exit hex {q},{r} is impassable")
+    per = rules.get("exit_points_per_cs", {})
+    per = per if isinstance(per, dict) else {}
+    for k in ("first", "second"):
+        if bool(exits[k]) != bool(per.get(k)):
+            err(f"{k} side: {len(exits[k])} exit hexes but exit_points_per_cs {per.get(k)}")
+    if any(u.get("exitPoints") for u in sc["units"]):
+        err("units[].exitPoints is not 0 on every unit (no stock file sets it)")
+    for k in ("first", "second"):
+        if exits[k]:
+            print(f"  exits {k} side ({sc['sideNames'][0 if k == 'first' else 1]}): {per.get(k)} point(s) per CS, "
+                  f"hexes {sorted(exits[k])}")
+    # v3.7: brigade cohesion.  Counters of one brigade (same commander, HQs and batteries aside, which
+    # are held on purpose) share one standby group, so the AI moves the brigade as a body.
+    brig = {}
+    for u in sc["units"]:
+        if "HQ" in u["name"] or u.get("range", 1) > 1:
+            continue
+        brig.setdefault((u["side"], u["boxes"][3]), set()).add(u.get("standbyGroup", 0))
+    for (side, ldr), gs in sorted(brig.items()):
+        if len(gs) > 1:
+            err(f"side {side} brigade {ldr} is split across standby groups {sorted(gs)}")
+    print(f"  cohesion: {len(brig)} brigades, each in one standby group")
     seen_doc = {st["doctrine"][k] for nm, st in stock.items() if not nm.startswith("user_") and "doctrine" in st for k in ("blue", "red")}
     for k in ("blue", "red"):
         if d["doctrine"][k] not in seen_doc:

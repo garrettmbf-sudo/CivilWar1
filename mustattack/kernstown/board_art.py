@@ -728,6 +728,25 @@ def make_board_art(grid, terrain, chains, fences, elev, painted=None, seed=1862,
         at = (p[i][0] + nx * off, p[i][1] + ny * off)
         label(txt, at, ang, 40 if kind == "road" else 44, (50, 80, 110, 255) if kind == "water" else (70, 50, 32, 255))
 
+    # v3.7: the Confederate exits.  A small period-style arrow pointing off the south edge beside the
+    # road (east of it), one row in from the edge, with an italic legend to its right; neither touches the exit
+    # row itself, so the exit hexes stay clear.
+    for txt, (q, r) in chains.get("exits", []):
+        # the road crosses row r-1 in the hex north-east of its exit hex (both roads run SSW here)
+        rx, ry = hex_px(q + 1, r - 1, ox, oy)
+        ax = rx + 70
+        y0, y1 = ry - 34, ry + 40
+        d.line([(ax, y0), (ax, y1 - 14)], fill=(70, 50, 32, 255), width=4)
+        d.polygon([(ax - 11, y1 - 18), (ax + 11, y1 - 18), (ax, y1)], fill=(70, 50, 32, 255))
+        d.line([(ax - 8, y0), (ax + 8, y0)], fill=(70, 50, 32, 255), width=3)
+        f = ImageFont.truetype(F_ITAL, 30)
+        tw = d.textlength(txt, font=f)
+        tx = min(ax + 18, W - 30 - tw)
+        if tx < ax + 18:                       # too close to the east edge: put the legend on the left
+            tx = ax - 18 - tw
+        d.text((tx, (y0 + y1) / 2), txt, font=f, anchor="lm", fill=(70, 50, 32, 255),
+               stroke_width=3, stroke_fill=(240, 232, 210, 255))
+
     # v3.5: title cartouche with scale bars, and a compass rose, in the empty south-east corner (east
     # of the pike, south of Buffalo Lick Run: no objective, name or start hex within 5 hexes)
     px_per_m = SQ3 * R * SCALE / grid.s           # hex centre to centre = grid.s metres (300)

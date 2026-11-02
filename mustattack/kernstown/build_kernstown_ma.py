@@ -231,6 +231,14 @@ def build_features(feats):
         ("Abrams Creek", rv["abrams_creek"], 0.85, 32, "water"),
         ("Buffalo Lick Run", rv["buffalo_lick"], 0.50, 32, "water"),
     ]
+    # v3.7 withdrawal: Confederate exit hexes where the Valley Turnpike and the Middle Road leave the
+    # south edge, the road hex and its neighbour on each side along the edge row (three hexes per road,
+    # as Second Bull Run's four-hex Union exit beside the Warrenton Turnpike toward Centreville).
+    chains["exits"] = []
+    for k, text in (("valley_pike", "To Newtown & Strasburg"), ("middle_road", "South by the Middle Road")):
+        ends = [h for h in (rc[k][0], rc[k][-1]) if h[1] == ROWS - 1]
+        assert len(ends) == 1, (k, rc[k][0], rc[k][-1])
+        chains["exits"].append((text, ends[0]))
     # trails never duplicate a road on the same hexside
     for h in list(trails):
         trails[h] -= roads.get(h, set())
@@ -352,7 +360,7 @@ UNITS = [
     (0, "Tyler", "7 OH/29 OH", "inf", 3, 4, 1, (19, 12), 1),
     (0, "Tyler", "7 IN/1 WV", "inf", 3, 4, 1, (20, 10), 1),
     (0, "Tyler", "110 PA", "inf", 2, 4, 1, (21, 8), 1),
-    (0, "Sullivan", "39 IL", "inf", 1, 4, 1, (22, 6), 3),            # v3.2: was (24,14); with Huntington
+    (0, "Sullivan", "39 IL", "inf", 1, 4, 1, (22, 6), 2),            # v3.2: was (24,14), with Huntington; v3.7: S3 -> S2, with its brigade
     (0, "Huntington", "H 1 OH Bty", "art", 2, 3, 3, (22, 6), 3),
     # --- Confederate: Jackson's Valley District.  2,742 inf engaged, 290 cav, 18 of 27 guns.
     (1, "Jackson", "Valley District HQ", "hq", 1, 4, 1, (11, 26), 4),  # v3.3: own group 4 (was 2 with Ashby)
@@ -416,6 +424,24 @@ ELITE = {("Tyler", "7 OH/29 OH"), ("Tyler", "7 IN/1 WV"),
 # Containment is only given to a group whose units all stand together facing the enemy (Ashby), so
 # the rule reads the same whether the engine sums the enemy around each unit or around the group:
 # for a rear group the enemy CS within range is 0 from the start, which would wake it at once.
+# v3.7 withdrawal (Jackson fell back up the Valley Turnpike to Newtown that night).  Format exactly as
+# secondbullrun1862, the one stock file that uses exits: rules.exit_points_per_cs {first, second}
+# (there 1 for the Union, 0 for the Confederates), rules.exit_sudden_death_cs {first, second} (there
+# 0/0), hex.exitHex {first, second} (the editor's "Board exit: the ... side may leave here"), and
+# units[].exitPoints 0 on every unit.  "first" is side 0 (Union), "second" side 1 (Confederate).
+# 1 point per CS exited, as Second Bull Run: see README "Withdrawal" for why 1 and not 2.
+# exit_sudden_death_cs stays 0: whether it ends the game on that much CS exited is not documented.
+EXIT_POINTS_PER_CS = {"first": 0, "second": 1}
+EXIT_SUDDEN_DEATH_CS = {"first": 0, "second": 0}
+
+
+def exit_hexes(chains):
+    out = set()
+    for _, (q, r) in chains["exits"]:
+        out |= {(q + d, r) for d in (-1, 0, 1) if 0 <= q + d < COLS}
+    return out
+
+
 def SG(side, turn, chance, rise, rng=0, need=0, main=0, enemy=0):
     return {"side": side, "turn": turn, "chance": chance, "rise": rise, "guardHexes": rng,
             "guardCs": need, "mainForcePct": main, "enemyGroup": enemy}
@@ -426,11 +452,13 @@ STANDBY = [  # per side in order: side 0 groups 1-4, then side 1 groups 1-4.  CS
     #     Jackson's flank about 3:30-4 PM, as Jackson's attack developed.  Wakes on turn 4 (50%,
     #     +25/turn), at once if Jackson commits Burks (C1), or if Kimball's main body falls to 70%.
     SG(0, 4, 50, 25, main=70, enemy=1),
-    # U2: Sullivan's 13 IN/5 OH and 62 OH, watching Ashby east of the pike; they went to Sandy Ridge
-    #     only late.  Turn 6 (30%, +25), at once if Ashby's group (C2) comes on, or main body 60%.
+    # U2: Sullivan's brigade, 13 IN/5 OH and 62 OH watching Ashby east of the pike; they went to Sandy
+    #     Ridge only late.  Turn 6 (30%, +25), at once if Ashby's group (C2) comes on, or main body 60%.
+    #     v3.7 (cohesion): Sullivan's 39 IL moved here from U3, so the whole brigade wakes as one body
+    #     (the AI moves a group together); Huntington stays held in U3.
     SG(0, 6, 30, 25, main=60, enemy=2),
-    # U3: Kimball's HQ, 39 IL and Huntington's battery at Winchester: held, unless the main body
-    #     falls to half.
+    # U3: Kimball's HQ and Huntington's battery (in reserve): held, unless the main body falls to
+    #     half.  (39 IL was here to v3.6.)
     SG(0, 0, 0, 0, main=50),
     # U4: the guns on Pritchard's Hill (Robinson, Jenks, Clark, Keeper), which stayed there all
     #     afternoon: held for good.  They fire while held; an adjacent enemy still wakes them.
@@ -929,6 +957,8 @@ Banks' army is leaving the Valley for the defence of Washington, and Jackson's o
 
 [How to win] The score is the Union's objective points minus the Confederates', plus the strength the Union destroys minus the strength it loses. The dividing line is Union +45, the score if nothing changes hands. The Stone Wall (15) starts neutral. Pritchard's Hill (20), Kernstown (15) and Winchester (30) start Union. Bartonsville (10), on the pike, and the Middle Road (10), where it crosses the south end of Sandy Ridge behind Jackson's left, start Confederate. Two hexes are command points (+2): Glass Farm, at the west end of the stone wall, and Grade Junction, where the Cedar Creek Grade meets the pike. Both start neutral. The side holding one may move two more units each turn. Losses count: every strength point destroyed moves the score one point. A margin of 5 either way is a tactical victory, 40 an operational one and 81 a strategic one. Before losses: a Union side that keeps what it has and takes the wall scores about 60, a tactical win, and a Jackson who holds the wall until dark holds the Union to about 30, a tactical win for him. Kimball turns that into an operational win by also taking the Middle Road and Bartonsville; Jackson does it by taking Kernstown as well as holding the wall.
 
+[Withdrawal] Jackson may leave the field. A Confederate unit on one of the six south-edge hexes where the Valley Turnpike and the Middle Road leave the board, marked "To Newtown & Strasburg" and "South by the Middle Road", may march off. Each strength point that leaves counts one point for Jackson, so strength carried off is not the Union's to destroy. A beaten army that gets away in good order turns a Union strategic victory into an operational one, but marching off early hands Kimball the objectives and the battle. Historically Jackson broke off at dark and fell back up the Valley Turnpike toward Newtown, with Ashby's cavalry covering the rear, and in the following days on up the Valley. The strength that leaves, with what is still on the board at the end, is what Jackson carries into the next fight.
+
 [Combat] This board uses its own combat table, gentler than the default. Attacks at poor odds usually stall: from 1:3 to 1:1 only a 1 repulses the attacker (at 1:3 a 2 as well), and every middle roll has no effect (C). At even odds a 6 drives the defender back (DR); from 2:1 a 4 or better does. Every battery starts stacked with another unit: infantry, Kimball's headquarters (Robinson) or Ashby's cavalry (Chew). A unit is destroyed by the die only at 5:1 or better on the highest rolls. Replacements are on: a unit of strength 3 or more destroyed that way falls back up to twice its movement and fights on at half strength. A unit that must retreat with no open hex behind it is lost for good, with no replacement, so keep a way back open. Sandy Ridge, Pritchard's Hill and the wall hexes are high ground (rough: defence x2, 2 MP), and a beaten unit can fall back onto them or off them. Elite units: Fulkerson's brigade and Garnett's 2nd/4th/27th Virginia for Jackson, and Tyler's 7th/29th Ohio and 7th Indiana/1st (West) Virginia for Kimball. Once per game, the first time one of a side's elite units attacks or is attacked, every elite unit of that side moves and attacks once more.
 
 [Order of battle] Union, Shields' division, Col. Nathan Kimball. Kimball's brigade: 14th Indiana (Lt. Col. Harrow), 84th Pennsylvania (Col. Murray, killed), 8th Ohio (Col. Carroll), 67th Ohio (Lt. Col. Voris). Tyler's brigade, Col. Erastus B. Tyler: 7th and 29th Ohio, 7th Indiana, 1st (West) Virginia (Col. Thoburn), 110th Pennsylvania. Sullivan's brigade, Col. Jeremiah C. Sullivan: 13th Indiana, 5th Ohio, 62nd Ohio, 39th Illinois (not in the final assault). Brodhead's cavalry: four companies of the 1st Michigan, and companies from Ohio, Maryland, Pennsylvania and the 1st (West) Virginia Cavalry. Batteries: Jenks (A, 1st (West) Virginia), Clark (E, 4th U.S.), Robinson (L, 1st Ohio), one section of B, 1st (West) Virginia (Keeper), Huntington (H, 1st Ohio, in reserve).
@@ -1007,11 +1037,17 @@ def build(repo, stock_path, out_path, painted=None, art=True, art_png=None):
             continue
         named[h] = name
 
+    exits = exit_hexes(chains)
+    assert all(h[1] == ROWS - 1 and h not in vp and h not in cp for h in exits), exits
     hexes = []
     for r in range(ROWS):
         for q in range(COLS):
             h = (q, r)
             boxes = [0] * 20
+            if h in exits:
+                # secondbullrun1862's first-side exit hexes carry boxes[18] = 1; boxes pair first/second
+                # as 10/11 (VP) and 16/17 (CP), so the second side's exit flag is boxes[19]
+                boxes[19] = 1
             name = ""
             isvp = h in vp
             vpv = vp[h][1] if isvp else 0
@@ -1033,7 +1069,7 @@ def build(repo, stock_path, out_path, painted=None, art=True, art_png=None):
                 "majorRivers": [], "fences": fe, "isVPLocation": isvp,
                 "vp": {"first": vpv, "second": vpv}, "pp": {"first": ppv, "second": ppv},
                 "suddenDeath": {"first": False, "second": False, "both": False},
-                "exitHex": {"first": False, "second": False}, "initialControl": ctl,
+                "exitHex": {"first": False, "second": h in exits}, "initialControl": ctl,
                 "name": name, "boxes": boxes})
 
     # units & templates
@@ -1138,6 +1174,9 @@ def build(repo, stock_path, out_path, painted=None, art=True, art_png=None):
                 # v3.3: replacements on (gettysburg1863 has replacement: true).
                 "replacement": True,
                 "night_turns": [11],
+                # v3.7: Confederate withdrawal off the south edge (format: secondbullrun1862)
+                "exit_points_per_cs": EXIT_POINTS_PER_CS,
+                "exit_sudden_death_cs": EXIT_SUDDEN_DEATH_CS,
                 "standby_groups": STANDBY,
                 "crt": CRT,
             },

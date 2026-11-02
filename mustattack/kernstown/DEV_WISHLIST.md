@@ -1,6 +1,6 @@
 # Wishlist from a Civil War scenario maker
 
-Hello, and thank you for *Must Attack!* and the Wargame Maker. We made a First Kernstown (1862) scenario with the Wargame Maker export format and have played it four times (v3.5 and v3.6 are not yet played). The engine works well for this. The editor's help text now answers many of our earlier questions: replacements, the retreat and ZOC options, the standby fields (containment, main body %, opposing group), the fact that held units still fire, the list of AI personalities, elite and sudden-death units, and the activation cap. Thank you. This list keeps only what is still open.
+Hello, and thank you for *Must Attack!* and the Wargame Maker. We made a First Kernstown (1862) scenario with the Wargame Maker export format and have played it five times (v3.6 and v3.7 are not yet played). The engine works well for this. The editor's help text now answers many of our earlier questions: replacements, the retreat and ZOC options, the standby fields (containment, main body %, opposing group), the fact that held units still fire, the list of AI personalities, elite and sudden-death units, and the activation cap. Thank you. This list keeps only what is still open.
 
 Each item has three parts:
 - **Want:** what we would like
@@ -130,6 +130,35 @@ The field names are only suggestions.
 - **Want:** an option for decorations on the board art (title cartouche, compass, scale bar) that the game draws above or beside the board, or a flag that marks a rectangle of the art as "no hexes".
 - **Why:** v3.5 puts a period title block with yard and meter scale bars in an empty corner of the art, on hexes nothing uses. Units can still move there and be hidden under it in a player's eye.
 - **Smallest version:** `meta.boardArt.decorations: [{"image": "data:...", "anchor": "se"}]`, drawn outside the hex grid.
+
+## From playtest 5 (v3.7)
+
+The owner's notes after playtest 5: artillery should limber and unlimber, line of sight should be visible, brigades should stay together, and Jackson needs a way to withdraw and fight again. v3.7 does the withdrawal with your exit keys; the rest needs the engine. Naming replacements after their parent unit is already item 4.
+
+**23. Exits: how they score (question)**
+- **Want:** a few help lines on exits: does `exit_points_per_cs` add to the exiting side's score, and is the exited CS then also counted as "strength lost"; what does `exit_sudden_death_cs` do (end the game when that much CS has exited?); is there a key that caps exit points; does the AI ever exit on its own, and when; and are the save's `BlueVP`/`RedVP` the exit points?
+- **Why:** v3.7 gives Jackson exits at 1 point per CS (as Second Bull Run); whether a full early walk-off can win depends on these answers.
+- **Smallest version:** document the current behaviour; if exited CS counts as lost, say so in the help.
+
+**24. Limbered and unlimbered artillery**
+- **Want:** a battery has two states: limbered (moves, cannot fire) and unlimbered (fires, moves 1 or not at all), switching costs its move or half of it.
+- **Why:** Guns that march and fire in the same turn make batteries roving assault units, which is how playtest 5 lost Marye's battery alone at the front.
+- **Smallest version:** unit `"limber": true`; a unit that fires may not move that turn and one that moves more than 1 hex may not fire.
+
+**25. Showing line of sight**
+- **Want:** when a unit is selected, shade the hexes it can see or fire at (with item 12's blocking terrain).
+- **Why:** Players cannot judge what the guns on Pritchard's Hill or Sandy Ridge can reach without seeing it.
+- **Smallest version:** highlight valid ranged targets for the selected unit, even before full LOS rules exist.
+
+**26. Brigade cohesion and command range**
+- **Want:** a `brigade` id per unit, so the AI keeps a brigade's counters together, and an optional command range (a unit more than N hexes from its brigade or HQ moves or fights at a penalty).
+- **Why:** In playtest 5 the AI marched Burks's brigade alone east of the pike and lost both counters to one blocked retreat; standby groups only keep units together until they wake.
+- **Smallest version:** `units[].brigade` read by the AI to move a brigade toward its own centre; later `rules.command_range`.
+
+**27. Campaign carry-over**
+- **Want:** a way to start a scenario from another's result: surviving and exited strength per unit, carried into the next battle's order of battle.
+- **Why:** Kernstown ended with Jackson's retreat up the Valley; the owner wants the strength he gets away with to fight the next battle.
+- **Smallest version:** an "export result" that writes the save's Units / Eliminated / Exited lists by unit id (we read them today with `carryover.py`), and a scenario field such as `units[].carryFrom` matched by id.
 
 ## Workarounds we use today
 

@@ -2,7 +2,7 @@
 
 `mKernstown1862_CW1.json` is a First Kernstown (23 March 1862) scenario for *Sekigahara 1600: Must Attack!*. It is in the same format the game's Wargame Maker exports. `build_kernstown_ma.py` generates it from this repo's Kernstown map data.
 
-**Status: v3.6, not tested in the game.** v3.6 folds in three staff reviews of v3.5 (`staff_notes/`): briefing corrections against the Official Records (archivist), counter strengths, names and elite picks from the OR (quartermaster), and a quieter, period-correct board art (Hotchkiss). v3.5 was a polish pass on v3.4: a reachable Union strategic victory, a Middle Road objective at the south end of Sandy Ridge, elite (surprise) brigades on both sides, a finished title cartouche, compass rose, scale bar and Winchester street plan on the board art, and briefing fixes. The CRT, retreat rules, AI doctrines, terrain types and standby groups are as in v3.4 (v3.6 changes none of them). v1 to v3.3 loaded and ran in the game (playtests 1-4). Playtest 4 (v3.3, all 11 turns) lost 11 units, 9 of them to a retreat with nowhere to go. Replaying the four saves showed the main cause: the engine never retreats a unit into a `mountain` hex, and our ridge was mountain. v3.4 writes the ridge as `rough` (same x2 defence and 2 MP), makes forced attacks at poor odds usually stall, and gives Jackson a Steady AI. Both files pass `validate_kernstown_ma.py`. Nothing in v3.4, v3.5 or v3.6 has been played yet.
+**Status: v3.7, not tested in the game.** v3.7 answers playtest 5 (v3.5): Jackson can now withdraw off the south edge (Confederate exit hexes where the Valley Turnpike and the Middle Road leave the board, 1 point per CS exited, in Second Bull Run's format), Sullivan's 39 IL joins the rest of its brigade in standby group 2, and `carryover.py` with `CAMPAIGN_CARRYOVER.md` reads a save's surviving, exited and eliminated strength to seed a next scenario. The CRT, retreat rules, doctrines, terrain types and portraits are unchanged, and winLine 45 and thresholds 5/40/81 do not move. v3.6 folds in three staff reviews of v3.5 (`staff_notes/`): briefing corrections against the Official Records (archivist), counter strengths, names and elite picks from the OR (quartermaster), and a quieter, period-correct board art (Hotchkiss). v3.5 was a polish pass on v3.4: a reachable Union strategic victory, a Middle Road objective at the south end of Sandy Ridge, elite (surprise) brigades on both sides, a finished title cartouche, compass rose, scale bar and Winchester street plan on the board art, and briefing fixes. The CRT, retreat rules, AI doctrines, terrain types and standby groups are as in v3.4 (v3.6 changes none of them). v1 to v3.3 loaded and ran in the game (playtests 1-4). Playtest 4 (v3.3, all 11 turns) lost 11 units, 9 of them to a retreat with nowhere to go. Replaying the four saves showed the main cause: the engine never retreats a unit into a `mountain` hex, and our ridge was mountain. v3.4 writes the ridge as `rough` (same x2 defence and 2 MP), makes forced attacks at poor odds usually stall, and gives Jackson a Steady AI. Both files pass `validate_kernstown_ma.py`. Nothing in v3.4, v3.5 or v3.6 has been played yet.
 
 | File | What it is |
 |---|---|
@@ -13,6 +13,8 @@
 | `board_art.py` | Paints `meta.boardArt` on the Must Attack grid |
 | `ma_grid.py` | The Must Attack hex grid: odd-r pointy-top, edges 0=E, 1=SE, 2=SW, 3=W, 4=NW, 5=NE |
 | `validate_kernstown_ma.py` | Checks a scenario against the stock scenarios |
+| `carryover.py` | v3.7: prints each side's surviving, exited and eliminated strength per unit from a save (see `CAMPAIGN_CARRYOVER.md`) |
+| `CAMPAIGN_CARRYOVER.md` | v3.7: how to read a save's Units, Eliminated and Exited lists to seed the next scenario |
 | `render_preview.py` | Draws `preview.png` (whole board), `preview_zoom.png` (Sandy Ridge to Kernstown) and `preview_counters.png` (all 29 counters). The previews are assembled from the file. They are not game screenshots, and the hex-name font in them is our guess. |
 
 ## Install
@@ -32,6 +34,7 @@ Do not overwrite `user_kernstown1862.json`. It is the user's own file, and these
 2. **Poor-odds attacks stall.** At 1:3 to 1:1 most rolls should give C. Only a 1 (at 1:3, a 1 or 2) repulses the attacker, and 1:1 on a 6 still drives the defender back.
 3. **Jackson's AI (Steady).** Does it hold the wall and Glass Farm instead of pushing a lone brigade north onto the ridge, as the Aggressive AI did with Garnett 5/33 on turn 1 of playtest 4?
 4. **Standby triggers.** Save on turn 1 and check that Confederate units carry `StandbyGroup` 1-4 and `StandbyActive` false. Then watch: does Burks come on in the same turn Tyler does (and the other way round)? Does Ashby stay put while Sullivan's 13 IN/5 OH stands within 4 hexes, and move once it leaves? The guns on both ridges should fire but never move unless an enemy comes next to them.
+6. **Withdrawal (v3.7).** Move a Confederate unit onto a south-edge exit hex beside the Valley Turnpike (11-13,35) or the Middle Road (0-2,35) and exit it. Report: is there an exit command or does it leave on its own; does `Exited` in the save list it; does the score change by its CS (and in which direction); does the AI Jackson ever exit on its own, and when. See "Withdrawal" under Victory.
 5. **Replacements.** Playtest 4 confirmed them: Marye's battery, destroyed by an AE, came back as "Replacements ①" at CS 2, six hexes back, with Marye's counter art. With v3.4's table only a DE at 5:1 or 6:1 can make one, so they will be rare.
 
 The full checklist is at the end of this file.
@@ -68,13 +71,28 @@ The full checklist is at the end of this file.
   - Why not the editor's guidance (5/40/80% of objectives + average CS, which fit the stock files)? That total assumes a line near the middle. Ours is the status quo, which is far toward the Union, so the guidance strategic (116 in v3.4, 125 now) was beyond the Union's best possible margin (79 in v3.4). The validator warned about it; it now fails any unreachable level, and there is none.
   - What each level needs, counting only plausible objectives (Winchester excluded for Jackson): Union strategic = the wall, Middle Road and Bartonsville + 26 CS net (57% of Jackson's force); Confederate strategic = Pritchard's Hill and Kernstown + 11 CS net (16% of Kimball's). Operational: Union wall + Middle Road + Bartonsville (+55), or wall + Middle Road (+35) and 5 CS net; Jackson wall + Kernstown (−45 against the line) with no CS needed.
 
+### Withdrawal (v3.7)
+
+Playtest 5 lost Burks's 21 VA/1 Bn and 42 VA together on a blocked DR (turn 9, (17,20)), Marye's battery alone (turn 10, (16,21)) and Brodhead's cavalry; the owner asked for a way for Jackson to withdraw when the Union is overwhelming, as he did, and to decide afterwards what comes next.
+
+- **Exit hexes** (`hex.exitHex` second = true, plus `boxes[19]` = 1): (11,35), (12,35), (13,35), where the Valley Turnpike leaves the south edge toward Newtown and Strasburg, and (0,35), (1,35), (2,35), where the Middle Road leaves. Only the Confederates may exit. The road hex is the middle one of each three. None carries VP or CP, and none is impassable ((0,35) is rough, the rest plain). The board art marks both with a small arrow and an italic legend one row in, so the exit row itself is clear.
+- **Points:** `rules.exit_points_per_cs` {"first": 0, "second": 1}: one point per CS exited, for the Confederates only. `rules.exit_sudden_death_cs` {"first": 0, "second": 0}. Every unit keeps `exitPoints` 0.
+- **Why this form and these values (stock evidence).** Second Bull Run is the only stock file that uses exits: `exit_points_per_cs` {"first": 1, "second": 0}, `exit_sudden_death_cs` {"first": 0, "second": 0}, four first-side exit hexes (51,16)-(51,19) on the east edge just south of where the Warrenton Turnpike leaves toward Centreville (Pope's line of retreat), each with `boxes[18]` = 1, and `exitPoints` 0 on every unit. Gettysburg carries both rules keys as 0 and no exit hexes; no other stock file has them. We copy Second Bull Run: dict form, the retreating side only, 1 per CS, sudden death off, exits by the road the army really left on. `boxes[19]` for the second side is inferred from the pairs 10/11 (VP) and 16/17 (CP).
+- **Why 1 per CS, not more.** The engine's exact arithmetic is not documented (DEV_WISHLIST 23). Two readings: (A) an exited unit is simply safe (not counted as lost) and its points are added for Jackson; (B) losses are initial CS minus CS on the board, so exiting counts as a loss and the points refund it. Worked cases at 1 per CS (Union holds every objective = 100 before strength):
+  - Battered army: Jackson has lost 20 CS and the Union 8; 26 CS left. Destroyed in place: 100 + 46 − 8 = 138, Union strategic. Withdrawn: 86 (A) or 112 (B), Union operational in both. Withdrawing in good order beats dying in place.
+  - Full early withdrawal, Union follows and takes everything: 54 (A) or 100 (B), a Union victory in both. Fighting it out at the wall (about 30) is a Confederate win, so an early walk-off does not beat fighting.
+  - At 2 per CS, (A) would make a full withdrawal score 8 and the battered case 60, close to a draw, which rewards leaving at once; so 1.
+  - Known risk, reading (A) only: if Jackson marches everything off and the Union never advances, the score is about 45 − 46 = −1, a Confederate win. That needs the Union to sit still for 11 turns; test item 6 checks how the engine scores exits, and DEV_WISHLIST 23 asks the developer.
+- **Victory numbers do not move.** Exits can only add to the Confederate room (212, or 258 counting every Confederate CS exited under reading A); the Union room (101) stays the smaller, so winLine 45 and thresholds 5/40/81 stand. The builder still checks the briefing against the file.
+- **After the battle.** The strength that exits, plus what is still on the board, is what Jackson carries into the next fight: `python3 carryover.py SAVE.json` (see `CAMPAIGN_CARRYOVER.md`).
+
 ### Order of battle
 
 v3.3: every strength below is doubled in the file (`CS_SCALE = 2` in the builder), so one point is about 150 men (`scaleMen` 150). The figures below are the pre-scale values; multiply by 2. v3.6 allows halves (x.5), so the file values are whole numbers. A typical battery is CS 2 (4 in the file) and Chew's horse battery CS 1 (2). Guns have MP 3 and range 3, infantry MP 4, cavalry MP 6. HQ counters are CS 1 (2), MP 4. `S#` is the standby group.
 
 **Union, Kimball (Shields' division), side 0.** v3.2: every battery starts stacked with one non-artillery unit.
 - Pritchard's Hill: 14 IN/84 PA 3 + Jenks A 1 WV Bty 2.5 (12,16); Kimball's HQ + Robinson L 1 OH Bty (13,16); 8 OH/67 OH 3 + Clark E 4 US Bty 2.5 (13,17). v3.6: Jenks and Clark had the Parrotts that did the day's execution (Daum, OR 12/1 p.359).
-- Sullivan: 62 OH 2 + Keeper B 1 WV Bty 1 (18,14) S2/S4 (v3.6: one section only, Daum p.359; Keeper as its commander is not in the OR, provisional); 13 IN/5 OH 3 (18,20) S2; 39 IL 1 + Huntington H 1 OH Bty (22,6) S3
+- Sullivan: 62 OH 2 + Keeper B 1 WV Bty 1 (18,14) S2/S4 (v3.6: one section only, Daum p.359; Keeper as its commander is not in the OR, provisional); 13 IN/5 OH 3 (18,20) S2; 39 IL 1 (22,6) S2 (v3.7; S3 before) + Huntington H 1 OH Bty (22,6) S3
 - Brodhead: 1 MI Cav 1 (6,12), WV/OH/MD/PA Cav 1.5 (18,21) (v3.6: was "OH/MD Cav" 1; the engaged non-Michigan companies included the PA squadron and six companies of the 1st (W.) Va Cav, OR p.355)
 - Tyler: 7 OH/29 OH 3 (19,12), 7 IN/1 WV 3 (20,10), 110 PA 2 (21,8), all S1
 - Union guns on and near Pritchard's Hill are S4; the HQ is S3.
@@ -101,8 +119,8 @@ v3.3 groups. Strengths are the doubled values in the file.
 | Side | Group | Units | Join turn, chance / rise | Other triggers |
 |---|---|---|---|---|
 | Union | 1 | Tyler | 4 (15:30), 50 / 25 | Confederate group 1 (Burks) wakes; Union main body falls to 70% |
-| Union | 2 | Sullivan 13 IN/5 OH, 62 OH | 6 (16:30), 30 / 25 | Confederate group 2 (Ashby) wakes; main body 60% |
-| Union | 3 | Kimball HQ, 39 IL, Huntington | hold | main body 50% |
+| Union | 2 | Sullivan 13 IN/5 OH, 62 OH, 39 IL (v3.7) | 6 (16:30), 30 / 25 | Confederate group 2 (Ashby) wakes; main body 60% |
+| Union | 3 | Kimball HQ, Huntington | hold | main body 50% |
 | Union | 4 | Jenks, Clark, Robinson, Keeper | hold | none |
 | Confederate | 1 | Burks, Pleasants (Hampden), Shumaker (Danville) | 5 (16:00), 40 / 30 | Union group 1 (Tyler) wakes; main body 70% |
 | Confederate | 2 | Ashby, Chew | hold | containment: 4 hexes, 6 CS |
@@ -110,6 +128,7 @@ v3.3 groups. Strengths are the doubled values in the file.
 | Confederate | 4 | Jackson HQ | hold | main body 50% |
 
 How the triggers play:
+- **Brigades move as one (v3.7).** Each brigade's counters share one group, so the AI wakes and moves them together; the validator fails a brigade split across groups. The only split was Sullivan's: 62 OH and 13 IN/5 OH in group 2 and 39 IL in group 3, so 39 IL moved to group 2. Not changed, on purpose: the batteries (held in groups 3-4 since v3.2, after playtest 2 lost guns that marched with their infantry), Kimball's HQ (the division HQ, not a brigade) and Shumaker's Danville battery (Fulkerson's battery, held in Burks's reserve group as it was not engaged). Burks's two counters already share group 1 and start adjacent in the rear; playtest 5 lost them together at (17,20) after the AI marched the whole group east of the pike beside Kernstown on turns 6-7, which is routing, not a group split (DEV_WISHLIST 26).
 - **Tyler and Burks are linked both ways.** Historically Jackson fed Burks in as Tyler struck the wall.
 - **Ashby is held by containment.** He stays put while at least 6 Union CS stand within 4 hexes of him. At the start that is 13 IN/5 OH (6) and WV/OH/MD/PA Cav (3), 9 in all; 13 IN/5 OH alone still meets the 6. If Sullivan's infantry leaves for the west, Ashby is free to press up the pike. Sullivan in turn wakes when Ashby does.
 - **Containment is used only for Ashby's group,** whose two units share a hex facing the enemy. For a rear group, the enemy strength in range is 0 from the start, so the rule would wake it at once. The validator checks that every containment group is satisfied at the start, counting both per unit and per group.
@@ -318,7 +337,7 @@ From the user's editor screenshots and help text, matched to keys in the stock s
 | Sudden death unit | `units[].suddenDeathUnit` | name; save `SuddenDeathUnit` | high |
 | Elite (surprise) unit | `units[].eliteUnit` | name; save `EliteUnit` / `EliteTriggered`; the user's own file marks Garnett | high |
 | Defection | `units[].betrayalTurn/Chance/Rise/BlockPct` | names; save `Betrayal*` | high |
-| Escaping off-board | `rules.exit_points_per_cs`, `rules.exit_sudden_death_cs`, `hex.exitHex`, `units[].exitPoints` | Second Bull Run, Gettysburg | high; the exit-points cap key was not seen |
+| Escaping off-board | `rules.exit_points_per_cs`, `rules.exit_sudden_death_cs`, `hex.exitHex`, `units[].exitPoints` | Second Bull Run, Gettysburg | high for the keys and form (used from v3.7, in Second Bull Run's dict form); medium for `boxes[19]` as the second side's flag; how exit points enter the margin, and whether exited CS counts as lost, are unknown (DEV_WISHLIST 23); the exit-points cap key was not seen |
 | Flag colours (first side red) | `scenario.firstSideFlagRed` | Malvern Hill true, Chancellorsville false | high |
 | Counter coaster | not found | no stock key matches a per-side coaster; `sideColors` exists in every file and Chancellorsville has per-unit `color`, but neither is proven to be the coaster | none: not set |
 | Map size, Max turns | `scenario.map.width/height`, `scenario.maxTurns` | | high |
@@ -372,7 +391,7 @@ From the user's editor screenshots and help text, matched to keys in the stock s
 
 See `DEV_WISHLIST.md`.
 
-## Full in-game checklist (v3.6)
+## Full in-game checklist (v3.7)
 
 Tick these in the game and report anything that fails. Screenshots help.
 
@@ -389,13 +408,15 @@ Tick these in the game and report anything that fails. Screenshots help.
     - A turn-1 save shows Confederate units with StandbyGroup 1-4 (not 0).
     - Tyler wakes from turn 4 or when Burks does; Burks from turn 5 or when Tyler does; Sullivan from turn 6 or when Ashby does.
     - Ashby stays while Sullivan's infantry is within 4 hexes of him.
-    - The guns, 39 IL, Huntington and both HQs move only if an enemy comes next to them (or, for the HQs and 39 IL/Huntington, if their side's main body is badly reduced).
+    - The guns, Huntington and both HQs move only if an enemy comes next to them (or, for the HQs and Huntington, if their side's main body is badly reduced). v3.7: 39 IL wakes with the rest of Sullivan's brigade.
 11. [ ] The Confederates move first. Union activation is 5, and 7 from turn 5. Confederate activation is 6.
 12. [ ] **VPs and CPs** show their values. The Stone Wall VP and the Glass Farm CP start neutral.
 13. [ ] **Victory.** winLine is 45 and the thresholds are 5/40/81. Middle Road (4,25) shows 10 VP and starts Confederate. Report the final score and whether losses moved it.
 16. [ ] **Elite round.** The first time Tyler's or Garnett's/Fulkerson's brigades fight, that side's elite units get one more move and attack, once per game. Note whether the Steady AI's elite round pulls Garnett off the wall, what happens to elite units still on standby, and whether a cavalry raid goes for the Middle Road hex.
 14. [ ] **Turns.** Turn 1 is 3/23 14:00, turn 11 is night, and the game ends after turn 11.
-15. [ ] **Briefing.** The region and battle maps show with their portraits and labels, and the description is readable.
+15. [ ] **Briefing.** The region and battle maps show with their portraits and labels, and the description is readable, including the new [Withdrawal] paragraph.
+17. [ ] **Withdrawal (v3.7).** The six south-edge exit hexes (11-13,35) and (0-2,35) accept Confederate units and refuse Union ones. Exit one Confederate unit and save: is it in `Exited`, with `HasExited` true; do `RedVP`/`BlueVP` change; does the final score move by its CS, and which way? Does the AI Jackson exit on its own, and how early? Does anything happen at `exit_sudden_death_cs` 0?
+18. [ ] **Carry-over.** Run `python3 carryover.py` on the end-of-game save and check the totals against the counters on the board.
 
 ## Rebuild and validate
 
@@ -437,6 +458,13 @@ You need:
 - In the user's `user_kernstown1862.json`, the roads are one-sided, and Carroll's `entryHex` is `"10,0"`. That file was not modified.
 
 ## Change history
+
+**v3.7 (playtest 5 follow-up, no playtest yet):**
+- **Withdrawal.** Confederate exit hexes at (11-13,35) on the Valley Turnpike and (0-2,35) on the Middle Road; `exit_points_per_cs` {"first": 0, "second": 1}, `exit_sudden_death_cs` 0/0, `exitPoints` 0, as Second Bull Run. Small "To Newtown & Strasburg" and "South by the Middle Road" arrows on the board art, clear of the exit row. A [Withdrawal] briefing paragraph (all 8 language keys). winLine 45 and thresholds 5/40/81 unchanged. See "Withdrawal (v3.7)".
+- **Cohesion.** Sullivan 39 IL moved from standby group 3 to group 2 with the rest of its brigade. The validator now fails a brigade split across groups, and checks the exit settings.
+- **Campaign.** `carryover.py` and `CAMPAIGN_CARRYOVER.md`.
+- **DEV_WISHLIST.** Items 23-27: exit semantics, limbered and unlimbered artillery, a line-of-sight display, brigade cohesion and command range, campaign carry-over.
+- Not changed: CRT, retreat rules, doctrines, terrain types, portraits, counter art, `ref/user_kernstown1862.json`.
 
 **v3.6 (staff reviews, no playtest yet):**
 - **Briefing (archivist, all 8 language keys).** New epigraph from Jackson's report (OR 12/1 p.381). Opening rewritten on the OR: Jackson's orders to keep Banks in the Valley, Ashby's report and the "four regiments" intelligence, the march, Shields' division about twice Jackson's 3,000 infantry, Kimball in command, Jackson's only tactical defeat. Kimball's guns are ten rifled Parrotts (was "16 guns and 800 infantry"); Tyler goes in soon after 4 PM and the wall fight runs 5 to 6:30; Garnett's withdrawal and arrest as in the OR, with no unverified date; the afternoon note explains that the 21st Va was engaged from the start (the reserve is an abstraction) and that the 48th Va never fought. Order of battle: 1st (West) Virginia, the 39th Illinois "not in the final assault", the full cavalry, Keeper's one section, Huntington in reserve, Pleasants, Shumaker/Lanier, the 48th Va. Sources cite page ranges. Dropped as unverified: the Harpers Ferry detail, "above the elbow", the 1 April arrest date, the 3:55 PM wayside time.
